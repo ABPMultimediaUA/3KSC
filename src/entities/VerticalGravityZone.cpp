@@ -22,11 +22,11 @@
 
 #include "../headers/entities/VerticalGravityZone.hpp"
 
-public VerticalGravityZone::VerticalGravityZone():GravityZone(){
+VerticalGravityZone::VerticalGravityZone():GravityZone(){
 
 }
 
-public void VerticalGravityZone::activateGravity(){
+void VerticalGravityZone::activateGravity(){
 
 }
 

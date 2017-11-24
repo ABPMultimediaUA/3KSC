@@ -22,11 +22,11 @@
 
 #include "Platform.hpp"
 
-public class MobilePlatform: public Platform {
+class MobilePlatform: public Platform {
 public:
-	MobilePlatform():Platform();
+	        MobilePlatform();
     void    move();
 private: 
-    float   waypoint1[]; // [0] for x, [1] for y, [2] for z
-    float   waypoint2[]; // [0] for x, [1] for y, [2] for z
+    float   m_waypoint1[]; // [0] for x, [1] for y, [2] for z
+    float   m_waypoint2[]; // [0] for x, [1] for y, [2] for z
 };

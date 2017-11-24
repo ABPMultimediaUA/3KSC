@@ -23,9 +23,9 @@
 #include "Character.hpp"
 #include "Projectile.hpp"
 
-public class Luka: public Character {
+class Luka: public Character {
 public:
-	Luka():Character();
+	Luka();
 private: 
-    Projectile **projectile;
+    Projectile**    m_projectile;
 };

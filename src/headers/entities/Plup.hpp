@@ -23,9 +23,9 @@
 #include "Character.hpp"
 #include "Projectile.hpp"
 
-public class Plup: public Character {
+class Plup: public Character {
 public:
-	Plup():Character();
+	Plup();
 private: 
-    Projectile **projectile;
+    Projectile**    projectile;
 };

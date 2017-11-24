@@ -22,15 +22,15 @@
 
 #include "../headers/entities/Branch.hpp"
 
-public Branch::Branch():Entity(){
+Branch::Branch():Entity(){
 
 }
 
-public void Branch::breakSelf(){
+void Branch::breakSelf(){
 
 }
 
-public void Branch::respawn(){
+void Branch::respawn(){
 
 }
 

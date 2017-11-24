@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Platform.hpp"
 
-public Platform::Platform():Entity(){
+Platform::Platform():Entity(){
 
 }
 

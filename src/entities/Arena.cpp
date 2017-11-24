@@ -22,31 +22,31 @@
 
 #include "../headers/entities/Arena.hpp"
 
-public Arena::Arena():Entity(){
+Arena::Arena() :Entity(){
 
 }
 
-public void Arena::finishRound(){
+void Arena::finishRound(){
 
 }
 
-public void Arena::spawnItem(){
+void Arena::spawnItem(){
 
 }
 
-public void Arena::spawnPlayer(){
+void Arena::spawnPlayer(){
 
 }
 
-public void Arena::movePlatforms(){
+void Arena::movePlatforms(){
 
 }
 
-public void Arena::animateBackground(){
+void Arena::animateBackground(){
 
 }
 
-public void Arena::restart(){
+void Arena::restart(){
     
 }
 

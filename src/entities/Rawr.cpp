@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Rawr.hpp"
 
-public Rawr::Rawr():Character(){
+Rawr::Rawr():Character(){
 
 }
 

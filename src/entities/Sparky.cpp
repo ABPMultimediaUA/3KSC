@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Sparky.hpp"
 
-public Sparky::Sparky():Character(){
+Sparky::Sparky():Character(){
 
 }
 

@@ -27,9 +27,9 @@
 #include "WaterLily.hpp"
 #include "GravityZone.hpp"
 
-public class Arena: public Entity {
+class Arena : public Entity {
 public:
-	Arena():Entity();
+	        Arena();
 	void    finishRound();
 	void    spawnItem();
     void    spawnPlayer();
@@ -37,14 +37,14 @@ public:
     void    animateBackground();
     void    restart();
 private: 
-	SkyBox  skyBox;
-    Texture background;
-    float   time;
-    float   *spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
-    Item    *itemsToSpawn;
+	SkyBox*     m_skyBox;
+    Texture*    m_background;
+    float       m_time;
+    float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
+    Item*       m_itemsToSpawn;
 
-    WaterLily   *waterLilys;
-    Branch      *branches;
-    Platform    *platforms;
-    GravityZone *gravityZones;
+    WaterLily*   m_waterLilys;
+    Branch*      m_branches;
+    Platform*    m_platforms;
+    GravityZone* m_gravityZones;
 };

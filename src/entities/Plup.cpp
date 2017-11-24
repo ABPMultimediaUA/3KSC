@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Plup.hpp"
 
-public Plup::Plup():Character(){
+Plup::Plup():Character(){
 
 }
 

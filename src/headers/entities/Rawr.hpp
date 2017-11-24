@@ -23,9 +23,9 @@
 #include "Character.hpp"
 #include "Projectile.hpp"
 
-public class Rawr: public Character {
+class Rawr: public Character {
 public:
-	Rawr():Character();
+	Rawr();
 private: 
-    Projectile **projectile;
+    Projectile**    m_projectile;
 };

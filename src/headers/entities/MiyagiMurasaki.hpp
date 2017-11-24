@@ -23,9 +23,9 @@
 #include "Character.hpp"
 #include "Projectile.hpp"
 
-public class MiyagiMurasaki: public Character {
+class MiyagiMurasaki: public Character {
 public:
-	MiyagiMurasaki():Character();
+	MiyagiMurasaki();
 private: 
-    Projectile **projectile;
+    Projectile**    m_projectile;
 };

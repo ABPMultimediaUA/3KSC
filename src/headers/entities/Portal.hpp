@@ -22,11 +22,11 @@
 
 #include "Entity.hpp"
 
-public class Portal: public Entity {
+class Portal: public Entity {
 public:
-	Portal():Entity();
-	void   initializePortal();
-	void   destroyPortal();
+	        Portal();
+	void    initializePortal();
+	void    destroyPortal();
 private: 
-	float  time;
+	float   m_time;
 };

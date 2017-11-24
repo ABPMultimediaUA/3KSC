@@ -23,14 +23,14 @@
 #include "Entity.hpp"
 #include "Projectile.hpp"
 
-public class Item: public Entity {
+class Item: public Entity {
 public:
-	Item():Entity();
-	bool   pick();
-	void   use();
+	        Item();
+	bool    pick();
+	void    use();
 private: 
-	float  duration;
-	bool   picked;
-	float  durationGround;
-    Projectile **projectile;
+	float           duration;
+	bool            picked;
+	float           durationGround;
+    Projectile**    projectile;
 };

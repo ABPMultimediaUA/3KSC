@@ -22,12 +22,12 @@
 
 #include "Entity.hpp"
 
-public class Branch: public Entity {
+class Branch: public Entity {
 public:
-	Branch():Entity();
+	        Branch();
 	void    breakSelf();
 	void    respawn();
 private: 
-    float   breakingTime;
-    float   respawnTime;
+    float   m_breakingTime;
+    float   m_respawnTime;
 };

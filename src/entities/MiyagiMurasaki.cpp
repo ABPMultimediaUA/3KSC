@@ -22,7 +22,7 @@
 
 #include "../headers/entities/MiyagiMurasaki.hpp"
 
-public MiyagiMurasaki::MiyagiMurasaki():Character(){
+MiyagiMurasaki::MiyagiMurasaki():Character(){
 
 }
 

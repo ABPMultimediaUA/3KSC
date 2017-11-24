@@ -22,11 +22,11 @@
 
 #include "Entity.hpp"
 
-public class GravityZone: public Entity {
+class GravityZone: public Entity {
 public:
-	GravityZone():Entity();
+	GravityZone();
     void    activateGravity();
 private: 
-    float   force;
-    float   direction[]; // [0] for x, [1] for y, [2] for z
+    float   m_force;
+    float   m_direction[]; // [0] for x, [1] for y, [2] for z
 };

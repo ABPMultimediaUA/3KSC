@@ -22,15 +22,15 @@
 
 #include "../headers/entities/WaterLily.hpp"
 
-public WaterLily::WaterLily():Entity(){
+WaterLily::WaterLily():Entity(){
 
 }
 
-public void WaterLily::breakSelf(){
+void WaterLily::breakSelf(){
 
 }
 
-public void WaterLily::respawn(){
+void WaterLily::respawn(){
 
 }
 

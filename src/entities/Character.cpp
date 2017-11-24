@@ -22,23 +22,23 @@
 
 #include "../headers/entities/Character.hpp"
 
-public Character::Character():Entity(){
+Character::Character():Entity(){
 
 }
 
-public void Character::jump(){
+void Character::jump(){
 
 }
 
-public void Character::basicAttack(){
+void Character::basicAttack(){
 
 }
 
-public void Character::specialAttack(int index){
+void Character::specialAttack(int p_index){
 
 }
 
-public void Character::ultimateAttack(){
+void Character::ultimateAttack(){
 
 }
 

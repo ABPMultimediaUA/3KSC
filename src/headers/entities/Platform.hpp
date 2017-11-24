@@ -22,7 +22,7 @@
 
 #include "Entity.hpp"
 
-public class Platform: public Entity {
+class Platform: public Entity {
 public:
 	Platform():Entity();
 private: 

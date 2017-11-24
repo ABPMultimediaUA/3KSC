@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Entity.hpp"
 
-public Entity(){
+Entity(){
 	
 }
 

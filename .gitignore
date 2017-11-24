@@ -1,5 +1,8 @@
 #Object folder and files
 /obj
+/src/*.o
+/src/entities/*.o
+/src/managers/*.o
 
 #Game binary
 3KSC

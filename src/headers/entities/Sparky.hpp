@@ -22,8 +22,8 @@
 
 #include "Character.hpp"
 
-public class Sparky: public Character {
+class Sparky: public Character {
 public:
-	Sparky():Character();
+	Sparky();
 private: 
 };

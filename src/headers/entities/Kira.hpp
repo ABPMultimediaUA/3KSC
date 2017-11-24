@@ -23,9 +23,9 @@
 #include "Character.hpp"
 #include "Projectile.hpp"
 
-public class Kira: public Character {
+class Kira: public Character {
 public:
-	Kira():Character();
+	Kira();
 private: 
-    Projectile **projectile;
+    Projectile**    m_projectile;
 };

@@ -22,11 +22,11 @@
 
 #include "../headers/entities/MobilePlatform.hpp"
 
-public MobilePlatform::MobilePlatform():Platform(){
+MobilePlatform::MobilePlatform():Platform(){
 
 }
 
-public void MobilePlatform::move(){
+void MobilePlatform::move(){
     
 }
 

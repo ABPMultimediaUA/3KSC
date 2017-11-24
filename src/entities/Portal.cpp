@@ -22,15 +22,15 @@
 
 #include "../headers/entities/Portal.hpp"
 
-public Portal::Portal():Entity(){
+Portal::Portal():Entity(){
 
 }
 
-public void Portal::initializePortal(){
+void Portal::initializePortal(){
 
 }
 
-public void Portal::destroyPortal(){
+void Portal::destroyPortal(){
 
 }
 

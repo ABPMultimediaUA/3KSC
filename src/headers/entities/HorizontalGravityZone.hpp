@@ -22,9 +22,9 @@
 
 #include "GravityZone.hpp"
 
-public class HorizontalGravityZone: public GravityZone {
+class HorizontalGravityZone: public GravityZone {
 public:
-	HorizontalGravityZone():GravityZone();
+	        HorizontalGravityZone();
     void    activateGravity();
 private: 
 };

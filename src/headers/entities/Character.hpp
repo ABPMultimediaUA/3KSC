@@ -22,17 +22,17 @@
 
 #include "Entity.hpp"
 
-public class Character: public Entity {
+class Character: public Entity {
 public:
-	Character():Entity();
-	void   jump();
-	void   basicAttack();
-    void   specialAttack(int index);
-    void   ultimateAttack();
+	        Character();
+	void    jump();
+	void    basicAttack();
+    void    specialAttack(int p_index);
+    void    ultimateAttack();
 private: 
-	string  name;
-    int     life;
-    int     damage;
-    float   velocity;
-    bool    orientation;
+	String* m_name;
+    int     m_life;
+    int     m_damage;
+    float   m_velocity;
+    bool    m_orientation;
 };

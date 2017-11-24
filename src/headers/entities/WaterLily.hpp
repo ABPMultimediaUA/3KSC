@@ -22,12 +22,12 @@
 
 #include "Entity.hpp"
 
-public class WaterLily: public Entity {
+class WaterLily: public Entity {
 public:
-	WaterLily():Entity();
+	        WaterLily();
 	void    breakSelf();
 	void    respawn();
 private: 
-    float   breakingTime;
-    float   respawnTime;
+    float   m_breakingTime;
+    float   m_respawnTime;
 };

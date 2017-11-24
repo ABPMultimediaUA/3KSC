@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Kira.hpp"
 
-public Kira::Kira():Character(){
+Kira::Kira():Character(){
 
 }
 

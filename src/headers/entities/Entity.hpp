@@ -22,13 +22,13 @@
 
 
 
-public class Entity {
+class Entity {
 public:
     Entity();
 private:
-    float      position[3]; // [0] for x, [1] for y, [2] for z
-    Model      model;
-    Texture    texture;
-    Hitbox     hitbox;
-    float      weight;
+    float      m_position[3]; // [0] for x, [1] for y, [2] for z
+    Model*     m_model;
+    Texture*   m_texture;
+    Hitbox*    m_hitbox;
+    float      m_weight;
 };

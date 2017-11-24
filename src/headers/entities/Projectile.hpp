@@ -22,14 +22,14 @@
 
 #include "Entity.hpp"
 
-public class Projectile: public Entity {
+class Projectile: public Entity {
 public:
-	Projectile():Entity();
+	        Projectile();
     bool    hit();
 private: 
-    float   velocity;
-    float   lifeTime;
-    int     damage;
-    float   initialPosition[3]; // [0] for x, [1] for y, [2] for z
-    float   angle;
+    float   m_velocity;
+    float   m_lifeTime;
+    int     m_damage;
+    float   m_initialPosition[3]; // [0] for x, [1] for y, [2] for z
+    float   m_angle;
 };

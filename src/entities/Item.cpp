@@ -22,15 +22,15 @@
 
 #include "../headers/entities/Item.hpp"
 
-public Item::Item():Entity(){
+Item::Item():Entity(){
 
 }
 
-public bool Item::pick(){
+bool Item::pick(){
 
 }
 
-public void Item::use(){
+void Item::use(){
     
 }
 

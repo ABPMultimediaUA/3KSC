@@ -22,11 +22,11 @@
 
 #include "../headers/entities/Projectile.hpp"
 
-public Projectile::Projectile():Entity(){
+Projectile::Projectile():Entity(){
 
 }
 
-public bool Projectile::hit(){
+bool Projectile::hit(){
     
 }
 

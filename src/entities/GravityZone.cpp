@@ -22,11 +22,11 @@
 
 #include "../headers/entities/GravityZone.hpp"
 
-public GravityZone::GravityZone():Entity(){
+GravityZone::GravityZone():Entity(){
 
 }
 
-public void GravityZone::activateGravity(){
+void GravityZone::activateGravity(){
     
 }
 

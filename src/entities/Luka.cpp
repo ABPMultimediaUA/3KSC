@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Luka.hpp"
 
-public Luka::Luka():Character(){
+Luka::Luka():Character(){
 
 }
 
