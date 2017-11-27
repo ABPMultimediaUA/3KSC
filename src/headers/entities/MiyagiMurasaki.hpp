@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef MIYAGI_MURASAKI
+#define MIYAGI_MURASAKI
+
 #include "Character.hpp"
 #include "Projectile.hpp"
 
@@ -29,3 +32,5 @@ public:
 private: 
     Projectile**    m_projectile;
 };
+
+#endif

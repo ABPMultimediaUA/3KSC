@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef WATER_LILY
+#define WATER_LILY
+
 #include "Entity.hpp"
 
 class WaterLily: public Entity {
@@ -31,3 +34,5 @@ private:
     float   m_breakingTime;
     float   m_respawnTime;
 };
+
+#endif

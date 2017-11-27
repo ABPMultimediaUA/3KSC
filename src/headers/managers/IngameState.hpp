@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef INGAME_STATE
+#define INGAME_STATE
+
 #include "State.hpp"
 
 class IngameState : public State
@@ -28,3 +31,5 @@ class IngameState : public State
   IngameState();
   ~IngameState();
 };
+
+#endif

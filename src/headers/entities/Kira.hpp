@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef KIRA
+#define KIRA
+
 #include "Character.hpp"
 #include "Projectile.hpp"
 
@@ -29,3 +32,5 @@ public:
 private: 
     Projectile**    m_projectile;
 };
+
+#endif

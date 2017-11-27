@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef PORTAL
+#define PORTAL
+
 #include "Entity.hpp"
 
 class Portal: public Entity {
@@ -30,3 +33,5 @@ public:
 private: 
 	float   m_time;
 };
+
+#endif

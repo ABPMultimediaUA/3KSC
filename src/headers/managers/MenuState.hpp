@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef MENU_STATE
+#define MENU_STATE
+
 #include "State.hpp"
 
 class MenuState : public State
@@ -28,3 +31,5 @@ class MenuState : public State
   MenuState();
   ~MenuState();
 };
+
+#endif

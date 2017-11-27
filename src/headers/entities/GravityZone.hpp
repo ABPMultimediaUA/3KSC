@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef GRAVITY_ZONE
+#define GRAVITY_ZONE
+
 #include "Entity.hpp"
 
 class GravityZone: public Entity {
@@ -30,3 +33,5 @@ private:
     float   m_force;
     float   m_direction[]; // [0] for x, [1] for y, [2] for z
 };
+
+#endif

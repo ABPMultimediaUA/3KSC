@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef PLATFORM
+#define PLATFORM
+
 #include "Entity.hpp"
 
 class Platform: public Entity {
@@ -27,3 +30,5 @@ public:
 	Platform():Entity();
 private: 
 };
+
+#endif

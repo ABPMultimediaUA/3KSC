@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef STATE_MANAGER
+#define STATE_MANAGER
+
 #include "State.hpp"
 
 class StateManager{
@@ -30,3 +33,5 @@ class StateManager{
     ~StateManager();
     void loadState();
 };
+
+#endif

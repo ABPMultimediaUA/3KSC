@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef CHARACTER
+#define CHARACTER
+
 #include "Entity.hpp"
 
 class Character: public Entity {
@@ -36,3 +39,5 @@ private:
     float   m_velocity;
     bool    m_orientation;
 };
+
+#endif

@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef VERTICAL_GRAVITY_ZONE
+#define VERTICAL_GRAVITY_ZONE
+
 #include "GravityZone.hpp"
 
 class VerticalGravityZone: public GravityZone {
@@ -28,3 +31,5 @@ public:
     void    activateGravity();
 private: 
 };
+
+#endif

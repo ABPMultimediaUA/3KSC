@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef SOUND_MANAGER
+#define SOUND_MANAGER
+
 class SoundManager{
     private:
     Sound** m_sounds;
@@ -30,3 +33,5 @@ class SoundManager{
     void playSong();
     void playSound();
 };
+
+#endif

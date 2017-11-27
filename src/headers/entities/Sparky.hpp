@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef SPARKY
+#define SPARKY
+
 #include "Character.hpp"
 
 class Sparky: public Character {
@@ -27,3 +30,5 @@ public:
 	Sparky();
 private: 
 };
+
+#endif

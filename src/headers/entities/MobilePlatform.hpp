@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef MOBILE_PLATFORM
+#define MOBILE_PLATFORM
+
 #include "Platform.hpp"
 
 class MobilePlatform: public Platform {
@@ -30,3 +33,5 @@ private:
     float   m_waypoint1[]; // [0] for x, [1] for y, [2] for z
     float   m_waypoint2[]; // [0] for x, [1] for y, [2] for z
 };
+
+#endif

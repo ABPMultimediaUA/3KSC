@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef PROJECTILE
+#define PROJECTILE
+
 #include "Entity.hpp"
 
 class Projectile: public Entity {
@@ -33,3 +36,5 @@ private:
     float   m_initialPosition[3]; // [0] for x, [1] for y, [2] for z
     float   m_angle;
 };
+
+#endif

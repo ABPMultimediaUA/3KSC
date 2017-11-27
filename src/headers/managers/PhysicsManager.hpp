@@ -17,6 +17,10 @@
 
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
+
+#ifndef PHYSICS_MANAGER
+#define PHYSICS_MANAGER
+
 #include "../entities/Entity.hpp"
 
 class PhysicsManager{
@@ -32,3 +36,5 @@ class PhysicsManager{
     void removeForce();
     void updateGravity();
 };
+
+#endif

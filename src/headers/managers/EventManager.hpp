@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef EVENT_MANAGER
+#define EVENT_MANAGER
+
 #include "../entities/Entity.h"
 
 class EventManager{
@@ -32,3 +35,5 @@ class EventManager{
     void removeEvent();
     void sendEvent();
 };
+
+#endif

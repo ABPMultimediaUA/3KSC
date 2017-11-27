@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef PLUP
+#define PLUP
+
 #include "Character.hpp"
 #include "Projectile.hpp"
 
@@ -29,3 +32,5 @@ public:
 private: 
     Projectile**    projectile;
 };
+
+#endif

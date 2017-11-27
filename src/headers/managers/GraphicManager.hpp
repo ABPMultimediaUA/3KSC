@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef GRAPHIC_MANAGER
+#define GRAPHIC_MANAGER
+
 class GraphicManager{
     private:
     float m_scale;
@@ -30,3 +33,5 @@ class GraphicManager{
     void addMode(Mode* p_mode);
     void addText(Text* p_text);
 };
+
+#endif

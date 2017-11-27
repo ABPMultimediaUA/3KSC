@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef ITEM
+#define ITEM
+
 #include "Entity.hpp"
 #include "Projectile.hpp"
 
@@ -34,3 +37,5 @@ private:
 	float           durationGround;
     Projectile**    projectile;
 };
+
+#endif

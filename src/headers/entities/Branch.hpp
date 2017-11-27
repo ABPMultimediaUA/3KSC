@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef BRANCH
+#define BRANCH
+
 #include "Entity.hpp"
 
 class Branch: public Entity {
@@ -31,3 +34,5 @@ private:
     float   m_breakingTime;
     float   m_respawnTime;
 };
+
+#endif

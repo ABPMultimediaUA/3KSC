@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef ENGINE_MANAGER
+#define ENGINE_MANAGER
+
 class EngineManager
 {
   private:
@@ -26,3 +29,5 @@ class EngineManager
   EngineManager();
   ~EngineManager();
 };
+
+#endif

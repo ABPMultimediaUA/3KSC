@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef INPUT_MANAGER
+#define INPUT_MANAGER
+
 class InputManager{
     private:
     int** m_bindings;
@@ -27,3 +30,5 @@ class InputManager{
     ~InputManager();
     void onKeyPressed(int p_key);
 };
+
+#endif

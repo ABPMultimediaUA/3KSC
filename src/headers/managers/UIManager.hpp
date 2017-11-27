@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef UI_MANAGER
+#define UI_MANAGER
+
 class UIManager{
     private:
     int* m_buttons;
@@ -32,3 +35,5 @@ class UIManager{
     void showMenu();
     void hideMenu();
 };
+
+#endif

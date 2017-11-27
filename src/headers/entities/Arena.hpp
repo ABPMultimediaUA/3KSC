@@ -20,6 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
+#ifndef ARENA
+#define ARENA
+
 #include "Entity.hpp"
 #include "Item.hpp"
 #include "Platform.hpp"
@@ -48,3 +51,5 @@ private:
     Platform*    m_platforms;
     GravityZone* m_gravityZones;
 };
+
+#endif

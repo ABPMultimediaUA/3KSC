@@ -18,6 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#ifndef STATE
+#define STATE
+
 class State{
     private:
     
@@ -25,3 +28,5 @@ class State{
     State();
     ~State();
 };
+
+#endif
