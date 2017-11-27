@@ -26,3 +26,4 @@ Rawr::Rawr():Character(){
 
 }
 
+Rawr::~Rawr(){}

@@ -26,6 +26,8 @@ HorizontalGravityZone::HorizontalGravityZone():GravityZone(){
 
 }
 
+HorizontalGravityZone::~HorizontalGravityZone(){}
+
 void HorizontalGravityZone::activateGravity(){
     
 }

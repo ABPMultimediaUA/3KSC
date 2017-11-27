@@ -26,6 +26,8 @@ Branch::Branch():Entity(){
 
 }
 
+Branch::~Branch(){}
+
 void Branch::breakSelf(){
 
 }

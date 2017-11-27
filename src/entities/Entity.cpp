@@ -22,7 +22,8 @@
 
 #include "../headers/entities/Entity.hpp"
 
-Entity(){
+Entity::Entity(){
 	
 }
 
+Entity::~Entity(){}

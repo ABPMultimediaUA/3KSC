@@ -21,6 +21,9 @@
 #ifndef SOUND_MANAGER
 #define SOUND_MANAGER
 
+#include "../Sound.hpp"
+#include "../Music.hpp"
+
 class SoundManager{
     private:
     Sound** m_sounds;

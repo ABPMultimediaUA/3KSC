@@ -22,8 +22,8 @@
 
 //Constructor
 StateManager::StateManager(){
-    this->currentState = NULL;
-    this->states = NULL;
+    this->m_currentState = 0;
+    this->m_states = 0;
 }
 
 //Destructor

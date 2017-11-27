@@ -28,6 +28,7 @@
 class MobilePlatform: public Platform {
 public:
 	        MobilePlatform();
+            ~MobilePlatform();
     void    move();
 private: 
     float   m_waypoint1[]; // [0] for x, [1] for y, [2] for z

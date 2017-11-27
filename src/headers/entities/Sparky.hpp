@@ -28,6 +28,7 @@
 class Sparky: public Character {
 public:
 	Sparky();
+    ~Sparky();
 private: 
 };
 

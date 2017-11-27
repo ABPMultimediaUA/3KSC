@@ -26,3 +26,4 @@ Kira::Kira():Character(){
 
 }
 
+Kira::~Kira(){}

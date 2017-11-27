@@ -28,12 +28,13 @@
 class Character: public Entity {
 public:
 	        Character();
+            ~Character();
 	void    jump();
 	void    basicAttack();
     void    specialAttack(int p_index);
     void    ultimateAttack();
 private: 
-	String* m_name;
+	char*   m_name;
     int     m_life;
     int     m_damage;
     float   m_velocity;

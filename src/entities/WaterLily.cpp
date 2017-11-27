@@ -26,6 +26,8 @@ WaterLily::WaterLily():Entity(){
 
 }
 
+WaterLily::~WaterLily(){}
+
 void WaterLily::breakSelf(){
 
 }

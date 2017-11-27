@@ -26,6 +26,8 @@ Arena::Arena() :Entity(){
 
 }
 
+Arena::~Arena(){}
+
 void Arena::finishRound(){
 
 }

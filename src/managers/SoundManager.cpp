@@ -22,8 +22,8 @@
 
 //Constructor
 SoundManager::SoundManager(){
-    this->m_sounds = NULL;
-    this->m_music = NULL;
+    this->m_sounds = new Sound*[50];
+    this->m_music = new Music[10];
 }
 
 //Destructor

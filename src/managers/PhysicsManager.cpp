@@ -22,7 +22,7 @@
 
 //Constructor
 PhysicsManager::PhysicsManager(){
-    this->m_physicBodies = NULL;
+    this->m_physicBodies = 0;
     this->m_gravity;
 }
 

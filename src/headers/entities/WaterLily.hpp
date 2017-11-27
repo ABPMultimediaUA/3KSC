@@ -28,6 +28,7 @@
 class WaterLily: public Entity {
 public:
 	        WaterLily();
+            ~WaterLily();
 	void    breakSelf();
 	void    respawn();
 private: 

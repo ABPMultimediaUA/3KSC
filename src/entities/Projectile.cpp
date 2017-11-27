@@ -26,6 +26,8 @@ Projectile::Projectile():Entity(){
 
 }
 
+Projectile::~Projectile(){}
+
 bool Projectile::hit(){
     
 }

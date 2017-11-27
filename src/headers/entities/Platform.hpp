@@ -27,7 +27,8 @@
 
 class Platform: public Entity {
 public:
-	Platform():Entity();
+	Platform();
+    ~Platform();
 private: 
 };
 

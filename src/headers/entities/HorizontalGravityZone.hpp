@@ -28,6 +28,7 @@
 class HorizontalGravityZone: public GravityZone {
 public:
 	        HorizontalGravityZone();
+            ~HorizontalGravityZone();
     void    activateGravity();
 private: 
 };

@@ -29,6 +29,7 @@
 class Luka: public Character {
 public:
 	Luka();
+    ~Luka();
 private: 
     Projectile**    m_projectile;
 };

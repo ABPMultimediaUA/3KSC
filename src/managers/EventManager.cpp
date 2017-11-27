@@ -22,8 +22,8 @@
 
 //Constructor
 EventManager::EventManager(){
-    this->m_events = NULL;
-    this->m_entities = NULL;
+    this->m_events = 0;
+    this->m_entities = 0;
 }
 
 //Destructor

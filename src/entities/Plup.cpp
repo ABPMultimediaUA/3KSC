@@ -26,3 +26,4 @@ Plup::Plup():Character(){
 
 }
 
+Plup::~Plup(){}

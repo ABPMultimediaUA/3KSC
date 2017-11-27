@@ -26,3 +26,4 @@ Luka::Luka():Character(){
 
 }
 
+Luka::~Luka(){}

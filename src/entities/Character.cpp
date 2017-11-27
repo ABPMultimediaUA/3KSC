@@ -26,6 +26,8 @@ Character::Character():Entity(){
 
 }
 
+Character::~Character(){}
+
 void Character::jump(){
 
 }

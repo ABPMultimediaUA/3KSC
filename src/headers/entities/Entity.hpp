@@ -23,9 +23,14 @@
 #ifndef ENTITY
 #define ENTITY
 
+#include "Model.hpp"
+#include "Texture.hpp"
+#include "Hitbox.hpp"
+
 class Entity {
 public:
     Entity();
+    ~Entity();
 private:
     float      m_position[3]; // [0] for x, [1] for y, [2] for z
     Model*     m_model;

@@ -26,6 +26,8 @@ Portal::Portal():Entity(){
 
 }
 
+Portal::~Portal(){}
+
 void Portal::initializePortal(){
 
 }

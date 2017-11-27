@@ -26,6 +26,8 @@ GravityZone::GravityZone():Entity(){
 
 }
 
+GravityZone::~GravityZone(){}
+
 void GravityZone::activateGravity(){
     
 }

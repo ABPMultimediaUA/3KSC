@@ -26,3 +26,4 @@ MiyagiMurasaki::MiyagiMurasaki():Character(){
 
 }
 
+MiyagiMurasaki::~MiyagiMurasaki(){}

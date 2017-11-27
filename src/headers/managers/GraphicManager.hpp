@@ -18,6 +18,12 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+
+#include "../Spritesheet.hpp"
+#include "../Sprite.hpp"
+#include "../Mode.hpp"
+#include "../Text.hpp"
+
 #ifndef GRAPHIC_MANAGER
 #define GRAPHIC_MANAGER
 
@@ -28,7 +34,7 @@ class GraphicManager{
     public:
     GraphicManager();
     ~GraphicManager();
-    void addSpriteSheet(SpriteSheet* p_spriteSheet);
+    void addSpriteSheet(Spritesheet* p_spritesheet);
     void addSprite(Sprite* p_sprite);
     void addMode(Mode* p_mode);
     void addText(Text* p_text);

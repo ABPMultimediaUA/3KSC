@@ -28,7 +28,9 @@
 
 class Kira: public Character {
 public:
-	Kira();
+    Kira();
+    ~Kira();
+
 private: 
     Projectile**    m_projectile;
 };

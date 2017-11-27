@@ -26,3 +26,4 @@ Sparky::Sparky():Character(){
 
 }
 
+Sparky::~Sparky(){}

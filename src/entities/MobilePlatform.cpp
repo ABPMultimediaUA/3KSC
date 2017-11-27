@@ -26,6 +26,8 @@ MobilePlatform::MobilePlatform():Platform(){
 
 }
 
+MobilePlatform::~MobilePlatform(){}
+
 void MobilePlatform::move(){
     
 }

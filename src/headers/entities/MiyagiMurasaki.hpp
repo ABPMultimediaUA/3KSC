@@ -29,6 +29,7 @@
 class MiyagiMurasaki: public Character {
 public:
 	MiyagiMurasaki();
+    ~MiyagiMurasaki();
 private: 
     Projectile**    m_projectile;
 };

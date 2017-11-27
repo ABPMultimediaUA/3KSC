@@ -29,7 +29,9 @@ setup:
 
 #Deletes object files
 clean:
-	rm -R $(OBJDIR)
+	rm -R -f $(OBJDIR)
+	rm -f 3KSC
+	rm -f 3KSC.exe
 
 #Makes binary (previous clean)
 cleanc:

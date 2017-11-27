@@ -28,6 +28,7 @@
 class GravityZone: public Entity {
 public:
 	GravityZone();
+    ~GravityZone();
     void    activateGravity();
 private: 
     float   m_force;

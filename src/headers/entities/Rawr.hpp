@@ -29,6 +29,7 @@
 class Rawr: public Character {
 public:
 	Rawr();
+    ~Rawr();
 private: 
     Projectile**    m_projectile;
 };

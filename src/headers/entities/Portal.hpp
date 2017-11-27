@@ -28,6 +28,7 @@
 class Portal: public Entity {
 public:
 	        Portal();
+            ~Portal();
 	void    initializePortal();
 	void    destroyPortal();
 private: 

@@ -29,6 +29,7 @@
 class Plup: public Character {
 public:
 	Plup();
+    ~Plup();
 private: 
     Projectile**    projectile;
 };

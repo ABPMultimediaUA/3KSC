@@ -28,6 +28,7 @@
 class Branch: public Entity {
 public:
 	        Branch();
+            ~Branch();
 	void    breakSelf();
 	void    respawn();
 private: 

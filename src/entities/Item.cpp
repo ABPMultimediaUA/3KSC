@@ -26,6 +26,8 @@ Item::Item():Entity(){
 
 }
 
+Item::~Item(){}
+
 bool Item::pick(){
 
 }

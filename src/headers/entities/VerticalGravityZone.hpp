@@ -28,6 +28,7 @@
 class VerticalGravityZone: public GravityZone {
 public:
 	        VerticalGravityZone();
+            ~VerticalGravityZone();
     void    activateGravity();
 private: 
 };

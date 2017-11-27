@@ -28,6 +28,7 @@
 class Projectile: public Entity {
 public:
 	        Projectile();
+            ~Projectile();
     bool    hit();
 private: 
     float   m_velocity;

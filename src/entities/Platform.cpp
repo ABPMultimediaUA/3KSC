@@ -26,3 +26,4 @@ Platform::Platform():Entity(){
 
 }
 
+Platform::~Platform(){}

@@ -29,6 +29,7 @@
 class Item: public Entity {
 public:
 	        Item();
+            ~Item();
 	bool    pick();
 	void    use();
 private: 

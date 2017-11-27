@@ -21,7 +21,8 @@
 #ifndef EVENT_MANAGER
 #define EVENT_MANAGER
 
-#include "../entities/Entity.h"
+#include "../entities/Entity.hpp"
+#include "Event.hpp"
 
 class EventManager{
     private:
