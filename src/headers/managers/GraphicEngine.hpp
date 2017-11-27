@@ -1,6 +1,5 @@
-/********************************************************************************
-*********************************************************************************
-	3KSC: A fighting game
+/*
+    3KSC: A fighting game
     Copyright (C) 2018  Chaotic Games
 
     This program is free software: you can redistribute it and/or modify
@@ -14,20 +13,31 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see http://www.gnu.org/licenses/.
 
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
-*********************************************************************************
-*********************************************************************************/
+*/
 
-#include "headers/main.hpp"
+#ifndef GRAPHIC_ENGINE
+#define GRAPHIC_ENGINE
 
-int main(){
-    std::cout << std::endl
-    << ">>>>>>>>>>" << std::endl
-    << "^   OK   v" << std::endl
-    << "<<<<<<<<<<" << std::endl
-    << std::endl;
-    
-    return 0;
-}
+#include "../Spritesheet.hpp"
+#include "../Sprite.hpp"
+#include "../Mode.hpp"
+#include "../Text.hpp"
+
+class GraphicEngine
+{
+private:
+    float m_scale;
+
+public:
+    GraphicEngine();
+    ~GraphicEngine();
+    void addSpriteSheet(Spritesheet* p_spritesheet);
+    void addSprite(Sprite* p_sprite);
+    void addMode(Mode* p_mode);
+    void addText(Text* p_text);
+};
+
+#endif

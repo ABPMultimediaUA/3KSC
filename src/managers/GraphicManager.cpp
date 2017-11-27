@@ -22,22 +22,40 @@
 
 //Constructor
 GraphicManager::GraphicManager(){
-    this->m_scale = 1.0;
+    this->graphicEngine = new GraphicEngine();
 }
 
 //Destructor
 GraphicManager::~GraphicManager(){}
 
-void GraphicManager::addSpriteSheet(Spritesheet* p_spriteSheet){
+void GraphicManager::loadArena(){
 
 }
 
-void GraphicManager::addSprite(Sprite* p_sprite){
+void GraphicManager::loadCharacters(){
+
 }
 
-void GraphicManager::addMode(Mode* p_mode){
-    
+void GraphicManager::loadObjects(){
+
 }
 
-void GraphicManager::addText(Text* p_text){
+void GraphicManager::putCharacters(){
+
+}
+
+void GraphicManager::putObject(){
+
+}
+
+void GraphicManager::drawArena(){
+
+}
+
+void GraphicManager::drawCharacter(){
+
+}
+
+void GraphicManager::drawObject(){
+
 }

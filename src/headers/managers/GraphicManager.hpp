@@ -18,26 +18,29 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-
-#include "../Spritesheet.hpp"
-#include "../Sprite.hpp"
-#include "../Mode.hpp"
-#include "../Text.hpp"
-
 #ifndef GRAPHIC_MANAGER
 #define GRAPHIC_MANAGER
 
+#include "GraphicEngine.hpp"
+
 class GraphicManager{
     private:
-    float m_scale;
+        GraphicEngine* graphicEngine;
 
     public:
     GraphicManager();
     ~GraphicManager();
-    void addSpriteSheet(Spritesheet* p_spritesheet);
-    void addSprite(Sprite* p_sprite);
-    void addMode(Mode* p_mode);
-    void addText(Text* p_text);
+    
+    void loadArena();
+    void loadCharacters();
+    void loadObjects();
+
+    void putCharacters();
+    void putObject();
+
+    void drawArena();
+    void drawCharacter();
+    void drawObject();
 };
 
 #endif
