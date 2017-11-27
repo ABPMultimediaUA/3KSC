@@ -38,6 +38,17 @@ cleanc:
 	make clean
 	make
 
+#Runs after compiling
+run:
+	make
+	./3KSC
+
+#Cleans, compiles and runs
+cleanr:
+	make clean
+	make
+	./3KSC
+
 #Prints sources, objects and headers lists
 info:
 	$(info $(SOURCES))
