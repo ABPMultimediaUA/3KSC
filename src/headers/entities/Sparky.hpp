@@ -29,6 +29,10 @@ class Sparky: public Character {
 public:
 	Sparky();
     ~Sparky();
+    void    jump();
+    void    basicAttack();
+    void    specialAttack(int p_index);
+    void    ultimateAttack();
 private: 
 };
 

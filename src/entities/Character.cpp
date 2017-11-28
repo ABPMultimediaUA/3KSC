@@ -20,27 +20,15 @@
 *********************************************************************************
 *********************************************************************************/
 
+
 #include "../headers/entities/Character.hpp"
 
 Character::Character():Entity(){
-
+   
 }
 
 Character::~Character(){}
 
-void Character::jump(){
-
+scene::ISceneNode * Character::getNode(){
+    return playerNode;
 }
-
-void Character::basicAttack(){
-
-}
-
-void Character::specialAttack(int p_index){
-
-}
-
-void Character::ultimateAttack(){
-
-}
-

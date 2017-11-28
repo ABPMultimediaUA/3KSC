@@ -7,3 +7,6 @@
 #Game binary
 3KSC
 3KSC.exe
+
+#Linux config file
+*.directory

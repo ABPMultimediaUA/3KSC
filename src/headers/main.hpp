@@ -23,6 +23,9 @@
 #ifndef MAIN
 #define MAIN
 
+#include <irrlicht.h>
 #include <iostream>
+
+using namespace iir;
 
 #endif

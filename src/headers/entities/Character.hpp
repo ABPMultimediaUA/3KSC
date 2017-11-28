@@ -23,17 +23,22 @@
 #ifndef CHARACTER
 #define CHARACTER
 
+#include <irrlicht.h>
+
 #include "Entity.hpp"
 
-class Character: public Entity {
+using namespace irr;
+
+class Character: public Entity{
 public:
-	        Character();
+            Character();
             ~Character();
-	void    jump();
-	void    basicAttack();
-    void    specialAttack(int p_index);
-    void    ultimateAttack();
-private: 
+	virtual void    jump();
+	virtual void    basicAttack();
+    virtual void    specialAttack(int p_index);
+    virtual void    ultimateAttack();
+
+protected: 
 	char*   m_name;
     int     m_life;
     int     m_damage;

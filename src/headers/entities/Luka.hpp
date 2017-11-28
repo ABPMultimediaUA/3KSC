@@ -30,6 +30,10 @@ class Luka: public Character {
 public:
 	Luka();
     ~Luka();
+    void    jump();
+    void    basicAttack();
+    void    specialAttack(int p_index);
+    void    ultimateAttack();
 private: 
     Projectile**    m_projectile;
 };

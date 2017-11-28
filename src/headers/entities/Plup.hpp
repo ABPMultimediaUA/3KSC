@@ -30,6 +30,10 @@ class Plup: public Character {
 public:
 	Plup();
     ~Plup();
+    void    jump();
+    void    basicAttack();
+    void    specialAttack(int p_index);
+    void    ultimateAttack();
 private: 
     Projectile**    projectile;
 };

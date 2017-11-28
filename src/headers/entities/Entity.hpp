@@ -29,14 +29,18 @@
 
 class Entity {
 public:
-    Entity();
+    Entity(video::IVideoDriver* p_driver, scene::ISceneManager* p_smgr, float pos[3], Texture* p_texture);
     ~Entity();
-private:
+
+protected:
     float      m_position[3]; // [0] for x, [1] for y, [2] for z
     Model*     m_model;
     Texture*   m_texture;
     Hitbox*    m_hitbox;
     float      m_weight;
+    
+    scene::ISceneNode* getNode();
+    scene::ISceneNode* entityNode;
 };
 
 #endif

@@ -28,8 +28,12 @@
 
 class Rawr: public Character {
 public:
-	Rawr();
+	Rawr(video::IVideoDriver* p_driver, scene::ISceneManager* p_smgr);
     ~Rawr();
+    void    jump();
+    void    basicAttack();
+    void    specialAttack(int p_index);
+    void    ultimateAttack();
 private: 
     Projectile**    m_projectile;
 };

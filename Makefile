@@ -11,8 +11,8 @@ BINARY 	:= 3KSC
 
 #Compiler set-up
 CC		:= g++
-INCLUDE := -I$(HDRDIR)
-LIBS	:=
+INCLUDE := -I$(HDRDIR) -I$(SRCDIR)irrlicht/include -I/usr/X11R6/include -Iinclude
+LIBS	:= -L$(SRCDIR)irrlicht/lib/Linux -lIrrlicht -L/usr/X11R6/lib -lGL -lXxf86vm -lXext -lX11 -lXcursor
 
 #Make binary
 $(BINARY): $(OBJECTS)
@@ -54,3 +54,4 @@ info:
 	$(info $(SOURCES))
 	$(info $(OBJECTS))
 	$(info $(INCLUDE))
+	$(info $(LIBS))
