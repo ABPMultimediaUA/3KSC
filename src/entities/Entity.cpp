@@ -23,10 +23,7 @@
 #include "../headers/entities/Entity.hpp"
 
 Entity::Entity(){
-    entityNode = p_smgr->addCubeSceneNode();
-    entityNode->setPosition(core::vector3df(0,5,0));
-    entityNode->setMaterialFlag(video::EMF_LIGHTING, false);
-    entityNode->setMaterialTexture(0, p_driver->getTexture("../assets/earth.jpg"));
+    
 }
 
 Entity::~Entity(){}

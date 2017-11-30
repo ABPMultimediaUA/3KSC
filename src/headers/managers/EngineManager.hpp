@@ -21,13 +21,38 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
+#include "GraphicManager.hpp"
+#include "managers/InputManager.hpp"
+#include <irrlicht.h>
+using namespace irr;
+
 class EngineManager
 {
-  private:
+private:
+    GraphicManager*         m_graphicManager;
+    IrrlichtDevice*         m_device;
+    video::IVideoDriver*    m_vDriver;
+    scene::ISceneManager*   m_scene;
   
-  public:
-  EngineManager();
-  ~EngineManager();
+public:
+    EngineManager();
+    ~EngineManager();
+
+    bool createWindow(InputManager* p_inputManager);
+    void drawScene();
+    bool deviceIsRunning();
+    void dropDevice();
+
+    void loadArena();
+    void loadCharacters();
+    void loadObjects();
+
+    void putCharacters();
+    void putObject();
+
+    void drawArena();
+    void drawCharacter();
+    void drawObject();
 };
 
 #endif

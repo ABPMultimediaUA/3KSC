@@ -21,26 +21,23 @@
 #ifndef GRAPHIC_MANAGER
 #define GRAPHIC_MANAGER
 
-#include "GraphicEngine.hpp"
+#include "../Spritesheet.hpp"
+#include "../Sprite.hpp"
+#include "../Mode.hpp"
+#include "../Text.hpp"
 
 class GraphicManager{
-    private:
-        GraphicEngine* graphicEngine;
+private:
+    float m_scale;
 
-    public:
+public:
     GraphicManager();
     ~GraphicManager();
     
-    void loadArena();
-    void loadCharacters();
-    void loadObjects();
-
-    void putCharacters();
-    void putObject();
-
-    void drawArena();
-    void drawCharacter();
-    void drawObject();
+    void addSpriteSheet(Spritesheet* p_spritesheet);
+    void addSprite(Sprite* p_sprite);
+    void addMode(Mode* p_mode);
+    void addText(Text* p_text);    
 };
 
 #endif

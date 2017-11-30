@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Rawr.hpp"
 
-Rawr::Rawr(video::IVideoDriver* p_driver, scene::ISceneManager* p_smgr):Character(p_driver, p_smgr){
+Rawr::Rawr(){
 
 }
 

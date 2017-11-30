@@ -29,14 +29,16 @@
 
 using namespace irr;
 
-class Character: public Entity{
+class Character{
 public:
-            Character();
-            ~Character();
-	virtual void    jump();
+    Character();
+    ~Character();
+	/*
+    virtual void    jump();
 	virtual void    basicAttack();
     virtual void    specialAttack(int p_index);
     virtual void    ultimateAttack();
+    */
 
 protected: 
 	char*   m_name;

@@ -23,12 +23,8 @@
 
 #include "../headers/entities/Character.hpp"
 
-Character::Character():Entity(){
+Character::Character(){
    
 }
 
 Character::~Character(){}
-
-scene::ISceneNode * Character::getNode(){
-    return playerNode;
-}

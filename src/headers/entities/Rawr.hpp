@@ -26,9 +26,9 @@
 #include "Character.hpp"
 #include "Projectile.hpp"
 
-class Rawr: public Character {
+class Rawr{
 public:
-	Rawr(video::IVideoDriver* p_driver, scene::ISceneManager* p_smgr);
+	Rawr();
     ~Rawr();
     void    jump();
     void    basicAttack();

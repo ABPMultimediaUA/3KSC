@@ -29,7 +29,7 @@
 
 class Entity {
 public:
-    Entity(video::IVideoDriver* p_driver, scene::ISceneManager* p_smgr, float pos[3], Texture* p_texture);
+    Entity();
     ~Entity();
 
 protected:
@@ -38,9 +38,6 @@ protected:
     Texture*   m_texture;
     Hitbox*    m_hitbox;
     float      m_weight;
-    
-    scene::ISceneNode* getNode();
-    scene::ISceneNode* entityNode;
 };
 
 #endif

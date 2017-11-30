@@ -22,8 +22,81 @@
 
 //Constructor
 EngineManager::EngineManager(){
-
+    this->m_graphicManager = new GraphicManager();
 }
 
 //Destructor
 EngineManager::~EngineManager(){}
+
+//Creates the game window
+bool EngineManager::createWindow(InputManager* p_inputManager){
+    //Create a null device to get the desktop resolution
+    //IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
+    //core::dimension2d<u32> t_desktopResolution = t_nulldevice->getVideoModeList()->getDesktopResolution();
+    //t_nulldevice->drop();
+
+    //Use the desktop resolution to create a real device
+    //IrrlichtDevice* t_device = createDevice(video::EDT_OPENGL, t_desktopResolution, 16, true, false, false, &inputs);
+    m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, p_inputManager);
+
+    //0 usually means "success", but with pointers, it's a null pointer.
+    if(!m_device)
+        return false;
+
+    m_device->setWindowCaption(L"3KSC");
+
+    //Create video driver and scene manager
+    m_vDriver = m_device->getVideoDriver();
+    m_scene = m_device->getSceneManager();
+    
+    return true;
+}
+
+//Scene render function
+void EngineManager::drawScene(){
+    m_vDriver->beginScene(true, true, video::SColor(255,100,100,140));
+    m_scene->drawAll();
+    m_vDriver->endScene();
+}
+
+//Returns whether the device is running or not
+bool EngineManager::deviceIsRunning(){
+    return m_device->run();
+}
+
+//Drops the device
+void EngineManager::dropDevice(){
+    m_device->drop();
+}
+
+void EngineManager::loadArena(){
+
+}
+
+void EngineManager::loadCharacters(){
+
+}
+
+void EngineManager::loadObjects(){
+
+}
+
+void EngineManager::putCharacters(){
+
+}
+
+void EngineManager::putObject(){
+
+}
+
+void EngineManager::drawArena(){
+
+}
+
+void EngineManager::drawCharacter(){
+
+}
+
+void EngineManager::drawObject(){
+
+}

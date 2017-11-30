@@ -21,13 +21,19 @@
 #ifndef INPUT_MANAGER
 #define INPUT_MANAGER
 
-class InputManager{
+#include <irrlicht.h>
+using namespace irr;
+
+class InputManager : public IEventReceiver{
     private:
     int** m_bindings;
+    bool m_keyIsDown[KEY_KEY_CODES_COUNT];
 
     public:
     InputManager();
     ~InputManager();
+    virtual bool OnEvent(const SEvent& p_event);
+    virtual bool IsKeyDown(EKEY_CODE p_keyCode) const;
     void onKeyPressed(int p_key);
 };
 

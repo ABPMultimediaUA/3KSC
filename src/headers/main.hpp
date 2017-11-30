@@ -26,6 +26,9 @@
 #include <irrlicht.h>
 #include <iostream>
 
-using namespace iir;
+#include "managers/EngineManager.hpp"
+#include "managers/InputManager.hpp"
+
+using namespace irr;
 
 #endif
