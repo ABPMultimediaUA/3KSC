@@ -28,6 +28,7 @@
 
 #include "managers/EngineManager.hpp"
 #include "managers/InputManager.hpp"
+#include "entities/Rawr.hpp"
 
 using namespace irr;
 

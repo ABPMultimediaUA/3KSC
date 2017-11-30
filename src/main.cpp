@@ -50,6 +50,8 @@ int main(){
 
     if (engineManager->createWindow(inputManager)){  
 
+        //Rawr* pRawr = new Rawr();
+        //engineManager->createNode();
         /////////////
 
         //Game main loop

@@ -54,7 +54,7 @@ bool EngineManager::createWindow(InputManager* p_inputManager){
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,100,100,140));
+    m_vDriver->beginScene(true, true, video::SColor(255,0,150,136));
     m_scene->drawAll();
     m_vDriver->endScene();
 }
@@ -67,6 +67,17 @@ bool EngineManager::deviceIsRunning(){
 //Drops the device
 void EngineManager::dropDevice(){
     m_device->drop();
+}
+
+//Creates a new node
+void EngineManager::createNode(){
+    scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
+
+    if (t_node){
+        t_node->setPosition(core::vector3df(0,0,0));
+        t_node->setMaterialFlag(video::EMF_LIGHTING, false);
+        t_node->setScale(core::vector3df(1,1,1));
+    }
 }
 
 void EngineManager::loadArena(){

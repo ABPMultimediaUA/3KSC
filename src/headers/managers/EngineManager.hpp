@@ -43,6 +43,8 @@ public:
     bool deviceIsRunning();
     void dropDevice();
 
+    void createNode();
+
     void loadArena();
     void loadCharacters();
     void loadObjects();

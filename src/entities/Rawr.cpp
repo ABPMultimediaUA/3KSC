@@ -22,8 +22,8 @@
 
 #include "../headers/entities/Rawr.hpp"
 
-Rawr::Rawr(){
-
+Rawr::Rawr():Character(){
+    
 }
 
 Rawr::~Rawr(){}
