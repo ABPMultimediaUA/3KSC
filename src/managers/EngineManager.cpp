@@ -80,6 +80,14 @@ void EngineManager::createNode(){
     }
 }
 
+void EngineManager::createCamera(){
+    scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
+    if(cameraNode){
+        cameraNode->setPosition(core::vector3df(0,35,-100));
+        cameraNode->setTarget(core::vector3df(0,0,0));
+    }
+}
+
 void EngineManager::loadArena(){
 
 }

@@ -51,7 +51,8 @@ int main(){
     if (engineManager->createWindow(inputManager)){  
 
         //Rawr* pRawr = new Rawr();
-        //engineManager->createNode();
+        engineManager->createNode();
+        engineManager->createCamera();
         /////////////
 
         //Game main loop

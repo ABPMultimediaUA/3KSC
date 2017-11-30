@@ -26,7 +26,7 @@
 #include "Character.hpp"
 #include "Projectile.hpp"
 
-class Rawr{
+class Rawr: public Character{
 public:
 	Rawr();
     ~Rawr();

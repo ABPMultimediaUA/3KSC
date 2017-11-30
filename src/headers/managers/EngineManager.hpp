@@ -26,8 +26,7 @@
 #include <irrlicht.h>
 using namespace irr;
 
-class EngineManager
-{
+class EngineManager{
 private:
     GraphicManager*         m_graphicManager;
     IrrlichtDevice*         m_device;
@@ -44,6 +43,7 @@ public:
     void dropDevice();
 
     void createNode();
+    void createCamera();
 
     void loadArena();
     void loadCharacters();

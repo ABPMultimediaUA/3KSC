@@ -26,7 +26,7 @@
 #include "Model.hpp"
 #include "Texture.hpp"
 #include "Hitbox.hpp"
-#include "../managers/EngineManager.hpp"
+//#include "../managers/EngineManager.hpp"
 
 class Entity {
 public:
