@@ -21,10 +21,10 @@
 #ifndef GRAPHIC_MANAGER
 #define GRAPHIC_MANAGER
 
-#include "../Spritesheet.hpp"
-#include "../Sprite.hpp"
-#include "../Mode.hpp"
-#include "../Text.hpp"
+//#include "../Spritesheet.hpp"
+//#include "../Sprite.hpp"
+//#include "../Mode.hpp"
+//#include "../Text.hpp"
 #include "EngineManager.hpp"
 
 class GraphicManager{
@@ -40,14 +40,15 @@ public:
 
     bool createWindow();
     void createCamera();
+    void createCube(float p_position[3]);
     bool running();
     void draw();
     void stop();
     
-    void addSpriteSheet(Spritesheet* p_spritesheet);
-    void addSprite(Sprite* p_sprite);
-    void addMode(Mode* p_mode);
-    void addText(Text* p_text);    
+    //void addSpriteSheet(Spritesheet* p_spritesheet);
+    //void addSprite(Sprite* p_sprite);
+    //void addMode(Mode* p_mode);
+    //void addText(Text* p_text);    
 };
 
 #endif

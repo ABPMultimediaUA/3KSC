@@ -23,7 +23,9 @@
 #include "../headers/entities/Entity.hpp"
 
 Entity::Entity(float p_position[3]){
-    moveTo(p_position);
+    m_graphicManager = GraphicManager::instance();
+    m_graphicManager->createCube(p_position);
+    //moveTo(p_position); //Descubrir como se puede mover
 }
 
 Entity::~Entity(){}

@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Arena.hpp"
 
-Arena::Arena() :Entity(){
+Arena::Arena(float p_position[3]) :Entity(p_position){
 
 }
 
@@ -51,5 +51,3 @@ void Arena::animateBackground(){
 void Arena::restart(){
     
 }
-
-

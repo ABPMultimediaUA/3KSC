@@ -22,39 +22,21 @@
 
 #include "headers/main.hpp"
 
-//bool collision(scene::ISceneNode* one, scene::ISceneNode* two) {
-//   core::aabbox3d<f32> b1, b2;
-//
-//   b1 = one->getBoundingBox();
-//   b2 = two->getBoundingBox();
-//
-//   one->getRelativeTransformation().transformBoxEx(b1);
-//   two->getRelativeTransformation().transformBoxEx(b2);
-//   return b1.intersectsWithBox(b2);
-//}
-//
-//core::vector3df calculateRadius(scene::ISceneNode* object){
-//    const core::aabbox3d<f32>& box = object->getBoundingBox();
-//    core::vector3df radius = box.MaxEdge - box.getCenter();
-//
-//    return radius;
-//}
-
 int main(){
 
     //TODO: Los nodos se crean en la Fachada, luego la informacion que guardan
     //se convierte a nuestro formato y se le pasa a las Entidades mediante
     //GraphicManager
 
-    //EngineManager* engineManager = EngineManager::instance();
     GraphicManager* graphicManager = GraphicManager::instance();
     InputManager* inputManager = InputManager::instance();
 
     if (graphicManager->createWindow()){  
+        float position[3] = {0, 0, 0};
 
-        //Rawr* pRawr = new Rawr();
-        //engineManager->createCubeNode();
+        Rawr* p_Rawr = new Rawr(position, "Player 1", 100, 30, 20, true);
         graphicManager->createCamera();
+
         /////////////
 
         //Game main loop

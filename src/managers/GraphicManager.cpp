@@ -49,6 +49,10 @@ void GraphicManager::createCamera(){
     m_engineManager->createCamera();
 }
 
+void GraphicManager::createCube(float p_position[3]){
+    m_engineManager->createCubeNode(p_position);
+}
+
 bool GraphicManager::running(){
     return m_engineManager->deviceIsRunning();
 }
@@ -61,16 +65,16 @@ void GraphicManager::stop(){
     m_engineManager->dropDevice();
 }
 
-void GraphicManager::addSpriteSheet(Spritesheet* p_spriteSheet){
-
-}
-
-void GraphicManager::addSprite(Sprite* p_sprite){
-}
-
-void GraphicManager::addMode(Mode* p_mode){
-    
-}
-
-void GraphicManager::addText(Text* p_text){
-}
+//void GraphicManager::addSpriteSheet(Spritesheet* p_spriteSheet){
+//
+//}
+//
+//void GraphicManager::addSprite(Sprite* p_sprite){
+//}
+//
+//void GraphicManager::addMode(Mode* p_mode){
+//    
+//}
+//
+//void GraphicManager::addText(Text* p_text){
+//}

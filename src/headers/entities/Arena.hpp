@@ -24,17 +24,17 @@
 #define ARENA
 
 #include "Entity.hpp"
-#include "Skybox.hpp"
-#include "Texture.hpp"
-#include "Item.hpp"
-#include "WaterLily.hpp"
-#include "Branch.hpp"
-#include "Platform.hpp"
-#include "GravityZone.hpp"
+//#include "Skybox.hpp"
+//#include "Texture.hpp"
+//#include "Item.hpp"
+//#include "WaterLily.hpp"
+//#include "Branch.hpp"
+//#include "Platform.hpp"
+//#include "GravityZone.hpp"
 
 class Arena : public Entity {
 public:
-	        Arena();
+	        Arena(float p_position[3]);
             ~Arena();
 	void    finishRound();
 	void    spawnItem();
@@ -43,16 +43,16 @@ public:
     void    animateBackground();
     void    restart();
 private: 
-	Skybox*     m_skybox;
-    Texture*    m_background;
+	//Skybox*     m_skybox;
+    //Texture*    m_background;
     float       m_time;
     float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
-    Item*       m_itemsToSpawn;
+    //Item*       m_itemsToSpawn;
 
-    WaterLily*   m_waterLilys;
-    Branch*      m_branches;
-    Platform*    m_platforms;
-    GravityZone* m_gravityZones;
+    //WaterLily*   m_waterLilys;
+    //Branch*      m_branches;
+    //Platform*    m_platforms;
+    //GravityZone* m_gravityZones;
 };
 
 #endif

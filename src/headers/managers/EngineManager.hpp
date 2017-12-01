@@ -21,12 +21,9 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-//#include "./GraphicManager.hpp"
 #include "InputManager.hpp"
 #include <irrlicht.h>
 using namespace irr;
-
-//class GraphicManager;
 
 class EngineManager{
 private:
@@ -47,7 +44,7 @@ public:
     bool deviceIsRunning();
     void dropDevice();
 
-    void createCubeNode();
+    void createCubeNode(float p_position[3]);
     void createCamera();
 
     void loadArena();

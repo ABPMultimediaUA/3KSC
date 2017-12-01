@@ -34,7 +34,7 @@ InputManager* InputManager::instance(){
 
 //Constructor
 InputManager::InputManager(){
-    this->m_bindings = 0;
+    m_bindings = 0;
     
     for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
         m_keyIsDown[i] = false;

@@ -82,11 +82,11 @@ void EngineManager::dropDevice(){
 }
 
 //Creates a new node
-void EngineManager::createCubeNode(){
+void EngineManager::createCubeNode(float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
-        t_node->setPosition(core::vector3df(0,0,0));
+        t_node->setPosition(core::vector3df(p_position[0],p_position[1],p_position[2]));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
         t_node->setScale(core::vector3df(1,1,1));
     }
