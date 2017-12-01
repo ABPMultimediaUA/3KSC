@@ -23,16 +23,16 @@
 #ifndef ENTITY
 #define ENTITY
 
-#include "Model.hpp"
-#include "Texture.hpp"
-#include "Hitbox.hpp"
+#include "../Model.hpp"
+#include "../Texture.hpp"
+#include "../Hitbox.hpp"
 #include "../managers/GraphicManager.hpp"
 
 //class EngineManager;
 
 class Entity {
 public:
-    Entity();
+    Entity(float p_position[3]);
     ~Entity();
     void moveTo(float p_position[3]);
 

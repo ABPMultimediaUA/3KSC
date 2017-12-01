@@ -27,7 +27,7 @@
 
 class GravityZone: public Entity {
 public:
-	GravityZone();
+	GravityZone(float p_position[3]);
     ~GravityZone();
     void    activateGravity();
 private: 

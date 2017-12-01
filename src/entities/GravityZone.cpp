@@ -22,7 +22,7 @@
 
 #include "../headers/entities/GravityZone.hpp"
 
-GravityZone::GravityZone():Entity(){
+GravityZone::GravityZone(float p_position[3]):Entity(p_position){
 
 }
 

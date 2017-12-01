@@ -22,7 +22,7 @@
 
 #include "../headers/entities/HorizontalGravityZone.hpp"
 
-HorizontalGravityZone::HorizontalGravityZone():GravityZone(){
+HorizontalGravityZone::HorizontalGravityZone(float p_position[3]):GravityZone(p_position){
 
 }
 

@@ -23,15 +23,14 @@
 #ifndef CHARACTER
 #define CHARACTER
 
-#include <irrlicht.h>
-
+//#include <irrlicht.h>
 #include "Entity.hpp"
 
-using namespace irr;
+//using namespace irr;
 
 class Character : public Entity{
 public:
-    Character();
+    Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
     ~Character();
 	/*
     virtual void    jump();

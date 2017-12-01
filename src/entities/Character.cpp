@@ -23,8 +23,12 @@
 
 #include "../headers/entities/Character.hpp"
 
-Character::Character():Entity(){
-   
+Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation):Entity(p_position){
+   m_name =         p_name;
+   m_life =         p_life;
+   m_damage =       p_damage;
+   m_velocity =     p_velocity;
+   m_orientation =  p_orientation;
 }
 
 Character::~Character(){}

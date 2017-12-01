@@ -27,7 +27,7 @@
 
 class VerticalGravityZone: public GravityZone {
 public:
-	        VerticalGravityZone();
+	        VerticalGravityZone(float p_position[3]);
             ~VerticalGravityZone();
     void    activateGravity();
 private: 

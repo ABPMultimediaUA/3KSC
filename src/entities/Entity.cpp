@@ -21,11 +21,13 @@
 *********************************************************************************/
 
 #include "../headers/entities/Entity.hpp"
-//#include "../headers/managers/EngineManager.hpp"
 
-Entity::Entity(){
-    //EngineManager* t_em = new EngineManager(); //CONVERTIR EN SINGLETON
-    //t_em->createNode();
+Entity::Entity(float p_position[3]){
+    moveTo(p_position);
 }
 
 Entity::~Entity(){}
+
+void Entity::moveTo(float p_position[3]){
+    memcpy(m_position,  p_position, 3 * sizeof(float));
+}

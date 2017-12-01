@@ -27,7 +27,7 @@
 
 class HorizontalGravityZone: public GravityZone {
 public:
-	        HorizontalGravityZone();
+	        HorizontalGravityZone(float p_position[3]);
             ~HorizontalGravityZone();
     void    activateGravity();
 private: 
