@@ -26,7 +26,6 @@
 //#include "../Model.hpp"
 //#include "../Texture.hpp"
 //#include "../Hitbox.hpp"
-#include "../managers/GraphicManager.hpp"
 
 class Entity {
 public:
@@ -35,7 +34,6 @@ public:
     void moveTo(float p_position[3]);
 
 protected:
-    GraphicManager* m_graphicManager;
     float      m_position[3]; // [0] for x, [1] for y, [2] for z
     //Model*     m_model;
     //Texture*   m_texture;

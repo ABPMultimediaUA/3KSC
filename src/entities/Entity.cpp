@@ -21,15 +21,17 @@
 *********************************************************************************/
 
 #include "../headers/entities/Entity.hpp"
+#include "../headers/managers/GraphicManager.hpp"
+#include <cstring> //For std::memcpy()
 
 Entity::Entity(float p_position[3]){
-    m_graphicManager = GraphicManager::instance();
-    m_graphicManager->createCube(p_position);
+    GraphicManager* t_graphicManager = GraphicManager::instance();
+    t_graphicManager->createCube(p_position);
     //moveTo(p_position); //Descubrir como se puede mover
 }
 
 Entity::~Entity(){}
 
 void Entity::moveTo(float p_position[3]){
-    memcpy(m_position,  p_position, 3 * sizeof(float));
+    std::memcpy(m_position,  p_position, 3 * sizeof(float));
 }

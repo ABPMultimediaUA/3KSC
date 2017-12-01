@@ -34,14 +34,14 @@ int main(){
     if (graphicManager->createWindow()){  
         float position[3] = {0, 0, 0};
 
-        Rawr* p_Rawr = new Rawr(position, "Player 1", 100, 30, 20, true);
+        Rawr* player1 = new Rawr(position, "Player 1", 100, 30, 20, true);
         graphicManager->createCamera();
 
         /////////////
 
         //Game main loop
         while (graphicManager->running()){
-            /////////
+            inputManager->playerMove(player1);
 
             graphicManager->draw();
         }

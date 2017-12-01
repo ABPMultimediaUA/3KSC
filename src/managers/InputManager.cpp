@@ -38,6 +38,8 @@ InputManager::InputManager(){
     
     for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
         m_keyIsDown[i] = false;
+
+    m_runningFactor = 1;
 }
 
 //Destructor
@@ -56,6 +58,37 @@ bool InputManager::OnEvent(const SEvent& p_event){
 bool InputManager::IsKeyDown(EKEY_CODE p_keyCode) const{
     return m_keyIsDown[p_keyCode];
 }
+
+//Handles player movement from input devices
+void InputManager::playerMove(Character* p_player){
+//    //void* ???
+//    core::vector3df t_nodePosition = p_player->getNode()->getPosition();
+//
+//    //Exit
+//    if(m_instance->IsKeyDown(irr::KEY_ESCAPE))
+//        //device->drop();
+//
+//    //Jump    
+//    if(m_instance->IsKeyDown(irr::KEY_SPACE))
+//        t_nodePosition.Y += MOVEMENT_SPEED*3 * frameDeltaTime;
+//
+//    m_runningFactor = 1;
+//    
+//    //Sprint
+//    if(m_instance->IsKeyDown(irr::KEY_LSHIFT))
+//        m_runningFactor = 2;
+//
+//    //Left
+//    if(m_instance->IsKeyDown(irr::KEY_KEY_A))
+//        t_nodePosition.X -= MOVEMENT_SPEED * frameDeltaTime * m_runningFactor;
+//
+//    //Right    
+//    else if(m_instance->IsKeyDown(irr::KEY_KEY_D))
+//        t_nodePosition.X += MOVEMENT_SPEED * frameDeltaTime * m_runningFactor;
+//
+//    p_player->getNode()->setPosition(t_nodePosition);
+}
+
 
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){

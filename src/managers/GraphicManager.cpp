@@ -19,6 +19,7 @@
 */
 
 #include "../headers/managers/GraphicManager.hpp"
+#include "../headers/managers/EngineManager.hpp"
 
 //Instance initialization
 GraphicManager* GraphicManager::m_instance = 0;
@@ -35,34 +36,33 @@ GraphicManager* GraphicManager::instance(){
 //Constructor
 GraphicManager::GraphicManager(){
     m_scale = 1.0;
-    m_engineManager = EngineManager::instance();
 }
 
 //Destructor
 GraphicManager::~GraphicManager(){}
 
 bool GraphicManager::createWindow(){
-    return m_engineManager->createWindow();
+    return EngineManager::instance()->createWindow();
 }
 
 void GraphicManager::createCamera(){
-    m_engineManager->createCamera();
+    EngineManager::instance()->createCamera();
 }
 
 void GraphicManager::createCube(float p_position[3]){
-    m_engineManager->createCubeNode(p_position);
+    EngineManager::instance()->createCubeNode(p_position);
 }
 
 bool GraphicManager::running(){
-    return m_engineManager->deviceIsRunning();
+    return EngineManager::instance()->deviceIsRunning();
 }
 
 void GraphicManager::draw(){
-    m_engineManager->drawScene();
+    EngineManager::instance()->drawScene();
 }
 
 void GraphicManager::stop(){
-    m_engineManager->dropDevice();
+    EngineManager::instance()->dropDevice();
 }
 
 //void GraphicManager::addSpriteSheet(Spritesheet* p_spriteSheet){

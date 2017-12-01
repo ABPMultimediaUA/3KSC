@@ -21,7 +21,6 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-#include "InputManager.hpp"
 #include <irrlicht.h>
 using namespace irr;
 
@@ -29,7 +28,6 @@ class EngineManager{
 private:
     static EngineManager* m_instance;
 
-    InputManager*           m_inputManager;
     IrrlichtDevice*         m_device;
     video::IVideoDriver*    m_vDriver;
     scene::ISceneManager*   m_scene;

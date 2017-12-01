@@ -25,12 +25,10 @@
 //#include "../Sprite.hpp"
 //#include "../Mode.hpp"
 //#include "../Text.hpp"
-#include "EngineManager.hpp"
 
 class GraphicManager{
 private:
     static GraphicManager* m_instance;
-    EngineManager* m_engineManager;
     float m_scale;
 
 public:
