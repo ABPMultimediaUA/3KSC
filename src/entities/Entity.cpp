@@ -21,9 +21,10 @@
 *********************************************************************************/
 
 #include "../headers/entities/Entity.hpp"
+//#include "../headers/managers/EngineManager.hpp"
 
 Entity::Entity(){
-    //EngineManager t_em = new EngineManager(); //CONVERTIR EN SINGLETON
+    //EngineManager* t_em = new EngineManager(); //CONVERTIR EN SINGLETON
     //t_em->createNode();
 }
 

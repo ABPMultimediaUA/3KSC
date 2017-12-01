@@ -20,13 +20,46 @@
 
 #include "../headers/managers/GraphicManager.hpp"
 
+//Instance initialization
+GraphicManager* GraphicManager::m_instance = 0;
+
+//Returns the only instance of this class
+GraphicManager* GraphicManager::instance(){
+    if (!m_instance)
+        m_instance = new GraphicManager();
+
+    return m_instance;
+}
+
+
 //Constructor
 GraphicManager::GraphicManager(){
-    this->m_scale = 1.0;
+    m_scale = 1.0;
+    m_engineManager = EngineManager::instance();
 }
 
 //Destructor
 GraphicManager::~GraphicManager(){}
+
+bool GraphicManager::createWindow(){
+    return m_engineManager->createWindow();
+}
+
+void GraphicManager::createCamera(){
+    m_engineManager->createCamera();
+}
+
+bool GraphicManager::running(){
+    return m_engineManager->deviceIsRunning();
+}
+
+void GraphicManager::draw(){
+    m_engineManager->drawScene();
+}
+
+void GraphicManager::stop(){
+    m_engineManager->dropDevice();
+}
 
 void GraphicManager::addSpriteSheet(Spritesheet* p_spriteSheet){
 

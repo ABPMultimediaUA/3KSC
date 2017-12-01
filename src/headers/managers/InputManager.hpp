@@ -26,10 +26,12 @@ using namespace irr;
 
 class InputManager : public IEventReceiver{
     private:
+    static InputManager* m_instance;
     int** m_bindings;
     bool m_keyIsDown[KEY_KEY_CODES_COUNT];
 
     public:
+    static InputManager* instance();
     InputManager();
     ~InputManager();
     virtual bool OnEvent(const SEvent& p_event);

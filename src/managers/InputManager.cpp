@@ -20,6 +20,18 @@
 
 #include "../headers/managers/InputManager.hpp"
 
+//Instance initialization
+InputManager* InputManager::m_instance = 0;
+
+//Returns the only instance of this class
+InputManager* InputManager::instance(){
+    if (!m_instance)
+        m_instance = new InputManager();
+
+    return m_instance;
+}
+
+
 //Constructor
 InputManager::InputManager(){
     this->m_bindings = 0;

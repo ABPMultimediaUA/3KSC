@@ -27,6 +27,7 @@
 #include <iostream>
 
 #include "managers/EngineManager.hpp"
+#include "managers/GraphicManager.hpp"
 #include "managers/InputManager.hpp"
 #include "entities/Rawr.hpp"
 

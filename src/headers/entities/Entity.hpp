@@ -26,12 +26,15 @@
 #include "Model.hpp"
 #include "Texture.hpp"
 #include "Hitbox.hpp"
-//#include "../managers/EngineManager.hpp"
+#include "../managers/GraphicManager.hpp"
+
+//class EngineManager;
 
 class Entity {
 public:
     Entity();
     ~Entity();
+    void moveTo(float p_position[3]);
 
 protected:
     float      m_position[3]; // [0] for x, [1] for y, [2] for z

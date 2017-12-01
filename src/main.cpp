@@ -43,26 +43,28 @@ core::vector3df calculateRadius(scene::ISceneNode* object){
 int main(){
 
     //TODO: Los nodos se crean en la Fachada, luego la informacion que guardan
-    //se pasa a las Entidades
+    //se convierte a nuestro formato y se le pasa a las Entidades mediante
+    //GraphicManager
 
-    EngineManager* engineManager = new EngineManager();
-    InputManager* inputManager = new InputManager();
+    EngineManager* engineManager = EngineManager::instance();
+    GraphicManager* graphicManager = GraphicManager::instance();
+    InputManager* inputManager = InputManager::instance();
 
-    if (engineManager->createWindow(inputManager)){  
+    if (graphicManager->createWindow()){  
 
         //Rawr* pRawr = new Rawr();
-        engineManager->createNode();
-        engineManager->createCamera();
+        engineManager->createCubeNode();
+        graphicManager->createCamera();
         /////////////
 
         //Game main loop
-        while (engineManager->deviceIsRunning()){
+        while (graphicManager->running()){
             /////////
 
-            engineManager->drawScene();
+            graphicManager->draw();
         }
 
-        engineManager->dropDevice();
+        graphicManager->stop();
 
         return 0;
     }

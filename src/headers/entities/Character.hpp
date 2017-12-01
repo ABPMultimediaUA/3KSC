@@ -29,7 +29,7 @@
 
 using namespace irr;
 
-class Character{
+class Character : public Entity{
 public:
     Character();
     ~Character();

@@ -23,7 +23,7 @@
 
 #include "../headers/entities/Character.hpp"
 
-Character::Character(){
+Character::Character():Entity(){
    
 }
 

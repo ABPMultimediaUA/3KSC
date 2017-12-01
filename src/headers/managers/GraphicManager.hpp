@@ -25,14 +25,24 @@
 #include "../Sprite.hpp"
 #include "../Mode.hpp"
 #include "../Text.hpp"
+#include "EngineManager.hpp"
 
 class GraphicManager{
 private:
+    static GraphicManager* m_instance;
+    EngineManager* m_engineManager;
     float m_scale;
 
 public:
+    static GraphicManager* instance();
     GraphicManager();
     ~GraphicManager();
+
+    bool createWindow();
+    void createCamera();
+    bool running();
+    void draw();
+    void stop();
     
     void addSpriteSheet(Spritesheet* p_spritesheet);
     void addSprite(Sprite* p_sprite);

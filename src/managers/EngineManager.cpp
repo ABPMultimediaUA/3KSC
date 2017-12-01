@@ -20,16 +20,28 @@
 
 #include "../headers/managers/EngineManager.hpp"
 
+//Instance initialization
+EngineManager* EngineManager::m_instance = 0;
+
+//Returns the only instance of this class
+EngineManager* EngineManager::instance(){
+    if (!m_instance)
+        m_instance = new EngineManager();
+
+    return m_instance;
+}
+
 //Constructor
 EngineManager::EngineManager(){
-    this->m_graphicManager = new GraphicManager();
+    //this->m_graphicManager = new GraphicManager();
+    m_inputManager = InputManager::instance();
 }
 
 //Destructor
 EngineManager::~EngineManager(){}
 
 //Creates the game window
-bool EngineManager::createWindow(InputManager* p_inputManager){
+bool EngineManager::createWindow(){
     //Create a null device to get the desktop resolution
     //IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
     //core::dimension2d<u32> t_desktopResolution = t_nulldevice->getVideoModeList()->getDesktopResolution();
@@ -37,7 +49,7 @@ bool EngineManager::createWindow(InputManager* p_inputManager){
 
     //Use the desktop resolution to create a real device
     //IrrlichtDevice* t_device = createDevice(video::EDT_OPENGL, t_desktopResolution, 16, true, false, false, &inputs);
-    m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, p_inputManager);
+    m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, m_inputManager);
 
     //0 usually means "success", but with pointers, it's a null pointer.
     if(!m_device)
@@ -70,7 +82,7 @@ void EngineManager::dropDevice(){
 }
 
 //Creates a new node
-void EngineManager::createNode(){
+void EngineManager::createCubeNode(){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
