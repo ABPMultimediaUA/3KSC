@@ -19,6 +19,8 @@
 */
 
 #include "../headers/managers/InputManager.hpp"
+#include "../headers/managers/EngineManager.hpp"
+using namespace irr;
 
 //Instance initialization
 InputManager* InputManager::m_instance = 0;
@@ -39,6 +41,7 @@ InputManager::InputManager(){
     for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
         m_keyIsDown[i] = false;
 
+    m_moveSpeed = 50.f;
     m_runningFactor = 1;
 }
 
@@ -59,38 +62,57 @@ bool InputManager::IsKeyDown(EKEY_CODE p_keyCode) const{
     return m_keyIsDown[p_keyCode];
 }
 
-//Handles player movement from input devices
-void InputManager::playerMove(Character* p_player){
-//    //void* ???
-//    core::vector3df t_nodePosition = p_player->getNode()->getPosition();
-//
-//    //Exit
-//    if(m_instance->IsKeyDown(irr::KEY_ESCAPE))
-//        //device->drop();
-//
-//    //Jump    
-//    if(m_instance->IsKeyDown(irr::KEY_SPACE))
-//        t_nodePosition.Y += MOVEMENT_SPEED*3 * frameDeltaTime;
-//
-//    m_runningFactor = 1;
-//    
-//    //Sprint
-//    if(m_instance->IsKeyDown(irr::KEY_LSHIFT))
-//        m_runningFactor = 2;
-//
-//    //Left
-//    if(m_instance->IsKeyDown(irr::KEY_KEY_A))
-//        t_nodePosition.X -= MOVEMENT_SPEED * frameDeltaTime * m_runningFactor;
-//
-//    //Right    
-//    else if(m_instance->IsKeyDown(irr::KEY_KEY_D))
-//        t_nodePosition.X += MOVEMENT_SPEED * frameDeltaTime * m_runningFactor;
-//
-//    p_player->getNode()->setPosition(t_nodePosition);
-}
-
-
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
+}
+
+//Sets m_prevTime for the first time
+void InputManager::timeStamp(){
+    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+}
+
+//Sets frame delta time of the last frame (in seconds) and prepares it for next update
+void InputManager::updateFrameDeltaTime(){
+    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
+    m_prevTime = m_nowTime;
+}
+
+//Handles player movement from input devices
+void InputManager::playerMove(Character* p_player){
+    //Get player position from node
+    core::vector3df t_nodePosition = EngineManager::instance()->getEntityNode(p_player->getId())->getPosition();
+
+    //Exit
+    if(IsKeyDown(irr::KEY_ESCAPE))
+        EngineManager::instance()->dropDevice();
+
+    //Jump    
+    if(IsKeyDown(irr::KEY_SPACE))
+        t_nodePosition.Y += m_moveSpeed * 3 * m_frameDeltaTime;
+
+    m_runningFactor = 1;
+    
+    //Sprint
+    if(IsKeyDown(irr::KEY_LSHIFT) || IsKeyDown(irr::KEY_RSHIFT))
+        m_runningFactor = 2;
+
+    //Up
+    if(IsKeyDown(irr::KEY_KEY_W) || IsKeyDown(irr::KEY_UP))
+        t_nodePosition.Y += m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+
+    //Down
+    if(IsKeyDown(irr::KEY_KEY_S) || IsKeyDown(irr::KEY_DOWN))
+        t_nodePosition.Y -= m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+
+    //Left
+    if(IsKeyDown(irr::KEY_KEY_A) || IsKeyDown(irr::KEY_LEFT))
+        t_nodePosition.X -= m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+
+    //Right    
+    if(IsKeyDown(irr::KEY_KEY_D) || IsKeyDown(irr::KEY_RIGHT))
+        t_nodePosition.X += m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+
+    EngineManager::instance()->getEntityNode(p_player->getId())->setPosition(t_nodePosition);
 }

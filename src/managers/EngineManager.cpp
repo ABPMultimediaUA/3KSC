@@ -20,6 +20,7 @@
 
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/InputManager.hpp"
+using namespace irr;
 
 //Instance initialization
 EngineManager* EngineManager::m_instance = 0;
@@ -82,10 +83,13 @@ void EngineManager::dropDevice(){
 }
 
 //Creates a new node
-void EngineManager::createCubeNode(float p_position[3]){
+void EngineManager::createCubeNode(int p_id, float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
+        //Add node to class node vector 
+        m_entityNodes.push_back(t_node);
+
         t_node->setPosition(core::vector3df(p_position[0],p_position[1],p_position[2]));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
         t_node->setScale(core::vector3df(1,1,1));
@@ -130,4 +134,12 @@ void EngineManager::drawCharacter(){
 
 void EngineManager::drawObject(){
 
+}
+
+scene::ISceneNode* EngineManager::getEntityNode(int p_id){
+    return m_entityNodes.at(p_id);
+}
+
+IrrlichtDevice* EngineManager::getDevice(){
+    return m_device;
 }

@@ -37,10 +37,11 @@ int main(){
         Rawr* player1 = new Rawr(position, "Player 1", 100, 30, 20, true);
         graphicManager->createCamera();
 
-        /////////////
+        inputManager->timeStamp();
 
         //Game main loop
         while (graphicManager->running()){
+            inputManager->updateFrameDeltaTime();
             inputManager->playerMove(player1);
 
             graphicManager->draw();

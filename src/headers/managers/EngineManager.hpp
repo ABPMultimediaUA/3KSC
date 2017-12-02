@@ -22,16 +22,18 @@
 #define ENGINE_MANAGER
 
 #include <irrlicht.h>
-using namespace irr;
+
+#include <vector>
 
 class EngineManager{
 private:
     static EngineManager* m_instance;
 
-    IrrlichtDevice*         m_device;
-    video::IVideoDriver*    m_vDriver;
-    scene::ISceneManager*   m_scene;
-  
+    std::vector<irr::scene::ISceneNode*>    m_entityNodes;
+    irr::IrrlichtDevice*                    m_device;
+    irr::video::IVideoDriver*               m_vDriver;
+    irr::scene::ISceneManager*              m_scene;
+
 public:
     static EngineManager* instance();
     EngineManager();
@@ -42,7 +44,7 @@ public:
     bool deviceIsRunning();
     void dropDevice();
 
-    void createCubeNode(float p_position[3]);
+    void createCubeNode(int p_id, float p_position[3]);
     void createCamera();
 
     void loadArena();
@@ -55,6 +57,9 @@ public:
     void drawArena();
     void drawCharacter();
     void drawObject();
+
+    irr::scene::ISceneNode* getEntityNode(int p_id);
+    irr::IrrlichtDevice* getDevice();
 };
 
 #endif

@@ -49,8 +49,8 @@ void GraphicManager::createCamera(){
     EngineManager::instance()->createCamera();
 }
 
-void GraphicManager::createCube(float p_position[3]){
-    EngineManager::instance()->createCubeNode(p_position);
+void GraphicManager::createCube(int p_id, float p_position[3]){
+    EngineManager::instance()->createCubeNode(p_id, p_position);
 }
 
 bool GraphicManager::running(){

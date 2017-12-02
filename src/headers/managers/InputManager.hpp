@@ -22,25 +22,33 @@
 #define INPUT_MANAGER
 
 #include <irrlicht.h>
-using namespace irr;
 
 #include "../entities/Character.hpp"
 
-class InputManager : public IEventReceiver{
+class InputManager : public irr::IEventReceiver{
     private:
     static InputManager* m_instance;
     int** m_bindings;
-    bool m_keyIsDown[KEY_KEY_CODES_COUNT];
-    int  m_runningFactor;
+    bool m_keyIsDown[irr::KEY_KEY_CODES_COUNT];
+
+    //Movement
+    irr::u32        m_prevTime;
+    /*const*/ irr::u32  m_nowTime;
+    /*const*/ irr::f32  m_frameDeltaTime;
+    /*const*/ irr::f32  m_moveSpeed;
+    int             m_runningFactor;
 
     public:
     static InputManager* instance();
     InputManager();
     ~InputManager();
-    virtual bool OnEvent(const SEvent& p_event);
-    virtual bool IsKeyDown(EKEY_CODE p_keyCode) const;
-    void playerMove(Character* p_player);
+    virtual bool OnEvent(const irr::SEvent& p_event);
+    virtual bool IsKeyDown(irr::EKEY_CODE p_keyCode) const;
     void onKeyPressed(int p_key);
+
+    void timeStamp();
+    void updateFrameDeltaTime();
+    void playerMove(Character* p_player);
 };
 
 #endif

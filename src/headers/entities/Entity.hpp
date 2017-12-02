@@ -32,8 +32,11 @@ public:
     Entity(float p_position[3]);
     ~Entity();
     void moveTo(float p_position[3]);
+    int getId();
 
 protected:
+    static int m_entityCount;
+    int        m_id; 
     float      m_position[3]; // [0] for x, [1] for y, [2] for z
     //Model*     m_model;
     //Texture*   m_texture;

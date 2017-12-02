@@ -38,7 +38,7 @@ public:
 
     bool createWindow();
     void createCamera();
-    void createCube(float p_position[3]);
+    void createCube(int p_id, float p_position[3]);
     bool running();
     void draw();
     void stop();
@@ -46,7 +46,7 @@ public:
     //void addSpriteSheet(Spritesheet* p_spritesheet);
     //void addSprite(Sprite* p_sprite);
     //void addMode(Mode* p_mode);
-    //void addText(Text* p_text);    
+    //void addText(Text* p_text);
 };
 
 #endif
