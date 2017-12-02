@@ -35,6 +35,15 @@ Entity::Entity(float p_position[3]){
     //moveTo(p_position); //Por implementar
 }
 
+Entity::Entity(float p_position[3], float p_scale[3]){
+    m_id = m_entityCount++;
+
+    GraphicManager* t_graphicManager = GraphicManager::instance();
+    t_graphicManager->createCube(m_id, p_position);
+    t_graphicManager->scaleNode(m_id, p_scale);
+    //moveTo(p_position); //Por implementar
+}
+
 Entity::~Entity(){}
 
 void Entity::moveTo(float p_position[3]){

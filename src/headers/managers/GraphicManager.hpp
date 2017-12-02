@@ -39,6 +39,7 @@ public:
     bool createWindow();
     void createCamera();
     void createCube(int p_id, float p_position[3]);
+    void scaleNode(int p_id, float p_scale[3]);
     bool running();
     void draw();
     void stop();

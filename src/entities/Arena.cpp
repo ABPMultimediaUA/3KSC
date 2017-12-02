@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Arena.hpp"
 
-Arena::Arena(float p_position[3]) :Entity(p_position){
+Arena::Arena(float p_position[3], float p_scale[3]) :Entity(p_position, p_scale){
 
 }
 

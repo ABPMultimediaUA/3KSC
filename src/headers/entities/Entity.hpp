@@ -30,6 +30,7 @@
 class Entity {
 public:
     Entity(float p_position[3]);
+    Entity(float p_position[3], float p_scale[3]);
     ~Entity();
     void moveTo(float p_position[3]);
     int getId();

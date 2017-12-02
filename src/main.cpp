@@ -32,9 +32,12 @@ int main(){
     InputManager* inputManager = InputManager::instance();
 
     if (graphicManager->createWindow()){  
+        float positionPlayer[3] = {0, 10, 0};
         float position[3] = {0, 0, 0};
+        float scale[3] = {10, 0.5, 2};
 
-        Rawr* player1 = new Rawr(position, "Player 1", 100, 30, 20, true);
+        Rawr* player1 = new Rawr(positionPlayer, "Player 1", 100, 30, 20, true);
+        Arena* testArena = new Arena(position, scale);
         graphicManager->createCamera();
 
         inputManager->timeStamp();

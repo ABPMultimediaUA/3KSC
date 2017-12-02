@@ -25,6 +25,8 @@
 
 #include <vector>
 
+#include <iostream>
+
 class EngineManager{
 private:
     static EngineManager* m_instance;
@@ -45,6 +47,8 @@ public:
     void dropDevice();
 
     void createCubeNode(int p_id, float p_position[3]);
+    void scaleNode(int p_id, float p_scale[3]);
+
     void createCamera();
 
     void loadArena();

@@ -92,8 +92,13 @@ void EngineManager::createCubeNode(int p_id, float p_position[3]){
 
         t_node->setPosition(core::vector3df(p_position[0],p_position[1],p_position[2]));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
-        t_node->setScale(core::vector3df(1,1,1));
     }
+}
+
+void EngineManager::scaleNode(int p_id, float p_scale[3]){
+    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
+
+    t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
 }
 
 void EngineManager::createCamera(){
