@@ -22,10 +22,9 @@
 #define ENGINE_MANAGER
 
 #include <irrlicht.h>
-
 #include <vector>
-
 #include <iostream>
+#include "../entities/Entity.hpp"
 
 class EngineManager{
 private:
@@ -62,6 +61,7 @@ public:
     void drawCharacter();
     void drawObject();
 
+    void moveEntity(Entity* p_entity, irr::core::vector3df p_position);
     irr::scene::ISceneNode* getEntityNode(int p_id);
     irr::IrrlichtDevice* getDevice();
 };

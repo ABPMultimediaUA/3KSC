@@ -18,38 +18,28 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef INPUT_MANAGER
-#define INPUT_MANAGER
+#ifndef PHYSICS_MANAGER
+#define PHYSICS_MANAGER
 
+#include "../entities/Entity.hpp"
+#include <iostream>
 #include <irrlicht.h>
 
-#include "../entities/Character.hpp"
 
-class InputManager : public irr::IEventReceiver{
+class PhysicsManager{
     private:
-    static InputManager* m_instance;
-    int** m_bindings;
-    bool m_keyIsDown[irr::KEY_KEY_CODES_COUNT];
-
-    //Movement
-    irr::u32        m_prevTime;
-    irr::u32        m_nowTime;
-    irr::f32        m_frameDeltaTime;
-    irr::f32        m_moveSpeed;
-    int             m_runningFactor;
-    
+    static PhysicsManager* m_instance;
+    Entity** m_physicBodies;
+    float m_gravity;
 
     public:
-    static InputManager* instance();
-    InputManager();
-    ~InputManager();
-    virtual bool OnEvent(const irr::SEvent& p_event);
-    virtual bool IsKeyDown(irr::EKEY_CODE p_keyCode) const;
-    void onKeyPressed(int p_key);
-
-    void timeStamp();
-    void updateFrameDeltaTime();
-    void playerInput(Character* p_player);
+    static PhysicsManager* instance();
+    PhysicsManager();
+    ~PhysicsManager();
+    bool checkCollision(irr::scene::ISceneNode* one, irr::scene::ISceneNode* two);
+    void addForce();
+    void removeForce();
+    void updateGravity();
 };
 
 #endif

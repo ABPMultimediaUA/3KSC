@@ -33,6 +33,9 @@ public:
     Entity(float p_position[3], float p_scale[3]);
     ~Entity();
     void moveTo(float p_position[3]);
+    void moveX(float p_variation);
+    void moveY(float p_variation);
+    void moveZ(float p_variation);
     int getId();
 
 protected:

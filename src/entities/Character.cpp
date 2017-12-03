@@ -32,3 +32,20 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
 }
 
 Character::~Character(){}
+
+void Character::jump(){}
+
+void Character::basicAttack(){}
+
+void Character::specialAttack(int p_index){}
+
+void Character::ultimateAttack(){}
+
+void Character::lookLeft(){
+    m_orientation = false;
+}
+
+void Character::lookRight(){
+    m_orientation = true;
+}
+

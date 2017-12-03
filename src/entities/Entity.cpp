@@ -32,7 +32,7 @@ Entity::Entity(float p_position[3]){
 
     GraphicManager* t_graphicManager = GraphicManager::instance();
     t_graphicManager->createCube(m_id, p_position);
-    //moveTo(p_position); //Por implementar
+    moveTo(p_position);
 }
 
 Entity::Entity(float p_position[3], float p_scale[3]){
@@ -41,7 +41,7 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     GraphicManager* t_graphicManager = GraphicManager::instance();
     t_graphicManager->createCube(m_id, p_position);
     t_graphicManager->scaleNode(m_id, p_scale);
-    //moveTo(p_position); //Por implementar
+    moveTo(p_position);
 }
 
 Entity::~Entity(){}
@@ -49,6 +49,19 @@ Entity::~Entity(){}
 void Entity::moveTo(float p_position[3]){
     std::memcpy(m_position,  p_position, 3 * sizeof(float));
 }
+
+void Entity::moveX(float p_variation){
+    m_position[0] += p_variation;
+}
+
+void Entity::moveY(float p_variation){
+    m_position[1] += p_variation;
+}
+
+void Entity::moveZ(float p_variation){
+    m_position[2] += p_variation;
+}
+
 
 int Entity::getId(){
     return m_id;
