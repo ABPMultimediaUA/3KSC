@@ -22,6 +22,8 @@
 #include "../headers/managers/EngineManager.hpp"
 using namespace irr;
 
+//#include <iostream>
+
 //Instance initialization
 InputManager* InputManager::m_instance = 0;
 
@@ -51,7 +53,7 @@ InputManager::~InputManager(){}
 
 //Detects events and acts if its a keyboard event
 bool InputManager::OnEvent(const SEvent& p_event){
-    if (p_event.EventType == irr::EET_KEY_INPUT_EVENT)
+    if (p_event.EventType == EET_KEY_INPUT_EVENT)
         m_keyIsDown[p_event.KeyInput.Key] = p_event.KeyInput.PressedDown;
 
     return false;
@@ -79,40 +81,52 @@ void InputManager::updateFrameDeltaTime(){
     m_prevTime = m_nowTime;
 }
 
-//Handles player movement from input devices
-void InputManager::playerMove(Character* p_player){
+//Handles player inputs
+void InputManager::playerInput(Character* p_player){
     //Get player position from node
     core::vector3df t_nodePosition = EngineManager::instance()->getEntityNode(p_player->getId())->getPosition();
 
     //Exit
-    if(IsKeyDown(irr::KEY_ESCAPE))
+    if(IsKeyDown(KEY_ESCAPE))
         EngineManager::instance()->dropDevice();
 
     //Jump    
-    if(IsKeyDown(irr::KEY_SPACE))
+    if(IsKeyDown(KEY_SPACE))
         t_nodePosition.Y += m_moveSpeed * 3 * m_frameDeltaTime;
 
     m_runningFactor = 1;
+
+    //Basic Attack
+    if(IsKeyDown(KEY_KEY_E)){
+        //std::cout << "Attacking..." << std::endl;
+        p_player->basicAttack();
+    }
     
     //Sprint
-    if(IsKeyDown(irr::KEY_LSHIFT) || IsKeyDown(irr::KEY_RSHIFT))
+    if(IsKeyDown(KEY_LSHIFT) || IsKeyDown(KEY_RSHIFT))
         m_runningFactor = 2;
 
     //Up
-    if(IsKeyDown(irr::KEY_KEY_W) || IsKeyDown(irr::KEY_UP))
+    if(IsKeyDown(KEY_KEY_W) || IsKeyDown(KEY_UP)){
         t_nodePosition.Y += m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+    }
 
     //Down
-    if(IsKeyDown(irr::KEY_KEY_S) || IsKeyDown(irr::KEY_DOWN))
+    if(IsKeyDown(KEY_KEY_S) || IsKeyDown(KEY_DOWN)){
         t_nodePosition.Y -= m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+    }
 
     //Left
-    if(IsKeyDown(irr::KEY_KEY_A) || IsKeyDown(irr::KEY_LEFT))
+    if(IsKeyDown(KEY_KEY_A) || IsKeyDown(KEY_LEFT)){
         t_nodePosition.X -= m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+        p_player->lookLeft();
+    }
 
     //Right    
-    if(IsKeyDown(irr::KEY_KEY_D) || IsKeyDown(irr::KEY_RIGHT))
+    if(IsKeyDown(KEY_KEY_D) || IsKeyDown(KEY_RIGHT)){
         t_nodePosition.X += m_moveSpeed * m_frameDeltaTime * m_runningFactor;
+        p_player->lookRight();
+    }
 
-    EngineManager::instance()->getEntityNode(p_player->getId())->setPosition(t_nodePosition);
+    EngineManager::instance()->moveEntity(p_player, t_nodePosition);
 }

@@ -30,18 +30,20 @@ public:
     Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
     ~Character();
 	
-    //virtual void    jump();
-	//virtual void    basicAttack();
-    //virtual void    specialAttack(int p_index);
-    //virtual void    ultimateAttack();
+    virtual void    jump();
+	virtual void    basicAttack();
+    virtual void    specialAttack(int p_index);
+    virtual void    ultimateAttack();
+    void            lookLeft();
+    void            lookRight();
     
-
 protected: 
 	char*   m_name;
     int     m_life;
     int     m_damage;
     float   m_velocity;
     bool    m_orientation;
+    float   m_atackPosition[3];
 };
 
 #endif

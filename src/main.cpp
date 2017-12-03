@@ -30,6 +30,7 @@ int main(){
 
     GraphicManager* graphicManager = GraphicManager::instance();
     InputManager* inputManager = InputManager::instance();
+    PhysicsManager* physicsManager = PhysicsManager::instance();
 
     if (graphicManager->createWindow()){  
         float positionPlayer[3] = {0, 10, 0};
@@ -45,7 +46,7 @@ int main(){
         //Game main loop
         while (graphicManager->running()){
             inputManager->updateFrameDeltaTime();
-            inputManager->playerMove(player1);
+            inputManager->playerInput(player1);
 
             graphicManager->draw();
         }

@@ -141,6 +141,13 @@ void EngineManager::drawObject(){
 
 }
 
+void EngineManager::moveEntity(Entity* p_entity, core::vector3df p_position){
+    m_entityNodes.at(p_entity->getId())->setPosition(p_position);
+
+    float t_posicion[3] = {(float) p_position.X, (float) p_position.Y, (float) p_position.Z};
+    p_entity->moveTo(t_posicion);
+}
+
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){
     return m_entityNodes.at(p_id);
 }
