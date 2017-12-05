@@ -25,7 +25,7 @@
 #include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/EngineManager.hpp"
 
-#include <iostream>
+//#include <iostream>
 #include <irrlicht.h>
 using namespace irr;
 
@@ -38,9 +38,9 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
 
   m_runningFactor = 1;
 
+  m_jumping = false;
   m_jumpCurrentTime = 0;
   m_jumpMaxTime = 10;
-  m_jumping = false;
   m_jumpTable[0] = 3.0f;
   m_jumpTable[1] = 2.4f;
   m_jumpTable[2] = 1.9f;
@@ -73,6 +73,7 @@ void Character::lookRight(){
 
 void Character::playerInput(){
     InputManager* t_inputManager = InputManager::instance();
+    m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
     //Exit
     if(t_inputManager->IsKeyDown(KEY_ESCAPE))
@@ -80,14 +81,14 @@ void Character::playerInput(){
 
     //Jump
     // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-    if(t_inputManager->IsKeyDown(KEY_SPACE))
+    if(t_inputManager->IsKeyDown(KEY_SPACE)){
         m_jumping = true;     // Begin jump movement
+    }
 
     m_runningFactor = 1;
 
     //Basic Attack
     if(t_inputManager->IsKeyDown(KEY_KEY_E)){
-        //std::cout << "Attacking..." << std::endl;
         basicAttack();
     }
     
@@ -97,29 +98,27 @@ void Character::playerInput(){
 
     //Up
     if(t_inputManager->IsKeyDown(KEY_KEY_W) || t_inputManager->IsKeyDown(KEY_UP)){
-        moveY(m_moveSpeed * 0.015 * m_runningFactor);
+        moveY(m_velocity * m_frameDeltaTime * m_runningFactor);
     }
 
     //Down
     if(t_inputManager->IsKeyDown(KEY_KEY_S) || t_inputManager->IsKeyDown(KEY_DOWN)){
-        moveY(m_moveSpeed * 0.015 * m_runningFactor * -1);
+        moveY(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     }
 
     //Left
     if(t_inputManager->IsKeyDown(KEY_KEY_A) || t_inputManager->IsKeyDown(KEY_LEFT)){
-        moveX(m_moveSpeed * 0.015 * m_runningFactor * -1);
+        moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
         lookLeft();
     }
 
     //Right
     if(t_inputManager->IsKeyDown(KEY_KEY_D) || t_inputManager->IsKeyDown(KEY_RIGHT)){
-        moveX(m_moveSpeed * 0.015 * m_runningFactor);
+        moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
         lookRight();
     }
 
-    //std::cout << "Move: " << m_moveSpeed << "; Delta: " << 0.015 << "; Run: " << m_runningFactor << std::endl;
-    //std::cout << "(" << m_position[0] << "," << m_position[1] << ")" << std::endl;
-
+    jump();
     EngineManager::instance()->moveEntity(this);
 }
 

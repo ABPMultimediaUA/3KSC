@@ -35,10 +35,17 @@ private:
     irr::video::IVideoDriver*               m_vDriver;
     irr::scene::ISceneManager*              m_scene;
 
+    irr::u32        m_prevTime;
+    irr::u32        m_nowTime;
+    irr::f32        m_frameDeltaTime;
+
 public:
     static EngineManager* instance();
     EngineManager();
     ~EngineManager();
+
+    void timeStamp();
+    float updateFrameDeltaTime();
 
     bool createWindow();
     void createCamera();
@@ -62,8 +69,10 @@ public:
     void drawObject();
 
     void moveEntity(Entity* p_entity);
+    
     irr::scene::ISceneNode* getEntityNode(int p_id);
     irr::IrrlichtDevice* getDevice();
+    float getFrameDeltaTime();
 };
 
 #endif

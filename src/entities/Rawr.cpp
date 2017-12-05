@@ -33,14 +33,8 @@ void Rawr::jump(){
     // Start or continue jump movement
     if(m_jumping){
         if(m_jumpCurrentTime < m_jumpMaxTime){
-            //Get player position from node
-            //core::vector3df t_nodePosition = EngineManager::instance()->getEntityNode(p_player->getId())->getPosition();
-            // Stop gravity
-            moveY(m_jumpTable[m_jumpCurrentTime]);
+            moveY(m_jumpTable[m_jumpCurrentTime++]);
             EngineManager::instance()->moveEntity(this);
-            //t_nodePosition.Y += m_jumpTable[m_jumpCurrentTime];     // Increase 'y' position
-            m_jumpCurrentTime++;
-            //EngineManager::instance()->moveEntity(p_player, p_player->getPosition());
         }
         else{                                                                       // Jump has ended. Starting to go down
             // Activate gravity

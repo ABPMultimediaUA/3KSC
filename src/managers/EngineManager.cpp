@@ -41,6 +41,18 @@ EngineManager::EngineManager(){
 //Destructor
 EngineManager::~EngineManager(){}
 
+//Sets m_prevTime for the first time
+void EngineManager::timeStamp(){
+    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+}
+
+//Sets frame delta time of the last frame (in seconds) and prepares it for next update
+float EngineManager::updateFrameDeltaTime(){
+    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
+    m_prevTime = m_nowTime;
+}
+
 //Creates the game window
 bool EngineManager::createWindow(){
     //Create a null device to get the desktop resolution
@@ -162,4 +174,8 @@ scene::ISceneNode* EngineManager::getEntityNode(int p_id){
 
 IrrlichtDevice* EngineManager::getDevice(){
     return m_device;
+}
+
+float EngineManager::getFrameDeltaTime(){
+    return (float) m_frameDeltaTime;
 }

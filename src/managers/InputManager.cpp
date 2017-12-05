@@ -43,23 +43,6 @@ InputManager::InputManager(){
     
     for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
         m_keyIsDown[i] = false;
-
-    m_moveSpeed = 50.f;
-    m_runningFactor = 1;
-
-    m_jumpCurrentTime = 0;
-    m_jumpMaxTime = 10;
-    m_jumping = false;
-    m_jumpTable[0] = 3.0f;
-    m_jumpTable[1] = 2.4f;
-    m_jumpTable[2] = 1.9f;
-    m_jumpTable[3] = 1.6f;
-    m_jumpTable[4] = 1.25f;
-    m_jumpTable[5] = 0.95;
-    m_jumpTable[6] = 0.75;
-    m_jumpTable[7] = 0.55;
-    m_jumpTable[8] = 0.35;
-    m_jumpTable[9] = 0.15;
 }
 
 //Destructor
@@ -82,17 +65,5 @@ bool InputManager::IsKeyDown(EKEY_CODE p_keyCode) const{
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
-}
-
-//Sets m_prevTime for the first time
-void InputManager::timeStamp(){
-    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
-}
-
-//Sets frame delta time of the last frame (in seconds) and prepares it for next update
-void InputManager::updateFrameDeltaTime(){
-    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
-    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
-    m_prevTime = m_nowTime;
 }
 
