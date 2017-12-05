@@ -88,7 +88,7 @@ void InputManager::playerInput(Character* p_player){
 
     //Exit
     if(IsKeyDown(KEY_ESCAPE))
-        EngineManager::instance()->dropDevice();
+        EngineManager::instance()->stop();
 
     //Jump    
     if(IsKeyDown(KEY_SPACE))

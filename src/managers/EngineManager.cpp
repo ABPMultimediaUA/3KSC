@@ -65,25 +65,26 @@ bool EngineManager::createWindow(){
     return true;
 }
 
-//Scene render function
-void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,0,150,136));
-    m_scene->drawAll();
-    m_vDriver->endScene();
+void EngineManager::createCamera(){
+    scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
+    if(cameraNode){
+        cameraNode->setPosition(core::vector3df(0,35,-100));
+        cameraNode->setTarget(core::vector3df(0,0,0));
+    }
 }
 
 //Returns whether the device is running or not
-bool EngineManager::deviceIsRunning(){
+bool EngineManager::running(){
     return m_device->run();
 }
 
 //Drops the device
-void EngineManager::dropDevice(){
+void EngineManager::stop(){
     m_device->drop();
 }
 
 //Creates a new node
-void EngineManager::createCubeNode(int p_id, float p_position[3]){
+void EngineManager::createCube(int p_id, float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
@@ -95,18 +96,17 @@ void EngineManager::createCubeNode(int p_id, float p_position[3]){
     }
 }
 
-void EngineManager::scaleNode(int p_id, float p_scale[3]){
+void EngineManager::scale(int p_id, float p_scale[3]){
     scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
 
     t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
 }
 
-void EngineManager::createCamera(){
-    scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
-    if(cameraNode){
-        cameraNode->setPosition(core::vector3df(0,35,-100));
-        cameraNode->setTarget(core::vector3df(0,0,0));
-    }
+//Scene render function
+void EngineManager::drawScene(){
+    m_vDriver->beginScene(true, true, video::SColor(255,0,150,136));
+    m_scene->drawAll();
+    m_vDriver->endScene();
 }
 
 void EngineManager::loadArena(){
