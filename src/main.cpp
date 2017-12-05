@@ -46,6 +46,7 @@ int main(){
         while (engineManager->running()){
             inputManager->updateFrameDeltaTime();
             inputManager->playerInput(player1);
+            inputManager->jump(player1);
 
             engineManager->drawScene();
         }

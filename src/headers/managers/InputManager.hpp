@@ -37,6 +37,10 @@ class InputManager : public irr::IEventReceiver{
     irr::f32        m_frameDeltaTime;
     irr::f32        m_moveSpeed;
     int             m_runningFactor;
+    int             m_jumpMaxTime;          // Control the time in which the character is in the air (in frames)
+    int             m_jumpCurrentTime;      // Control variable. Checks in which frame of the jump the character is in
+    bool            m_jumping;              // Controls if the jump is still going
+    float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
     
 
     public:
@@ -50,6 +54,7 @@ class InputManager : public irr::IEventReceiver{
     void timeStamp();
     void updateFrameDeltaTime();
     void playerInput(Character* p_player);
+    void jump(Character* p_player);
 };
 
 #endif

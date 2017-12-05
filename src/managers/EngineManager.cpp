@@ -96,6 +96,10 @@ void EngineManager::createCube(int p_id, float p_position[3]){
     }
 }
 
+void EngineManager::deleteCube(int p_id){
+    m_entityNodes.at(p_id)->remove();
+}
+
 void EngineManager::scale(int p_id, float p_scale[3]){
     scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
 
@@ -141,11 +145,14 @@ void EngineManager::drawObject(){
 
 }
 
-void EngineManager::moveEntity(Entity* p_entity, core::vector3df p_position){
-    m_entityNodes.at(p_entity->getId())->setPosition(p_position);
+void EngineManager::moveEntity(Entity* p_entity, float p_position[3]){
+    core::vector3df t_position;
+    t_position.X = (f32) p_position[0];
+    t_position.Y = (f32) p_position[1];
+    t_position.Z = (f32) p_position[2];
+    m_entityNodes.at(p_entity->getId())->setPosition(t_position);
 
-    float t_posicion[3] = {(float) p_position.X, (float) p_position.Y, (float) p_position.Z};
-    p_entity->moveTo(t_posicion);
+    p_entity->moveTo(p_position);
 }
 
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){

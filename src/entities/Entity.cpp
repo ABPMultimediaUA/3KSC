@@ -65,3 +65,7 @@ void Entity::moveZ(float p_variation){
 int Entity::getId(){
     return m_id;
 }
+
+float* Entity::getPosition(){
+    return m_position;
+}
