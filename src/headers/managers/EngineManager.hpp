@@ -61,7 +61,7 @@ public:
     void drawCharacter();
     void drawObject();
 
-    void moveEntity(Entity* p_entity, float p_position[3]);
+    void moveEntity(Entity* p_entity);
     irr::scene::ISceneNode* getEntityNode(int p_id);
     irr::IrrlichtDevice* getDevice();
 };

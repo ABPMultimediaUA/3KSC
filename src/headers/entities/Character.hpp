@@ -36,6 +36,7 @@ public:
     virtual void    ultimateAttack();
     void            lookLeft();
     void            lookRight();
+    void            playerInput();
     
 protected: 
 	char*   m_name;
@@ -44,6 +45,18 @@ protected:
     float   m_velocity;
     bool    m_orientation;
     float   m_atackPosition[3];
+
+    //Movement
+    unsigned int    m_prevTime;
+    unsigned int    m_nowTime;
+    float           m_frameDeltaTime;
+    float           m_moveSpeed;
+
+    int             m_runningFactor;
+    int             m_jumpMaxTime;          // Control the time in which the character is in the air (in frames)
+    int             m_jumpCurrentTime;      // Control variable. Checks in which frame of the jump the character is in
+    bool            m_jumping;              // Controls if the jump is still going
+    float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
 };
 
 #endif

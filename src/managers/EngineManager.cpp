@@ -145,14 +145,15 @@ void EngineManager::drawObject(){
 
 }
 
-void EngineManager::moveEntity(Entity* p_entity, float p_position[3]){
+void EngineManager::moveEntity(Entity* p_entity){
     core::vector3df t_position;
-    t_position.X = (f32) p_position[0];
-    t_position.Y = (f32) p_position[1];
-    t_position.Z = (f32) p_position[2];
+    float*          t_entityPosition = p_entity->getPosition();
+    t_position.X = (f32) t_entityPosition[0];
+    t_position.Y = (f32) t_entityPosition[1];
+    t_position.Z = (f32) t_entityPosition[2];
     m_entityNodes.at(p_entity->getId())->setPosition(t_position);
 
-    p_entity->moveTo(p_position);
+    p_entity->moveTo(t_entityPosition);
 }
 
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){

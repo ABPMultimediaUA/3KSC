@@ -36,7 +36,7 @@ int main(){
         float position[3] = {0, 0, 0};
         float scale[3] = {10, 0.5, 2};
 
-        Rawr* player1 = new Rawr(positionPlayer, "Player 1", 100, 30, 20, true);
+        Character* player1 = new Rawr(positionPlayer, "Player 1", 100, 30, 20, true);
         Arena* testArena = new Arena(position, scale);
         engineManager->createCamera();
 
@@ -45,8 +45,8 @@ int main(){
         //Game main loop
         while (engineManager->running()){
             inputManager->updateFrameDeltaTime();
-            inputManager->playerInput(player1);
-            inputManager->jump(player1);
+            player1->playerInput();
+            player1->jump();
 
             engineManager->drawScene();
         }

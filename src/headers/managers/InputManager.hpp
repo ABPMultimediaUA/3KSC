@@ -53,8 +53,7 @@ class InputManager : public irr::IEventReceiver{
 
     void timeStamp();
     void updateFrameDeltaTime();
-    void playerInput(Character* p_player);
-    void jump(Character* p_player);
+
 };
 
 #endif
