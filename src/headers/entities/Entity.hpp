@@ -37,6 +37,7 @@ public:
     void moveY(float p_variation);
     void moveZ(float p_variation);
     int getId();
+    float* getPosition();
 
 protected:
     static int m_entityCount;

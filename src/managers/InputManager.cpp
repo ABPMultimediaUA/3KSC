@@ -20,6 +20,7 @@
 
 #include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include <iostream> // to write in console
 using namespace irr;
 
 //#include <iostream>
@@ -45,6 +46,20 @@ InputManager::InputManager(){
 
     m_moveSpeed = 50.f;
     m_runningFactor = 1;
+
+    m_jumpCurrentTime = 0;
+    m_jumpMaxTime = 10;
+    m_jumping = false;
+    m_jumpTable[0] = 3.0f;
+    m_jumpTable[1] = 2.4f;
+    m_jumpTable[2] = 1.9f;
+    m_jumpTable[3] = 1.6f;
+    m_jumpTable[4] = 1.25f;
+    m_jumpTable[5] = 0.95;
+    m_jumpTable[6] = 0.75;
+    m_jumpTable[7] = 0.55;
+    m_jumpTable[8] = 0.35;
+    m_jumpTable[9] = 0.15;
 }
 
 //Destructor
@@ -88,11 +103,12 @@ void InputManager::playerInput(Character* p_player){
 
     //Exit
     if(IsKeyDown(KEY_ESCAPE))
-        EngineManager::instance()->dropDevice();
+        EngineManager::instance()->stop();
 
-    //Jump    
+    //Jump
+    // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
     if(IsKeyDown(KEY_SPACE))
-        t_nodePosition.Y += m_moveSpeed * 3 * m_frameDeltaTime;
+        m_jumping = true;     // Begin jump movement
 
     m_runningFactor = 1;
 
@@ -128,5 +144,31 @@ void InputManager::playerInput(Character* p_player){
         p_player->lookRight();
     }
 
-    EngineManager::instance()->moveEntity(p_player, t_nodePosition);
+    float t_position[3] = {(float) t_nodePosition.X, (float) t_nodePosition.Y, (float) t_nodePosition.Z};
+    EngineManager::instance()->moveEntity(p_player, t_position);
+}
+
+void InputManager::jump(Character* p_player){
+
+    // Start or continue jump movement
+    if(m_jumping){
+        if(m_jumpCurrentTime < m_jumpMaxTime){
+            //Get player position from node
+            //core::vector3df t_nodePosition = EngineManager::instance()->getEntityNode(p_player->getId())->getPosition();
+            // Stop gravity
+            p_player->moveY(m_jumpTable[m_jumpCurrentTime]);
+            EngineManager::instance()->moveEntity(p_player, p_player->getPosition());
+            //t_nodePosition.Y += m_jumpTable[m_jumpCurrentTime];     // Increase 'y' position
+            m_jumpCurrentTime++;
+            //EngineManager::instance()->moveEntity(p_player, p_player->getPosition());
+        }
+        else{                                                                       // Jump has ended. Starting to go down
+            // Activate gravity
+            // Check collision with the floor
+            // If there is collision
+            m_jumping = false;                                                          // We are on the floor. Reset jump
+            m_jumpCurrentTime = 0;
+        }
+    }
+    
 }

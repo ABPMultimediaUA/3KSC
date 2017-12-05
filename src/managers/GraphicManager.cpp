@@ -41,34 +41,6 @@ GraphicManager::GraphicManager(){
 //Destructor
 GraphicManager::~GraphicManager(){}
 
-bool GraphicManager::createWindow(){
-    return EngineManager::instance()->createWindow();
-}
-
-void GraphicManager::createCamera(){
-    EngineManager::instance()->createCamera();
-}
-
-void GraphicManager::createCube(int p_id, float p_position[3]){
-    EngineManager::instance()->createCubeNode(p_id, p_position);
-}
-
-void GraphicManager::scaleNode(int p_id, float p_scale[3]){
-    EngineManager::instance()->scaleNode(p_id, p_scale);
-}
-
-bool GraphicManager::running(){
-    return EngineManager::instance()->deviceIsRunning();
-}
-
-void GraphicManager::draw(){
-    EngineManager::instance()->drawScene();
-}
-
-void GraphicManager::stop(){
-    EngineManager::instance()->dropDevice();
-}
-
 //void GraphicManager::addSpriteSheet(Spritesheet* p_spriteSheet){
 //
 //}

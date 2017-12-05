@@ -28,30 +28,30 @@ int main(){
     //se convierte a nuestro formato y se le pasa a las Entidades mediante
     //GraphicManager
 
-    GraphicManager* graphicManager = GraphicManager::instance();
+    EngineManager* engineManager = EngineManager::instance();
     InputManager* inputManager = InputManager::instance();
-    PhysicsManager* physicsManager = PhysicsManager::instance();
 
-    if (graphicManager->createWindow()){  
+    if (engineManager->createWindow()){  
         float positionPlayer[3] = {0, 10, 0};
         float position[3] = {0, 0, 0};
         float scale[3] = {10, 0.5, 2};
 
         Rawr* player1 = new Rawr(positionPlayer, "Player 1", 100, 30, 20, true);
         Arena* testArena = new Arena(position, scale);
-        graphicManager->createCamera();
+        engineManager->createCamera();
 
         inputManager->timeStamp();
 
         //Game main loop
-        while (graphicManager->running()){
+        while (engineManager->running()){
             inputManager->updateFrameDeltaTime();
             inputManager->playerInput(player1);
+            inputManager->jump(player1);
 
-            graphicManager->draw();
+            engineManager->drawScene();
         }
 
-        graphicManager->stop();
+        engineManager->stop();
 
         return 0;
     }

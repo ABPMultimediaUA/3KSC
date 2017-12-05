@@ -41,14 +41,14 @@ public:
     ~EngineManager();
 
     bool createWindow();
-    void drawScene();
-    bool deviceIsRunning();
-    void dropDevice();
-
-    void createCubeNode(int p_id, float p_position[3]);
-    void scaleNode(int p_id, float p_scale[3]);
-
     void createCamera();
+    bool running();
+    void stop();
+
+    void createCube(int p_id, float p_position[3]);
+    void deleteCube(int p_id);
+    void scale(int p_id, float p_scale[3]);
+    void drawScene();
 
     void loadArena();
     void loadCharacters();
@@ -61,7 +61,7 @@ public:
     void drawCharacter();
     void drawObject();
 
-    void moveEntity(Entity* p_entity, irr::core::vector3df p_position);
+    void moveEntity(Entity* p_entity, float p_position[3]);
     irr::scene::ISceneNode* getEntityNode(int p_id);
     irr::IrrlichtDevice* getDevice();
 };

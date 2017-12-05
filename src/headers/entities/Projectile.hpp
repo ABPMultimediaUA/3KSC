@@ -20,22 +20,23 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef RAWR
-#define RAWR
+#ifndef PROJECTILE
+#define PROJECTILE
 
-#include "Character.hpp"
-#include "Projectile.hpp"
+#include "Entity.hpp"
 
-class Rawr: public Character{
+class Projectile: public Entity {
 public:
-	Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
-    ~Rawr();
-    void    jump();
-    void    basicAttack();
-    void    specialAttack(int p_index);
-    void    ultimateAttack();
+	        Projectile(float p_position[3], float p_angle);
+            ~Projectile();
+    bool    hit();
+    void    move();
 private: 
-    Projectile**    m_projectile;
+    float   m_initialPosition[3]; // [0] for x, [1] for y, [2] for z
+    float   m_angle;
+    float   m_velocity;
+    float   m_lifeTime;
+    int     m_damage;
 };
 
 #endif

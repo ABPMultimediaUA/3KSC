@@ -35,14 +35,6 @@ public:
     static GraphicManager* instance();
     GraphicManager();
     ~GraphicManager();
-
-    bool createWindow();
-    void createCamera();
-    void createCube(int p_id, float p_position[3]);
-    void scaleNode(int p_id, float p_scale[3]);
-    bool running();
-    void draw();
-    void stop();
     
     //void addSpriteSheet(Spritesheet* p_spritesheet);
     //void addSprite(Sprite* p_sprite);

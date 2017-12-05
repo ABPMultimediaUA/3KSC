@@ -21,7 +21,7 @@
 *********************************************************************************/
 
 #include "../headers/entities/Rawr.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../headers/managers/EngineManager.hpp"
 
 Rawr::Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
     
@@ -49,7 +49,8 @@ void Rawr::basicAttack(){
         //}
 
         // Destroy attack instance
-        delete t_attack;
+        //delete t_attack;
+        //EngineManager::instance()->deleteCube(t_attack->getId());
     }
     else{   // Looking left
         // Attack 20 units to the right
@@ -66,7 +67,8 @@ void Rawr::basicAttack(){
         //}
 
         // Destroy attack instance
-        delete t_attack;
+        //delete t_attack;
+        //EngineManager::instance()->deleteCube(t_attack->getId());
     }
 }
 

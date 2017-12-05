@@ -65,25 +65,26 @@ bool EngineManager::createWindow(){
     return true;
 }
 
-//Scene render function
-void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,0,150,136));
-    m_scene->drawAll();
-    m_vDriver->endScene();
+void EngineManager::createCamera(){
+    scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
+    if(cameraNode){
+        cameraNode->setPosition(core::vector3df(0,35,-100));
+        cameraNode->setTarget(core::vector3df(0,0,0));
+    }
 }
 
 //Returns whether the device is running or not
-bool EngineManager::deviceIsRunning(){
+bool EngineManager::running(){
     return m_device->run();
 }
 
 //Drops the device
-void EngineManager::dropDevice(){
+void EngineManager::stop(){
     m_device->drop();
 }
 
 //Creates a new node
-void EngineManager::createCubeNode(int p_id, float p_position[3]){
+void EngineManager::createCube(int p_id, float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
@@ -95,18 +96,21 @@ void EngineManager::createCubeNode(int p_id, float p_position[3]){
     }
 }
 
-void EngineManager::scaleNode(int p_id, float p_scale[3]){
+void EngineManager::deleteCube(int p_id){
+    m_entityNodes.at(p_id)->remove();
+}
+
+void EngineManager::scale(int p_id, float p_scale[3]){
     scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
 
     t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
 }
 
-void EngineManager::createCamera(){
-    scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
-    if(cameraNode){
-        cameraNode->setPosition(core::vector3df(0,35,-100));
-        cameraNode->setTarget(core::vector3df(0,0,0));
-    }
+//Scene render function
+void EngineManager::drawScene(){
+    m_vDriver->beginScene(true, true, video::SColor(255,0,150,136));
+    m_scene->drawAll();
+    m_vDriver->endScene();
 }
 
 void EngineManager::loadArena(){
@@ -141,11 +145,14 @@ void EngineManager::drawObject(){
 
 }
 
-void EngineManager::moveEntity(Entity* p_entity, core::vector3df p_position){
-    m_entityNodes.at(p_entity->getId())->setPosition(p_position);
+void EngineManager::moveEntity(Entity* p_entity, float p_position[3]){
+    core::vector3df t_position;
+    t_position.X = (f32) p_position[0];
+    t_position.Y = (f32) p_position[1];
+    t_position.Z = (f32) p_position[2];
+    m_entityNodes.at(p_entity->getId())->setPosition(t_position);
 
-    float t_posicion[3] = {(float) p_position.X, (float) p_position.Y, (float) p_position.Z};
-    p_entity->moveTo(t_posicion);
+    p_entity->moveTo(p_position);
 }
 
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){

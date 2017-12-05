@@ -20,22 +20,25 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef RAWR
-#define RAWR
+#include "../headers/entities/Projectile.hpp"
+#include "../headers/managers/EngineManager.hpp"
+#include <cstring> //For std::memcpy()
 
-#include "Character.hpp"
-#include "Projectile.hpp"
+Projectile::Projectile(float p_position[3], float p_angle):Entity(p_position){
+    std::memcpy(m_initialPosition, p_position, 3 * sizeof(float));
+    m_angle     = p_angle;
+    m_velocity  = 10;
+    m_lifeTime  = 100;
+    m_damage    = 30;
+}
 
-class Rawr: public Character{
-public:
-	Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
-    ~Rawr();
-    void    jump();
-    void    basicAttack();
-    void    specialAttack(int p_index);
-    void    ultimateAttack();
-private: 
-    Projectile**    m_projectile;
-};
+Projectile::~Projectile(){}
 
-#endif
+bool Projectile::hit(){
+    
+}
+
+//Moves projectile in the direction the angle tells
+void Projectile::move(){
+    
+}

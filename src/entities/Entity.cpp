@@ -21,7 +21,7 @@
 *********************************************************************************/
 
 #include "../headers/entities/Entity.hpp"
-#include "../headers/managers/GraphicManager.hpp"
+#include "../headers/managers/EngineManager.hpp"
 #include <cstring> //For std::memcpy()
 
 //Entity count initialization
@@ -30,17 +30,16 @@ int Entity::m_entityCount = 0;
 Entity::Entity(float p_position[3]){
     m_id = m_entityCount++;
 
-    GraphicManager* t_graphicManager = GraphicManager::instance();
-    t_graphicManager->createCube(m_id, p_position);
+    EngineManager::instance()->createCube(m_id, p_position);
     moveTo(p_position);
 }
 
 Entity::Entity(float p_position[3], float p_scale[3]){
     m_id = m_entityCount++;
 
-    GraphicManager* t_graphicManager = GraphicManager::instance();
-    t_graphicManager->createCube(m_id, p_position);
-    t_graphicManager->scaleNode(m_id, p_scale);
+    EngineManager* t_engineManager = EngineManager::instance();
+    t_engineManager->createCube(m_id, p_position);
+    t_engineManager->scale(m_id, p_scale);
     moveTo(p_position);
 }
 
@@ -65,4 +64,8 @@ void Entity::moveZ(float p_variation){
 
 int Entity::getId(){
     return m_id;
+}
+
+float* Entity::getPosition(){
+    return m_position;
 }
