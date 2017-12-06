@@ -39,15 +39,17 @@ public:
     void            lookLeft();
     void            lookRight();
     void            playerInput();
+    void            reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
 
 protected: 
     char*   m_name;
     int     m_life;
     int     m_damage;
     float   m_velocity;
-    bool    m_orientation;
     float   m_atackPosition[3];
-
+    bool    m_orientation;
+    bool    m_stunned;
+    bool    m_blocking;
     float   m_frameDeltaTime;               //For movement
     
     int             m_runningFactor;

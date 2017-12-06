@@ -33,6 +33,8 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
     m_damage                = p_damage;
     m_velocity              = p_velocity;
     m_orientation           = p_orientation;
+  m_stunned     = false;  
+  m_blocking    = false;    
 
     m_runningFactor         = 1;
 
@@ -63,6 +65,20 @@ void Character::jump(){}
 
 void Character::basicAttack(){}
 
+void Character::reciveAttack(int p_damage,bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
+    if(p_block && m_blocking && p_orientation == m_orientation)
+    {
+        //attack blocked
+        //use p_force
+    }else{
+        m_life -= p_damage;
+        //use p_force
+        if(m_life<1){
+            //die
+        }
+    }
+}
+
 void Character::specialAttack(int p_index){}
 
 void Character::ultimateAttack(){}
@@ -83,13 +99,15 @@ void Character::playerInput(){
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         EngineManager::instance()->stop();
 
-    //Jump
-    // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
-        m_jumping = true;     // Begin jump movement
-    }
+    if(!m_stunned)
+    {
+        //Jump
+        // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            m_jumping = true;     // Begin jump movement
+        }
 
-    m_runningFactor = 1;
+        m_runningFactor = 1;
 
     //Basic Attack
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)){
@@ -100,28 +118,35 @@ void Character::playerInput(){
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
         m_runningFactor = 2;
 
-    //Up
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-        moveY(m_velocity * m_frameDeltaTime * m_runningFactor);
-    }
+        //Up
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+            moveY(m_velocity * m_frameDeltaTime * m_runningFactor);
+        }
 
-    //Down
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-        moveY(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
-    }
+        //Down
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+            moveY(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
+        }
 
-    //Left
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-        moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
-        lookLeft();
-    }
+        //Left
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+            moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
+            lookLeft();
+        }
 
-    //Right
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-        moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
-        lookRight();
-    }
+        //Right
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+            moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
+            lookRight();
+        }
 
+        //Block
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::B)){
+            m_blocking = true;
+        }else{
+            m_blocking = false;
+        }
+    }
     jump();
     basicAttack();
 }
