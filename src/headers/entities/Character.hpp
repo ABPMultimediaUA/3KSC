@@ -23,6 +23,7 @@
 #ifndef CHARACTER
 #define CHARACTER
 
+#include <SFML/Window.hpp>
 #include "Entity.hpp"
 #include "Projectile.hpp"
 
@@ -38,9 +39,9 @@ public:
     void            lookLeft();
     void            lookRight();
     void            playerInput();
-    
+
 protected: 
-	char*   m_name;
+    char*   m_name;
     int     m_life;
     int     m_damage;
     float   m_velocity;
@@ -66,6 +67,8 @@ protected:
     Projectile**    m_projectiles;
     int             m_maxProjectiles;
     int             m_currentProjectiles;
+
+    sf::Event       m_event;
 };
 
 #endif
