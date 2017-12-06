@@ -26,8 +26,6 @@
 #include "../headers/managers/EngineManager.hpp"
 
 //#include <iostream>
-#include <irrlicht.h>
-using namespace irr;
 
 Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation):Entity(p_position){
   m_name =         p_name;
@@ -51,6 +49,7 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
   m_jumpTable[7] = 0.55;
   m_jumpTable[8] = 0.35;
   m_jumpTable[9] = 0.15;
+
 }
 
 Character::~Character(){}
@@ -76,44 +75,44 @@ void Character::playerInput(){
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
     //Exit
-    if(t_inputManager->IsKeyDown(KEY_ESCAPE))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         EngineManager::instance()->stop();
 
     //Jump
     // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-    if(t_inputManager->IsKeyDown(KEY_SPACE)){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
         m_jumping = true;     // Begin jump movement
     }
 
     m_runningFactor = 1;
 
     //Basic Attack
-    if(t_inputManager->IsKeyDown(KEY_KEY_E)){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)){
         basicAttack();
     }
     
     //Sprint
-    if(t_inputManager->IsKeyDown(KEY_LSHIFT) || t_inputManager->IsKeyDown(KEY_RSHIFT))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
         m_runningFactor = 2;
 
     //Up
-    if(t_inputManager->IsKeyDown(KEY_KEY_W) || t_inputManager->IsKeyDown(KEY_UP)){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
         moveY(m_velocity * m_frameDeltaTime * m_runningFactor);
     }
 
     //Down
-    if(t_inputManager->IsKeyDown(KEY_KEY_S) || t_inputManager->IsKeyDown(KEY_DOWN)){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
         moveY(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     }
 
     //Left
-    if(t_inputManager->IsKeyDown(KEY_KEY_A) || t_inputManager->IsKeyDown(KEY_LEFT)){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
         moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
         lookLeft();
     }
 
     //Right
-    if(t_inputManager->IsKeyDown(KEY_KEY_D) || t_inputManager->IsKeyDown(KEY_RIGHT)){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
         moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
         lookRight();
     }
