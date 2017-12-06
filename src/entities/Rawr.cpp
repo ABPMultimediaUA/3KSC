@@ -30,7 +30,20 @@ Rawr::Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_
 Rawr::~Rawr(){}
 
 void Rawr::jump(){
-
+    // Start or continue jump movement
+    if(m_jumping){
+        if(m_jumpCurrentTime < m_jumpMaxTime){
+            moveY(m_jumpTable[m_jumpCurrentTime++]);
+            EngineManager::instance()->moveEntity(this);
+        }
+        else{                                                                       // Jump has ended. Starting to go down
+            // Activate gravity
+            // Check collision with the floor
+            // If there is collision
+            m_jumping = false;                                                          // We are on the floor. Reset jump
+            m_jumpCurrentTime = 0;
+        }
+    }
 }
 
 void Rawr::basicAttack(){
