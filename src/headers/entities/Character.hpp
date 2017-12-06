@@ -24,6 +24,7 @@
 #define CHARACTER
 
 #include "Entity.hpp"
+#include "Projectile.hpp"
 
 class Character : public Entity{
 public:
@@ -55,6 +56,16 @@ protected:
     int             m_jumpCurrentTime;      // Control variable. Checks in which frame of the jump the character is in
     int             m_jumpMaxTime;          // Control the time in which the character is in the air (in frames)
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
+
+    bool m_basicAttack;
+    bool m_specialAttackLeft;
+    bool m_specialAttackRight;
+    bool m_specialAttackUp;
+    bool m_ultimateAttack;
+
+    Projectile**    m_projectiles;
+    int             m_maxProjectiles;
+    int             m_currentProjectiles;
 };
 
 #endif

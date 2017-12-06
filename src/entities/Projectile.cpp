@@ -24,12 +24,12 @@
 #include "../headers/managers/EngineManager.hpp"
 #include <cstring> //For std::memcpy()
 
-Projectile::Projectile(float p_position[3], float p_angle):Entity(p_position){
+Projectile::Projectile(float p_position[3], bool p_orientation, float p_velocity, float p_distanceLeft, int p_damage):Entity(p_position){
     std::memcpy(m_initialPosition, p_position, 3 * sizeof(float));
-    m_angle     = p_angle;
-    m_velocity  = 10;
-    m_lifeTime  = 100;
-    m_damage    = 30;
+    m_orientation   = p_orientation;
+    m_velocity      = p_velocity;
+    m_distanceLeft  = p_distanceLeft;
+    m_damage        = p_damage;
 }
 
 Projectile::~Projectile(){}
@@ -38,7 +38,28 @@ bool Projectile::hit(){
     
 }
 
-//Moves projectile in the direction the angle tells
-void Projectile::move(){
-    
+//Moves projectile right or left. Returns false at end of way.
+bool Projectile::move(){
+    //Go on
+    if (m_distanceLeft > 0){
+        //Right
+        if (m_orientation){
+            moveX(m_velocity);
+        }
+
+        //Left
+        else{
+            moveX(-m_velocity);
+        }
+
+        m_distanceLeft -= m_velocity;
+    }
+
+    //End of the way, my friend
+    else{
+        EngineManager::instance()->deleteEntity(this->getId());
+        return false;
+    }
+
+    return true;
 }

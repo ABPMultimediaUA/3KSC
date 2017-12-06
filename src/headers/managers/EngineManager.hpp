@@ -52,8 +52,8 @@ public:
     bool running();
     void stop();
 
-    void createCube(int p_id, float p_position[3]);
-    void deleteCube(int p_id);
+    void createEntity(int p_id, float p_position[3]);
+    void deleteEntity(int p_id);
     void scale(int p_id, float p_scale[3]);
     void drawScene();
 

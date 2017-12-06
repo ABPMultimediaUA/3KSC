@@ -96,7 +96,7 @@ void EngineManager::stop(){
 }
 
 //Creates a new node
-void EngineManager::createCube(int p_id, float p_position[3]){
+void EngineManager::createEntity(int p_id, float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
@@ -108,7 +108,7 @@ void EngineManager::createCube(int p_id, float p_position[3]){
     }
 }
 
-void EngineManager::deleteCube(int p_id){
+void EngineManager::deleteEntity(int p_id){
     m_entityNodes.at(p_id)->remove();
 }
 
@@ -164,8 +164,6 @@ void EngineManager::moveEntity(Entity* p_entity){
     t_position.Y = (f32) t_entityPosition[1];
     t_position.Z = (f32) t_entityPosition[2];
     m_entityNodes.at(p_entity->getId())->setPosition(t_position);
-
-    p_entity->moveTo(t_entityPosition);
 }
 
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){

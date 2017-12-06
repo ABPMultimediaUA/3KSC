@@ -27,15 +27,15 @@
 
 class Projectile: public Entity {
 public:
-	        Projectile(float p_position[3], float p_angle);
+	        Projectile(float p_position[3], bool p_orientation, float p_velocity, float p_distanceLeft, int p_damage);
             ~Projectile();
     bool    hit();
-    void    move();
+    bool    move();
 private: 
     float   m_initialPosition[3]; // [0] for x, [1] for y, [2] for z
-    float   m_angle;
+    bool    m_orientation;
     float   m_velocity;
-    float   m_lifeTime;
+    float   m_distanceLeft;
     int     m_damage;
 };
 

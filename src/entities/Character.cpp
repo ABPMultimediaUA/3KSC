@@ -30,27 +30,33 @@
 using namespace irr;
 
 Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation):Entity(p_position){
-  m_name =         p_name;
-  m_life =         p_life;
-  m_damage =       p_damage;
-  m_velocity =     p_velocity;
-  m_orientation =  p_orientation;
+    m_name                  = p_name;
+    m_life                  = p_life;
+    m_damage                = p_damage;
+    m_velocity              = p_velocity;
+    m_orientation           = p_orientation;
 
-  m_runningFactor = 1;
+    m_runningFactor         = 1;
 
-  m_jumping = false;
-  m_jumpCurrentTime = 0;
-  m_jumpMaxTime = 10;
-  m_jumpTable[0] = 3.0f;
-  m_jumpTable[1] = 2.4f;
-  m_jumpTable[2] = 1.9f;
-  m_jumpTable[3] = 1.6f;
-  m_jumpTable[4] = 1.25f;
-  m_jumpTable[5] = 0.95;
-  m_jumpTable[6] = 0.75;
-  m_jumpTable[7] = 0.55;
-  m_jumpTable[8] = 0.35;
-  m_jumpTable[9] = 0.15;
+    m_jumping               = false;
+    m_jumpCurrentTime       = 0;
+    m_jumpMaxTime           = 10;
+    m_jumpTable[0]          = 3.0f;
+    m_jumpTable[1]          = 2.4f;
+    m_jumpTable[2]          = 1.9f;
+    m_jumpTable[3]          = 1.6f;
+    m_jumpTable[4]          = 1.25f;
+    m_jumpTable[5]          = 0.95;
+    m_jumpTable[6]          = 0.75;
+    m_jumpTable[7]          = 0.55;
+    m_jumpTable[8]          = 0.35;
+    m_jumpTable[9]          = 0.15;
+
+    m_basicAttack           = false;
+    m_specialAttackLeft     = false;
+    m_specialAttackRight    = false;
+    m_specialAttackUp       = false;
+    m_ultimateAttack        = false;
 }
 
 Character::~Character(){}
@@ -89,7 +95,7 @@ void Character::playerInput(){
 
     //Basic Attack
     if(t_inputManager->IsKeyDown(KEY_KEY_E)){
-        basicAttack();
+        m_basicAttack = true;
     }
     
     //Sprint
@@ -119,6 +125,6 @@ void Character::playerInput(){
     }
 
     jump();
-    EngineManager::instance()->moveEntity(this);
+    basicAttack();
 }
 

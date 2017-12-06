@@ -30,7 +30,7 @@ int Entity::m_entityCount = 0;
 Entity::Entity(float p_position[3]){
     m_id = m_entityCount++;
 
-    EngineManager::instance()->createCube(m_id, p_position);
+    EngineManager::instance()->createEntity(m_id, p_position);
     moveTo(p_position);
 }
 
@@ -38,7 +38,7 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     m_id = m_entityCount++;
 
     EngineManager* t_engineManager = EngineManager::instance();
-    t_engineManager->createCube(m_id, p_position);
+    t_engineManager->createEntity(m_id, p_position);
     t_engineManager->scale(m_id, p_scale);
     moveTo(p_position);
 }
@@ -47,18 +47,22 @@ Entity::~Entity(){}
 
 void Entity::moveTo(float p_position[3]){
     std::memcpy(m_position,  p_position, 3 * sizeof(float));
+    EngineManager::instance()->moveEntity(this);
 }
 
 void Entity::moveX(float p_variation){
     m_position[0] += p_variation;
+    EngineManager::instance()->moveEntity(this);
 }
 
 void Entity::moveY(float p_variation){
     m_position[1] += p_variation;
+    EngineManager::instance()->moveEntity(this);
 }
 
 void Entity::moveZ(float p_variation){
     m_position[2] += p_variation;
+    EngineManager::instance()->moveEntity(this);
 }
 
 
