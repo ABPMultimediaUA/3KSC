@@ -24,7 +24,6 @@
 #define RAWR
 
 #include "Character.hpp"
-#include "Projectile.hpp"
 
 class Rawr: public Character{
 public:
@@ -34,8 +33,8 @@ public:
     void    basicAttack();
     void    specialAttack(int p_index);
     void    ultimateAttack();
-private: 
-    Projectile**    m_projectile;
+    
+private:
 };
 
 #endif

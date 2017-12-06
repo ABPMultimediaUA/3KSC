@@ -24,51 +24,56 @@
 #include "../headers/managers/EngineManager.hpp"
 
 Rawr::Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
-    
+    m_projectiles           = new Projectile*[5];
+    m_maxProjectiles        = 1;
+    m_currentProjectiles    = 0;
 }
 
 Rawr::~Rawr(){}
 
 void Rawr::jump(){
-
+    // Start or continue jump movement
+    if(m_jumping){
+        if(m_jumpCurrentTime < m_jumpMaxTime){
+            moveY(m_jumpTable[m_jumpCurrentTime++]);
+        }
+        else{                                                                       // Jump has ended. Starting to go down
+            // Activate gravity
+            // Check collision with the floor
+            // If there is collision
+            m_jumping = false;                                                          // We are on the floor. Reset jump
+            m_jumpCurrentTime = 0;
+        }
+    }
 }
 
 void Rawr::basicAttack(){
-    if(m_orientation){   // Looking right
-        // Attack 20 units to the right
-        m_atackPosition[0] = m_position[0] + 20;
-        m_atackPosition[1] = m_position[1];
-        m_atackPosition[2] = 0;
+    if (m_basicAttack){
+        if (m_currentProjectiles < m_maxProjectiles){
+            if(m_orientation){   // Looking right
+                // Attack 20 units to the right
+                m_atackPosition[0] = m_position[0] + 20;
+                m_atackPosition[1] = m_position[1];
+                m_atackPosition[2] = 0;
+            }
+            else{   // Looking left
+                // Attack 20 units to the right
+                m_atackPosition[0] = m_position[0] - 20;
+                m_atackPosition[1] = m_position[1];
+                m_atackPosition[2] = 0;
+            }
 
-        // Create attack instance
-        Rawr* t_attack = new Rawr(m_atackPosition, "Attack", 100, 30, 20, true);
+            //Create attack and increase projectile count
+            m_projectiles[m_currentProjectiles++] = new Projectile(m_atackPosition, m_orientation, 3, 60, 30);
+        }
 
-        // Check collision
-        //if(physicsManager->instance()->checkCollision(m_node, m_node)){                  // Collision comprobation crashes when getting bounding box
-        //  do damage
-        //}
-
-        // Destroy attack instance
-        //delete t_attack;
-        //EngineManager::instance()->deleteCube(t_attack->getId());
-    }
-    else{   // Looking left
-        // Attack 20 units to the right
-        m_atackPosition[0] = m_position[0] - 20;
-        m_atackPosition[1] = m_position[1];
-        m_atackPosition[2] = 0;
-
-        // Create attack instance
-        Rawr* t_attack = new Rawr(m_atackPosition, "Attack", 100, 30, 20, false);
-
-        // Check collision
-        //if(physicsManager->instance()->checkCollision(m_node, m_node)){                  // Collision comprobation crashes when getting bounding box
-        //  do damage
-        //}
-
-        // Destroy attack instance
-        //delete t_attack;
-        //EngineManager::instance()->deleteCube(t_attack->getId());
+        //Move projectiles, and delete them
+        for (int i = 0; i < m_currentProjectiles; i++){
+            if (m_projectiles[i]->move() == false){
+                m_currentProjectiles--;
+                m_basicAttack = false;
+            }
+        }
     }
 }
 

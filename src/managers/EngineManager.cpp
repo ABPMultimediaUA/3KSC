@@ -41,6 +41,18 @@ EngineManager::EngineManager(){
 //Destructor
 EngineManager::~EngineManager(){}
 
+//Sets m_prevTime for the first time
+void EngineManager::timeStamp(){
+    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+}
+
+//Sets frame delta time of the last frame (in seconds) and prepares it for next update
+float EngineManager::updateFrameDeltaTime(){
+    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
+    m_prevTime = m_nowTime;
+}
+
 //Creates the game window
 bool EngineManager::createWindow(){
     //Create a null device to get the desktop resolution
@@ -84,7 +96,7 @@ void EngineManager::stop(){
 }
 
 //Creates a new node
-void EngineManager::createCube(int p_id, float p_position[3]){
+void EngineManager::createEntity(int p_id, float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
@@ -96,7 +108,7 @@ void EngineManager::createCube(int p_id, float p_position[3]){
     }
 }
 
-void EngineManager::deleteCube(int p_id){
+void EngineManager::deleteEntity(int p_id){
     m_entityNodes.at(p_id)->remove();
 }
 
@@ -145,14 +157,13 @@ void EngineManager::drawObject(){
 
 }
 
-void EngineManager::moveEntity(Entity* p_entity, float p_position[3]){
+void EngineManager::moveEntity(Entity* p_entity){
     core::vector3df t_position;
-    t_position.X = (f32) p_position[0];
-    t_position.Y = (f32) p_position[1];
-    t_position.Z = (f32) p_position[2];
+    float*          t_entityPosition = p_entity->getPosition();
+    t_position.X = (f32) t_entityPosition[0];
+    t_position.Y = (f32) t_entityPosition[1];
+    t_position.Z = (f32) t_entityPosition[2];
     m_entityNodes.at(p_entity->getId())->setPosition(t_position);
-
-    p_entity->moveTo(p_position);
 }
 
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){
@@ -161,4 +172,8 @@ scene::ISceneNode* EngineManager::getEntityNode(int p_id){
 
 IrrlichtDevice* EngineManager::getDevice(){
     return m_device;
+}
+
+float EngineManager::getFrameDeltaTime(){
+    return (float) m_frameDeltaTime;
 }
