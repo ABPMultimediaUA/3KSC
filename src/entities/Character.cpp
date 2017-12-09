@@ -33,8 +33,8 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
     m_damage                = p_damage;
     m_velocity              = p_velocity;
     m_orientation           = p_orientation;
-  m_stunned     = false;  
-  m_blocking    = false;    
+    m_stunned     = false;  
+    m_blocking    = false;    
 
     m_runningFactor         = 1;
 
@@ -89,6 +89,10 @@ void Character::lookLeft(){
 
 void Character::lookRight(){
     m_orientation = true;
+}
+
+bool Character::isJumping(){
+    return m_jumping;
 }
 
 void Character::playerInput(){

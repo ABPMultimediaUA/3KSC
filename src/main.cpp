@@ -20,8 +20,8 @@
 *********************************************************************************
 *********************************************************************************/
 
+//Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
-#include <Box2D.h>
 
 int main(){
 
@@ -31,6 +31,7 @@ int main(){
 
     EngineManager* engineManager = EngineManager::instance();
     InputManager* inputManager = InputManager::instance();
+    PhysicsManager* physicsManager = PhysicsManager::instance();
 
     if (engineManager->createWindow()){  
         float positionPlayer[3] = {0, 10, 0};
@@ -46,8 +47,12 @@ int main(){
         //Game main loop
         while (engineManager->running()){
             engineManager->updateFrameDeltaTime();
+
+            physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
             
             player1->playerInput();
+            player1->updatePosition(player1->getBody()->GetPosition().y, player1->isJumping());
+            std::cout << "(" << player1->getBody()->GetPosition().x << "," << player1->getBody()->GetPosition().y << ")" << std::endl;
 
             engineManager->drawScene();
         }

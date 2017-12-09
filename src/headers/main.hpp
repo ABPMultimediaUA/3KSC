@@ -26,6 +26,7 @@
 #include <iostream>
 #include "managers/EngineManager.hpp"
 #include "managers/InputManager.hpp"
+#include "managers/PhysicsManager.hpp"
 #include "entities/Rawr.hpp"
 #include "entities/Arena.hpp"
 
