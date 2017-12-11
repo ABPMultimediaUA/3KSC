@@ -23,23 +23,36 @@
 
 #include "../entities/Entity.hpp"
 #include <iostream>
-#include <irrlicht.h>
-
+#include <Box2D.h>
 
 class PhysicsManager{
     private:
     static PhysicsManager* m_instance;
     Entity** m_physicBodies;
-    float m_gravity;
+
+
+    b2AABB  m_worldAABB;
+    b2Vec2  m_gravity;
+    bool    m_doSleep;
+    
+    float   m_timeStep;
+    int     m_iterations;
+
 
     public:
     static PhysicsManager* instance();
     PhysicsManager();
     ~PhysicsManager();
-    bool checkCollision(irr::scene::ISceneNode* one, irr::scene::ISceneNode* two);
     void addForce();
     void removeForce();
     void updateGravity();
+
+    b2World* m_world;
+    b2World* getWorld();
+
+    float getTimeStep();
+    int getIterations();
+
 };
 
 #endif

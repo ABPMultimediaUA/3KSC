@@ -19,7 +19,7 @@
 */
 
 #include "../headers/managers/PhysicsManager.hpp"
-using namespace irr;
+
 
 //Instance initialization
 PhysicsManager* PhysicsManager::m_instance = 0;
@@ -34,26 +34,37 @@ PhysicsManager* PhysicsManager::instance(){
 
 //Constructor
 PhysicsManager::PhysicsManager(){
-    this->m_physicBodies = 0;
-    this->m_gravity;
+    m_worldAABB = b2AABB();
+    b2Vec2 t_upperBound(100.0f, 100.0f);
+    b2Vec2 t_lowerBound(-100.0f, -100.0f);
+    m_worldAABB.upperBound = t_upperBound;
+    m_worldAABB.lowerBound = t_lowerBound;
+
+    m_gravity = b2Vec2(0.0f, -10.0f);
+    
+    m_doSleep = true;
+
+    m_world = new b2World(m_worldAABB, m_gravity, m_doSleep);
+    //std::cout << "Es validoo? " << m_world->GetPairCount() << std::endl;
+
+    m_timeStep = 1.0 / 60.0;
+    m_iterations = 10;
+}
+
+b2World* PhysicsManager::getWorld(){
+    return m_world;
+}
+
+float PhysicsManager::getTimeStep(){
+    return m_timeStep;
+}
+
+int PhysicsManager::getIterations(){
+    return m_iterations;
 }
 
 //Destructor
 PhysicsManager::~PhysicsManager(){}
-
-//Checks if two entities have collided
-bool PhysicsManager::checkCollision(scene::ISceneNode* one, scene::ISceneNode* two){
-    core::aabbox3d<f32> b1, b2;
-
-    // CRASHES HERE
-    b1 = one->getBoundingBox();
-    b2 = two->getBoundingBox();
-
-    std::cout<<"If it gets to this point then it did not crash"<<std::endl;
-    //one->getRelativeTransformation().transformBoxEx(b1);
-    //two->getRelativeTransformation().transformBoxEx(b2);
-    return b1.intersectsWithBox(b2);
-}
 
 //Adds a force to an entity
 void PhysicsManager::addForce(){

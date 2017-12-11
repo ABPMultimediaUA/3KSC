@@ -40,6 +40,7 @@ public:
     void            lookRight();
     void            playerInput();
     void            reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
+    bool            isJumping();
 
 protected: 
     char*   m_name;
@@ -70,7 +71,6 @@ protected:
     int             m_maxProjectiles;
     int             m_currentProjectiles;
 
-    sf::Event       m_event;
 };
 
 #endif
