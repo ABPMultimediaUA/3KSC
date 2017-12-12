@@ -47,7 +47,7 @@ PhysicsManager::PhysicsManager(){
     m_world = new b2World(m_worldAABB, m_gravity, m_doSleep);
     //std::cout << "Es validoo? " << m_world->GetPairCount() << std::endl;
 
-    m_timeStep = 1.0 / 60.0;
+    m_timeStep = 3.0 / 60.0;
     m_iterations = 10;
 }
 

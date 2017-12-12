@@ -52,7 +52,7 @@ int main(){
             
             player1->playerInput();
             player1->updatePosition(player1->getBody()->GetPosition().y, player1->isJumping());
-            std::cout << "(" << player1->getBody()->GetPosition().x << "," << player1->getBody()->GetPosition().y << ")" << std::endl;
+            //std::cout << "(" << player1->getBody()->GetPosition().x << "," << player1->getBody()->GetPosition().y << ")" << std::endl;
 
             engineManager->drawScene();
         }

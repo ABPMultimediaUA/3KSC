@@ -85,20 +85,18 @@ Entity::Entity(float p_position[3], float p_scale[3]){
 
 Entity::~Entity(){}
 
-void Entity::updatePosition(float posY, bool isJump){
+void Entity::updatePosition(float p_posY, bool p_jumping){
     //Update physics position X
     //std::cout << m_position[0] << std::endl;
-
-
-    if(isJump){
-        this->m_body->PutToSleep();
+    if(p_jumping){
+        m_body->PutToSleep();
     }
     else{
-        this->m_body->WakeUp();
-        m_position[1] = posY;
+        m_body->WakeUp();
+        m_position[1] = p_posY;
     }
     b2Vec2 t_vec(m_position[0], m_position[1]);
-    this->m_body->SetXForm(t_vec, 0);
+    m_body->SetXForm(t_vec, 0);
 
 
     //m_debugDraw = new b2DebugDraw();
@@ -117,19 +115,19 @@ void Entity::moveTo(float p_position[3]){
 void Entity::moveX(float p_variation){
     m_lastPosition[0] = m_position[0];
     m_position[0] += p_variation;
-    //EngineManager::instance()->moveEntity(this);
+    EngineManager::instance()->moveEntity(this);
 }
 
 void Entity::moveY(float p_variation){
     m_lastPosition[1] = m_position[1];
     m_position[1] += p_variation;
-    //EngineManager::instance()->moveEntity(this);
+    EngineManager::instance()->moveEntity(this);
 }
 
 void Entity::moveZ(float p_variation){
     m_lastPosition[2] = m_position[2];
     m_position[2] += p_variation;
-    //EngineManager::instance()->moveEntity(this);
+    EngineManager::instance()->moveEntity(this);
 }
 
 
