@@ -41,6 +41,7 @@ int main(){
         Character* player1 = new Rawr(positionPlayer, "Player 1", 100, 30, 50.f, true);
         Arena* testArena = new Arena(position, scale);
         engineManager->createCamera();
+        engineManager->loadArena();
 
         engineManager->timeStamp();
 
