@@ -115,6 +115,15 @@ void EngineManager::drawScene(){
 
 void EngineManager::loadArena(){
 
+    scene::IAnimatedMesh* t_map = m_scene->getMesh("assets/models/estadio.obj");
+    scene::ISceneNode* t_node = 0;
+
+    if (t_map){
+        t_node = m_scene->addOctreeSceneNode(t_map->getMesh(0), 0, -1, 1024);
+        t_node->setPosition(core::vector3df(0,0,0));
+        t_node->setMaterialFlag(video::EMF_LIGHTING, false);
+        t_node->setScale(core::vector3df(8, 8, 8));
+    }
 }
 
 void EngineManager::loadCharacters(){
