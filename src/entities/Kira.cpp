@@ -20,21 +20,21 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Rawr.hpp"
+#include "../headers/entities/Kira.hpp"
 
-Rawr::Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
+Kira::Kira(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
     m_projectiles           = new Projectile*[5];
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
 }
 
-Rawr::~Rawr(){}
+Kira::~Kira(){}
 
-void Rawr::jump(){
+void Kira::jump(){
     Character::jump();
 }
 
-void Rawr::basicAttack(){
+void Kira::basicAttack(){
     if (m_basicAttack){
 
         //PENDING IMPLEMENTATION
@@ -43,7 +43,7 @@ void Rawr::basicAttack(){
     }
 }
 
-void Rawr::specialAttackUp(){
+void Kira::specialAttackUp(){
     if (m_specialAttackUp){
 
         //PENDING IMPLEMENTATION
@@ -52,7 +52,7 @@ void Rawr::specialAttackUp(){
     }
 }
 
-void Rawr::specialAttackDown(){
+void Kira::specialAttackDown(){
     if (m_specialAttackDown){
 
         //PENDING IMPLEMENTATION
@@ -61,38 +61,17 @@ void Rawr::specialAttackDown(){
     }
 }
 
-void Rawr::specialAttackSide(){
+void Kira::specialAttackSide(){
     if (m_specialAttackSide){
-        if (m_currentProjectiles < m_maxProjectiles){
-            if(m_orientation){   // Looking right
-                // Attack 20 units to the right
-                m_atackPosition[0] = m_position[0] + 20;
-                m_atackPosition[1] = m_position[1];
-                m_atackPosition[2] = 0;
-            }
-            else{   // Looking left
-                // Attack 20 units to the right
-                m_atackPosition[0] = m_position[0] - 20;
-                m_atackPosition[1] = m_position[1];
-                m_atackPosition[2] = 0;
-            }
-
-            //Create attack and increase projectile count
-            m_projectiles[m_currentProjectiles++] = new Projectile(m_atackPosition, m_orientation, 3, 60, 30);
-        }
-
-        //Move projectiles, and delete them
-        for (int i = 0; i < m_currentProjectiles; i++){
-            if (m_projectiles[i]->move() == false){
-                m_currentProjectiles--;
-                m_specialAttackSide = false;
-            }
-        }
+    
+        //PENDING IMPLEMENTATION
+        
+        m_specialAttackSide = false;
     }
 }
 
 
-void Rawr::ultimateAttack(){
+void Kira::ultimateAttack(){
     if (m_ultimateAttack){
 
         //PENDING IMPLEMENTATION

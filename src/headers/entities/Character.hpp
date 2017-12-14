@@ -23,7 +23,6 @@
 #ifndef CHARACTER
 #define CHARACTER
 
-#include <SFML/Window.hpp>
 #include "Entity.hpp"
 #include "Projectile.hpp"
 
@@ -32,15 +31,18 @@ public:
     Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
     ~Character();
 	
-    virtual void    jump();
-	virtual void    basicAttack();
-    virtual void    specialAttack(int p_index);
-    virtual void    ultimateAttack();
     void            lookLeft();
     void            lookRight();
     void            playerInput();
     void            reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
     bool            isJumping();
+
+    virtual void    jump();
+	virtual void    basicAttack();
+    virtual void    specialAttackUp();
+    virtual void    specialAttackDown();
+    virtual void    specialAttackSide();
+    virtual void    ultimateAttack();
 
 protected: 
     char*   m_name;
@@ -62,9 +64,9 @@ protected:
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
 
     bool m_basicAttack;
-    bool m_specialAttackLeft;
-    bool m_specialAttackRight;
     bool m_specialAttackUp;
+    bool m_specialAttackDown;
+    bool m_specialAttackSide;
     bool m_ultimateAttack;
 
     Projectile**    m_projectiles;

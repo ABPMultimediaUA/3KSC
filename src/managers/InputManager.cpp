@@ -20,8 +20,8 @@
 
 #include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include <SFML/Window.hpp>
 #include <iostream> // to write in console
-using namespace irr;
 
 //#include <iostream>
 
@@ -41,29 +41,18 @@ InputManager* InputManager::instance(){
 InputManager::InputManager(){
     m_bindings = 0;
     
-    for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
-        m_keyIsDown[i] = false;
+//    for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
+//        m_keyIsDown[i] = false;
 }
 
 //Destructor
 InputManager::~InputManager(){}
-
-
-//Detects events and acts if its a keyboard event
-bool InputManager::OnEvent(const SEvent& p_event){
-    if (p_event.EventType == EET_KEY_INPUT_EVENT)
-        m_keyIsDown[p_event.KeyInput.Key] = p_event.KeyInput.PressedDown;
-
-    return false;
-}
-
-// Check whether a key is being held down
-bool InputManager::IsKeyDown(EKEY_CODE p_keyCode) const{
-    return m_keyIsDown[p_keyCode];
-}
 
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
 }
 
+bool InputManager::isKeyPressed(int p_key){
+    
+}
