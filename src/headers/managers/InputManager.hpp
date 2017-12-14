@@ -22,11 +22,13 @@
 #define INPUT_MANAGER
 
 #include "../entities/Character.hpp"
+#include <SFML/Window/Keyboard.hpp>
 
 class InputManager{
     private:
         static InputManager* m_instance;
         int** m_bindings;   
+        sf::Keyboard::Key m_keys[101];
 
     public:
         static InputManager* instance();
