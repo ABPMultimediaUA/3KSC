@@ -20,15 +20,15 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef RAWR
-#define RAWR
+#ifndef PLUP
+#define PLUP
 
 #include "Character.hpp"
 
-class Rawr: public Character{
+class Plup: public Character {
 public:
-	Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
-    ~Rawr();
+	Plup(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
+    ~Plup();
     void    jump();
     void    basicAttack();
     void    specialAttackUp();

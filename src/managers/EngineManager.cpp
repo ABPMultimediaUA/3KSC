@@ -41,6 +41,9 @@ EngineManager::EngineManager(){
 //Destructor
 EngineManager::~EngineManager(){}
 
+//Irrlicht events
+bool EngineManager::OnEvent(const SEvent& p_event){}
+
 //Sets m_prevTime for the first time
 void EngineManager::timeStamp(){
     m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
@@ -62,7 +65,7 @@ bool EngineManager::createWindow(){
 
     //Use the desktop resolution to create a real device
     //IrrlichtDevice* t_device = createDevice(video::EDT_OPENGL, t_desktopResolution, 16, true, false, false, &inputs);
-    m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, InputManager::instance());
+    m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, this);
 
     //0 usually means "success", but with pointers, it's a null pointer.
     if(!m_device)

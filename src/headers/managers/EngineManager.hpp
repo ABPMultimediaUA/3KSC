@@ -26,7 +26,7 @@
 #include <iostream>
 #include "../entities/Entity.hpp"
 
-class EngineManager{
+class EngineManager : public irr::IEventReceiver{
 private:
     static EngineManager* m_instance;
 
@@ -44,6 +44,7 @@ public:
     EngineManager();
     ~EngineManager();
 
+    virtual bool OnEvent(const irr::SEvent& p_event); 
     void timeStamp();
     float updateFrameDeltaTime();
 

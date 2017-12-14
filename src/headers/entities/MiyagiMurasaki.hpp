@@ -20,15 +20,15 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef RAWR
-#define RAWR
+#ifndef MIYAGI_MURASAKI
+#define MIYAGI_MURASAKI
 
 #include "Character.hpp"
 
-class Rawr: public Character{
+class MiyagiMurasaki: public Character {
 public:
-	Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
-    ~Rawr();
+	MiyagiMurasaki(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
+    ~MiyagiMurasaki();
     void    jump();
     void    basicAttack();
     void    specialAttackUp();

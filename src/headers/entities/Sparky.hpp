@@ -20,21 +20,21 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef RAWR
-#define RAWR
+#ifndef SPARKY
+#define SPARKY
 
 #include "Character.hpp"
 
-class Rawr: public Character{
+class Sparky: public Character {
 public:
-	Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
-    ~Rawr();
+	Sparky(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
+    ~Sparky();
     void    jump();
     void    basicAttack();
     void    specialAttackUp();
     void    specialAttackDown();
     void    specialAttackSide();
-    void    ultimateAttack();
+    void    ultimateAttack(); 
 };
 
 #endif

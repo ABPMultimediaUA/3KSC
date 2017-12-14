@@ -24,6 +24,7 @@
 #include "../headers/entities/Character.hpp"
 #include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include "../headers/extra/Keycodes.hpp"
 
 //#include <iostream>
 
@@ -53,17 +54,13 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
     m_jumpTable[9]          = 0.15;
 
     m_basicAttack           = false;
-    m_specialAttackLeft     = false;
-    m_specialAttackRight    = false;
     m_specialAttackUp       = false;
+    m_specialAttackDown     = false;
+    m_specialAttackSide     = false;
     m_ultimateAttack        = false;
 }
 
 Character::~Character(){}
-
-void Character::jump(){}
-
-void Character::basicAttack(){}
 
 void Character::reciveAttack(int p_damage,bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
     if(p_block && m_blocking && p_orientation == m_orientation)
@@ -73,15 +70,11 @@ void Character::reciveAttack(int p_damage,bool p_orientation, bool p_block, floa
     }else{
         m_life -= p_damage;
         //use p_force
-        if(m_life<1){
+        if(m_life<=0){
             //die
         }
     }
 }
-
-void Character::specialAttack(int p_index){}
-
-void Character::ultimateAttack(){}
 
 void Character::lookLeft(){
     m_orientation = false;
@@ -100,58 +93,110 @@ void Character::playerInput(){
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
     //Exit
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    if(t_inputManager->isKeyPressed(Key_Escape))
         EngineManager::instance()->stop();
 
     if(!m_stunned)
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+        if(t_inputManager->isKeyPressed(Key_Space)){
             m_jumping = true;     // Begin jump movement
         }
 
         m_runningFactor = 1;
 
     //Basic Attack
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)){
+    if(t_inputManager->isKeyPressed(Key_E)){
         m_basicAttack = true;
+    }
+
+    //Special attack up
+    if (t_inputManager->isKeyPressed(Key_X) && t_inputManager->isKeyPressed(Key_Up)){
+        m_specialAttackUp = true;
+    }
+
+    //Special attack down
+    if (t_inputManager->isKeyPressed(Key_X) && t_inputManager->isKeyPressed(Key_Down)){
+        m_specialAttackDown = true;
+    }
+
+    //Special attack side
+    if (t_inputManager->isKeyPressed(Key_X) && (t_inputManager->isKeyPressed(Key_Left) || t_inputManager->isKeyPressed(Key_Right))){
+        m_specialAttackSide = true;
+    }
+
+     //Ultimate Attack
+    if(t_inputManager->isKeyPressed(Key_Z)){
+        m_ultimateAttack = true;
     }
     
     //Sprint
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+    if(t_inputManager->isKeyPressed(Key_LShift) || t_inputManager->isKeyPressed(Key_RShift))
         m_runningFactor = 2;
 
         //Up
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+        if(t_inputManager->isKeyPressed(Key_W) || t_inputManager->isKeyPressed(Key_Up)){
             moveY(m_velocity * m_frameDeltaTime * m_runningFactor);
         }
 
         //Down
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+        if(t_inputManager->isKeyPressed(Key_S) || t_inputManager->isKeyPressed(Key_Down)){
             moveY(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
         }
 
         //Left
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+        if(t_inputManager->isKeyPressed(Key_A) || t_inputManager->isKeyPressed(Key_Left)){
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
             lookLeft();
         }
 
         //Right
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+        if(t_inputManager->isKeyPressed(Key_D) || t_inputManager->isKeyPressed(Key_Right)){
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
             lookRight();
         }
 
         //Block
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::B)){
+        if(t_inputManager->isKeyPressed(Key_B)){
             m_blocking = true;
         }else{
             m_blocking = false;
         }
     }
+
+    //Call to functions. Each one would do nothing if its associated boolean is false
     jump();
     basicAttack();
+    specialAttackUp();
+    specialAttackDown();
+    specialAttackSide();
+    ultimateAttack();
 }
 
+//VIRTUAL METHODS
+void Character::jump(){
+    // Start or continue jump movement
+    if(m_jumping){
+        if(m_jumpCurrentTime < m_jumpMaxTime){
+            moveY(m_jumpTable[m_jumpCurrentTime++]);
+        }
+        else{                                                                       // Jump has ended. Starting to go down
+            // Activate gravity
+            // Check collision with the floor
+            // If there is collision
+            m_jumping = false;                                                          // We are on the floor. Reset jump
+            m_jumpCurrentTime = 0;
+        }
+    }
+}
+
+void Character::basicAttack(){}
+
+void Character::specialAttackUp(){}
+
+void Character::specialAttackDown(){}
+
+void Character::specialAttackSide(){}
+
+void Character::ultimateAttack(){}
