@@ -18,30 +18,16 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef INPUT_MANAGER
-#define INPUT_MANAGER
+#ifndef AXIS
+#define AXIS
 
-#include "../entities/Character.hpp"
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Joystick.hpp>
+    #define Axis_X          0       ///The X Axis
+    #define Axis_Y          1       ///The Y Axis
+    #define Axis_Z          2       ///The Z Axis (LT)
+    #define Axis_R          3       ///The R Axis (RT)
+    #define Axis_U          4       ///The U Axis
+    #define Axis_V          5       ///The V Axis
+    #define Axis_PovX       6       ///The X Axis of the POV Hat
+    #define Axis_PovY       7       ///The Y Axis of the POV Hat
 
-class InputManager{
-    private:
-        static InputManager*    m_instance;
-        int**                   m_bindings;   
-        sf::Keyboard::Key       m_keys[101];
-        sf::Joystick::Axis      m_axis[8];
-
-    public:
-        static InputManager* instance();
-        InputManager();
-        ~InputManager();
-        void    onKeyPressed(int p_key);
-        bool    isKeyPressed(int p_key);
-        bool    isConnected(int p_joystick);
-        bool    isButtonPressed(int p_joystick, int p_button);
-        float   getAxisPosition(int p_joystick, int p_axis);
-        void    updateJoysticks();
-};
-
-#endif
+#endif      

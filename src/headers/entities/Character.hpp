@@ -31,13 +31,15 @@ public:
     Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
     ~Character();
 	
+    void            reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
     void            lookLeft();
     void            lookRight();
-    void            playerInput();
-    void            reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
     bool            isJumping();
+    void            assignJoystick(int p_joystick);
+    void            playerInput();
 
     virtual void    jump();
+    void            pickObject();
 	virtual void    basicAttack();
     virtual void    specialAttackUp();
     virtual void    specialAttackDown();
@@ -45,15 +47,15 @@ public:
     virtual void    ultimateAttack();
 
 protected: 
-    char*   m_name;
-    int     m_life;
-    int     m_damage;
-    float   m_velocity;
-    float   m_atackPosition[3];
-    bool    m_orientation;
-    bool    m_stunned;
-    bool    m_blocking;
-    float   m_frameDeltaTime;               //For movement
+    char*           m_name;
+    int             m_life;
+    int             m_damage;
+    float           m_velocity;
+    float           m_atackPosition[3];
+    bool            m_orientation;
+    bool            m_stunned;
+    bool            m_blocking;
+    float           m_frameDeltaTime;               //For movement
     
     int             m_runningFactor;
 
@@ -63,16 +65,34 @@ protected:
     int             m_jumpMaxTime;          // Control the time in which the character is in the air (in frames)
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
 
-    bool m_basicAttack;
-    bool m_specialAttackUp;
-    bool m_specialAttackDown;
-    bool m_specialAttackSide;
-    bool m_ultimateAttack;
+    bool            m_basicAttack;
+    bool            m_specialAttackUp;
+    bool            m_specialAttackDown;
+    bool            m_specialAttackSide;
+    bool            m_ultimateAttack;
 
     Projectile**    m_projectiles;
     int             m_maxProjectiles;
     int             m_currentProjectiles;
 
+private:
+    //Conditions for each Input (they change depending on keyboard/joystick control)
+    bool            m_upInput;
+    bool            m_downInput;
+    bool            m_leftInput;
+    bool            m_rightInput;
+    bool            m_jumpInput;
+    bool            m_runInput;
+    bool            m_blockInput;
+    bool            m_pickInput;
+    bool            m_basicAttackInput;
+    bool            m_specialAttackUpInput;
+    bool            m_specialAttackDownInput;
+    bool            m_specialAttackSideInput;
+    bool            m_ultimateAttackInput;
+
+    void            updateInputs();
+    int             m_joystick;
 };
 
 #endif
