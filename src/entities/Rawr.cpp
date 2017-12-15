@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../headers/entities/Rawr.hpp"
+#include <iostream>
 
 Rawr::Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
     m_projectiles           = new Projectile*[5];
@@ -38,6 +39,7 @@ void Rawr::basicAttack(){
     if (m_basicAttack){
 
         //PENDING IMPLEMENTATION
+        std::cout << "Basic Attack" << std::endl;
 
         m_basicAttack = false;
     }
@@ -47,6 +49,7 @@ void Rawr::specialAttackUp(){
     if (m_specialAttackUp){
 
         //PENDING IMPLEMENTATION
+        std::cout << "Special Attack Up" << std::endl;
 
         m_specialAttackUp = false;
     }
@@ -56,6 +59,7 @@ void Rawr::specialAttackDown(){
     if (m_specialAttackDown){
 
         //PENDING IMPLEMENTATION
+        std::cout << "Special Attack Down" << std::endl;
 
         m_specialAttackDown = false;
     }
@@ -96,6 +100,7 @@ void Rawr::ultimateAttack(){
     if (m_ultimateAttack){
 
         //PENDING IMPLEMENTATION
+        std::cout << "ULTIMATE TIME!!!" << std::endl;
 
         m_ultimateAttack = false;
     }
