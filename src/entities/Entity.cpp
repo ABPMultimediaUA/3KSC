@@ -61,7 +61,6 @@ b2Body* Entity::getBody(){
     return m_body;
 }
 
-
 //Create a new Entity for a new Platform or Arena
 Entity::Entity(float p_position[3], float p_scale[3]){
     m_id = m_entityCount++;
@@ -72,7 +71,7 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     moveTo(p_position);
 
     m_groundBodyDef = new b2BodyDef();
-    m_groundBodyDef->position.Set(0.0, -10.0);
+    m_groundBodyDef->position.Set(p_position[0], p_position[1]);
     
     m_groundBody = PhysicsManager::instance()->getWorld()->CreateBody(m_groundBodyDef);
 
@@ -86,10 +85,8 @@ Entity::Entity(float p_position[3], float p_scale[3]){
 Entity::~Entity(){}
 
 void Entity::updatePosition(float p_posY, bool p_jumping){
-    //Update physics position X
-    //std::cout << m_position[0] << std::endl;
     if(p_jumping){
-        m_body->PutToSleep();
+        this->m_body->PutToSleep();
     }
     else{
         m_body->WakeUp();
@@ -97,12 +94,6 @@ void Entity::updatePosition(float p_posY, bool p_jumping){
     }
     b2Vec2 t_vec(m_position[0], m_position[1]);
     m_body->SetXForm(t_vec, 0);
-
-
-    //m_debugDraw = new b2DebugDraw();
-    b2Color t_red(255,0,0);
-    //m_debugDraw->DrawSolidPolygon(m_shapeDef->vertices, m_shapeDef->vertexCount, t_red);
-
 
     EngineManager::instance()->moveEntity(this);
 }
