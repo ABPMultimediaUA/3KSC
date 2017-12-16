@@ -22,6 +22,7 @@
 
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
+//#include "headers/debug.hpp"
 
 int main(){
 
@@ -32,6 +33,7 @@ int main(){
     EngineManager* engineManager = EngineManager::instance();
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
+
 
     if (engineManager->createWindow()){  
         float positionPlayer[3] = {0, 10, 0};

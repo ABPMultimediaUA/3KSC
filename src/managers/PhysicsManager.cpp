@@ -19,6 +19,7 @@
 */
 
 #include "../headers/managers/PhysicsManager.hpp"
+#include "../headers/debug.hpp"
 
 
 //Instance initialization
@@ -31,6 +32,7 @@ PhysicsManager* PhysicsManager::instance(){
 
     return m_instance;
 }
+  //at global scope
 
 //Constructor
 PhysicsManager::PhysicsManager(){
@@ -45,10 +47,17 @@ PhysicsManager::PhysicsManager(){
     m_doSleep = true;
 
     m_world = new b2World(m_worldAABB, m_gravity, m_doSleep);
-    //std::cout << "Es validoo? " << m_world->GetPairCount() << std::endl;
 
     m_timeStep = 1.0 / 60.0;
     m_iterations = 10;
+
+    Debug* DebugInstance;
+    //in constructor, usually
+    //m_world->SetDebugDraw(DebugInstance);
+    //m_world->DrawDebugData();
+
+    //somewhere appropriate
+    //DebugInstance->SetFlags(b2DebugDraw::e_shapeBit);
 }
 
 b2World* PhysicsManager::getWorld(){
