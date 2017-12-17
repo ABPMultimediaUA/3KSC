@@ -22,16 +22,16 @@
 
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
+//#include <fmod.h>
 
 int main(){
-
     //TODO: Los nodos se crean en la Fachada, luego la informacion que guardan
     //se convierte a nuestro formato y se le pasa a las Entidades mediante
     //GraphicManager
-
-    EngineManager* engineManager = EngineManager::instance();
-    InputManager* inputManager = InputManager::instance();
+    EngineManager*  engineManager = EngineManager::instance();
+    InputManager*   inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
+    SoundManager*   soundManager = SoundManager::instance();
 
     if (engineManager->createWindow()){  
         float positionPlayer[3] = {0, 10, 0};
@@ -47,6 +47,7 @@ int main(){
 
         //Game main loop
         while (engineManager->running()){
+            soundManager->update();
             engineManager->updateFrameDeltaTime();
 
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);

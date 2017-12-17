@@ -27,6 +27,7 @@
 #include "managers/EngineManager.hpp"
 #include "managers/InputManager.hpp"
 #include "managers/PhysicsManager.hpp"
+#include "managers/SoundManager.hpp"
 #include "entities/Rawr.hpp"
 #include "entities/Arena.hpp"
 

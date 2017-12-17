@@ -25,6 +25,7 @@
 
 #include "Entity.hpp"
 #include "Projectile.hpp"
+#include "../headers/managers/SoundManager.hpp"
 
 class Character : public Entity{
 public:
@@ -74,6 +75,9 @@ protected:
     Projectile**    m_projectiles;
     int             m_maxProjectiles;
     int             m_currentProjectiles;
+
+    SoundManager*   m_soundManager;
+    Sound soundSteps;
 
 private:
     //Conditions for each Input (they change depending on keyboard/joystick control)
