@@ -63,12 +63,14 @@ b2Body* Entity::getBody(){
 
 //Create a new Entity for a new Platform or Arena
 Entity::Entity(float p_position[3], float p_scale[3]){
+    /*
     m_id = m_entityCount++;
 
     EngineManager* t_engineManager = EngineManager::instance();
     t_engineManager->createEntity(m_id, p_position);
     t_engineManager->scale(m_id, p_scale);
     moveTo(p_position);
+    */
 
     m_groundBodyDef = new b2BodyDef();
     m_groundBodyDef->position.Set(p_position[0], p_position[1]);
@@ -77,7 +79,8 @@ Entity::Entity(float p_position[3], float p_scale[3]){
 
     m_groundShapeDef = new b2PolygonDef();
 
-    m_groundShapeDef->SetAsBox(p_scale[0], p_scale[1]);
+    //scaleX = 50
+    m_groundShapeDef->SetAsBox((p_scale[0] * 5), p_scale[1]);
     m_groundBody->CreateShape(m_groundShapeDef);
 
 }

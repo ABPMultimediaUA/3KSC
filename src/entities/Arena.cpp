@@ -21,9 +21,11 @@
 *********************************************************************************/
 
 #include "../headers/entities/Arena.hpp"
+#include "../headers/managers/EngineManager.hpp"
 
-Arena::Arena(float p_position[3], float p_scale[3]) :Entity(p_position, p_scale){
-
+Arena::Arena(float p_position[3], float p_scale[3], const char* arenaModelURL):Entity(p_position, p_scale){
+    EngineManager* t_engineManager = EngineManager::instance();
+    t_engineManager->loadArena(arenaModelURL);
 }
 
 Arena::~Arena(){}

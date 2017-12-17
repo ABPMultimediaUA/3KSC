@@ -58,7 +58,7 @@ public:
     void scale(int p_id, float p_scale[3]);
     void drawScene();
 
-    void loadArena();
+    void loadArena(const char* arenaModelURL);
     void loadCharacters();
     void loadObjects();
 

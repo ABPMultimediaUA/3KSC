@@ -41,9 +41,9 @@ int main(){
         float scale[3] = {10, 0.5, 2};
 
         Character* player1 = new Rawr(positionPlayer, "Player 1", 100, 30, 50.f, true);
-        Arena* testArena = new Arena(position, scale);
+        //Arena* testArena = new Arena(position, scale);
         engineManager->createCamera();
-        engineManager->loadArena();
+        Arena* estadio = new Arena(position, scale, "assets/models/estadio.obj");
 
         engineManager->timeStamp();
 

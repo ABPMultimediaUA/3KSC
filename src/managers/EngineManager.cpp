@@ -128,9 +128,9 @@ void EngineManager::drawScene(){
     m_vDriver->endScene();
 }
 
-void EngineManager::loadArena(){
+void EngineManager::loadArena(const char* arenaModelURL){
 
-    scene::IAnimatedMesh* t_map = m_scene->getMesh("assets/models/estadio.obj");
+    scene::IAnimatedMesh* t_map = m_scene->getMesh(arenaModelURL);
     scene::ISceneNode* t_node = 0;
 
     if (t_map){
