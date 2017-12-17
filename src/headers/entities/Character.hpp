@@ -25,6 +25,7 @@
 
 #include "Entity.hpp"
 #include "Projectile.hpp"
+#include <vector>
 
 class Character : public Entity{
 public:
@@ -46,12 +47,21 @@ public:
     virtual void    specialAttackSide();
     virtual void    ultimateAttack();
 
-protected: 
+    static int          getPlayerCount();
+    static Character*   getPlayer(int p_index);
+    int                 getIndex();
+
+protected:
+    static Character**  m_players;
+    static int          m_playerCount;
+    int                 m_playerIndex;
+
     char*           m_name;
     int             m_life;
     int             m_damage;
     float           m_velocity;
-    float           m_atackPosition[3];
+    float           m_attackPosition[3];
+    float           m_attackTarget[3];
     bool            m_orientation;
     bool            m_stunned;
     bool            m_blocking;

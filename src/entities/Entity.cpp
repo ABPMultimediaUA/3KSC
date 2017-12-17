@@ -129,3 +129,15 @@ int Entity::getId(){
 float* Entity::getPosition(){
     return m_position;
 }
+
+float Entity::getX(){
+    return m_position[0];
+}
+
+float Entity::getY(){
+    return m_position[1];
+}
+
+float Entity::getZ(){
+    return m_position[1];
+}

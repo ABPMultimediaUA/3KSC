@@ -39,6 +39,9 @@ public:
     void moveZ(float p_variation);
     int getId();
     float* getPosition();
+    float getX();
+    float getY();
+    float getZ();
 
     b2Body* getBody();
 

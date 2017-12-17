@@ -24,9 +24,9 @@
 #include <iostream>
 
 Rawr::Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
-    m_projectiles           = new Projectile*[5];
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
+    m_projectiles           = new Projectile*[m_maxProjectiles];
 }
 
 Rawr::~Rawr(){}
@@ -70,24 +70,32 @@ void Rawr::specialAttackSide(){
         if (m_currentProjectiles < m_maxProjectiles){
             if(m_orientation){   // Looking right
                 // Attack 20 units to the right
-                m_atackPosition[0] = m_position[0] + 20;
-                m_atackPosition[1] = m_position[1];
-                m_atackPosition[2] = 0;
+                m_attackPosition[0] = m_position[0] + 20;
+                m_attackPosition[1] = m_position[1];
+                m_attackPosition[2] = 0;
+
+                m_attackTarget[0] = m_position[0] + 100;
+                m_attackTarget[1] = m_position[1];
+                m_attackTarget[2] = 0;
             }
             else{   // Looking left
                 // Attack 20 units to the right
-                m_atackPosition[0] = m_position[0] - 20;
-                m_atackPosition[1] = m_position[1];
-                m_atackPosition[2] = 0;
+                m_attackPosition[0] = m_position[0] - 20;
+                m_attackPosition[1] = m_position[1];
+                m_attackPosition[2] = 0;
+
+                m_attackTarget[0] = m_position[0] - 100;
+                m_attackTarget[1] = m_position[1];
+                m_attackTarget[2] = 0;
             }
 
             //Create attack and increase projectile count
-            m_projectiles[m_currentProjectiles++] = new Projectile(m_atackPosition, m_orientation, 3, 60, 30);
+            m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, 60, 3, 100);
         }
 
         //Move projectiles, and delete them
         for (int i = 0; i < m_currentProjectiles; i++){
-            if (m_projectiles[i]->move() == false){
+            if (!m_projectiles[i]->update()){
                 m_currentProjectiles--;
                 m_specialAttackSide = false;
             }

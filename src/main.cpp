@@ -25,37 +25,47 @@
 //#include "headers/debug.hpp"
 
 int main(){
-
-    //TODO: Los nodos se crean en la Fachada, luego la informacion que guardan
-    //se convierte a nuestro formato y se le pasa a las Entidades mediante
-    //GraphicManager
-
     EngineManager* engineManager = EngineManager::instance();
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
 
 
     if (engineManager->createWindow()){  
-        float positionPlayer[3] = {0, 10, 0};
+        float positionRawr[3] = {-10, 15, 0};
+        float positionPlup[3] = {10, 15, 0};
+        float positionTurret[3] = {30, 25, 0};
         float position[3] = {0, 0, 0};
         float scale[3] = {10, 0.5, 2};
 
-        Character* player1 = new Rawr(positionPlayer, "Player 1", 100, 30, 50.f, true);
+        Character* player1 = new Rawr(positionRawr, "Player 1", 100, 30, 50.f, true);
+        Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false);
+
         Arena* testArena = new Arena(position, scale);
+        Snowman* snowman = new Snowman(positionTurret, player2->getIndex());
         engineManager->createCamera();
         engineManager->loadArena();
 
         engineManager->timeStamp();
+
+        //For players loop
+        int i;
+        Character* currentPlayer;
 
         //Game main loop
         while (engineManager->running()){
             engineManager->updateFrameDeltaTime();
 
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
-            
-            player1->playerInput();
-            player1->updatePosition(player1->getBody()->GetPosition().y, player1->isJumping());
-            //std::cout << "(" << player1->getBody()->GetPosition().x << "," << player1->getBody()->GetPosition().y << ")" << std::endl;
+
+            //Input and update for every character
+            for (i = 0; i < Character::getPlayerCount(); i++){
+                currentPlayer = Character::getPlayer(i);
+
+                currentPlayer->playerInput();
+                //currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
+            }
+
+            snowman->lockNLoad();
 
             engineManager->drawScene();
         }

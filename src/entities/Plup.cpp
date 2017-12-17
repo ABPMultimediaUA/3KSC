@@ -23,9 +23,9 @@
 #include "../headers/entities/Plup.hpp"
 
 Plup::Plup(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
-    m_projectiles           = new Projectile*[5];
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
+    m_projectiles           = new Projectile*[m_maxProjectiles];
 }
 
 Plup::~Plup(){}
