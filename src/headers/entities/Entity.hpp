@@ -62,9 +62,6 @@ protected:
     b2BodyDef*      m_groundBodyDef;
     b2Body*         m_groundBody;
     b2PolygonDef*   m_groundShapeDef;
-
-    b2DebugDraw*    m_debugDraw;
-
 };
 
 #endif
