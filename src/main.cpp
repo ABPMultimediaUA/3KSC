@@ -22,6 +22,7 @@
 
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
+//#include <fmod.h>
 //#include "headers/debug.hpp"
 //#include <iostream>
 
@@ -29,6 +30,7 @@ int main(){
     EngineManager* engineManager = EngineManager::instance();
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
+    SoundManager*   soundManager = SoundManager::instance();
 
 
     if (engineManager->createWindow()){  
@@ -52,6 +54,7 @@ int main(){
 
         //Game main loop
         while (engineManager->running()){
+            soundManager->update();
             engineManager->updateFrameDeltaTime();
 
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);

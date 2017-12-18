@@ -68,6 +68,9 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
 
     m_playerIndex = Character::m_playerCount++;
     Character::m_players[m_playerIndex] = this;
+
+    m_soundManager = SoundManager::instance();
+    m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
 }
 
 Character::~Character(){}
@@ -241,12 +244,16 @@ void Character::playerInput(){
 
         //Left
         if(m_leftInput){
+            if(!m_soundManager->isPlaying(&soundSteps))
+                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
             lookLeft();
         }
 
         //Right
         if(m_rightInput){
+            if(!m_soundManager->isPlaying(&soundSteps))
+                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
             lookRight();
         }
