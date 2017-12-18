@@ -29,6 +29,10 @@
 #include "../headers/extra/Buttons.hpp"
 #include <iostream>
 
+//Static members
+Character** Character::m_players = new Character*[4];
+int Character::m_playerCount = 0;
+
 Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation):Entity(p_position){
     m_name                  = p_name;
     m_life                  = p_life;
@@ -61,11 +65,14 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
     m_ultimateAttack        = false;
 
     m_joystick              = -1;
+
+    m_playerIndex = Character::m_playerCount++;
+    Character::m_players[m_playerIndex] = this;
 }
 
 Character::~Character(){}
 
-void Character::reciveAttack(int p_damage,bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
+void Character::reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
     if(p_block && m_blocking && p_orientation == m_orientation)
     {
         //attack blocked
@@ -264,7 +271,6 @@ void Character::playerInput(){
     ultimateAttack();
 }
 
-//VIRTUAL METHODS
 void Character::jump(){
     // Start or continue jump movement
     if(m_jumping){
@@ -294,3 +300,18 @@ void Character::specialAttackDown(){}
 void Character::specialAttackSide(){}
 
 void Character::ultimateAttack(){}
+
+//Returns the player count
+int Character::getPlayerCount(){
+    return Character::m_playerCount;
+}
+
+//Returns the player with the given index
+Character* Character::getPlayer(int p_index){
+    return Character::m_players[p_index];
+}
+
+//Returns the index of the player
+int Character::getIndex(){
+    return m_playerIndex;
+}
