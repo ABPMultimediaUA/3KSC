@@ -23,13 +23,11 @@
 #ifndef MAIN
 #define MAIN
 
-#include <iostream>
 #include "managers/EngineManager.hpp"
 #include "managers/InputManager.hpp"
 #include "managers/PhysicsManager.hpp"
 #include "entities/Rawr.hpp"
 #include "entities/Plup.hpp"
-#include "entities/Snowman.hpp"
 #include "entities/Arena.hpp"
 
 #endif

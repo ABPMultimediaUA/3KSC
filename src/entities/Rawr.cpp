@@ -72,21 +72,21 @@ void Rawr::specialAttackSide(){
                 // Attack 20 units to the right
                 m_attackPosition[0] = m_position[0] + 20;
                 m_attackPosition[1] = m_position[1];
-                m_attackPosition[2] = 0;
+                m_attackPosition[2] = m_position[2];
 
                 m_attackTarget[0] = m_position[0] + 100;
                 m_attackTarget[1] = m_position[1];
-                m_attackTarget[2] = 0;
+                m_attackTarget[2] = m_position[2];
             }
             else{   // Looking left
                 // Attack 20 units to the right
                 m_attackPosition[0] = m_position[0] - 20;
                 m_attackPosition[1] = m_position[1];
-                m_attackPosition[2] = 0;
+                m_attackPosition[2] = m_position[2];
 
                 m_attackTarget[0] = m_position[0] - 100;
                 m_attackTarget[1] = m_position[1];
-                m_attackTarget[2] = 0;
+                m_attackTarget[2] = m_position[2];
             }
 
             //Create attack and increase projectile count

@@ -37,7 +37,7 @@ Snowman::~Snowman(){}
 
 
 //Looks for player and fires after finding
-void Snowman::lockNLoad(){
+bool Snowman::lockNLoad(){
     if (m_currentSnowballs < m_maxSnowballs){
         int t_playerCount = Character::getPlayerCount();
         Character* t_currentPlayer;
@@ -63,4 +63,6 @@ void Snowman::lockNLoad(){
             m_currentSnowballs--;
         }
     }
+
+    return true;
 }

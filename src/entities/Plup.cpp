@@ -23,9 +23,15 @@
 #include "../headers/entities/Plup.hpp"
 
 Plup::Plup(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
+    //For its OWN projectiles, not snowmen ones
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
+
+
+    m_maxSnowmen        = 1;
+    m_currentSnowmen    = 0;
+    m_snowmen           = new Snowman*[m_maxSnowmen];
 }
 
 Plup::~Plup(){}
@@ -52,12 +58,37 @@ void Plup::specialAttackUp(){
     }
 }
 
+//Place snowmen
 void Plup::specialAttackDown(){
     if (m_specialAttackDown){
+        if (m_currentSnowmen < m_maxSnowmen){
+            //Looking right
+            if (m_orientation){
+                // Place snowman 10 units to the right
+                m_attackPosition[0] = m_position[0] + 10;
+                m_attackPosition[1] = m_position[1];
+                m_attackPosition[2] = m_position[2];
+            }
 
-        //PENDING IMPLEMENTATION
+            //Looking left
+            else{
+                // Place snowman 10 units to the left
+                m_attackPosition[0] = m_position[0] - 10;
+                m_attackPosition[1] = m_position[1];
+                m_attackPosition[2] = m_position[2];
+            }
 
-        m_specialAttackDown = false;
+            //Create snowman and increase snowmen count
+            m_snowmen[m_currentSnowmen++] = new Snowman(m_attackPosition, m_playerIndex);
+        }
+
+        //Snowmen AI
+        for (int i = 0; i < m_currentSnowmen; i++){
+            if (!m_snowmen[i]->lockNLoad()){
+                m_currentSnowmen--;
+                m_specialAttackDown = false;
+            }
+        }
     }
 }
 

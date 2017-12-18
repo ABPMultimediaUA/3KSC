@@ -23,6 +23,7 @@
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
 //#include "headers/debug.hpp"
+//#include <iostream>
 
 int main(){
     EngineManager* engineManager = EngineManager::instance();
@@ -41,7 +42,7 @@ int main(){
         Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false);
 
         Arena* testArena = new Arena(position, scale);
-        Snowman* snowman = new Snowman(positionTurret, player2->getIndex());
+        
         engineManager->createCamera();
         engineManager->loadArena();
 
@@ -62,10 +63,8 @@ int main(){
                 currentPlayer = Character::getPlayer(i);
 
                 currentPlayer->playerInput();
-                //currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
+                currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
             }
-
-            snowman->lockNLoad();
 
             engineManager->drawScene();
         }

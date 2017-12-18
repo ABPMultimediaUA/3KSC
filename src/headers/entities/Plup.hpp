@@ -24,17 +24,23 @@
 #define PLUP
 
 #include "Character.hpp"
+#include "Snowman.hpp"
 
 class Plup: public Character {
-public:
-	Plup(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
-    ~Plup();
-    void    jump();
-    void    basicAttack();
-    void    specialAttackUp();
-    void    specialAttackDown();
-    void    specialAttackSide();
-    void    ultimateAttack();
+    public:
+        Plup(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
+        ~Plup();
+        void    jump();
+        void    basicAttack();
+        void    specialAttackUp();
+        void    specialAttackDown();
+        void    specialAttackSide();
+        void    ultimateAttack();
+    private:
+        int         m_maxSnowmen;
+        int         m_currentSnowmen;
+        Snowman**   m_snowmen;
+        
 };
 
 #endif

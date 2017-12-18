@@ -139,5 +139,5 @@ float Entity::getY(){
 }
 
 float Entity::getZ(){
-    return m_position[1];
+    return m_position[2];
 }

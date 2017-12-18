@@ -30,7 +30,7 @@ class Snowman: public Entity {
     public:
         Snowman(float p_position[3], int p_owner);
         ~Snowman();
-        void lockNLoad();
+        bool lockNLoad();
     
     private:
         int             m_lifetime;
