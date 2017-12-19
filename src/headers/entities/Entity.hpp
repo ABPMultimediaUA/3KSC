@@ -58,8 +58,6 @@ protected:
     //Texture*   m_texture;
     //Hitbox*    m_hitbox;
     float      m_weight;
-
-    const char* m_modelURL;
     
     b2BodyDef*      m_bodyDef;
     b2Body*         m_body;
