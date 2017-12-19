@@ -108,6 +108,7 @@ void EngineManager::createEntity(int p_id, float p_position[3]){
 
         t_node->setPosition(core::vector3df(p_position[0],p_position[1],p_position[2]));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
+        
     }
 }
 
@@ -129,7 +130,6 @@ void EngineManager::drawScene(){
 }
 
 void EngineManager::loadArena(const char* arenaModelURL){
-
     scene::IAnimatedMesh* t_map = m_scene->getMesh(arenaModelURL);
     scene::ISceneNode* t_node = 0;
 
@@ -143,7 +143,7 @@ void EngineManager::loadArena(const char* arenaModelURL){
 }
 
 void EngineManager::loadCharacters(){
-
+    
 }
 
 void EngineManager::loadObjects(){
