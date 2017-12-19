@@ -80,7 +80,7 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     m_groundShapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_groundShapeDef->SetAsBox((p_scale[0] * 5), p_scale[1]);
+    m_groundShapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
     m_groundBody->CreateShape(m_groundShapeDef);
 
 }

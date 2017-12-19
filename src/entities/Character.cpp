@@ -296,7 +296,7 @@ void Character::playerInput(){
 void Character::jump(){
     // Start or continue jump movement
     if(m_jumpCurrentTime < m_jumpMaxTime){
-        moveY(m_jumpTable[m_jumpCurrentTime++]*3);
+        moveY(m_jumpTable[m_jumpCurrentTime++]*2);
     }
     else{                                                                       // Jump has ended. Starting to go down
         // Activate gravity
