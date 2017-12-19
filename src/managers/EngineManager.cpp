@@ -83,8 +83,8 @@ bool EngineManager::createWindow(){
 void EngineManager::createCamera(){
     scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
     if(cameraNode){
-        cameraNode->setPosition(core::vector3df(0,35,-100));
-        cameraNode->setTarget(core::vector3df(0,0,0));
+        cameraNode->setPosition(core::vector3df(0,90,-150));
+        cameraNode->setTarget(core::vector3df(0,50,0));
     }
 }
 
@@ -137,7 +137,8 @@ void EngineManager::loadArena(const char* arenaModelURL){
         t_node = m_scene->addOctreeSceneNode(t_map->getMesh(0), 0, -1, 1024);
         t_node->setPosition(core::vector3df(0,0,0));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
-        t_node->setScale(core::vector3df(8, 8, 8));
+        t_node->setScale(core::vector3df(10,10,10));
+        //t_node->setRotation(core::vector3df(0,90,0));
     }
 }
 

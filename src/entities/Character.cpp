@@ -280,17 +280,15 @@ void Character::playerInput(){
 
 void Character::jump(){
     // Start or continue jump movement
-    if(m_jumping){
-        if(m_jumpCurrentTime < m_jumpMaxTime){
-            moveY(m_jumpTable[m_jumpCurrentTime++]);
-        }
-        else{                                                                       // Jump has ended. Starting to go down
-            // Activate gravity
-            // Check collision with the floor
-            // If there is collision
-            m_jumping = false;                                                          // We are on the floor. Reset jump
-            m_jumpCurrentTime = 0;
-        }
+    if(m_jumpCurrentTime < m_jumpMaxTime){
+        moveY(m_jumpTable[m_jumpCurrentTime++]*3);
+    }
+    else{                                                                       // Jump has ended. Starting to go down
+        // Activate gravity
+        // Check collision with the floor
+        // If there is collision
+        m_jumping = false;                                                          // We are on the floor. Reset jump
+        m_jumpCurrentTime = 0;
     }
 }
 

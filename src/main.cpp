@@ -44,7 +44,7 @@ int main(){
         Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false);
 
         engineManager->createCamera();
-        Arena* estadio = new Arena(position, scale, "assets/models/estadio.obj");
+        Arena* estadio = new Arena(position, scale, "assets/models/stadium.obj");
 
         engineManager->timeStamp();
 
