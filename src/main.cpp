@@ -41,7 +41,7 @@ int main(){
         float scale[3] = {10, 0.5, 2};
 
         Character* player1 = new Rawr(positionRawr, "Player 1", 100, 30, 50.f, true, 0);
-        Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false, -1);
+        Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false, 1);
 
         engineManager->createCamera();
         Arena* estadio = new Arena(position, scale, 1);
