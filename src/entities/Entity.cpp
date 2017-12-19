@@ -55,6 +55,18 @@ Entity::Entity(float p_position[3]){
     m_body->CreateShape(m_shapeDef);
     m_body->SetMassFromShapes();
 
+    m_polygonShape = new b2PolygonShape(m_shapeDef);    
+}
+
+void Entity::getCoords(){
+    for(int i = 0; i < m_polygonShape->GetVertexCount(); i++){
+        std::cout << "(" << m_polygonShape->GetVertices()[i].x << "," << m_polygonShape->GetVertices()[i].y << ")" << std::endl;
+    }
+    std::cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << std::endl;
+}
+
+b2PolygonShape* Entity::getShape(){
+    return m_polygonShape;
 }
 
 b2Body* Entity::getBody(){

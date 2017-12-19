@@ -46,6 +46,10 @@ public:
     b2Body* getBody();
 
     void updatePosition(float p_posY, bool p_jumping);
+
+    b2PolygonShape* getShape();
+    void getCoords();
+
     
 protected:
     static int m_entityCount;
