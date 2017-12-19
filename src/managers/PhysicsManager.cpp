@@ -37,8 +37,8 @@ PhysicsManager* PhysicsManager::instance(){
 //Constructor
 PhysicsManager::PhysicsManager(){
     m_worldAABB = b2AABB();
-    b2Vec2 t_upperBound(100.0f, 100.0f);
-    b2Vec2 t_lowerBound(-100.0f, -100.0f);
+    b2Vec2 t_upperBound(200.0f, 200.0f);
+    b2Vec2 t_lowerBound(-200.0f, -200.0f);
     m_worldAABB.upperBound = t_upperBound;
     m_worldAABB.lowerBound = t_lowerBound;
 

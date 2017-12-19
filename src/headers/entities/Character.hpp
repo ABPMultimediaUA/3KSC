@@ -30,7 +30,7 @@
 
 class Character : public Entity{
 public:
-    Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation);
+    Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick);
     ~Character();
 	
     void            reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
@@ -106,6 +106,7 @@ private:
     bool            m_ultimateAttackInput;
 
     void            updateInputs();
+    void            checkActions();
     int             m_joystick;
 };
 

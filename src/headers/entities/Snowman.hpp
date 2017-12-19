@@ -37,6 +37,7 @@ class Snowman: public Entity {
         Projectile**    m_snowballs;
         int             m_maxSnowballs;
         int             m_currentSnowballs;
+        int             m_ammo;
         int             m_owner;
         float           m_target[3];            //Position of the target
 };

@@ -21,8 +21,9 @@
 *********************************************************************************/
 
 #include "../headers/entities/Sparky.hpp"
+#include <iostream>
 
-Sparky::Sparky(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
+Sparky::Sparky(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation, p_joystick){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
@@ -35,47 +36,37 @@ void Sparky::jump(){
 }
 
 void Sparky::basicAttack(){
-    if (m_basicAttack){
-
-        //PENDING IMPLEMENTATION
-
-        m_basicAttack = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Basic Attack" << std::endl;
+    
+    m_basicAttack = false;
 }
 
 void Sparky::specialAttackUp(){
-    if (m_specialAttackUp){
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Up" << std::endl;
 
-        //PENDING IMPLEMENTATION
-
-        m_specialAttackUp = false;
-    }
+    m_specialAttackUp = false;
 }
 
 void Sparky::specialAttackDown(){
-    if (m_specialAttackDown){
-
-        //PENDING IMPLEMENTATION
-
-        m_specialAttackDown = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Down" << std::endl;
+    
+    m_specialAttackDown = false;
 }
 
 void Sparky::specialAttackSide(){
-    if (m_specialAttackSide){
-    
-        //PENDING IMPLEMENTATION
-        
-        m_specialAttackSide = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Side" << std::endl;
+
+    m_specialAttackSide = false;
 }
 
 
 void Sparky::ultimateAttack(){
-    if (m_ultimateAttack){
+    //PENDING IMPLEMENTATION
+    std::cout << "ULTIMATE TIME!!!" << std::endl;
 
-        //PENDING IMPLEMENTATION
-
-        m_ultimateAttack = false;
-    }
+    m_ultimateAttack = false;
 }
