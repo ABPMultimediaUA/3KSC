@@ -24,14 +24,9 @@
 #include "../entities/Character.hpp"
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Joystick.hpp>
+#include <SFML/System/Clock.hpp>
 
 class InputManager{
-    private:
-        static InputManager*    m_instance;
-        int**                   m_bindings;   
-        sf::Keyboard::Key       m_keys[101];
-        sf::Joystick::Axis      m_axis[8];
-
     public:
         static InputManager* instance();
         InputManager();
@@ -42,6 +37,12 @@ class InputManager{
         bool    isButtonPressed(int p_joystick, int p_button);
         float   getAxisPosition(int p_joystick, int p_axis);
         void    updateJoysticks();
+    
+    private:
+        static InputManager*    m_instance;
+        int**                   m_bindings;   
+        sf::Keyboard::Key       m_keys[101];
+        sf::Joystick::Axis      m_axis[8];
 };
 
 #endif
