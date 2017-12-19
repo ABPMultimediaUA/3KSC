@@ -33,7 +33,7 @@
 Character** Character::m_players = new Character*[4];
 int Character::m_playerCount = 0;
 
-Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation):Entity(p_position){
+Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick):Entity(p_position){
     m_name                  = p_name;
     m_life                  = p_life;
     m_damage                = p_damage;
@@ -64,7 +64,7 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
 
-    m_joystick              = -1;
+    m_joystick              = p_joystick;
 
     m_playerIndex = Character::m_playerCount++;
     Character::m_players[m_playerIndex] = this;
@@ -178,6 +178,27 @@ void Character::updateInputs(){
     }
 }
 
+//Calls action functions when they are active
+void Character::checkActions(){
+    if (m_jumping)
+        jump();
+
+    if (m_basicAttack)
+        basicAttack();
+
+    if (m_specialAttackUp)
+        specialAttackUp();
+
+    if (m_specialAttackDown)
+        specialAttackDown();
+
+    if (m_specialAttackSide)
+        specialAttackSide();
+
+    if (m_ultimateAttack)
+        ultimateAttack();
+}
+
 void Character::playerInput(){
     InputManager* t_inputManager = InputManager::instance();
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
@@ -185,14 +206,14 @@ void Character::playerInput(){
     updateInputs();
 
     //Change to keyboard
-    if (t_inputManager->isKeyPressed(Key_Return)){
-        assignJoystick(-1);
-    }
+    //if (t_inputManager->isKeyPressed(Key_Return)){
+    //    assignJoystick(-1);
+    //}
 
     //Change to joystick (START BUTTON)
-    if (t_inputManager->isButtonPressed(0, Button_Start)){
-        assignJoystick(0);
-    }
+    //if (t_inputManager->isButtonPressed(0, Button_Start)){
+    //    assignJoystick(0);
+    //}
 
     //Exit
     if(t_inputManager->isKeyPressed(Key_Escape))
@@ -262,28 +283,19 @@ void Character::playerInput(){
 
     }
 
-    //Call to functions. Each one would do nothing if its associated boolean is false
-    jump();
-    basicAttack();
-    specialAttackUp();
-    specialAttackDown();
-    specialAttackSide();
-    ultimateAttack();
+    checkActions();    
 }
 
 void Character::jump(){
-    // Start or continue jump movement
-    if(m_jumping){
-        if(m_jumpCurrentTime < m_jumpMaxTime){
-            moveY(m_jumpTable[m_jumpCurrentTime++]);
-        }
-        else{                                                                       // Jump has ended. Starting to go down
-            // Activate gravity
-            // Check collision with the floor
-            // If there is collision
-            m_jumping = false;                                                          // We are on the floor. Reset jump
-            m_jumpCurrentTime = 0;
-        }
+    if(m_jumpCurrentTime < m_jumpMaxTime){
+        moveY(m_jumpTable[m_jumpCurrentTime++]);
+    }
+    else{                                                                       // Jump has ended. Starting to go down
+        // Activate gravity
+        // Check collision with the floor
+        // If there is collision
+        m_jumping = false;                                                          // We are on the floor. Reset jump
+        m_jumpCurrentTime = 0;
     }
 }
 

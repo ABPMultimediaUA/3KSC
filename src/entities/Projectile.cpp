@@ -78,6 +78,7 @@ bool Projectile::update(){
     //End of the way, my friend
     else{
         EngineManager::instance()->deleteEntity(this->getId());
+        getBody()->GetWorld()->DestroyBody(getBody());
         return false;
     }
 

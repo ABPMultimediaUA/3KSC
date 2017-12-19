@@ -21,13 +21,12 @@
 *********************************************************************************/
 
 #include "../headers/entities/Plup.hpp"
+#include <iostream>
 
-Plup::Plup(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
-    //For its OWN projectiles, not snowmen ones
+Plup::Plup(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation, p_joystick){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
-
 
     m_maxSnowmen        = 1;
     m_currentSnowmen    = 0;
@@ -41,24 +40,19 @@ void Plup::jump(){
 }
 
 void Plup::basicAttack(){
-    if (m_basicAttack){
-
-        //PENDING IMPLEMENTATION
-
-        m_basicAttack = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Basic Attack" << std::endl;
+    
+    m_basicAttack = false;
 }
 
 void Plup::specialAttackUp(){
-    if (m_specialAttackUp){
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Up" << std::endl;
 
-        //PENDING IMPLEMENTATION
-
-        m_specialAttackUp = false;
-    }
+    m_specialAttackUp = false;
 }
 
-//Place snowmen
 void Plup::specialAttackDown(){
     if (m_specialAttackDown){
         if (m_currentSnowmen < m_maxSnowmen){
@@ -70,7 +64,7 @@ void Plup::specialAttackDown(){
                 m_attackPosition[2] = m_position[2];
             }
 
-            //Looking left
+            //Looking left 
             else{
                 // Place snowman 10 units to the left
                 m_attackPosition[0] = m_position[0] - 10;
@@ -85,6 +79,7 @@ void Plup::specialAttackDown(){
         //Snowmen AI
         for (int i = 0; i < m_currentSnowmen; i++){
             if (!m_snowmen[i]->lockNLoad()){
+                delete m_snowmen[i];
                 m_currentSnowmen--;
                 m_specialAttackDown = false;
             }
@@ -93,20 +88,16 @@ void Plup::specialAttackDown(){
 }
 
 void Plup::specialAttackSide(){
-    if (m_specialAttackSide){
-    
-        //PENDING IMPLEMENTATION
-        
-        m_specialAttackSide = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Side" << std::endl;
+
+    m_specialAttackSide = false;
 }
 
 
 void Plup::ultimateAttack(){
-    if (m_ultimateAttack){
+    //PENDING IMPLEMENTATION
+    std::cout << "ULTIMATE TIME!!!" << std::endl;
 
-        //PENDING IMPLEMENTATION
-
-        m_ultimateAttack = false;
-    }
+    m_ultimateAttack = false;
 }

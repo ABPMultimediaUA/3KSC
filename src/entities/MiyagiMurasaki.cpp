@@ -21,8 +21,9 @@
 *********************************************************************************/
 
 #include "../headers/entities/MiyagiMurasaki.hpp"
+#include <iostream>
 
-MiyagiMurasaki::MiyagiMurasaki(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation){
+MiyagiMurasaki::MiyagiMurasaki(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation, p_joystick){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
@@ -35,47 +36,37 @@ void MiyagiMurasaki::jump(){
 }
 
 void MiyagiMurasaki::basicAttack(){
-    if (m_basicAttack){
-
-        //PENDING IMPLEMENTATION
-
-        m_basicAttack = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Basic Attack" << std::endl;
+    
+    m_basicAttack = false;
 }
 
 void MiyagiMurasaki::specialAttackUp(){
-    if (m_specialAttackUp){
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Up" << std::endl;
 
-        //PENDING IMPLEMENTATION
-
-        m_specialAttackUp = false;
-    }
+    m_specialAttackUp = false;
 }
 
 void MiyagiMurasaki::specialAttackDown(){
-    if (m_specialAttackDown){
-
-        //PENDING IMPLEMENTATION
-
-        m_specialAttackDown = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Down" << std::endl;
+    
+    m_specialAttackDown = false;
 }
 
 void MiyagiMurasaki::specialAttackSide(){
-    if (m_specialAttackSide){
-    
-        //PENDING IMPLEMENTATION
-        
-        m_specialAttackSide = false;
-    }
+    //PENDING IMPLEMENTATION
+    std::cout << "Special Attack Side" << std::endl;
+
+    m_specialAttackSide = false;
 }
 
 
 void MiyagiMurasaki::ultimateAttack(){
-    if (m_ultimateAttack){
+    //PENDING IMPLEMENTATION
+    std::cout << "ULTIMATE TIME!!!" << std::endl;
 
-        //PENDING IMPLEMENTATION
-
-        m_ultimateAttack = false;
-    }
+    m_ultimateAttack = false;
 }
