@@ -25,7 +25,7 @@
 #include "../headers/managers/EngineManager.hpp"
 
 //Constructor
-Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position){
+Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "assets/models/characters/plup/snowman.obj"){
     m_maxSnowballs          = 1;
     m_currentSnowballs      = 0;
     m_snowballs             = new Projectile*[m_maxSnowballs];

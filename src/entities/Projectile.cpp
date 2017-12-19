@@ -26,7 +26,7 @@
 #include <cmath> //For std::sqrt()
 //#include <iostream>
 
-Projectile::Projectile(float p_position[3], float p_target[3], int p_damage, float p_velocity, float p_distanceLeft):Entity(p_position){
+Projectile::Projectile(float p_position[3], float p_target[3], int p_damage, float p_velocity, float p_distanceLeft):Entity(p_position, 7.f, "assets/models/characters/plup/snowball.obj"){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_damage        = p_damage;
     m_velocity      = p_velocity;

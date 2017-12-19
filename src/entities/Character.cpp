@@ -33,14 +33,17 @@
 Character** Character::m_players = new Character*[4];
 int Character::m_playerCount = 0;
 
-Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick):Entity(p_position){
+Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL) : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
+    m_joystick              = p_joystick;
+    m_lives                 = 3;
     m_life                  = p_life;
+    m_magic                 = p_magic;
     m_damage                = p_damage;
     m_velocity              = p_velocity;
-    m_orientation           = p_orientation;
-    m_stunned     = false;  
-    m_blocking    = false;    
+    m_orientation           = true;
+    m_stunned               = false;  
+    m_blocking              = false;    
 
     m_runningFactor         = 1;
 
@@ -64,16 +67,17 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
 
-    m_joystick              = p_joystick;
-
     m_playerIndex = Character::m_playerCount++;
     Character::m_players[m_playerIndex] = this;
+
+    m_soundManager = SoundManager::instance();
+    m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
 }
 
 Character::~Character(){}
 
-void Character::reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
-    if(p_block && m_blocking && p_orientation == m_orientation)
+void Character::receiveAttack(int p_damage, bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
+    if(p_block && m_blocking && p_orientation != m_orientation)
     {
         //attack blocked
         //use p_force
@@ -262,12 +266,16 @@ void Character::playerInput(){
 
         //Left
         if(m_leftInput){
+            if(!m_soundManager->isPlaying(&soundSteps))
+                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
             lookLeft();
         }
 
         //Right
         if(m_rightInput){
+            if(!m_soundManager->isPlaying(&soundSteps))
+                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
             lookRight();
         }
@@ -287,8 +295,9 @@ void Character::playerInput(){
 }
 
 void Character::jump(){
+    // Start or continue jump movement
     if(m_jumpCurrentTime < m_jumpMaxTime){
-        moveY(m_jumpTable[m_jumpCurrentTime++]);
+        moveY(m_jumpTable[m_jumpCurrentTime++]*2);
     }
     else{                                                                       // Jump has ended. Starting to go down
         // Activate gravity

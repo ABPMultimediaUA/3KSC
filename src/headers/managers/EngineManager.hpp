@@ -58,11 +58,12 @@ public:
     void scale(int p_id, float p_scale[3]);
     void drawScene();
 
+    void load3DModel(int p_id, float p_position[3], float p_scale, const char* p_modelURL);
     void loadArena(const char* arenaModelURL);
-    void loadCharacters();
-    void loadObjects();
+    void loadCharacter();
+    void loadObject();
 
-    void putCharacters();
+    void putCharacter();
     void putObject();
 
     void drawArena();

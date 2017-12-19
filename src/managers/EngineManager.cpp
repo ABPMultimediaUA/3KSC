@@ -83,8 +83,8 @@ bool EngineManager::createWindow(){
 void EngineManager::createCamera(){
     scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
     if(cameraNode){
-        cameraNode->setPosition(core::vector3df(0,35,-100));
-        cameraNode->setTarget(core::vector3df(0,0,0));
+        cameraNode->setPosition(core::vector3df(0,90,-150));
+        cameraNode->setTarget(core::vector3df(0,50,0));
     }
 }
 
@@ -108,6 +108,7 @@ void EngineManager::createEntity(int p_id, float p_position[3]){
 
         t_node->setPosition(core::vector3df(p_position[0],p_position[1],p_position[2]));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
+        
     }
 }
 
@@ -128,8 +129,23 @@ void EngineManager::drawScene(){
     m_vDriver->endScene();
 }
 
-void EngineManager::loadArena(const char* arenaModelURL){
+//Loads a 3D model
+void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale, const char* p_modelURL){
+    scene::IAnimatedMesh* t_mesh = m_scene->getMesh(p_modelURL);
+    scene::ISceneNode* t_node = 0;
 
+    if (t_mesh){
+        t_node = m_scene->addOctreeSceneNode(t_mesh->getMesh(0), 0, p_id, 1024);
+        t_node->setPosition(core::vector3df(p_position[0], p_position[1], p_position[2]));
+        t_node->setMaterialFlag(video::EMF_LIGHTING, false);
+        t_node->setScale(core::vector3df(p_scale, p_scale, p_scale));
+
+        //Add node to class node vector 
+        m_entityNodes.push_back(t_node);
+    }
+}
+
+void EngineManager::loadArena(const char* arenaModelURL){
     scene::IAnimatedMesh* t_map = m_scene->getMesh(arenaModelURL);
     scene::ISceneNode* t_node = 0;
 
@@ -137,19 +153,21 @@ void EngineManager::loadArena(const char* arenaModelURL){
         t_node = m_scene->addOctreeSceneNode(t_map->getMesh(0), 0, -1, 1024);
         t_node->setPosition(core::vector3df(0,0,0));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
-        t_node->setScale(core::vector3df(8, 8, 8));
+        t_node->setScale(core::vector3df(10,10,10));
     }
 }
 
-void EngineManager::loadCharacters(){
+void EngineManager::loadCharacter(){
+    
+}
+
+
+
+void EngineManager::loadObject(){
 
 }
 
-void EngineManager::loadObjects(){
-
-}
-
-void EngineManager::putCharacters(){
+void EngineManager::putCharacter(){
 
 }
 

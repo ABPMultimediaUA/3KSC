@@ -22,6 +22,7 @@
 
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
+//#include <fmod.h>
 //#include "headers/debug.hpp"
 //#include <iostream>
 
@@ -29,6 +30,7 @@ int main(){
     EngineManager* engineManager = EngineManager::instance();
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
+    SoundManager*   soundManager = SoundManager::instance();
 
 
     if (engineManager->createWindow()){  
@@ -38,11 +40,11 @@ int main(){
         float position[3] = {0, 0, 0};
         float scale[3] = {10, 0.5, 2};
 
-        Character* player1 = new Rawr(positionRawr, "Player 1", 100, 30, 50.f, true, 0);
-        Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false, -1);
+        Character* player1 = new Rawr("Player 1", positionRawr, -1);
+        Character* player2 = new Plup("Player 2", positionPlup, -1);
 
         engineManager->createCamera();
-        Arena* estadio = new Arena(position, scale, "assets/models/estadio.obj");
+        Arena* estadio = new Arena(position, scale, 1);
 
         engineManager->timeStamp();
 
@@ -52,6 +54,7 @@ int main(){
 
         //Game main loop
         while (engineManager->running()){
+            soundManager->update();
             engineManager->updateFrameDeltaTime();
 
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);

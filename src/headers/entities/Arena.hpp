@@ -34,7 +34,7 @@
 
 class Arena : public Entity {
 public:
-	        Arena(float p_position[3], float p_scale[3], const char* arenaModelURL);
+	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex);
             ~Arena();
 	void    finishRound();
 	void    spawnItem();

@@ -27,7 +27,7 @@
 
 class Rawr: public Character{
 public:
-	Rawr(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick);
+	Rawr(char* p_name, float p_position[3], int p_joystick);
     ~Rawr();
     void    jump();
     void    basicAttack();

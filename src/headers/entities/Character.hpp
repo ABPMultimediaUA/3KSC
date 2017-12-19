@@ -25,14 +25,15 @@
 
 #include "Entity.hpp"
 #include "Projectile.hpp"
+#include "../headers/managers/SoundManager.hpp"
 #include <vector>
 
 class Character : public Entity{
 public:
-    Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick);
+    Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL);
     ~Character();
 	
-    void            reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
+    void            receiveAttack(int p_damage, bool p_orientation, bool p_block, float p_force);
     void            lookLeft();
     void            lookRight();
     bool            isJumping();
@@ -57,7 +58,9 @@ protected:
     int                 m_playerIndex;
 
     char*           m_name;
+    int             m_lives;
     int             m_life;
+    int             m_magic;
     int             m_damage;
     float           m_velocity;
     float           m_attackPosition[3];
@@ -84,6 +87,9 @@ protected:
     Projectile**    m_projectiles;
     int             m_maxProjectiles;
     int             m_currentProjectiles;
+
+    SoundManager*   m_soundManager;
+    Sound soundSteps;
 
 private:
     //Conditions for each Input (they change depending on keyboard/joystick control)
