@@ -11,9 +11,8 @@ BINARY 	:= 3KSC
 
 #Compiler set-up
 CC		:= g++
-INCLUDE := -I$(HDRDIR) -I$(SRCDIR)irrlicht/include -I$(SRCDIR)sfml/include -I$(SRCDIR)box2D/include
-LIBS	:= -L$(SRCDIR)irrlicht/lib/Linux -lIrrlicht -L$(SRCDIR)lib -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(SRCDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(SRCDIR)box2D/lib -lbox2d
-
+INCLUDE := -I$(HDRDIR) -I$(SRCDIR)irrlicht/include -I$(SRCDIR)sfml/include -I$(SRCDIR)box2D/include -I$(SRCDIR)fmod/include
+LIBS	:= -L$(SRCDIR)irrlicht/lib/Linux -lIrrlicht -L$(SRCDIR)lib -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(SRCDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(SRCDIR)box2D/lib -lbox2d -L$(SRCDIR)fmod/lib -lfmodex64 -lfmodevent64 -Wl,-rpath $(SRCDIR)fmod/lib
 #Make binary
 $(BINARY): $(OBJECTS)
 	$(CC) -o $@ $^ $(INCLUDE) $(LIBS)

@@ -54,11 +54,6 @@ Entity::Entity(float p_position[3]){
     //Attach the shape to the body
     m_body->CreateShape(m_shapeDef);
     m_body->SetMassFromShapes();
-
-}
-
-b2Body* Entity::getBody(){
-    return m_body;
 }
 
 //Create a new Entity for a new Platform or Arena
@@ -80,9 +75,37 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     m_groundShapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_groundShapeDef->SetAsBox((p_scale[0] * 5), p_scale[1]);
+    m_groundShapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
     m_groundBody->CreateShape(m_groundShapeDef);
 
+}
+
+//Create entity with model
+Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
+    m_id = m_entityCount++;
+
+    for(int i = 0; i < 3; i++){
+        m_position[i] = p_position[i];
+        m_lastPosition[i] = p_position[i];
+    }
+
+    EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
+    moveTo(p_position);
+
+    //Create a new body and positioning it in the coords of the Entity
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->position.Set(p_position[0], p_position[1]);
+    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
+
+    //Create a shape for the body
+    m_shapeDef = new b2PolygonDef();
+    m_shapeDef->SetAsBox(1.0, 1.0);
+    m_shapeDef->density = 10.0;
+    m_shapeDef->friction = 0.3;
+
+    //Attach the shape to the body
+    m_body->CreateShape(m_shapeDef);
+    m_body->SetMassFromShapes();
 }
 
 Entity::~Entity(){}
@@ -122,6 +145,10 @@ void Entity::moveZ(float p_variation){
     m_lastPosition[2] = m_position[2];
     m_position[2] += p_variation;
     EngineManager::instance()->moveEntity(this);
+}
+
+b2Body* Entity::getBody(){
+    return m_body;
 }
 
 
