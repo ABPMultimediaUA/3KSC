@@ -59,16 +59,9 @@ float EngineManager::updateFrameDeltaTime(){
 
 //Creates the game window
 bool EngineManager::createWindow(){
-    //Create a null device to get the desktop resolution
-    //IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
-    //core::dimension2d<u32> t_desktopResolution = t_nulldevice->getVideoModeList()->getDesktopResolution();
-    //t_nulldevice->drop();
-
-    //Use the desktop resolution to create a real device
-    //IrrlichtDevice* t_device = createDevice(video::EDT_OPENGL, t_desktopResolution, 16, true, false, false, &inputs);
     m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, this);
 
-    //0 usually means "success", but with pointers, it's a null pointer.
+    //If m_device is NULL
     if(!m_device)
         return false;
 
@@ -129,7 +122,7 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,0,150,136));
+    m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
     m_scene->drawAll();
     m_vDriver->endScene();
 }

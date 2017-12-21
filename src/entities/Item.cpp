@@ -26,7 +26,7 @@
 //#include <iostream>
 
 //Static members
-const char* Item::m_modelURLs[4] = {"assets/models/items/life_tank.obj", "assets/models/items/life_tank.obj", "assets/models/items/movement_wings.obj", "assets/models/items/life_tank.obj"};
+const char* Item::m_modelURLs[4] = {"assets/models/items/life_tank.obj", "assets/models/items/shield.obj", "assets/models/items/movement_wings.obj", "assets/models/items/life_tank.obj"};
 
 Item::Item(int p_type, float p_position[3]):Entity(p_position, 4.f, Item::m_modelURLs[p_type]){
     m_type = p_type;

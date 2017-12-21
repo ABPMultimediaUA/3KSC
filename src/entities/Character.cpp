@@ -38,7 +38,7 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_name                  = p_name;
     m_joystick              = p_joystick;
     m_lives                 = 3;
-    m_life                  = 50;
+    m_life                  = p_life;
     m_magic                 = p_magic;
     m_maxLife               = p_life;
     m_maxMagic              = p_magic;
@@ -82,18 +82,14 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
 Character::~Character(){}
 
 //Receives an attack from other player
-//Parameters: damage, can you block it?, dragging force
-void Character::receiveAttack(int p_damage, bool p_block, float p_force){
-    if(p_block && m_blocking)
+//Parameters: damage, can you block it?
+void Character::receiveAttack(int p_damage, bool p_block){
+    if((p_block && m_blocking) || m_shielded)
     {
-        //attack blocked
-        //use p_force
+        std::cout << m_name << " blocked an attack and his life remains " << m_life << " HP." << std::endl << std::endl;
     }else{
-        m_life -= p_damage;
-        //use p_force
-        if(m_life<=0){
-            //die
-        }
+        changeLife(-p_damage);
+        std::cout << m_name << " took an attack and now has " << m_life << " HP." << std::endl << std::endl;
     }
 }
 
@@ -101,11 +97,13 @@ void Character::receiveAttack(int p_damage, bool p_block, float p_force){
 void Character::changeLife(int p_variation){
     m_life += p_variation;
 
-    if (m_life <= 0)
-        die();
+    if (m_life < 0){
+        m_life = 0;
+    }
     
-    else if (m_life > m_maxLife)
+    else if (m_life > m_maxLife){
         m_life = m_maxMagic;
+    }
 
     //HUD Stuff
 }
@@ -338,7 +336,7 @@ void Character::playerInput(){
         //Sprint
         if(m_runInput){
             m_runningFactor = 2;
-            std::cout << "Running" << std::endl;
+            //std::cout << m_name << " is running" << std::endl;
         }
 
         //Left
@@ -359,12 +357,14 @@ void Character::playerInput(){
 
         //Block
         m_blocking = m_blockInput;
-        if (m_blocking)
-            std::cout << "Blocking" << std::endl;
+        if (m_blocking){
+            //std::cout << m_name << " is blocking" << std::endl;
+        }
 
         //Pick object
-        if (m_pickInput)
+        if (m_pickInput){
             pickItem();
+        }
 
     }
 
@@ -375,6 +375,19 @@ void Character::playerInput(){
 void Character::playerUpdate(){
     updatePosition(getBody()->GetPosition().y, m_jumping);
     //Increase magic every second and with attacks
+}
+
+//Checks if a player is close to a certain point (in specified range)
+bool Character::checkCloseness(float* p_point, float p_range){  
+    //X axis
+    if(p_point[0] >= m_position[0] - p_range && p_point[0] <= m_position[0] + p_range){
+        //Y axis
+        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range){
+            return true;
+        }
+    }   
+
+    return false;
 }
 
 void Character::jump(){
@@ -405,7 +418,7 @@ void Character::pickItem(){
         //Shield
         case 1:{
             std::cout << m_name <<" got a Shield." << std::endl
-            << m_name << "'s going to take less damage." << std::endl << std::endl;
+            << m_name << "'s now protected against attacks." << std::endl << std::endl;
             break;
         }
 

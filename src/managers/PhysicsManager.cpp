@@ -89,19 +89,3 @@ void PhysicsManager::removeForce(){
 void PhysicsManager::updateGravity(){
 
 }
-
-//Returns whether two entities collide, with a range of error
-bool PhysicsManager::checkCollision(Entity* p_self, Entity* p_obstacle, float p_range){
-    float t_e1[2]   = {p_self->getX(), p_self->getY()}; 
-    float t_e2[2]   = {p_obstacle->getX(), p_obstacle->getY()};
-
-    //X Axis
-    if (t_e2[0] >= t_e1[0] - p_range && t_e2[0] <= t_e1[0] + p_range){
-        //Y Axis
-        if (t_e2[1] >= t_e1[1] - p_range && t_e2[1] <= t_e1[1] + p_range){
-            return true;
-        }
-    }
-
-    return false;
-}

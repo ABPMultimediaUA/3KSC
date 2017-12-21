@@ -86,7 +86,7 @@ int Arena::catchItem(int p_owner, float p_where[3]){
             //X axis
             if(p_where[0] >= m_items[i]->getX() - 5 && p_where[0] <= m_items[i]->getX() + 5){
                 //Y axis
-                if(p_where[1] >= m_items[i]->getY() - 5 && p_where[1] <= m_items[i]->getY() + 5){
+                if(p_where[1] >= m_items[i]->getY() - 10 && p_where[1] <= m_items[i]->getY() + 10){
                     //Use the item
                     m_items[i]->setOwner(p_owner);
                     m_items[i]->use();

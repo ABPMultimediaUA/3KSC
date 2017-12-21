@@ -23,7 +23,7 @@
 #include "../headers/entities/Rawr.hpp"
 #include <iostream>
 
-Rawr::Rawr(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 30, 50.f, "assets/models/characters/rawr/rawr.obj"){
+Rawr::Rawr(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 10, 50.f, "assets/models/characters/rawr/rawr.obj"){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
@@ -35,23 +35,55 @@ void Rawr::jump(){
     Character::jump();
 }
 
+//Headbutt
 void Rawr::basicAttack(){
-    //PENDING IMPLEMENTATION
-    std::cout << "Basic Attack" << std::endl;
-    
+    std::cout << m_name << ": Headbutt!" << std::endl;
+    Character* t_currentPlayer;
+
+    for (int i = 0; i < m_playerCount; i++){
+        //Ignore myself
+        if (i == m_id)
+            continue;
+
+        t_currentPlayer = getPlayer(i);
+
+        //Looking at the rival
+        if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
+        (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
+            //Rival close enough
+            if (checkCloseness(t_currentPlayer->getPosition(), 15)){
+                t_currentPlayer->receiveAttack(m_damage/5, true);
+            }
+        }
+    }
+
     m_basicAttack = false;
 }
 
+//Range attack
 void Rawr::specialAttackUp(){
-    //PENDING IMPLEMENTATION
-    std::cout << "Special Attack Up" << std::endl;
+    std::cout << m_name << ": Range attack" << std::endl;
+    Character* t_currentPlayer;
+
+    for (int i = 0; i < m_playerCount; i++){
+        //Ignore myself
+        if (i == m_id)
+            continue;
+
+        t_currentPlayer = getPlayer(i);
+
+        //Rival close enough
+        if (checkCloseness(t_currentPlayer->getPosition(), 35)){
+            t_currentPlayer->receiveAttack(m_damage/2, true);
+        }
+    }
 
     m_specialAttackUp = false;
 }
 
 void Rawr::specialAttackDown(){
     //PENDING IMPLEMENTATION
-    std::cout << "Special Attack Down" << std::endl;
+    std::cout << m_name << ": Special Attack Down" << std::endl;
     
     m_specialAttackDown = false;
 }
@@ -96,7 +128,7 @@ void Rawr::specialAttackSide(){
 
 void Rawr::ultimateAttack(){
     //PENDING IMPLEMENTATION
-    std::cout << "ULTIMATE TIME!!!" << std::endl;
+    std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
     m_ultimateAttack = false;
 }

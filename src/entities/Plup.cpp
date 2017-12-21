@@ -23,7 +23,7 @@
 #include "../headers/entities/Plup.hpp"
 #include <iostream>
 
-Plup::Plup(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj"){
+Plup::Plup(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 10, 50.f, "assets/models/characters/plup/plup.obj"){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
@@ -39,20 +39,53 @@ void Plup::jump(){
     Character::jump();
 }
 
+//Slap
 void Plup::basicAttack(){
-    //PENDING IMPLEMENTATION
-    std::cout << "Basic Attack" << std::endl;
+    std::cout << m_name << ": Slap!" << std::endl;
+    Character* t_currentPlayer;
+
+    for (int i = 0; i < m_playerCount; i++){
+        //Ignore myself
+        if (i == m_id)
+            continue;
+
+        t_currentPlayer = getPlayer(i);
+
+        //Looking at the rival
+        if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
+        (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
+            //Rival close enough
+            if (checkCloseness(t_currentPlayer->getPosition(), 15)){
+                t_currentPlayer->receiveAttack(m_damage/5, true);
+            }
+        }
+    }
     
     m_basicAttack = false;
 }
 
+//Range attack
 void Plup::specialAttackUp(){
-    //PENDING IMPLEMENTATION
-    std::cout << "Special Attack Up" << std::endl;
+    std::cout << m_name << ": Range attack" << std::endl;
+    Character* t_currentPlayer;
+
+    for (int i = 0; i < m_playerCount; i++){
+        //Ignore myself
+        if (i == m_id)
+            continue;
+
+        t_currentPlayer = getPlayer(i);
+
+        //Rival close enough
+        if (checkCloseness(t_currentPlayer->getPosition(), 35)){
+            t_currentPlayer->receiveAttack(m_damage/2, true);
+        }
+    }
 
     m_specialAttackUp = false;
 }
 
+//Snowman
 void Plup::specialAttackDown(){
     if (m_specialAttackDown){
         if (m_currentSnowmen < m_maxSnowmen){
@@ -89,7 +122,7 @@ void Plup::specialAttackDown(){
 
 void Plup::specialAttackSide(){
     //PENDING IMPLEMENTATION
-    std::cout << "Special Attack Side" << std::endl;
+    std::cout << m_name << ": Special Attack Side" << std::endl;
 
     m_specialAttackSide = false;
 }
@@ -97,7 +130,7 @@ void Plup::specialAttackSide(){
 
 void Plup::ultimateAttack(){
     //PENDING IMPLEMENTATION
-    std::cout << "ULTIMATE TIME!!!" << std::endl;
+    std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
     m_ultimateAttack = false;
 }

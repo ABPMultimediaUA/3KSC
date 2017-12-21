@@ -33,7 +33,7 @@ public:
     Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL);
     ~Character();
 	
-    void            receiveAttack(int p_damage, bool p_block, float p_force);
+    void            receiveAttack(int p_damage, bool p_block7);
     virtual void    changeLife(int p_variation);
     void            changeMagic(int p_variation);
     void            shield();
@@ -57,6 +57,7 @@ public:
     static int          getPlayerCount();
     static Character*   getPlayer(int p_index);
     int                 getIndex();
+    bool                checkCloseness(float* p_point, float p_range);
 
 
 protected:
