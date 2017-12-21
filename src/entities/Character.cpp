@@ -27,7 +27,6 @@
 #include "../headers/extra/Keycodes.hpp"
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
-//#include "../headers/entities/Item.hpp"
 #include "../headers/entities/Arena.hpp"
 #include <iostream>
 
@@ -47,7 +46,9 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_velocity              = p_velocity;
     m_orientation           = true;
     m_stunned               = false;  
-    m_blocking              = false;    
+    m_blocking              = false;
+    m_shielded              = false;
+    m_winged                = false;    
 
     m_runningFactor         = 1;
 
@@ -122,6 +123,19 @@ void Character::changeMagic(int p_variation){
     //HUD Stuff
 }
 
+//Activates shield
+void Character::shield(){
+    m_shielded = true;
+}
+
+//Activates wings, if not already active
+void Character::wings(){
+    if (!m_winged){
+        m_velocity *= 3;
+        m_winged = true;
+    }
+}
+
 //Decreases number of lives
 void Character::die(){
     m_lives--;
@@ -146,7 +160,9 @@ bool Character::isJumping(){
 
 //Assing joystick with index p_joystick (-1 for Keyboard)
 void Character::assignJoystick(int p_joystick){
-    m_joystick = p_joystick;
+    //Only assign to player 2 for now
+    if (m_playerIndex == 1)
+        m_joystick = p_joystick;
 }
 
 
@@ -190,8 +206,8 @@ void Character::updateInputs(){
         m_ultimateAttackInput = t_inputManager->isKeyPressed(Key_Z);
     }
 
-    //Joystick input
-    else{
+    //Joystick input 
+    else if (m_joystick != -2){
 
         /* Controls (XBOX 360 Controller):
             *   Left/Right      Movement
@@ -221,6 +237,25 @@ void Character::updateInputs(){
         m_specialAttackDownInput = t_inputManager->isButtonPressed(m_joystick, Button_B) && m_downInput;
         m_specialAttackSideInput = t_inputManager->isButtonPressed(m_joystick, Button_B) && (m_leftInput || m_rightInput);
         m_ultimateAttackInput = t_inputManager->getAxisPosition(m_joystick, Axis_Z) >= 0 && t_inputManager->getAxisPosition(m_joystick, Axis_R) >= 0;
+    }
+
+    //NPC
+    else{
+        m_upInput = false;
+        m_downInput = false;
+        m_leftInput = false;
+        m_rightInput = false;
+        
+        m_jumpInput = false;
+        m_runInput = false;
+        m_blockInput = false;
+        m_pickInput = false;
+        
+        m_basicAttackInput = false;
+        m_specialAttackUpInput = false;
+        m_specialAttackDownInput = false;
+        m_specialAttackSideInput = false;
+        m_ultimateAttackInput = false;
     }
 }
 
@@ -257,9 +292,9 @@ void Character::playerInput(){
     //}
 
     //Change to joystick (START BUTTON)
-    //if (t_inputManager->isButtonPressed(0, Button_Start)){
-    //    assignJoystick(0);
-    //}
+    if (t_inputManager->isButtonPressed(0, Button_Start)){
+        assignJoystick(0);
+    }
 
     //Exit
     if(t_inputManager->isKeyPressed(Key_Escape))
@@ -363,30 +398,33 @@ void Character::pickItem(){
         //Life tank
         case 0:{
             std::cout << m_name <<" got a Life Tank." << std::endl
-            << "Now " << m_name << "'s life is " << m_life << " HP." << std::endl << std::endl;
+            << m_name << "'s life is now " << m_life << " HP." << std::endl << std::endl;
             break;
         }
 
         //Shield
         case 1:{
-
+            std::cout << m_name <<" got a Shield." << std::endl
+            << m_name << "'s going to take less damage." << std::endl << std::endl;
             break;
         }
 
         //Wings
         case 2:{
-
+            std::cout << m_name <<" got Wings." << std::endl
+            << m_name << "'s speed increased." << std::endl << std::endl;
             break;
         }
 
         //Fosforian Obedience Automatic Hammer (F.O.A.H)
         case 3:{
-
+            std::cout << m_name <<" got a F.O.A.H." << std::endl
+            << m_name << "'s going to make rivals suffer." << std::endl << std::endl;
             break;
         }
 
         default:{
-            std::cout << "No object here" << std::endl;
+            //std::cout << "No object here" << std::endl;
         }
     }
 }

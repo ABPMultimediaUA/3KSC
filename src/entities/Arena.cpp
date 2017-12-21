@@ -22,7 +22,7 @@
 
 #include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
-#include <iostream>
+//#include <iostream>
 
 
 //Instance initialization
@@ -35,7 +35,7 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_p
 
     t_engineManager->loadArena(m_modelURL);
 
-    m_maxItems      = 4;
+    m_maxItems      = 8;
     m_currentItems  = 0;
     m_items         = new Item*[m_maxItems];
 
@@ -48,19 +48,31 @@ Arena* Arena::getInstance(){
     return m_instance;
 }
 
-void Arena::finishRound(){
+void Arena::spawnPlayers(){
+    float positionRawr[3] = {-10, 20, 0};
+    float positionPlup[3] = {10, 20, 0};
 
+    Character* player1 = new Rawr("Player 1", positionRawr, -1);
+    Character* player2 = new Plup("Player 2", positionPlup, -2);
 }
 
-void Arena::spawnItem(int p_type){
-    float positionItem[3] = {30, 5, 0};
-    m_items[m_currentItems++] = new Item(p_type, positionItem);
+void Arena::spawnItems(){
+    float positionItem[3] = {-100, 10, 0};
+    m_items[m_currentItems++] = new Item(0, positionItem);
+    positionItem[0] = -80;
+    m_items[m_currentItems++] = new Item(0, positionItem);
+    positionItem[0] = 80;
+    m_items[m_currentItems++] = new Item(0, positionItem);
+    positionItem[0] = 100;
+    m_items[m_currentItems++] = new Item(0, positionItem);
+    positionItem[0] = -60;
+    m_items[m_currentItems++] = new Item(1, positionItem);
+    positionItem[0] = 60;
+    m_items[m_currentItems++] = new Item(1, positionItem);
     positionItem[0] = -30;
-    m_items[m_currentItems++] = new Item(p_type, positionItem);
-    positionItem[0] = 50;
-    m_items[m_currentItems++] = new Item(p_type, positionItem);
-    positionItem[0] = -50;
-    m_items[m_currentItems++] = new Item(p_type, positionItem);
+    m_items[m_currentItems++] = new Item(2, positionItem);
+    positionItem[0] = 30;
+    m_items[m_currentItems++] = new Item(2, positionItem);
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it
@@ -72,18 +84,17 @@ int Arena::catchItem(int p_owner, float p_where[3]){
         //Check not null
         if (m_items[i]){
             //X axis
-            if(p_where[0] >= m_items[i]->getX() - 15 && p_where[0] <= m_items[i]->getX() + 15){
+            if(p_where[0] >= m_items[i]->getX() - 5 && p_where[0] <= m_items[i]->getX() + 5){
                 //Y axis
-                if(p_where[1] >= m_items[i]->getY() - 15 && p_where[1] <= m_items[i]->getY() + 15){
+                if(p_where[1] >= m_items[i]->getY() - 5 && p_where[1] <= m_items[i]->getY() + 5){
                     //Use the item
                     m_items[i]->setOwner(p_owner);
                     m_items[i]->use();
 
-                    std::cout << "i: " << i << std::endl;
-
                     //Save return value and delete item
                     t_type = m_items[i]->getType();
                     delete m_items[i];
+                    m_items[i] = 0;
                     break;
                 }
             }
@@ -93,7 +104,7 @@ int Arena::catchItem(int p_owner, float p_where[3]){
     return t_type;
 }
 
-void Arena::spawnPlayer(){
+void Arena::finishRound(){
 
 }
 

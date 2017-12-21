@@ -23,7 +23,9 @@
 #ifndef ARENA
 #define ARENA
 
-#include "Entity.hpp"
+//#include "Entity.hpp"
+#include "Rawr.hpp"
+#include "Plup.hpp"
 #include "Item.hpp"
 //#include "Skybox.hpp"
 //#include "Texture.hpp"
@@ -37,10 +39,10 @@ public:
 	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex);
             ~Arena();
     static Arena*   getInstance();
-	void            finishRound();
-	void            spawnItem(int p_type);
+    void            spawnPlayers();
+	void            spawnItems();
     int             catchItem(int p_owner, float p_where[3]);
-    void            spawnPlayer();
+	void            finishRound();
     void            movePlatforms();
     void            animateBackground();
     void            restart();

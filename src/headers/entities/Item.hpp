@@ -38,7 +38,7 @@ class Item: public Entity {
         int                 m_owner;
         float               m_duration;
         float               m_durationGround;
-        static const char*  m_modelURLs[2];
+        static const char*  m_modelURLs[4];
 };
 
 #endif

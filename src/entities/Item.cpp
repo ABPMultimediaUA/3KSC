@@ -23,10 +23,10 @@
 #include "../headers/entities/Item.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/entities/Character.hpp"
-#include <iostream>
+//#include <iostream>
 
 //Static members
-const char* Item::m_modelURLs[2] = {"assets/models/items/life_tank.obj", "assets/models/items/movement_wings.obj"};
+const char* Item::m_modelURLs[4] = {"assets/models/items/life_tank.obj", "assets/models/items/life_tank.obj", "assets/models/items/movement_wings.obj", "assets/models/items/life_tank.obj"};
 
 Item::Item(int p_type, float p_position[3]):Entity(p_position, 4.f, Item::m_modelURLs[p_type]){
     m_type = p_type;
@@ -52,13 +52,13 @@ void Item::use(){
 
         //Shield
         case 1:{
-
+            Character::getPlayer(m_owner)->shield();
             break;
         }
 
         //Wings
         case 2:{
-
+            Character::getPlayer(m_owner)->wings();
             break;
         }
 

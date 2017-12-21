@@ -24,7 +24,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
-#include <iostream>
+//#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -76,7 +76,7 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     m_groundShapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_groundShapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
+    m_groundShapeDef->SetAsBox((p_scale[0]), p_scale[1]);
     m_groundBody->CreateShape(m_groundShapeDef);
 
 }
@@ -111,12 +111,8 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
 
 //Destructor
 Entity::~Entity(){
-    std::cout << "Delete id: " << m_id << std::endl;
-    std::cout << "Check 1" << std::endl;
     EngineManager::instance()->deleteEntity(m_id);
-    std::cout << "Check 2" << std::endl;
     getBody()->GetWorld()->DestroyBody(getBody());
-    std::cout << "Check 3" << std::endl;
 }
 
 void Entity::updatePosition(float p_posY, bool p_jumping){
