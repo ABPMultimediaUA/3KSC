@@ -32,15 +32,14 @@ int main(){
     PhysicsManager* physicsManager = PhysicsManager::instance();
     SoundManager*   soundManager = SoundManager::instance();
 
-
     if (engineManager->createWindow()){  
-        float positionRawr[3] = {-10, 15, 0};
-        float positionPlup[3] = {10, 15, 0};
+        float positionRawr[3] = {-10, 15, 6};
+        float positionPlup[3] = {10, 15, 6};
         float positionTurret[3] = {30, 25, 0};
         float position[3] = {0, 0, 0};
         float scale[3] = {10, 0.5, 2};
 
-        Character* player1 = new Rawr(positionRawr, "Player 1", 100, 30, 50.f, true);
+        Character* player1 = new Rawr(positionRawr, "Player 1", 100, 30, 50.f, true, -1);
         //Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false);
 
         engineManager->createCamera();
@@ -51,6 +50,9 @@ int main(){
         //For players loop
         int i;
         Character* currentPlayer;
+
+        Debug *estadioDebug = new Debug(666, estadio->getBody(), estadio->getShape());
+        Debug *playerDebug = new Debug(666, player1->getBody(), player1->getShape());
 
         //Game main loop
         while (engineManager->running()){
@@ -66,16 +68,7 @@ int main(){
                 currentPlayer->playerInput();
                 currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
             }
-
-
-            std::cout << player1->getBody()->GetShapeList()->GetType() << std::endl;
-
-            //player1->getCoords();
-            for(int i = 0; i < player1->getShape()->GetVertexCount(); i++){
-                std::cout << "(" << player1->getShape()->GetVertices()[i].x << "," << player1->getShape()->GetVertices()[i].y << ")" << std::endl;
-            }
-            std::cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << std::endl;
-
+            playerDebug->update();
             engineManager->drawScene();
         }
 

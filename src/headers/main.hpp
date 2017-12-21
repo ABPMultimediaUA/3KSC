@@ -30,5 +30,6 @@
 #include "entities/Rawr.hpp"
 #include "entities/Plup.hpp"
 #include "entities/Arena.hpp"
+#include "debug.hpp"
 
 #endif

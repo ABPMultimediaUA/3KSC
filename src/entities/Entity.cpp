@@ -47,7 +47,7 @@ Entity::Entity(float p_position[3]){
 
     //Create a shape for the body
     m_shapeDef = new b2PolygonDef();
-    m_shapeDef->SetAsBox(1.0, 1.0);
+    m_shapeDef->SetAsBox(5.0, 5.0);
     m_shapeDef->density = 10.0;
     m_shapeDef->friction = 0.3;
 
@@ -55,14 +55,7 @@ Entity::Entity(float p_position[3]){
     m_body->CreateShape(m_shapeDef);
     m_body->SetMassFromShapes();
 
-    m_polygonShape = new b2PolygonShape(m_shapeDef);    
-}
-
-void Entity::getCoords(){
-    for(int i = 0; i < m_polygonShape->GetVertexCount(); i++){
-        std::cout << "(" << m_polygonShape->GetVertices()[i].x << "," << m_polygonShape->GetVertices()[i].y << ")" << std::endl;
-    }
-    std::cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << std::endl;
+    m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
 
 b2PolygonShape* Entity::getShape(){
@@ -84,22 +77,24 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     moveTo(p_position);
     */
 
-    m_groundBodyDef = new b2BodyDef();
-    m_groundBodyDef->position.Set(p_position[0], p_position[1]);
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->position.Set(p_position[0], p_position[1]);
     
-    m_groundBody = PhysicsManager::instance()->getWorld()->CreateBody(m_groundBodyDef);
+    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
 
-    m_groundShapeDef = new b2PolygonDef();
+    m_shapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_groundShapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
-    m_groundBody->CreateShape(m_groundShapeDef);
+    m_shapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
+    m_body->CreateShape(m_shapeDef);
 
+    m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
 
 Entity::~Entity(){}
 
 void Entity::updatePosition(float p_posY, bool p_jumping){
+    //std::cout << m_position[0] << "," << m_position[1] << std::endl;
     if(p_jumping){
         this->m_body->PutToSleep();
     }

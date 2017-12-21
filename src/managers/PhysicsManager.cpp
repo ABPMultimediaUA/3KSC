@@ -50,14 +50,6 @@ PhysicsManager::PhysicsManager(){
 
     m_timeStep = 3.0 / 60.0;
     m_iterations = 10;
-
-    Debug* DebugInstance;
-    //in constructor, usually
-    //m_world->SetDebugDraw(DebugInstance);
-    //m_world->DrawDebugData();
-
-    //somewhere appropriate
-    //DebugInstance->SetFlags(b2DebugDraw::e_shapeBit);
 }
 
 b2World* PhysicsManager::getWorld(){

@@ -80,6 +80,13 @@ bool EngineManager::createWindow(){
     return true;
 }
 
+irr::video::IVideoDriver* EngineManager::getVideoDriver(){
+    return m_vDriver;
+}
+irr::scene::ISceneManager* EngineManager::getSceneManager(){
+    return m_scene;
+}
+
 void EngineManager::createCamera(){
     scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
     if(cameraNode){
