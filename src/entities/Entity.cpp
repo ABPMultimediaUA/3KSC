@@ -24,6 +24,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
+#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -108,7 +109,15 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
     m_body->SetMassFromShapes();
 }
 
-Entity::~Entity(){}
+//Destructor
+Entity::~Entity(){
+    std::cout << "Delete id: " << m_id << std::endl;
+    std::cout << "Check 1" << std::endl;
+    EngineManager::instance()->deleteEntity(m_id);
+    std::cout << "Check 2" << std::endl;
+    getBody()->GetWorld()->DestroyBody(getBody());
+    std::cout << "Check 3" << std::endl;
+}
 
 void Entity::updatePosition(float p_posY, bool p_jumping){
     if(p_jumping){
@@ -170,4 +179,8 @@ float Entity::getY(){
 
 float Entity::getZ(){
     return m_position[2];
+}
+
+int Entity::getEntityCount(){
+    return Entity::m_entityCount;
 }

@@ -20,45 +20,25 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef ARENA
-#define ARENA
+#ifndef ITEM
+#define ITEM
 
 #include "Entity.hpp"
-#include "Item.hpp"
-//#include "Skybox.hpp"
-//#include "Texture.hpp"
-//#include "WaterLily.hpp"
-//#include "Branch.hpp"
-//#include "Platform.hpp"
-//#include "GravityZone.hpp"
 
-class Arena : public Entity {
-public:
-	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex);
-            ~Arena();
-    static Arena*   getInstance();
-	void            finishRound();
-	void            spawnItem(int p_type);
-    int             catchItem(int p_owner, float p_where[3]);
-    void            spawnPlayer();
-    void            movePlatforms();
-    void            animateBackground();
-    void            restart();
-private: 
-    static Arena* m_instance;
-	//Skybox*     m_skybox;
-    //Texture*    m_background;
-    float       m_time;
-    float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
-    
-    int         m_maxItems;
-    int         m_currentItems;
-    Item**      m_items;
-
-    //WaterLily*   m_waterLilys;
-    //Branch*      m_branches;
-    //Platform*    m_platforms;
-    //GravityZone* m_gravityZones;
+class Item: public Entity {
+    public:
+        Item(int p_type, float p_position[3]);
+        ~Item();
+        int             getType();
+        void            setOwner(int p_owner);
+        void            use();
+        
+    private:
+        int                 m_type;             //0-3: {Life Tank, Shield, Wings, F.O.A.H}
+        int                 m_owner;
+        float               m_duration;
+        float               m_durationGround;
+        static const char*  m_modelURLs[2];
 };
 
 #endif

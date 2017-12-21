@@ -24,7 +24,7 @@
 #include "headers/main.hpp"
 //#include <fmod.h>
 //#include "headers/debug.hpp"
-//#include <iostream>
+#include <iostream>
 
 int main(){
     EngineManager* engineManager = EngineManager::instance();
@@ -36,21 +36,24 @@ int main(){
     if (engineManager->createWindow()){  
         float positionRawr[3] = {-10, 15, 0};
         float positionPlup[3] = {10, 15, 0};
-        float positionTurret[3] = {30, 25, 0};
         float position[3] = {0, 0, 0};
         float scale[3] = {10, 0.5, 2};
 
+        Arena* estadio = new Arena(position, scale, 1);
         Character* player1 = new Rawr("Player 1", positionRawr, -1);
         Character* player2 = new Plup("Player 2", positionPlup, -1);
 
         engineManager->createCamera();
-        Arena* estadio = new Arena(position, scale, 1);
+
+        estadio->spawnItem(0);
 
         engineManager->timeStamp();
 
         //For players loop
         int i;
         Character* currentPlayer;
+
+        std::cout << "Entities: " << Entity::getEntityCount() << std::endl;
 
         //Game main loop
         while (engineManager->running()){
@@ -64,7 +67,7 @@ int main(){
                 currentPlayer = Character::getPlayer(i);
 
                 currentPlayer->playerInput();
-                currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
+                currentPlayer->playerUpdate();
             }
 
             engineManager->drawScene();

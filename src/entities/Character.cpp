@@ -27,6 +27,8 @@
 #include "../headers/extra/Keycodes.hpp"
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
+//#include "../headers/entities/Item.hpp"
+#include "../headers/entities/Arena.hpp"
 #include <iostream>
 
 //Static members
@@ -37,8 +39,10 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_name                  = p_name;
     m_joystick              = p_joystick;
     m_lives                 = 3;
-    m_life                  = p_life;
+    m_life                  = 50;
     m_magic                 = p_magic;
+    m_maxLife               = p_life;
+    m_maxMagic              = p_magic;
     m_damage                = p_damage;
     m_velocity              = p_velocity;
     m_orientation           = true;
@@ -76,8 +80,10 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
 
 Character::~Character(){}
 
-void Character::receiveAttack(int p_damage, bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
-    if(p_block && m_blocking && p_orientation != m_orientation)
+//Receives an attack from other player
+//Parameters: damage, can you block it?, dragging force
+void Character::receiveAttack(int p_damage, bool p_block, float p_force){
+    if(p_block && m_blocking)
     {
         //attack blocked
         //use p_force
@@ -89,6 +95,42 @@ void Character::receiveAttack(int p_damage, bool p_orientation, bool p_block, fl
         }
     }
 }
+
+//Increases or decreases life
+void Character::changeLife(int p_variation){
+    m_life += p_variation;
+
+    if (m_life <= 0)
+        die();
+    
+    else if (m_life > m_maxLife)
+        m_life = m_maxMagic;
+
+    //HUD Stuff
+}
+
+//Increases or decreases magic
+void Character::changeMagic(int p_variation){
+    m_magic += p_variation;
+
+    if (m_magic < 0)
+        m_magic = 0;
+    
+    else if (m_magic > m_maxMagic)
+        m_life = m_maxMagic;
+
+    //HUD Stuff
+}
+
+//Decreases number of lives
+void Character::die(){
+    m_lives--;
+    
+    //HUD Stuff
+
+    //Delete when m_lives == 0
+}
+
 
 void Character::lookLeft(){
     m_orientation = false;
@@ -125,7 +167,7 @@ void Character::updateInputs(){
             *   X + Up/W                    Up Special Attack
             *   X + Down/S                  Down Special Attack
             *   X + Left/Right or A/D       Side Special Attack
-            *   Q                           Pick object
+            *   Q                           Pick item
             *   B                           Block
             *   LShift/RShift               Run
             *   Z                           Ultimate Attack
@@ -158,7 +200,7 @@ void Character::updateInputs(){
             *   B + Up          Up Special Attack
             *   B + Down        Down Special Attack
             *   B + Left/Right  Side Special Attack
-            *   Y               Pick object
+            *   Y               Pick item
             *   LB              Block
             *   RB              Run
             *   LT + RT         Ultimate Attack
@@ -287,11 +329,17 @@ void Character::playerInput(){
 
         //Pick object
         if (m_pickInput)
-            pickObject();
+            pickItem();
 
     }
 
     checkActions();    
+}
+
+//Update state of player
+void Character::playerUpdate(){
+    updatePosition(getBody()->GetPosition().y, m_jumping);
+    //Increase magic every second and with attacks
 }
 
 void Character::jump(){
@@ -308,8 +356,39 @@ void Character::jump(){
     }
 }
 
-void Character::pickObject(){
-    std::cout << "Picked object" << std::endl;
+void Character::pickItem(){
+    int t_itemType = Arena::getInstance()->catchItem(m_id, m_position);
+    
+    switch (t_itemType){
+        //Life tank
+        case 0:{
+            std::cout << m_name <<" got a Life Tank." << std::endl
+            << "Now " << m_name << "'s life is " << m_life << " HP." << std::endl << std::endl;
+            break;
+        }
+
+        //Shield
+        case 1:{
+
+            break;
+        }
+
+        //Wings
+        case 2:{
+
+            break;
+        }
+
+        //Fosforian Obedience Automatic Hammer (F.O.A.H)
+        case 3:{
+
+            break;
+        }
+
+        default:{
+            std::cout << "No object here" << std::endl;
+        }
+    }
 }
 
 void Character::basicAttack(){}

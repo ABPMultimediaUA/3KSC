@@ -77,9 +77,6 @@ bool Snowman::lockNLoad(){
 
     //Delete turret when last bullet is gone
     if (m_ammo == -1){
-        EngineManager::instance()->deleteEntity(this->getId());
-        getBody()->GetWorld()->DestroyBody(getBody());
-        
         return false;
     }
 

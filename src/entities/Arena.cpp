@@ -22,6 +22,11 @@
 
 #include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include <iostream>
+
+
+//Instance initialization
+Arena* Arena::m_instance = 0;
 
 Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_position, p_scale){
     EngineManager* t_engineManager = EngineManager::instance();
@@ -29,16 +34,63 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_p
         m_modelURL = "assets/models/arenas/stadium.obj";
 
     t_engineManager->loadArena(m_modelURL);
+
+    m_maxItems      = 4;
+    m_currentItems  = 0;
+    m_items         = new Item*[m_maxItems];
+
+    m_instance      = this;
 }
 
 Arena::~Arena(){}
+
+Arena* Arena::getInstance(){
+    return m_instance;
+}
 
 void Arena::finishRound(){
 
 }
 
-void Arena::spawnItem(){
+void Arena::spawnItem(int p_type){
+    float positionItem[3] = {30, 5, 0};
+    m_items[m_currentItems++] = new Item(p_type, positionItem);
+    positionItem[0] = -30;
+    m_items[m_currentItems++] = new Item(p_type, positionItem);
+    positionItem[0] = 50;
+    m_items[m_currentItems++] = new Item(p_type, positionItem);
+    positionItem[0] = -50;
+    m_items[m_currentItems++] = new Item(p_type, positionItem);
+}
 
+//Checks if any of the items in the screen is where the player wants to pick it
+//Returns -1 if no item found or the type of the item
+int Arena::catchItem(int p_owner, float p_where[3]){
+    int t_type = -1;
+    
+    for (int i = 0; i < m_currentItems; i++){
+        //Check not null
+        if (m_items[i]){
+            //X axis
+            if(p_where[0] >= m_items[i]->getX() - 15 && p_where[0] <= m_items[i]->getX() + 15){
+                //Y axis
+                if(p_where[1] >= m_items[i]->getY() - 15 && p_where[1] <= m_items[i]->getY() + 15){
+                    //Use the item
+                    m_items[i]->setOwner(p_owner);
+                    m_items[i]->use();
+
+                    std::cout << "i: " << i << std::endl;
+
+                    //Save return value and delete item
+                    t_type = m_items[i]->getType();
+                    delete m_items[i];
+                    break;
+                }
+            }
+        }
+    }
+
+    return t_type;
 }
 
 void Arena::spawnPlayer(){
