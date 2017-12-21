@@ -46,13 +46,13 @@ class PhysicsManager{
     void addForce();
     void removeForce();
     void updateGravity();
+    bool checkCollision(Entity* p_self, Entity* p_obstacle, float p_range);
 
     b2World* m_world;
     b2World* getWorld();
 
     float getTimeStep();
     int getIterations();
-
 };
 
 #endif

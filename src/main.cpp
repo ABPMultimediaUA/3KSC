@@ -34,18 +34,15 @@ int main(){
 
 
     if (engineManager->createWindow()){  
-        float positionRawr[3] = {-10, 15, 0};
-        float positionPlup[3] = {10, 15, 0};
-        float positionTurret[3] = {30, 25, 0};
-        float position[3] = {0, 0, 0};
-        float scale[3] = {10, 0.5, 2};
+        float position[3] = {0, 6, 0};
+        float scale[3] = {120, 0.5, 2};
 
-        Character* player1 = new Rawr("Player 1", positionRawr, -1);
-        Character* player2 = new Plup("Player 2", positionPlup, -1);
+        Arena* estadio = new Arena(position, scale, 1);
+        
+        estadio->spawnPlayers();
+        estadio->spawnItems();
 
         engineManager->createCamera();
-        Arena* estadio = new Arena(position, scale, 1);
-
         engineManager->timeStamp();
 
         //For players loop
@@ -64,7 +61,7 @@ int main(){
                 currentPlayer = Character::getPlayer(i);
 
                 currentPlayer->playerInput();
-                currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
+                currentPlayer->playerUpdate();
             }
 
             engineManager->drawScene();

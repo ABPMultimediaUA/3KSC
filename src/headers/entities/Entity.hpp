@@ -47,6 +47,8 @@ public:
     b2Body* getBody();
 
     void updatePosition(float p_posY, bool p_jumping);
+
+    static int getEntityCount();
     
 protected:
     static int m_entityCount;
