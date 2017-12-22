@@ -152,6 +152,19 @@ void Entity::moveZ(float p_variation){
     EngineManager::instance()->moveEntity(this);
 }
 
+//Checks if an entity is close to a certain point (in specified range)
+bool Entity::checkCloseness(float* p_point, float p_range){  
+    //X axis
+    if(p_point[0] >= m_position[0] - p_range && p_point[0] <= m_position[0] + p_range){
+        //Y axis
+        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range){
+            return true;
+        }
+    }   
+
+    return false;
+}
+
 b2Body* Entity::getBody(){
     return m_body;
 }

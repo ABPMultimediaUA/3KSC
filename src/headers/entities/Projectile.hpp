@@ -32,10 +32,12 @@ public:
     bool    hit();
     bool    update();
 private:
+    int     m_type;
     float   m_target[3];
     int     m_damage;
     float   m_velocity;
     float   m_distanceLeft;
+    static const char*  m_modelURLs[2];
 
     float   m_step[3];
     void    calculateSteps();

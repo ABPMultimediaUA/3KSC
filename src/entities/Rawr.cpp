@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../headers/entities/Rawr.hpp"
+#include "../headers/entities/Arena.hpp"
 #include <iostream>
 
 Rawr::Rawr(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 10, 50.f, "assets/models/characters/rawr/rawr.obj"){
@@ -45,7 +46,7 @@ void Rawr::basicAttack(){
         if (i == m_id)
             continue;
 
-        t_currentPlayer = getPlayer(i);
+        t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Looking at the rival
         if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
@@ -70,7 +71,7 @@ void Rawr::specialAttackUp(){
         if (i == m_id)
             continue;
 
-        t_currentPlayer = getPlayer(i);
+        t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Rival close enough
         if (checkCloseness(t_currentPlayer->getPosition(), 35)){

@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../headers/entities/Plup.hpp"
+#include "../headers/entities/Arena.hpp"
 #include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 10, 50.f, "assets/models/characters/plup/plup.obj"){
@@ -49,7 +50,7 @@ void Plup::basicAttack(){
         if (i == m_id)
             continue;
 
-        t_currentPlayer = getPlayer(i);
+        t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Looking at the rival
         if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
@@ -74,7 +75,7 @@ void Plup::specialAttackUp(){
         if (i == m_id)
             continue;
 
-        t_currentPlayer = getPlayer(i);
+        t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Rival close enough
         if (checkCloseness(t_currentPlayer->getPosition(), 35)){

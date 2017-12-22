@@ -31,7 +31,6 @@
 #include <iostream>
 
 //Static members
-Character** Character::m_players = new Character*[4];
 int Character::m_playerCount = 0;
 
 Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL) : Entity(p_position, 5.f, p_modelURL){
@@ -73,7 +72,6 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_ultimateAttack        = false;
 
     m_playerIndex = Character::m_playerCount++;
-    Character::m_players[m_playerIndex] = this;
 
     m_soundManager = SoundManager::instance();
     m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
@@ -377,19 +375,6 @@ void Character::playerUpdate(){
     //Increase magic every second and with attacks
 }
 
-//Checks if a player is close to a certain point (in specified range)
-bool Character::checkCloseness(float* p_point, float p_range){  
-    //X axis
-    if(p_point[0] >= m_position[0] - p_range && p_point[0] <= m_position[0] + p_range){
-        //Y axis
-        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range){
-            return true;
-        }
-    }   
-
-    return false;
-}
-
 void Character::jump(){
     // Start or continue jump movement
     if(m_jumpCurrentTime < m_jumpMaxTime){
@@ -451,16 +436,6 @@ void Character::specialAttackDown(){}
 void Character::specialAttackSide(){}
 
 void Character::ultimateAttack(){}
-
-//Returns the player count
-int Character::getPlayerCount(){
-    return Character::m_playerCount;
-}
-
-//Returns the player with the given index
-Character* Character::getPlayer(int p_index){
-    return Character::m_players[p_index];
-}
 
 //Returns the index of the player
 int Character::getIndex(){

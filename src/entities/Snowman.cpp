@@ -22,6 +22,7 @@
 
 #include "../headers/entities/Snowman.hpp"
 #include "../headers/entities/Character.hpp"
+#include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
 
 //Constructor
@@ -42,7 +43,7 @@ Snowman::~Snowman(){}
 bool Snowman::lockNLoad(){
     if (m_ammo > 0){
         if (m_currentSnowballs < m_maxSnowballs){
-            int t_playerCount = Character::getPlayerCount();
+            int t_playerCount = Arena::getInstance()->getPlayerCount();
             Character* t_currentPlayer;
 
             for (int i = 0; i < t_playerCount; i++){
@@ -50,7 +51,7 @@ bool Snowman::lockNLoad(){
                 if (i == m_owner)
                     continue;
 
-                t_currentPlayer = Character::getPlayer(i);
+                t_currentPlayer = Arena::getInstance()->getPlayer(i);
                 m_target[0] = t_currentPlayer->getX();
                 m_target[1] = t_currentPlayer->getY();
                 m_target[2] = t_currentPlayer->getZ();
