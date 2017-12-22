@@ -23,7 +23,6 @@
 #ifndef ARENA
 #define ARENA
 
-//#include "Entity.hpp"
 #include "Rawr.hpp"
 #include "Plup.hpp"
 #include "Item.hpp"
@@ -40,6 +39,8 @@ public:
             ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
+    int             getPlayerCount();
+    Character*      getPlayer(int p_index);
 	void            spawnItems();
     int             catchItem(int p_owner, float p_where[3]);
 	void            finishRound();
@@ -56,6 +57,9 @@ private:
     int         m_maxItems;
     int         m_currentItems;
     Item**      m_items;
+
+    int         m_playerCount;
+    Character** m_players;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

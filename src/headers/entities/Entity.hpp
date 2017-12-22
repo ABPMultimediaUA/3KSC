@@ -38,6 +38,7 @@ public:
     void moveX(float p_variation);
     void moveY(float p_variation);
     void moveZ(float p_variation);
+    bool checkCloseness(float* p_point, float p_range);
     int getId();
     float* getPosition();
     float getX();

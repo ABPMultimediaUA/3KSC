@@ -52,9 +52,23 @@ void Arena::spawnPlayers(){
     float positionRawr[3] = {-10, 20, 0};
     float positionPlup[3] = {10, 20, 0};
 
-    Character* player1 = new Rawr("Player 1", positionRawr, -1);
-    Character* player2 = new Plup("Player 2", positionPlup, -2);
+    m_playerCount = 0;
+    m_players = new Character*[4];
+
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -2);
 }
+
+//Returns number of players
+int Arena::getPlayerCount(){
+    return m_playerCount;
+}
+
+//Returns the player with the given index
+Character* Arena::getPlayer(int p_index){
+    return m_players[p_index];
+}
+
 
 void Arena::spawnItems(){
     float positionItem[3] = {-100, 10, 0};
@@ -86,7 +100,7 @@ int Arena::catchItem(int p_owner, float p_where[3]){
             //X axis
             if(p_where[0] >= m_items[i]->getX() - 5 && p_where[0] <= m_items[i]->getX() + 5){
                 //Y axis
-                if(p_where[1] >= m_items[i]->getY() - 5 && p_where[1] <= m_items[i]->getY() + 5){
+                if(p_where[1] >= m_items[i]->getY() - 10 && p_where[1] <= m_items[i]->getY() + 10){
                     //Use the item
                     m_items[i]->setOwner(p_owner);
                     m_items[i]->use();

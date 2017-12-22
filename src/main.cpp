@@ -46,7 +46,7 @@ int main(){
         engineManager->timeStamp();
 
         //For players loop
-        int i;
+        int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
 
         //Game main loop
@@ -57,8 +57,8 @@ int main(){
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
 
             //Input and update for every character
-            for (i = 0; i < Character::getPlayerCount(); i++){
-                currentPlayer = Character::getPlayer(i);
+            for (i = 0; i < playerCount; i++){
+                currentPlayer = Arena::getInstance()->getPlayer(i);
 
                 currentPlayer->playerInput();
                 currentPlayer->playerUpdate();

@@ -26,14 +26,13 @@
 #include "Entity.hpp"
 #include "Projectile.hpp"
 #include "../headers/managers/SoundManager.hpp"
-//#include <vector>
 
 class Character : public Entity{
 public:
     Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL);
     ~Character();
 	
-    void            receiveAttack(int p_damage, bool p_block, float p_force);
+    void            receiveAttack(int p_damage, bool p_block);
     virtual void    changeLife(int p_variation);
     void            changeMagic(int p_variation);
     void            shield();
@@ -53,16 +52,13 @@ public:
     virtual void    specialAttackDown();
     virtual void    specialAttackSide();
     virtual void    ultimateAttack();
-
-    static int          getPlayerCount();
-    static Character*   getPlayer(int p_index);
-    int                 getIndex();
-
+    
+    int             getDamage();
+    int             getIndex();
 
 protected:
-    static Character**  m_players;
-    static int          m_playerCount;
-    int                 m_playerIndex;
+    static int      m_playerCount;
+    int             m_playerIndex;
 
     char*           m_name;
     int             m_lives;
