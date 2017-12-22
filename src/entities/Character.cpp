@@ -437,6 +437,11 @@ void Character::specialAttackSide(){}
 
 void Character::ultimateAttack(){}
 
+//Returns the damage of the player
+int Character::getDamage(){
+    return m_damage;
+}
+
 //Returns the index of the player
 int Character::getIndex(){
     return m_playerIndex;

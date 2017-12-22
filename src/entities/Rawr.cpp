@@ -89,11 +89,12 @@ void Rawr::specialAttackDown(){
     m_specialAttackDown = false;
 }
 
+//Fireball
 void Rawr::specialAttackSide(){
     if (m_currentProjectiles < m_maxProjectiles){
         if(m_orientation){   // Looking right
-            // Attack 20 units to the right
-            m_attackPosition[0] = m_position[0] + 20;
+            // Attack 5 units to the right
+            m_attackPosition[0] = m_position[0] + 5;
             m_attackPosition[1] = m_position[1];
             m_attackPosition[2] = m_position[2];
 
@@ -102,8 +103,8 @@ void Rawr::specialAttackSide(){
             m_attackTarget[2] = m_position[2];
         }
         else{   // Looking left
-            // Attack 20 units to the right
-            m_attackPosition[0] = m_position[0] - 20;
+            // Attack 5 units to the right
+            m_attackPosition[0] = m_position[0] - 5;
             m_attackPosition[1] = m_position[1];
             m_attackPosition[2] = m_position[2];
 
@@ -113,7 +114,8 @@ void Rawr::specialAttackSide(){
         }
 
         //Create attack and increase projectile count
-        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, 60, 3, 100);
+        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_id, 0);
+        std::cout << m_name << ": Fireball" << std::endl;
     }
 
     //Move projectiles, and delete them

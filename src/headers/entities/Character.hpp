@@ -53,7 +53,8 @@ public:
     virtual void    specialAttackSide();
     virtual void    ultimateAttack();
     
-    int                 getIndex();
+    int             getDamage();
+    int             getIndex();
 
 protected:
     static int      m_playerCount;

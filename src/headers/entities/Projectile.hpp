@@ -27,11 +27,12 @@
 
 class Projectile: public Entity {
 public:
-	        Projectile(float p_position[3], float p_target[3], int p_damage, float p_velocity, float p_distanceLeft);
+	        Projectile(float p_position[3], float p_target[3], int p_owner, int p_type);
             ~Projectile();
     bool    hit();
     bool    update();
 private:
+    int     m_owner;
     int     m_type;
     float   m_target[3];
     int     m_damage;

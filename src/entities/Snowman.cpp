@@ -24,6 +24,7 @@
 #include "../headers/entities/Character.hpp"
 #include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include <iostream>
 
 //Constructor
 Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "assets/models/characters/plup/snowman.obj"){
@@ -58,8 +59,9 @@ bool Snowman::lockNLoad(){
                 
                 //Create snowball (if any left)
                 if (m_ammo-- > 0){        
-                    m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, 30, 4, 200);
+                    m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, m_owner, 1);
                     m_currentSnowballs++;
+                    std::cout << "Snowman: Take this!" << std::endl;
                 }
             }
         }

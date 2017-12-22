@@ -88,35 +88,34 @@ void Plup::specialAttackUp(){
 
 //Snowman
 void Plup::specialAttackDown(){
-    if (m_specialAttackDown){
-        if (m_currentSnowmen < m_maxSnowmen){
-            //Looking right
-            if (m_orientation){
-                // Place snowman 10 units to the right
-                m_attackPosition[0] = m_position[0] + 10;
-                m_attackPosition[1] = m_position[1];
-                m_attackPosition[2] = m_position[2];
-            }
-
-            //Looking left 
-            else{
-                // Place snowman 10 units to the left
-                m_attackPosition[0] = m_position[0] - 10;
-                m_attackPosition[1] = m_position[1];
-                m_attackPosition[2] = m_position[2];
-            }
-
-            //Create snowman and increase snowmen count
-            m_snowmen[m_currentSnowmen++] = new Snowman(m_attackPosition, m_playerIndex);
+    if (m_currentSnowmen < m_maxSnowmen){
+        //Looking right
+        if (m_orientation){
+            // Place snowman 10 units to the right
+            m_attackPosition[0] = m_position[0] + 10;
+            m_attackPosition[1] = m_position[1];
+            m_attackPosition[2] = m_position[2];
         }
 
-        //Snowmen AI
-        for (int i = 0; i < m_currentSnowmen; i++){
-            if (!m_snowmen[i]->lockNLoad()){
-                delete m_snowmen[i];
-                m_currentSnowmen--;
-                m_specialAttackDown = false;
-            }
+        //Looking left 
+        else{
+            // Place snowman 10 units to the left
+            m_attackPosition[0] = m_position[0] - 10;
+            m_attackPosition[1] = m_position[1];
+            m_attackPosition[2] = m_position[2];
+        }
+
+        //Create snowman and increase snowmen count
+        m_snowmen[m_currentSnowmen++] = new Snowman(m_attackPosition, m_playerIndex);
+        std::cout << m_name << ": Snowman" << std::endl;
+    }
+
+    //Snowmen AI
+    for (int i = 0; i < m_currentSnowmen; i++){
+        if (!m_snowmen[i]->lockNLoad()){
+            delete m_snowmen[i];
+            m_currentSnowmen--;
+            m_specialAttackDown = false;
         }
     }
 }
