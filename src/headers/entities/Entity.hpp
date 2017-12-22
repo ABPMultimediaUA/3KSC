@@ -46,6 +46,7 @@ public:
     float getZ();
 
     b2Body* getBody();
+    b2PolygonShape* getShape();
 
     void updatePosition(float p_posY, bool p_jumping);
 
@@ -66,10 +67,6 @@ protected:
     b2Body*         m_body;
     b2PolygonDef*   m_shapeDef;
     b2PolygonShape* m_polygonShape;
-
-    b2BodyDef*      m_groundBodyDef;
-    b2Body*         m_groundBody;
-    b2PolygonDef*   m_groundShapeDef;
 };
 
 #endif

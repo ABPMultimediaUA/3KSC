@@ -22,8 +22,8 @@
 
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
-//#include <fmod.h>
 //#include "headers/debug.hpp"
+//#include <fmod.h>
 //#include <iostream>
 
 int main(){
@@ -49,6 +49,9 @@ int main(){
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
 
+        //Debug *estadioDebug = new Debug(666, estadio->getBody(), estadio->getShape());
+        //Debug *playerDebug = new Debug(666, Arena::getInstance()->getPlayer(0)->getBody(), Arena::getInstance()->getPlayer(0)->getShape());
+
         //Game main loop
         while (engineManager->running()){
             soundManager->update();
@@ -64,6 +67,7 @@ int main(){
                 currentPlayer->playerUpdate();
             }
 
+            //playerDebug->update();
             engineManager->drawScene();
         }
 
