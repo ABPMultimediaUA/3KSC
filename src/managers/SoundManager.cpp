@@ -19,6 +19,7 @@
 */
 
 #include "../headers/managers/SoundManager.hpp"
+#include <iostream>
 
 //Instance initialization
 SoundManager* SoundManager::m_instance = 0;

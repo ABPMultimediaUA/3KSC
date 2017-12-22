@@ -20,21 +20,25 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef RAWR
-#define RAWR
+#ifndef ITEM
+#define ITEM
 
-#include "Character.hpp"
+#include "Entity.hpp"
 
-class Rawr: public Character{
-public:
-	Rawr(char* p_name, float p_position[3], int p_joystick);
-    ~Rawr();
-    void    jump();
-    void    basicAttack();
-    void    specialAttackUp();
-    void    specialAttackDown();
-    void    specialAttackSide();
-    void    ultimateAttack();
+class Item: public Entity {
+    public:
+        Item(int p_type, float p_position[3]);
+        ~Item();
+        int             getType();
+        void            setOwner(int p_owner);
+        void            use();
+        
+    private:
+        int                 m_type;             //0-3: {Life Tank, Shield, Wings, F.O.A.H}
+        int                 m_owner;
+        float               m_duration;
+        float               m_durationGround;
+        static const char*  m_modelURLs[4];
 };
 
 #endif

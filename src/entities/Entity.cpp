@@ -24,6 +24,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
+//#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -54,11 +55,6 @@ Entity::Entity(float p_position[3]){
     //Attach the shape to the body
     m_body->CreateShape(m_shapeDef);
     m_body->SetMassFromShapes();
-
-}
-
-b2Body* Entity::getBody(){
-    return m_body;
 }
 
 //Create a new Entity for a new Platform or Arena
@@ -80,12 +76,44 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     m_groundShapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_groundShapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
+    m_groundShapeDef->SetAsBox((p_scale[0]), p_scale[1]);
     m_groundBody->CreateShape(m_groundShapeDef);
 
 }
 
-Entity::~Entity(){}
+//Create entity with model
+Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
+    m_id = m_entityCount++;
+
+    for(int i = 0; i < 3; i++){
+        m_position[i] = p_position[i];
+        m_lastPosition[i] = p_position[i];
+    }
+
+    EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
+    moveTo(p_position);
+
+    //Create a new body and positioning it in the coords of the Entity
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->position.Set(p_position[0], p_position[1]);
+    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
+
+    //Create a shape for the body
+    m_shapeDef = new b2PolygonDef();
+    m_shapeDef->SetAsBox(1.0, 1.0);
+    m_shapeDef->density = 10.0;
+    m_shapeDef->friction = 0.3;
+
+    //Attach the shape to the body
+    m_body->CreateShape(m_shapeDef);
+    m_body->SetMassFromShapes();
+}
+
+//Destructor
+Entity::~Entity(){
+    EngineManager::instance()->deleteEntity(m_id);
+    getBody()->GetWorld()->DestroyBody(getBody());
+}
 
 void Entity::updatePosition(float p_posY, bool p_jumping){
     if(p_jumping){
@@ -124,6 +152,23 @@ void Entity::moveZ(float p_variation){
     EngineManager::instance()->moveEntity(this);
 }
 
+//Checks if an entity is close to a certain point (in specified range)
+bool Entity::checkCloseness(float* p_point, float p_range){  
+    //X axis
+    if(p_point[0] >= m_position[0] - p_range && p_point[0] <= m_position[0] + p_range){
+        //Y axis
+        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range){
+            return true;
+        }
+    }   
+
+    return false;
+}
+
+b2Body* Entity::getBody(){
+    return m_body;
+}
+
 
 int Entity::getId(){
     return m_id;
@@ -143,4 +188,8 @@ float Entity::getY(){
 
 float Entity::getZ(){
     return m_position[2];
+}
+
+int Entity::getEntityCount(){
+    return Entity::m_entityCount;
 }

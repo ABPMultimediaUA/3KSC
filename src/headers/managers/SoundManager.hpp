@@ -21,7 +21,6 @@
 #ifndef SOUND_MANAGER
 #define SOUND_MANAGER
 
-#include <iostream>
 #include <fmod/wincompat.h>
 #include <fmod/fmod.hpp>
 #include <fmod/fmod_event.hpp>

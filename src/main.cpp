@@ -34,22 +34,19 @@ int main(){
 
 
     if (engineManager->createWindow()){  
-        float positionRawr[3] = {-10, 15, 0};
-        float positionPlup[3] = {10, 15, 0};
-        float positionTurret[3] = {30, 25, 0};
-        float position[3] = {0, 0, 0};
-        float scale[3] = {10, 0.5, 2};
+        float position[3] = {0, 6, 0};
+        float scale[3] = {120, 0.5, 2};
 
-        Character* player1 = new Rawr(positionRawr, "Player 1", 100, 30, 50.f, true, 0);
-        Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false, 1);
+        Arena* estadio = new Arena(position, scale, 1);
+        
+        estadio->spawnPlayers();
+        estadio->spawnItems();
 
         engineManager->createCamera();
-        Arena* estadio = new Arena(position, scale, 1);
-
         engineManager->timeStamp();
 
         //For players loop
-        int i;
+        int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
 
         //Game main loop
@@ -60,11 +57,11 @@ int main(){
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
 
             //Input and update for every character
-            for (i = 0; i < Character::getPlayerCount(); i++){
-                currentPlayer = Character::getPlayer(i);
+            for (i = 0; i < playerCount; i++){
+                currentPlayer = Arena::getInstance()->getPlayer(i);
 
                 currentPlayer->playerInput();
-                currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
+                currentPlayer->playerUpdate();
             }
 
             engineManager->drawScene();
