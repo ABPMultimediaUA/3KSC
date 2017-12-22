@@ -14,35 +14,86 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <http://www.gnu.org/m_licenses/>.m_
 
-    You can contact Chaotic Games at: chaoticgamesdev@gmail.com
+    m_You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/debug.hpp"
+#include "headers/debug.hpp"
+#include "headers/managers/EngineManager.hpp"
 
-#include <GL/gl.h>
-#include <GL/glut.h>
+Debug::Debug(s32 p_id, b2Body* p_body, b2PolygonShape* p_shape): scene::ISceneNode(EngineManager::instance()->getSceneManager()->getRootSceneNode(), EngineManager::instance()->getSceneManager(), p_id) {
+    m_Material.Wireframe = false;
+    m_Material.Lighting = false;
 
-void Debug::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color){
-    //set up vertex array
-    GLfloat glverts[16]; //allow for polygons up to 8 vertices
-    glVertexPointer(2, GL_FLOAT, 0, glverts); //tell OpenGL where to find vertices
-    glEnableClientState(GL_VERTEX_ARRAY); //use vertices in subsequent calls to glDrawArrays
-    
-    //fill in vertex positions as directed by Box2D
-    for (int i = 0; i < vertexCount; i++) {
-        glverts[i*2]   = vertices[i].x;
-        glverts[i*2+1] = vertices[i].y;
+    video::SColor red = video::SColor(50,255,0,0);
+
+    m_body = p_body;
+    m_shape = p_shape;
+
+    int t_count = p_shape->GetVertexCount();
+    b2Vec2* t_verts = (b2Vec2*) p_shape->GetVertices();
+
+    int t_bodyPositionX = p_body->GetPosition().x;
+    int t_bodyPositionY = p_body->GetPosition().y;
+    std::cout << t_bodyPositionX << "," << t_bodyPositionY << std::endl;
+
+    for( int i = 0; i < t_count; i++ ){
+        m_posVertex[i][0] = t_verts[i].x + t_bodyPositionX;
+        m_posVertex[i][1] = t_verts[i].y + t_bodyPositionY;
     }
     
-    //draw solid area
-    glColor4f( color.r, color.g, color.b, 1);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
-  
-    //draw lines
-    glLineWidth(3); //fat lines
-    glColor4f( 1, 0, 1, 1 ); //purple
-    glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
+    for(int i = 0; i < 4; i++){
+        m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0,     0,0,0, red, 0, 0);        
+    }
+}
+
+void Debug::OnRegisterSceneNode(){
+    if (IsVisible)
+        SceneManager->registerNodeForRendering(this);
+
+    ISceneNode::OnRegisterSceneNode();
+}
+
+void Debug::render(){
+    u16 indices[] = {   0,2,3, 2,1,3, 1,0,3, 2,0,1  };
+    video::IVideoDriver* driver = SceneManager->getVideoDriver();
+
+    driver->setMaterial(m_Material);
+    driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
+    driver->drawVertexPrimitiveList(&m_Vertices[0], 4, &indices[0], 4, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
+}
+
+const core::aabbox3d<f32>& Debug::getBoundingBox() const{
+    return m_Box;
+}
+
+u32 Debug::getMaterialCount() const{
+    return 1;
+}
+
+video::SMaterial& Debug::getMaterial(u32 i){
+    return m_Material;
+}
+
+void Debug::update(){
+    video::SColor red = video::SColor(50,255,0,0);
+    
+    int t_count = m_shape->GetVertexCount();
+    b2Vec2* t_verts = (b2Vec2*) m_shape->GetVertices();
+
+    int t_bodyPositionX = m_body->GetPosition().x;
+    int t_bodyPositionY = m_body->GetPosition().y;
+    //std::cout << t_bodyPositionX << "," << t_bodyPositionY << std::endl;
+
+    for( int i = 0; i < t_count; i++ ){
+        m_posVertex[i][0] = t_verts[i].x + t_bodyPositionX;
+        m_posVertex[i][1] = t_verts[i].y + t_bodyPositionY;
+        //std::cout << "(" << m_posVertex[i][0] << "," << m_posVertex[i][1] << ")" << std::endl;
+    }
+
+    for(int i = 0; i < 4; i++){
+        m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0,     0,0,0, red, 0, 0);        
+    }
 }

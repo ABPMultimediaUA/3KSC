@@ -208,3 +208,11 @@ IrrlichtDevice* EngineManager::getDevice(){
 float EngineManager::getFrameDeltaTime(){
     return (float) m_frameDeltaTime;
 }
+
+irr::video::IVideoDriver* EngineManager::getVideoDriver(){
+    return m_vDriver;
+}
+
+irr::scene::ISceneManager* EngineManager::getSceneManager(){
+    return m_scene;
+}
