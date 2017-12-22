@@ -48,13 +48,15 @@ Entity::Entity(float p_position[3]){
 
     //Create a shape for the body
     m_shapeDef = new b2PolygonDef();
-    m_shapeDef->SetAsBox(1.0, 1.0);
+    m_shapeDef->SetAsBox(5, 5);
     m_shapeDef->density = 10.0;
     m_shapeDef->friction = 0.3;
 
     //Attach the shape to the body
     m_body->CreateShape(m_shapeDef);
     m_body->SetMassFromShapes();
+
+    m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
 
 //Create a new Entity for a new Platform or Arena
@@ -68,16 +70,17 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     moveTo(p_position);
     */
 
-    m_groundBodyDef = new b2BodyDef();
-    m_groundBodyDef->position.Set(p_position[0], p_position[1]);
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->position.Set(p_position[0], p_position[1]);
     
-    m_groundBody = PhysicsManager::instance()->getWorld()->CreateBody(m_groundBodyDef);
-
-    m_groundShapeDef = new b2PolygonDef();
+    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
+    m_shapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_groundShapeDef->SetAsBox((p_scale[0]), p_scale[1]);
-    m_groundBody->CreateShape(m_groundShapeDef);
+    m_shapeDef->SetAsBox((p_scale[0]), p_scale[1]);
+    m_body->CreateShape(m_shapeDef);  
+
+    m_polygonShape = new b2PolygonShape(m_shapeDef);
 
 }
 
@@ -100,13 +103,15 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
 
     //Create a shape for the body
     m_shapeDef = new b2PolygonDef();
-    m_shapeDef->SetAsBox(1.0, 1.0);
+    m_shapeDef->SetAsBox(5, 5);
     m_shapeDef->density = 10.0;
     m_shapeDef->friction = 0.3;
 
     //Attach the shape to the body
     m_body->CreateShape(m_shapeDef);
     m_body->SetMassFromShapes();
+
+    m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
 
 //Destructor
@@ -167,6 +172,10 @@ bool Entity::checkCloseness(float* p_point, float p_range){
 
 b2Body* Entity::getBody(){
     return m_body;
+}
+
+b2PolygonShape* Entity::getShape(){
+    return m_polygonShape;
 }
 
 
