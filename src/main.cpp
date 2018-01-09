@@ -55,29 +55,22 @@ int main(){
             soundManager->update();
             engineManager->updateFrameDeltaTime();
 
-
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
 
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
-
                 currentPlayer = Arena::getInstance()->getPlayer(i);
 
                 currentPlayer->playerInput();
-
                 currentPlayer->playerUpdate();
-
             }
-
 
             //playerDebug->update();
             engineManager->drawScene();
         }
 
         engineManager->stop();
-
         return 0;
     }
-
     return 1;
 }

@@ -108,11 +108,9 @@ b2Body* PhysicsManager::getBody(int p_id){
     int* t_id = 0;
     int  t_value = 0;
 
-    std::cout << "ID A BUSCAR: " << p_id << std::endl;
     while(t_body != NULL){
         t_id = static_cast<int*>(t_body->GetUserData());
         t_value = *t_id;
-        std::cout << "ID ENCONTRADO: " << t_value << std::endl;
         if(p_id == t_value)
             return t_body;
         
@@ -135,18 +133,11 @@ int PhysicsManager::getIterations(){
     return m_iterations;
 }
 
-
 //Adds a force to an entity
-void PhysicsManager::addForce(){
-
-}
+void PhysicsManager::addForce(){}
 
 //Removes a force from an entity
-void PhysicsManager::removeForce(){
-
-}
+void PhysicsManager::removeForce(){}
 
 //Handles gravity changes in Kawaiisaki map
-void PhysicsManager::updateGravity(){
-
-}
+void PhysicsManager::updateGravity(){}
