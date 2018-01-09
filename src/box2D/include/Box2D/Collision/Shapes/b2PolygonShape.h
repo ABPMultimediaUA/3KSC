@@ -111,6 +111,7 @@ public:
 	/// Get the support point in the given world direction.
 	/// Use the supplied transform.
 	b2Vec2 Support(const b2XForm& xf, const b2Vec2& d) const;
+	b2PolygonShape(const b2ShapeDef* def);
 
 	b2PolygonShape(const b2ShapeDef* def);
 private:

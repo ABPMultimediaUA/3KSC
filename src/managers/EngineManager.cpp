@@ -27,15 +27,16 @@ EngineManager* EngineManager::m_instance = 0;
 
 //Returns the only instance of this class
 EngineManager* EngineManager::instance(){
-    if (!m_instance)
+    if (!m_instance){
         m_instance = new EngineManager();
+    }
 
     return m_instance;
 }
 
 //Constructor
 EngineManager::EngineManager(){
-
+    //m_entityNodes = new irr::scene::ISceneNode*[100];
 }
 
 //Destructor
@@ -58,16 +59,9 @@ float EngineManager::updateFrameDeltaTime(){
 
 //Creates the game window
 bool EngineManager::createWindow(){
-    //Create a null device to get the desktop resolution
-    //IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
-    //core::dimension2d<u32> t_desktopResolution = t_nulldevice->getVideoModeList()->getDesktopResolution();
-    //t_nulldevice->drop();
-
-    //Use the desktop resolution to create a real device
-    //IrrlichtDevice* t_device = createDevice(video::EDT_OPENGL, t_desktopResolution, 16, true, false, false, &inputs);
     m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, this);
 
-    //0 usually means "success", but with pointers, it's a null pointer.
+    //If m_device is NULL
     if(!m_device)
         return false;
 
@@ -110,8 +104,10 @@ void EngineManager::createEntity(int p_id, float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
 
     if (t_node){
-        //Add node to class node vector 
+        //Add node to class node vector
         m_entityNodes.push_back(t_node);
+        //m_entityNodes[p_id] = t_node;
+
 
         t_node->setPosition(core::vector3df(p_position[0],p_position[1],p_position[2]));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
@@ -121,19 +117,38 @@ void EngineManager::createEntity(int p_id, float p_position[3]){
 
 void EngineManager::deleteEntity(int p_id){
     m_entityNodes.at(p_id)->remove();
+    //m_entityNodes[p_id]->remove();
 }
 
 void EngineManager::scale(int p_id, float p_scale[3]){
     scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
+    //scene::ISceneNode* t_node  = m_entityNodes[p_id];
 
     t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
 }
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,0,150,136));
+    m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
     m_scene->drawAll();
     m_vDriver->endScene();
+}
+
+//Loads a 3D model
+void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale, const char* p_modelURL){
+    scene::IAnimatedMesh* t_mesh = m_scene->getMesh(p_modelURL);
+    scene::ISceneNode* t_node = 0;
+
+    if (t_mesh){
+        t_node = m_scene->addOctreeSceneNode(t_mesh->getMesh(0), 0, p_id, 1024);
+        t_node->setPosition(core::vector3df(p_position[0], p_position[1], p_position[2]));
+        t_node->setMaterialFlag(video::EMF_LIGHTING, false);
+        t_node->setScale(core::vector3df(p_scale, p_scale, p_scale));
+
+        //Add node to class node vector 
+        m_entityNodes.push_back(t_node);
+        //m_entityNodes[p_id] = t_node;
+    }
 }
 
 void EngineManager::loadArena(const char* arenaModelURL){
@@ -145,19 +160,20 @@ void EngineManager::loadArena(const char* arenaModelURL){
         t_node->setPosition(core::vector3df(0,0,0));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
         t_node->setScale(core::vector3df(10,10,10));
-        //t_node->setRotation(core::vector3df(0,90,0));
     }
 }
 
-void EngineManager::loadCharacters(){
+void EngineManager::loadCharacter(){
     
 }
 
-void EngineManager::loadObjects(){
+
+
+void EngineManager::loadObject(){
 
 }
 
-void EngineManager::putCharacters(){
+void EngineManager::putCharacter(){
 
 }
 
@@ -184,10 +200,12 @@ void EngineManager::moveEntity(Entity* p_entity){
     t_position.Y = (f32) t_entityPosition[1];
     t_position.Z = (f32) t_entityPosition[2];
     m_entityNodes.at(p_entity->getId())->setPosition(t_position);
+    //m_entityNodes[p_entity->getId()]->setPosition(t_position);
 }
 
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){
     return m_entityNodes.at(p_id);
+    //return m_entityNodes[p_id];
 }
 
 IrrlichtDevice* EngineManager::getDevice(){
@@ -196,4 +214,12 @@ IrrlichtDevice* EngineManager::getDevice(){
 
 float EngineManager::getFrameDeltaTime(){
     return (float) m_frameDeltaTime;
+}
+
+irr::video::IVideoDriver* EngineManager::getVideoDriver(){
+    return m_vDriver;
+}
+
+irr::scene::ISceneManager* EngineManager::getSceneManager(){
+    return m_scene;
 }

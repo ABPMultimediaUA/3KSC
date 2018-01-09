@@ -27,20 +27,27 @@
 #include "../headers/extra/Keycodes.hpp"
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
+#include "../headers/entities/Arena.hpp"
 #include <iostream>
 
 //Static members
-Character** Character::m_players = new Character*[4];
 int Character::m_playerCount = 0;
 
-Character::Character(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick):Entity(p_position){
+Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL) : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
+    m_joystick              = p_joystick;
+    m_lives                 = 3;
     m_life                  = p_life;
+    m_magic                 = p_magic;
+    m_maxLife               = p_life;
+    m_maxMagic              = p_magic;
     m_damage                = p_damage;
     m_velocity              = p_velocity;
-    m_orientation           = p_orientation;
-    m_stunned     = false;  
-    m_blocking    = false;    
+    m_orientation           = true;
+    m_stunned               = false;  
+    m_blocking              = false;
+    m_shielded              = false;
+    m_winged                = false;    
 
     m_runningFactor         = 1;
 
@@ -64,10 +71,7 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
 
-    m_joystick              = p_joystick;
-
     m_playerIndex = Character::m_playerCount++;
-    Character::m_players[m_playerIndex] = this;
 
     m_soundManager = SoundManager::instance();
     m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
@@ -75,19 +79,68 @@ Character::Character(float p_position[3], char* p_name, int p_life, int p_damage
 
 Character::~Character(){}
 
-void Character::reciveAttack(int p_damage, bool p_orientation, bool p_block, float p_force){ //damage, side of the attack, can you block it?, dragging force
-    if(p_block && m_blocking && p_orientation == m_orientation)
+//Receives an attack from other player
+//Parameters: damage, can you block it?
+void Character::receiveAttack(int p_damage, bool p_block){
+    if((p_block && m_blocking) || m_shielded)
     {
-        //attack blocked
-        //use p_force
+        std::cout << m_name << " blocked an attack and his life remains " << m_life << " HP." << std::endl << std::endl;
     }else{
-        m_life -= p_damage;
-        //use p_force
-        if(m_life<=0){
-            //die
-        }
+        changeLife(-p_damage);
+        std::cout << m_name << " took an attack and now has " << m_life << " HP." << std::endl << std::endl;
     }
 }
+
+//Increases or decreases life
+void Character::changeLife(int p_variation){
+    m_life += p_variation;
+
+    if (m_life < 0){
+        m_life = 0;
+    }
+    
+    else if (m_life > m_maxLife){
+        m_life = m_maxMagic;
+    }
+
+    //HUD Stuff
+}
+
+//Increases or decreases magic
+void Character::changeMagic(int p_variation){
+    m_magic += p_variation;
+
+    if (m_magic < 0)
+        m_magic = 0;
+    
+    else if (m_magic > m_maxMagic)
+        m_life = m_maxMagic;
+
+    //HUD Stuff
+}
+
+//Activates shield
+void Character::shield(){
+    m_shielded = true;
+}
+
+//Activates wings, if not already active
+void Character::wings(){
+    if (!m_winged){
+        m_velocity *= 3;
+        m_winged = true;
+    }
+}
+
+//Decreases number of lives
+void Character::die(){
+    m_lives--;
+    
+    //HUD Stuff
+
+    //Delete when m_lives == 0
+}
+
 
 void Character::lookLeft(){
     m_orientation = false;
@@ -103,7 +156,9 @@ bool Character::isJumping(){
 
 //Assing joystick with index p_joystick (-1 for Keyboard)
 void Character::assignJoystick(int p_joystick){
-    m_joystick = p_joystick;
+    //Only assign to player 2 for now
+    if (m_playerIndex == 1)
+        m_joystick = p_joystick;
 }
 
 
@@ -124,7 +179,7 @@ void Character::updateInputs(){
             *   X + Up/W                    Up Special Attack
             *   X + Down/S                  Down Special Attack
             *   X + Left/Right or A/D       Side Special Attack
-            *   Q                           Pick object
+            *   Q                           Pick item
             *   B                           Block
             *   LShift/RShift               Run
             *   Z                           Ultimate Attack
@@ -147,8 +202,8 @@ void Character::updateInputs(){
         m_ultimateAttackInput = t_inputManager->isKeyPressed(Key_Z);
     }
 
-    //Joystick input
-    else{
+    //Joystick input 
+    else if (m_joystick != -2){
 
         /* Controls (XBOX 360 Controller):
             *   Left/Right      Movement
@@ -157,7 +212,7 @@ void Character::updateInputs(){
             *   B + Up          Up Special Attack
             *   B + Down        Down Special Attack
             *   B + Left/Right  Side Special Attack
-            *   Y               Pick object
+            *   Y               Pick item
             *   LB              Block
             *   RB              Run
             *   LT + RT         Ultimate Attack
@@ -178,6 +233,25 @@ void Character::updateInputs(){
         m_specialAttackDownInput = t_inputManager->isButtonPressed(m_joystick, Button_B) && m_downInput;
         m_specialAttackSideInput = t_inputManager->isButtonPressed(m_joystick, Button_B) && (m_leftInput || m_rightInput);
         m_ultimateAttackInput = t_inputManager->getAxisPosition(m_joystick, Axis_Z) >= 0 && t_inputManager->getAxisPosition(m_joystick, Axis_R) >= 0;
+    }
+
+    //NPC
+    else{
+        m_upInput = false;
+        m_downInput = false;
+        m_leftInput = false;
+        m_rightInput = false;
+        
+        m_jumpInput = false;
+        m_runInput = false;
+        m_blockInput = false;
+        m_pickInput = false;
+        
+        m_basicAttackInput = false;
+        m_specialAttackUpInput = false;
+        m_specialAttackDownInput = false;
+        m_specialAttackSideInput = false;
+        m_ultimateAttackInput = false;
     }
 }
 
@@ -214,9 +288,9 @@ void Character::playerInput(){
     //}
 
     //Change to joystick (START BUTTON)
-    //if (t_inputManager->isButtonPressed(0, Button_Start)){
-    //    assignJoystick(0);
-    //}
+    if (t_inputManager->isButtonPressed(0, Button_Start)){
+        assignJoystick(0);
+    }
 
     //Exit
     if(t_inputManager->isKeyPressed(Key_Escape))
@@ -260,7 +334,7 @@ void Character::playerInput(){
         //Sprint
         if(m_runInput){
             m_runningFactor = 2;
-            std::cout << "Running" << std::endl;
+            //std::cout << m_name << " is running" << std::endl;
         }
 
         //Left
@@ -281,15 +355,23 @@ void Character::playerInput(){
 
         //Block
         m_blocking = m_blockInput;
-        if (m_blocking)
-            std::cout << "Blocking" << std::endl;
+        if (m_blocking){
+            //std::cout << m_name << " is blocking" << std::endl;
+        }
 
         //Pick object
-        if (m_pickInput)
-            pickObject();
+        if (m_pickInput){
+            pickItem();
+        }
 
     }
     checkActions();    
+}
+
+//Update state of player
+void Character::playerUpdate(){
+    updatePosition(getBody()->GetPosition().y, m_jumping);
+    //Increase magic every second and with attacks
 }
 
 void Character::jump(){
@@ -306,8 +388,42 @@ void Character::jump(){
     }
 }
 
-void Character::pickObject(){
-    std::cout << "Picked object" << std::endl;
+void Character::pickItem(){
+    int t_itemType = Arena::getInstance()->catchItem(m_id, m_position);
+    
+    switch (t_itemType){
+        //Life tank
+        case 0:{
+            std::cout << m_name <<" got a Life Tank." << std::endl
+            << m_name << "'s life is now " << m_life << " HP." << std::endl << std::endl;
+            break;
+        }
+
+        //Shield
+        case 1:{
+            std::cout << m_name <<" got a Shield." << std::endl
+            << m_name << "'s now protected against attacks." << std::endl << std::endl;
+            break;
+        }
+
+        //Wings
+        case 2:{
+            std::cout << m_name <<" got Wings." << std::endl
+            << m_name << "'s speed increased." << std::endl << std::endl;
+            break;
+        }
+
+        //Fosforian Obedience Automatic Hammer (F.O.A.H)
+        case 3:{
+            std::cout << m_name <<" got a F.O.A.H." << std::endl
+            << m_name << "'s going to make rivals suffer." << std::endl << std::endl;
+            break;
+        }
+
+        default:{
+            //std::cout << "No object here" << std::endl;
+        }
+    }
 }
 
 void Character::basicAttack(){}
@@ -320,14 +436,9 @@ void Character::specialAttackSide(){}
 
 void Character::ultimateAttack(){}
 
-//Returns the player count
-int Character::getPlayerCount(){
-    return Character::m_playerCount;
-}
-
-//Returns the player with the given index
-Character* Character::getPlayer(int p_index){
-    return Character::m_players[p_index];
+//Returns the damage of the player
+int Character::getDamage(){
+    return m_damage;
 }
 
 //Returns the index of the player

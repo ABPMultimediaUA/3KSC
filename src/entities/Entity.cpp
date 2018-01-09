@@ -24,6 +24,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
+//#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -57,10 +58,16 @@ Entity::Entity(float p_position[3], float p_scale[3]){
     PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale);
 }
 
-Entity::~Entity(){}
+//Create entity with model
+Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
+    m_id = m_entityCount++;
+
+Entity::~Entity(){
+    EngineManager::instance()->deleteEntity(m_id);
+    getBody()->GetWorld()->DestroyBody(getBody());
+}
 
 void Entity::updatePosition(bool p_jumping){
-    //std::cout << m_position[0] << "," << m_position[1] << std::endl;
     if(p_jumping){
         PhysicsManager::instance()->getBody(m_id)->PutToSleep();
     }
@@ -97,6 +104,27 @@ void Entity::moveZ(float p_variation){
     EngineManager::instance()->moveEntity(this);
 }
 
+//Checks if an entity is close to a certain point (in specified range)
+bool Entity::checkCloseness(float* p_point, float p_range){  
+    //X axis
+    if(p_point[0] >= m_position[0] - p_range && p_point[0] <= m_position[0] + p_range){
+        //Y axis
+        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range){
+            return true;
+        }
+    }   
+
+    return false;
+}
+
+b2Body* Entity::getBody(){
+    return m_body;
+}
+
+b2PolygonShape* Entity::getShape(){
+    return m_polygonShape;
+}
+
 
 int Entity::getId(){
     return m_id;
@@ -116,4 +144,8 @@ float Entity::getY(){
 
 float Entity::getZ(){
     return m_position[2];
+}
+
+int Entity::getEntityCount(){
+    return Entity::m_entityCount;
 }

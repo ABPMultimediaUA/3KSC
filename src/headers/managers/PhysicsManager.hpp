@@ -64,6 +64,8 @@ class PhysicsManager{
     float           getTimeStep();
     int             getIterations();
 
+    float getTimeStep();
+    int getIterations();
 };
 
 #endif

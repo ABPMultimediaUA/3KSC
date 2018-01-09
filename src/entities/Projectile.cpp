@@ -21,17 +21,40 @@
 *********************************************************************************/
 
 #include "../headers/entities/Projectile.hpp"
+#include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
 #include <cmath> //For std::sqrt()
 //#include <iostream>
 
-Projectile::Projectile(float p_position[3], float p_target[3], int p_damage, float p_velocity, float p_distanceLeft):Entity(p_position){
+//Static members
+const char* Projectile::m_modelURLs[2] = {"assets/models/characters/rawr/fireball.obj", "assets/models/characters/plup/snowball.obj"};
+
+Projectile::Projectile(float p_position[3], float p_target[3], int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type]){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
-    m_damage        = p_damage;
-    m_velocity      = p_velocity;
-    m_distanceLeft  = p_distanceLeft;
+    m_owner = p_owner;
+
+    //Base damage (from its owner)
+    int t_damage = Arena::getInstance()->getPlayer(m_owner)->getDamage();
+
+    switch (p_type){
+        //Rawr's fireball
+        case 0:{
+            m_damage = t_damage/3;
+            m_velocity = 2.5;
+            m_distanceLeft = 100;
+            break;
+        }
+
+        //Plup's snowmen's snowball
+        case 1:{
+            m_damage = t_damage/4;
+            m_velocity = 3;
+            m_distanceLeft = 150;
+            break;
+        }
+    }
 
     calculateSteps();
 }
@@ -61,8 +84,27 @@ void Projectile::calculateSteps(){
     m_step[2] = t_distanceZ/t_time;
 }
 
+//Checks if projectile hits a player
 bool Projectile::hit(){
-    
+    Character* t_currentPlayer;
+    int t_playerCount = Arena::getInstance()->getPlayerCount();
+
+    for (int i = 0; i < t_playerCount; i++){
+        //Ignore owner
+        if (i == m_owner)
+            continue;
+
+        t_currentPlayer = Arena::getInstance()->getPlayer(i);
+
+        //Rival close enough
+        if (checkCloseness(t_currentPlayer->getPosition(), 10)){
+            t_currentPlayer->receiveAttack(m_damage, false);
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //Moves projectile right or left. Returns false at end of way.
@@ -73,13 +115,15 @@ bool Projectile::update(){
         moveY(m_step[1]);
         moveZ(m_step[2]);
 
+        if (hit()){
+            return false;
+        }
+
         m_distanceLeft -= m_velocity;
     }
 
     //End of the way, my friend
     else{
-        //PhysicsManager::instance()->getWorld()->DestroyBody(PhysicsManager::instance()->getBody(this->getId()));
-        EngineManager::instance()->deleteEntity(this->getId());
         return false;
     }
 

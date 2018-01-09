@@ -23,7 +23,7 @@
 #include "../headers/entities/MiyagiMurasaki.hpp"
 #include <iostream>
 
-MiyagiMurasaki::MiyagiMurasaki(float p_position[3], char* p_name, int p_life, int p_damage, float p_velocity, bool p_orientation, int p_joystick) : Character(p_position, p_name, p_life, p_damage, p_velocity, p_orientation, p_joystick){
+MiyagiMurasaki::MiyagiMurasaki(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj"){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];

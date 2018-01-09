@@ -31,11 +31,13 @@ class Entity {
 public:
     Entity(float p_position[3]);
     Entity(float p_position[3], float p_scale[3]);
+    Entity(float p_position[3], float p_scale, const char* p_modelURL);
     ~Entity();
     void moveTo(float p_position[3]);
     void moveX(float p_variation);
     void moveY(float p_variation);
     void moveZ(float p_variation);
+    bool checkCloseness(float* p_point, float p_range);
     int getId();
     float* getPosition();
     float getX();
@@ -44,11 +46,13 @@ public:
 
     void updatePosition(bool p_jumping);
 
+    static int getEntityCount();
 protected:
     static int m_entityCount;
     int        m_id; 
     float      m_position[3]; // [0] for x, [1] for y, [2] for z
     float      m_lastPosition[3]; // [0] for x, [1] for y, [2] for z
+    const char* m_modelURL;
     //Model*     m_model;
     //Texture*   m_texture;
     //Hitbox*    m_hitbox;

@@ -22,11 +22,12 @@
 
 #include "../headers/entities/Snowman.hpp"
 #include "../headers/entities/Character.hpp"
+#include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include <iostream>
 
 //Constructor
-Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position){
+Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "assets/models/characters/plup/snowman.obj"){
     m_maxSnowballs          = 1;
     m_currentSnowballs      = 0;
     m_snowballs             = new Projectile*[m_maxSnowballs];
@@ -43,7 +44,7 @@ Snowman::~Snowman(){}
 bool Snowman::lockNLoad(){
     if (m_ammo > 0){
         if (m_currentSnowballs < m_maxSnowballs){
-            int t_playerCount = Character::getPlayerCount();
+            int t_playerCount = Arena::getInstance()->getPlayerCount();
             Character* t_currentPlayer;
 
             for (int i = 0; i < t_playerCount; i++){
@@ -51,15 +52,16 @@ bool Snowman::lockNLoad(){
                 if (i == m_owner)
                     continue;
 
-                t_currentPlayer = Character::getPlayer(i);
+                t_currentPlayer = Arena::getInstance()->getPlayer(i);
                 m_target[0] = t_currentPlayer->getX();
                 m_target[1] = t_currentPlayer->getY();
                 m_target[2] = t_currentPlayer->getZ();
                 
                 //Create snowball (if any left)
                 if (m_ammo-- > 0){        
-                    m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, 30, 4, 200);
+                    m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, m_owner, 1);
                     m_currentSnowballs++;
+                    std::cout << "Snowman: Take this!" << std::endl;
                 }
             }
         }
@@ -78,9 +80,6 @@ bool Snowman::lockNLoad(){
 
     //Delete turret when last bullet is gone
     if (m_ammo == -1){
-        //PhysicsManager::instance()->getWorld()->DestroyBody(PhysicsManager::instance()->getBody(this->getId()));
-        EngineManager::instance()->deleteEntity(this->getId());
-        
         return false;
     }
 
