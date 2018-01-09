@@ -35,7 +35,6 @@ int main(){
     if (engineManager->createWindow()){  
         float position[3] = {0, 6, 0};
         float scale[3] = {120, 0.5, 2};
-
         Arena* estadio = new Arena(position, scale, 1);
         
         estadio->spawnPlayers();
@@ -56,15 +55,20 @@ int main(){
             soundManager->update();
             engineManager->updateFrameDeltaTime();
 
+
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
 
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
+
                 currentPlayer = Arena::getInstance()->getPlayer(i);
 
                 currentPlayer->playerInput();
+
                 currentPlayer->playerUpdate();
+
             }
+
 
             //playerDebug->update();
             engineManager->drawScene();

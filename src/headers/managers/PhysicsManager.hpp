@@ -22,13 +22,14 @@
 #define PHYSICS_MANAGER
 
 #include "../entities/Entity.hpp"
-#include <iostream>
+#include <vector>
 #include <Box2D.h>
 
 class PhysicsManager{
     private:
     static PhysicsManager* m_instance;
-    Entity** m_physicBodies;
+    //Entity** m_physicBodies;
+    std::vector<b2Body*> m_physicBodies;
 
     b2World* m_world;
     b2AABB  m_worldAABB;
@@ -52,8 +53,6 @@ class PhysicsManager{
     void createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]);
 
-
-
     void addForce();
     void removeForce();
     void updateGravity();
@@ -61,11 +60,9 @@ class PhysicsManager{
     b2World*        getWorld();
     b2PolygonShape* getShape();
     b2Body*         getBody(int p_id);
+    void            destroyBody(int p_id);
     float           getTimeStep();
     int             getIterations();
-
-    float getTimeStep();
-    int getIterations();
 };
 
 #endif

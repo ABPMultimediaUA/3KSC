@@ -20,7 +20,7 @@
 
 #include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/debug.hpp"
-
+#include <iostream>
 
 //Instance initialization
 PhysicsManager* PhysicsManager::m_instance = 0;
@@ -56,6 +56,7 @@ PhysicsManager::~PhysicsManager(){}
 
 void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY){
     //Create a new body and positioning it in the coords of the Entity
+    
     m_bodyDef = new b2BodyDef();
     m_bodyDef->position.Set(p_position[0], p_position[1]);
     m_body = m_world->CreateBody(m_bodyDef);
@@ -107,16 +108,23 @@ b2Body* PhysicsManager::getBody(int p_id){
     int* t_id = 0;
     int  t_value = 0;
 
+    std::cout << "ID A BUSCAR: " << p_id << std::endl;
     while(t_body != NULL){
         t_id = static_cast<int*>(t_body->GetUserData());
         t_value = *t_id;
+        std::cout << "ID ENCONTRADO: " << t_value << std::endl;
         if(p_id == t_value)
             return t_body;
         
         t_body = t_body->GetNext();
     }
-
     return 0;
+}
+
+//Destroys the body with the given ID
+void PhysicsManager::destroyBody(int p_id){
+    b2Body* t_body = getBody(p_id);
+    m_world->DestroyBody(t_body);
 }
 
 float PhysicsManager::getTimeStep(){
