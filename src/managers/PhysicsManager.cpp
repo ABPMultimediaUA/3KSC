@@ -20,7 +20,7 @@
 
 #include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/debug.hpp"
-
+#include <iostream>
 
 //Instance initialization
 PhysicsManager* PhysicsManager::m_instance = 0;
@@ -110,6 +110,7 @@ b2Body* PhysicsManager::getBody(int p_id){
     while(t_body != NULL){
         t_id = static_cast<int*>(t_body->GetUserData());
         t_value = *t_id;
+        std::cout << "t_value: " << t_value << std::endl;
         if(p_id == t_value)
             return t_body;
         
@@ -117,6 +118,12 @@ b2Body* PhysicsManager::getBody(int p_id){
     }
 
     return 0;
+}
+
+//Destroys the body with the given ID
+void PhysicsManager::destroyBody(int p_id){
+    b2Body* t_body = getBody(p_id);
+    t_body->GetWorld()->DestroyBody(t_body);
 }
 
 float PhysicsManager::getTimeStep(){

@@ -22,8 +22,8 @@
 
 
 #include "../headers/entities/Character.hpp"
-#include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include "../headers/managers/InputManager.hpp"
 #include "../headers/extra/Keycodes.hpp"
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
@@ -370,7 +370,7 @@ void Character::playerInput(){
 
 //Update state of player
 void Character::playerUpdate(){
-    updatePosition(getBody()->GetPosition().y, m_jumping);
+    updatePosition(m_jumping);
     //Increase magic every second and with attacks
 }
 

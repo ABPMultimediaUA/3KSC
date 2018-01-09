@@ -29,7 +29,7 @@
 //Entity count initialization
 int Entity::m_entityCount = 0;
 
-//Create a new Etity for a player
+//Create a new Entity for a player
 Entity::Entity(float p_position[3]){
     m_id = m_entityCount++;
     for(int i = 0; i < 3; i++){
@@ -61,10 +61,11 @@ Entity::Entity(float p_position[3], float p_scale[3]){
 //Create entity with model
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
     m_id = m_entityCount++;
+}
 
 Entity::~Entity(){
     EngineManager::instance()->deleteEntity(m_id);
-    getBody()->GetWorld()->DestroyBody(getBody());
+    PhysicsManager::instance()->destroyBody(m_id);
 }
 
 void Entity::updatePosition(bool p_jumping){
@@ -116,15 +117,6 @@ bool Entity::checkCloseness(float* p_point, float p_range){
 
     return false;
 }
-
-b2Body* Entity::getBody(){
-    return m_body;
-}
-
-b2PolygonShape* Entity::getShape(){
-    return m_polygonShape;
-}
-
 
 int Entity::getId(){
     return m_id;
