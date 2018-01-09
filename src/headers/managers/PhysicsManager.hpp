@@ -30,28 +30,39 @@ class PhysicsManager{
     static PhysicsManager* m_instance;
     Entity** m_physicBodies;
 
-
+    b2World* m_world;
     b2AABB  m_worldAABB;
     b2Vec2  m_gravity;
     bool    m_doSleep;
     
     float   m_timeStep;
     int     m_iterations;
-
+    //int*    m_id;
+    
+    b2BodyDef*      m_bodyDef;
+    b2Body*         m_body;
+    b2PolygonDef*   m_shapeDef;
+    b2PolygonShape* m_polygonShape;
 
     public:
     static PhysicsManager* instance();
     PhysicsManager();
     ~PhysicsManager();
+
+    void createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]);
+
+
+
     void addForce();
     void removeForce();
     void updateGravity();
 
-    b2World* m_world;
-    b2World* getWorld();
-
-    float getTimeStep();
-    int getIterations();
+    b2World*        getWorld();
+    b2PolygonShape* getShape();
+    b2Body*         getBody(int p_id);
+    float           getTimeStep();
+    int             getIterations();
 
 };
 

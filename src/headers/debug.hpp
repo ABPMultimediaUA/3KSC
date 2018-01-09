@@ -24,13 +24,28 @@
 #define DEBUG
 
 #include <Box2D.h>
+#include <irrlicht.h>
 
-class Debug: public b2DebugDraw {
+using namespace irr;
+
+class Debug : public scene::ISceneNode{
 public:
-    void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
+    Debug(s32 p_id, b2Body* p_body, b2PolygonShape* p_shape);
+    void OnRegisterSceneNode();
+    void render();
+    const core::aabbox3d<f32>& getBoundingBox() const;
+    u32 getMaterialCount() const;
+    video::SMaterial& getMaterial(u32 i);
 
+    void update();
 private:
+    core::aabbox3d<f32> m_Box;
+    video::S3DVertex    m_Vertices[4];
+    video::SMaterial    m_Material;
     
+    b2Body*             m_body;
+    b2PolygonShape*     m_shape;
+    float               m_posVertex[4][2];
 };
 
 #endif 

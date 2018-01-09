@@ -289,7 +289,6 @@ void Character::playerInput(){
             pickObject();
 
     }
-
     checkActions();    
 }
 

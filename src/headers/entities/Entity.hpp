@@ -26,7 +26,6 @@
 //#include "../Model.hpp"
 //#include "../Texture.hpp"
 //#include "../Hitbox.hpp"
-#include <Box2D.h>
 
 class Entity {
 public:
@@ -43,10 +42,8 @@ public:
     float getY();
     float getZ();
 
-    b2Body* getBody();
+    void updatePosition(bool p_jumping);
 
-    void updatePosition(float p_posY, bool p_jumping);
-    
 protected:
     static int m_entityCount;
     int        m_id; 
@@ -58,15 +55,6 @@ protected:
     float      m_weight;
 
     const char* m_modelURL;
-    
-    b2BodyDef*      m_bodyDef;
-    b2Body*         m_body;
-    b2PolygonDef*   m_shapeDef;
-    b2PolygonShape* m_polygonShape;
-
-    b2BodyDef*      m_groundBodyDef;
-    b2Body*         m_groundBody;
-    b2PolygonDef*   m_groundShapeDef;
 };
 
 #endif

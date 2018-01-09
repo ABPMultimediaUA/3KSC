@@ -23,6 +23,7 @@
 #include "../headers/entities/Snowman.hpp"
 #include "../headers/entities/Character.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
 
 //Constructor
 Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position){
@@ -77,8 +78,8 @@ bool Snowman::lockNLoad(){
 
     //Delete turret when last bullet is gone
     if (m_ammo == -1){
+        //PhysicsManager::instance()->getWorld()->DestroyBody(PhysicsManager::instance()->getBody(this->getId()));
         EngineManager::instance()->deleteEntity(this->getId());
-        getBody()->GetWorld()->DestroyBody(getBody());
         
         return false;
     }

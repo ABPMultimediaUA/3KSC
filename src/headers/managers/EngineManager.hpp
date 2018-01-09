@@ -53,6 +53,9 @@ public:
     bool running();
     void stop();
 
+    irr::video::IVideoDriver* getVideoDriver();
+    irr::scene::ISceneManager* getSceneManager();
+
     void createEntity(int p_id, float p_position[3]);
     void deleteEntity(int p_id);
     void scale(int p_id, float p_scale[3]);

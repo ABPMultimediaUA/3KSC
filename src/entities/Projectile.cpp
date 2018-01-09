@@ -22,6 +22,7 @@
 
 #include "../headers/entities/Projectile.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
 #include <cmath> //For std::sqrt()
 //#include <iostream>
@@ -77,8 +78,8 @@ bool Projectile::update(){
 
     //End of the way, my friend
     else{
+        //PhysicsManager::instance()->getWorld()->DestroyBody(PhysicsManager::instance()->getBody(this->getId()));
         EngineManager::instance()->deleteEntity(this->getId());
-        getBody()->GetWorld()->DestroyBody(getBody());
         return false;
     }
 
