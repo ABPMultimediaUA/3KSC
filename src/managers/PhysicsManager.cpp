@@ -51,9 +51,72 @@ PhysicsManager::PhysicsManager(){
     m_timeStep = 3.0 / 60.0;
     m_iterations = 10;
 }
+//Destructor
+PhysicsManager::~PhysicsManager(){}
+
+void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY){
+    //Create a new body and positioning it in the coords of the Entity
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->position.Set(p_position[0], p_position[1]);
+    m_body = m_world->CreateBody(m_bodyDef);
+
+    //Create a shape for the body
+    m_shapeDef = new b2PolygonDef();
+    m_shapeDef->SetAsBox(p_dimX, p_dimY);
+    m_shapeDef->density = 10.0;
+    m_shapeDef->friction = 0.3;
+
+    //Attach the shape to the body
+    m_body->CreateShape(m_shapeDef);
+    m_body->SetMassFromShapes();
+    m_body->SetUserData(p_id);
+
+    //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
+    int *t_id = static_cast<int*>(m_body->GetUserData());
+
+    m_polygonShape = new b2PolygonShape(m_shapeDef);
+}
+
+void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]){
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->position.Set(p_position[0], p_position[1]);
+    
+    m_body = m_world->CreateBody(m_bodyDef);
+
+    m_shapeDef = new b2PolygonDef();
+
+    //scaleX = 50
+    m_shapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
+    m_body->CreateShape(m_shapeDef);
+    m_body->SetUserData(p_id);    
+
+    m_polygonShape = new b2PolygonShape(m_shapeDef);
+}
 
 b2World* PhysicsManager::getWorld(){
     return m_world;
+}
+
+b2PolygonShape* PhysicsManager::getShape(){
+    return m_polygonShape;
+}
+
+//An ID is receive and we look for the body with that ID
+b2Body* PhysicsManager::getBody(int p_id){
+    b2Body* t_body = m_world->GetBodyList();
+    int* t_id = 0;
+    int  t_value = 0;
+
+    while(t_body != NULL){
+        t_id = static_cast<int*>(t_body->GetUserData());
+        t_value = *t_id;
+        if(p_id == t_value)
+            return t_body;
+        
+        t_body = t_body->GetNext();
+    }
+
+    return 0;
 }
 
 float PhysicsManager::getTimeStep(){
@@ -64,8 +127,6 @@ int PhysicsManager::getIterations(){
     return m_iterations;
 }
 
-//Destructor
-PhysicsManager::~PhysicsManager(){}
 
 //Adds a force to an entity
 void PhysicsManager::addForce(){

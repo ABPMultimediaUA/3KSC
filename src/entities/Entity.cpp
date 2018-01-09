@@ -31,7 +31,6 @@ int Entity::m_entityCount = 0;
 //Create a new Etity for a player
 Entity::Entity(float p_position[3]){
     m_id = m_entityCount++;
-
     for(int i = 0; i < 3; i++){
         m_position[i] = p_position[i];
         m_lastPosition[i] = p_position[i];
@@ -40,70 +39,37 @@ Entity::Entity(float p_position[3]){
     EngineManager::instance()->createEntity(m_id, p_position);
     moveTo(p_position);
 
-    //Create a new body and positioning it in the coords of the Entity
-    m_bodyDef = new b2BodyDef();
-    m_bodyDef->position.Set(p_position[0], p_position[1]);
-    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
-
-    //Create a shape for the body
-    m_shapeDef = new b2PolygonDef();
-    m_shapeDef->SetAsBox(5.0, 5.0);
-    m_shapeDef->density = 10.0;
-    m_shapeDef->friction = 0.3;
-
-    //Attach the shape to the body
-    m_body->CreateShape(m_shapeDef);
-    m_body->SetMassFromShapes();
-
-    m_polygonShape = new b2PolygonShape(m_shapeDef);
-}
-
-b2PolygonShape* Entity::getShape(){
-    return m_polygonShape;
-}
-
-b2Body* Entity::getBody(){
-    return m_body;
+    float t_dimX = 5.0;
+    float t_dimY = 5.0;
+    PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
 }
 
 //Create a new Entity for a new Platform or Arena
 Entity::Entity(float p_position[3], float p_scale[3]){
-    /*
     m_id = m_entityCount++;
-
+    /*
     EngineManager* t_engineManager = EngineManager::instance();
     t_engineManager->createEntity(m_id, p_position);
     t_engineManager->scale(m_id, p_scale);
     moveTo(p_position);
     */
 
-    m_bodyDef = new b2BodyDef();
-    m_bodyDef->position.Set(p_position[0], p_position[1]);
-    
-    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
-
-    m_shapeDef = new b2PolygonDef();
-
-    //scaleX = 50
-    m_shapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
-    m_body->CreateShape(m_shapeDef);
-
-    m_polygonShape = new b2PolygonShape(m_shapeDef);
+    PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale);
 }
 
 Entity::~Entity(){}
 
-void Entity::updatePosition(float p_posY, bool p_jumping){
+void Entity::updatePosition(bool p_jumping){
     //std::cout << m_position[0] << "," << m_position[1] << std::endl;
     if(p_jumping){
-        this->m_body->PutToSleep();
+        PhysicsManager::instance()->getBody(m_id)->PutToSleep();
     }
     else{
-        m_body->WakeUp();
-        m_position[1] = p_posY;
+        PhysicsManager::instance()->getBody(m_id)->WakeUp();
+        m_position[1] = PhysicsManager::instance()->getBody(m_id)->GetPosition().y;
     }
     b2Vec2 t_vec(m_position[0], m_position[1]);
-    m_body->SetXForm(t_vec, 0);
+    PhysicsManager::instance()->getBody(m_id)->SetXForm(t_vec, 0);
 
     EngineManager::instance()->moveEntity(this);
 }

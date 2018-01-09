@@ -40,7 +40,7 @@ int main(){
         float scale[3] = {10, 0.5, 2};
 
         Character* player1 = new Rawr(positionRawr, "Player 1", 100, 30, 50.f, true, -1);
-        //Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false);
+        Character* player2 = new Plup(positionPlup, "Player 2", 100, 30, 50.f, false, -1);
 
         engineManager->createCamera();
         Arena* estadio = new Arena(position, scale, 1);
@@ -51,8 +51,8 @@ int main(){
         int i;
         Character* currentPlayer;
 
-        Debug *estadioDebug = new Debug(666, estadio->getBody(), estadio->getShape());
-        Debug *playerDebug = new Debug(666, player1->getBody(), player1->getShape());
+        //Debug *estadioDebug = new Debug(666, estadio->getBody(), estadio->getShape());
+        //Debug *playerDebug = new Debug(666, player1->getBody(), player1->getShape());
 
         //Game main loop
         while (engineManager->running()){
@@ -66,9 +66,9 @@ int main(){
                 currentPlayer = Character::getPlayer(i);
 
                 currentPlayer->playerInput();
-                currentPlayer->updatePosition(currentPlayer->getBody()->GetPosition().y, currentPlayer->isJumping());
+                currentPlayer->updatePosition(currentPlayer->isJumping());
             }
-            playerDebug->update();
+            //playerDebug->update();
             engineManager->drawScene();
         }
 
