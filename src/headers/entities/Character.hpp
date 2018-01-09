@@ -113,6 +113,7 @@ private:
     bool            m_specialAttackDownInput;
     bool            m_specialAttackSideInput;
     bool            m_ultimateAttackInput;
+    bool            m_waitRelease;
 
     void            updateInputs();
     void            checkActions();

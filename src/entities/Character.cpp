@@ -71,6 +71,9 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
 
+    m_waitRelease           = false;
+
+
     m_playerIndex = Character::m_playerCount++;
 
     m_soundManager = SoundManager::instance();
@@ -308,27 +311,47 @@ void Character::playerInput(){
 
         //Basic Attack
         if(m_basicAttackInput){
-            m_basicAttack = true;
+            if (!m_waitRelease){
+                m_basicAttack = true;
+                m_waitRelease = true;
+            }
         }
 
         //Special attack up
-        if (m_specialAttackUpInput){
-            m_specialAttackUp = true;
+        else if(m_specialAttackUpInput){
+            if (!m_waitRelease){
+                m_specialAttackUp = true;
+                m_waitRelease = true;
+            }
         }
 
         //Special attack down
-        if (m_specialAttackDownInput){
-            m_specialAttackDown = true;
+        else if(m_specialAttackDownInput){
+            if (!m_waitRelease){
+                m_specialAttackDown = true;
+                m_waitRelease = true;
+            }
         }
 
         //Special attack side
-        if (m_specialAttackSideInput){
-            m_specialAttackSide = true;
+        else if(m_specialAttackSideInput){
+            if (!m_waitRelease){
+                m_specialAttackSide = true;
+                m_waitRelease = true;
+            }
         }
 
-         //Ultimate Attack
-        if(m_ultimateAttackInput){
-            m_ultimateAttack = true;
+        //Ultimate Attack
+        else if(m_ultimateAttackInput){
+            if (!m_waitRelease){
+                m_ultimateAttack = true;
+                m_waitRelease = true;
+            }
+        }
+
+        //No attack
+        else{
+            m_waitRelease = false;
         }
 
         //Sprint
