@@ -61,6 +61,17 @@ Entity::Entity(float p_position[3], float p_scale[3]){
 //Create entity with model
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
     m_id = m_entityCount++;
+    for(int i = 0; i < 3; i++){
+        m_position[i] = p_position[i];
+        m_lastPosition[i] = p_position[i];
+    }
+
+    EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
+    moveTo(p_position);
+
+    float t_dimX = 5.0;
+    float t_dimY = 5.0;
+    PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
 }
 
 Entity::~Entity(){
@@ -114,7 +125,6 @@ bool Entity::checkCloseness(float* p_point, float p_range){
             return true;
         }
     }   
-
     return false;
 }
 
