@@ -389,7 +389,7 @@ void Character::jump(){
 }
 
 void Character::pickItem(){
-    int t_itemType = Arena::getInstance()->catchItem(m_id, m_position);
+    int t_itemType = Arena::getInstance()->catchItem(m_playerIndex, m_position);
     
     switch (t_itemType){
         //Life tank

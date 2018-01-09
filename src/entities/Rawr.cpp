@@ -43,7 +43,7 @@ void Rawr::basicAttack(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
@@ -68,7 +68,7 @@ void Rawr::specialAttackUp(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
@@ -114,7 +114,7 @@ void Rawr::specialAttackSide(){
         }
 
         //Create attack and increase projectile count
-        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_id, 0);
+        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_playerIndex, 0);
         std::cout << m_name << ": Fireball" << std::endl;
     }
 

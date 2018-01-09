@@ -47,7 +47,7 @@ void Plup::basicAttack(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
@@ -72,7 +72,7 @@ void Plup::specialAttackUp(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);

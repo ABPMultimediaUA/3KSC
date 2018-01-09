@@ -130,7 +130,7 @@ void EngineManager::drawScene(){
 }
 
 //Loads a 3D model
-void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale, const char* p_modelURL){
+void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL){
     scene::IAnimatedMesh* t_mesh = m_scene->getMesh(p_modelURL);
     scene::ISceneNode* t_node = 0;
 
@@ -138,7 +138,7 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale, co
         t_node = m_scene->addOctreeSceneNode(t_mesh->getMesh(0), 0, p_id, 1024);
         t_node->setPosition(core::vector3df(p_position[0], p_position[1], p_position[2]));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
-        t_node->setScale(core::vector3df(p_scale, p_scale, p_scale));
+        t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
 
         //Add node to class node vector 
         m_entityNodes.push_back(t_node);
@@ -154,6 +154,9 @@ void EngineManager::loadArena(const char* arenaModelURL){
         t_node->setPosition(core::vector3df(0,0,0));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
         t_node->setScale(core::vector3df(10,10,10));
+
+        //Add node to class node vector 
+        m_entityNodes.push_back(t_node);
     }
 }
 
@@ -191,7 +194,7 @@ void EngineManager::moveEntity(Entity* p_entity){
     t_position.Y = (f32) t_entityPosition[1];
     t_position.Z = (f32) t_entityPosition[2];
 
-    m_entityNodes.at(p_entity->getId()-1)->setPosition(t_position);
+    m_entityNodes.at(p_entity->getId())->setPosition(t_position);
 }
 
 scene::ISceneNode* EngineManager::getEntityNode(int p_id){

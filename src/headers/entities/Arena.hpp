@@ -49,6 +49,7 @@ public:
     void            restart();
 private: 
     static Arena* m_instance;
+    static const char*  m_modelURLs[2];
 	//Skybox*     m_skybox;
     //Texture*    m_background;
     float       m_time;

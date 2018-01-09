@@ -24,7 +24,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
-//#include <iostream>
+#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -32,9 +32,10 @@ int Entity::m_entityCount = 0;
 //Create a new Entity for a player
 Entity::Entity(float p_position[3]){
     m_id = m_entityCount++;
+    std::cout << "[POS constructor] - m_id: " << m_id << " m_entityCount: " << m_entityCount << std::endl;
     for(int i = 0; i < 3; i++){
+        m_lastPosition[i] = m_position[i];
         m_position[i] = p_position[i];
-        m_lastPosition[i] = p_position[i];
     }
 
     EngineManager::instance()->createEntity(m_id, p_position);
@@ -45,38 +46,76 @@ Entity::Entity(float p_position[3]){
     PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
 }
 
-//Create a new Entity for a new Platform or Arena
-Entity::Entity(float p_position[3], float p_scale[3]){
+//Create entity with model (proportional scale)
+Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
     m_id = m_entityCount++;
-    /*
-    EngineManager* t_engineManager = EngineManager::instance();
-    t_engineManager->createEntity(m_id, p_position);
-    t_engineManager->scale(m_id, p_scale);
-    moveTo(p_position);
-    */
+    //std::cout << "[PSM constructor] -  m_id: " << m_id << " m_entityCount: " << m_entityCount << std::endl;
+    
+    float t_scale[3] = {p_scale, p_scale, p_scale};
 
-    PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale);
+    switch (p_type){
+        //Players and items
+        case 0:{
+            for(int i = 0; i < 3; i++){
+                m_position[i] = p_position[i];
+                m_lastPosition[i] = p_position[i];
+            }
+
+            EngineManager::instance()->load3DModel(m_id, p_position, t_scale, p_modelURL);
+            moveTo(p_position);
+
+            float t_dimX = 5.0;
+            float t_dimY = 5.0;
+            PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
+            break;
+        }
+
+        //Arenas
+        case 1:{
+            EngineManager::instance()->loadArena(p_modelURL);
+            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, t_scale);
+            break;
+        }
+    }
 }
 
-//Create entity with model
-Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
+//Create entity with model (free scale)
+Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type){
     m_id = m_entityCount++;
-    for(int i = 0; i < 3; i++){
-        m_position[i] = p_position[i];
-        m_lastPosition[i] = p_position[i];
+    //std::cout << "[FSM constructor] - m_id: " << m_id << " m_entityCount: " << m_entityCount << std::endl;
+
+    switch (p_type){
+        //Players and items
+        case 0:{
+            for(int i = 0; i < 3; i++){
+                m_position[i] = p_position[i];
+                m_lastPosition[i] = p_position[i];
+            }
+
+            EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
+            moveTo(p_position);
+
+            float t_dimX = 5.0;
+            float t_dimY = 5.0;
+            PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
+            break;
+        }
+
+        //Arenas
+        case 1:{
+            EngineManager::instance()->loadArena(p_modelURL);
+            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale);
+            break;
+        }
     }
-
-    EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
-    moveTo(p_position);
-
-    float t_dimX = 5.0;
-    float t_dimY = 5.0;
-    PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
 }
 
 Entity::~Entity(){
+    //std::cout << "Check" << std::endl;
     EngineManager::instance()->deleteEntity(m_id);
+    //std::cout << "Check2" << std::endl;
     PhysicsManager::instance()->destroyBody(m_id);
+    //std::cout << "Check3" << std::endl;
 }
 
 void Entity::updatePosition(bool p_jumping){

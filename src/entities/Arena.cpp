@@ -24,16 +24,18 @@
 #include "../headers/managers/EngineManager.hpp"
 //#include <iostream>
 
+//Static members
+const char* Arena::m_modelURLs[2] = {"assets/models/arenas/stadium.obj", "assets/models/arenas/stadium.obj"};
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_position, p_scale){
-    EngineManager* t_engineManager = EngineManager::instance();
-    if(p_arenaIndex == 1)
-        m_modelURL = "assets/models/arenas/stadium.obj";
-
-    t_engineManager->loadArena(m_modelURL);
+Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1){
+//    EngineManager* t_engineManager = EngineManager::instance();
+//    if(p_arenaIndex == 1)
+//        m_modelURL = "assets/models/arenas/stadium.obj";
+//
+//    t_engineManager->loadArena(m_modelURL);
 
     m_maxItems      = 8;
     m_currentItems  = 0;
@@ -56,7 +58,7 @@ void Arena::spawnPlayers(){
     m_players = new Character*[4];
 
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1);
-    //m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -2);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -2);
 }
 
 //Returns number of players
@@ -72,7 +74,7 @@ Character* Arena::getPlayer(int p_index){
 
 void Arena::spawnItems(){
     float positionItem[3] = {-100, 10, 0};
-    /*
+    
     m_items[m_currentItems++] = new Item(0, positionItem);
     positionItem[0] = -80;
     m_items[m_currentItems++] = new Item(0, positionItem);
@@ -88,7 +90,7 @@ void Arena::spawnItems(){
     m_items[m_currentItems++] = new Item(2, positionItem);
     positionItem[0] = 30;
     m_items[m_currentItems++] = new Item(2, positionItem);
-    */
+    
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it
