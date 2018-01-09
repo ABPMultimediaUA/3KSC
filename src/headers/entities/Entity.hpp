@@ -57,8 +57,6 @@ protected:
     //Texture*   m_texture;
     //Hitbox*    m_hitbox;
     float      m_weight;
-
-    const char* m_modelURL;
 };
 
 #endif

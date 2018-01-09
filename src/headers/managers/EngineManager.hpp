@@ -78,8 +78,5 @@ public:
     irr::scene::ISceneNode* getEntityNode(int p_id);
     irr::IrrlichtDevice* getDevice();
     float getFrameDeltaTime();
-    irr::video::IVideoDriver* getVideoDriver();
-    irr::scene::ISceneManager* getSceneManager();
-};
 
 #endif
