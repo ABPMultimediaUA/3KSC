@@ -1,7 +1,8 @@
 #Directories
 SRCDIR	:= src/
-OBJDIR	:= obj/
 HDRDIR	:= src/headers/
+LIBDIR  := src/lib/
+OBJDIR	:= obj/
 SUBDIRS := $(OBJDIR)entities $(OBJDIR)managers
 
 #Files
@@ -11,8 +12,8 @@ BINARY 	:= 3KSC
 
 #Compiler set-up
 CC		:= g++
-INCLUDE := -I$(HDRDIR) -I$(SRCDIR)irrlicht/include -I$(SRCDIR)sfml/include -I$(SRCDIR)box2D/include -I$(SRCDIR)fmod/include
-LIBS	:= -L$(SRCDIR)irrlicht/lib/Linux -lIrrlicht -L$(SRCDIR)lib -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(SRCDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(SRCDIR)box2D/lib -lbox2d -L$(SRCDIR)fmod/lib -lfmodex64 -lfmodevent64 -Wl,-rpath $(SRCDIR)fmod/lib
+INCLUDE := -I$(HDRDIR) -I$(LIBDIR)irrlicht/include -I$(LIBDIR)sfml/include -I$(LIBDIR)box2D/include -I$(LIBDIR)fmod/include
+LIBS	:= -L$(LIBDIR)irrlicht/lib/Linux -lIrrlicht -L$(LIBDIR) -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(LIBDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(LIBDIR)box2D/lib -lbox2d -L$(LIBDIR)fmod/lib -lfmodex64 -lfmodevent64 -Wl,-rpath $(LIBDIR)fmod/lib
 #Make binary
 $(BINARY): $(OBJECTS)
 	$(CC) -o $@ $^ $(INCLUDE) $(LIBS)
