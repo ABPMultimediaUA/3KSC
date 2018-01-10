@@ -43,6 +43,11 @@ int main(){
         engineManager->createCamera();
         engineManager->timeStamp();
 
+        // Play music
+        Sound t_music;
+        soundManager->createSound(&t_music,"assets/FosfosStadium.mp3");
+        soundManager->playSound(t_music, true);
+
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
