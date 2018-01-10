@@ -98,8 +98,26 @@ b2World* PhysicsManager::getWorld(){
     return m_world;
 }
 
-b2PolygonShape* PhysicsManager::getShape(){
-    return m_polygonShape;
+b2PolygonShape* PhysicsManager::getShape(int p_id){
+    b2Body* t_body = m_world->GetBodyList();
+    b2Shape* t_shape = 0;
+    int* t_id = 0;
+    int  t_value = 0;
+
+    while(t_body != NULL){
+        t_id = static_cast<int*>(t_body->GetUserData());
+        t_value = *t_id;
+        if(p_id == t_value){
+            t_shape = t_body->GetShapeList();
+            if(t_shape->GetType() == 1){
+                b2PolygonShape* t_polygonShape = (b2PolygonShape*)t_shape;
+                return t_polygonShape;
+            }
+        }
+        
+        t_body = t_body->GetNext();
+    }
+    return 0;
 }
 
 //An ID is receive and we look for the body with that ID

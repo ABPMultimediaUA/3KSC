@@ -27,7 +27,7 @@
 
 class Sparky: public Character {
 public:
-	Sparky(char* p_name, float p_position[3], int p_joystick);
+	Sparky(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
     ~Sparky();
     void    jump();
     void    basicAttack();

@@ -22,6 +22,7 @@
 
 #include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
 //#include <iostream>
 
 //Static members
@@ -30,7 +31,7 @@ const char* Arena::m_modelURLs[2] = {"assets/models/arenas/stadium.obj", "assets
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1){
+Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1){
 //    EngineManager* t_engineManager = EngineManager::instance();
 //    if(p_arenaIndex == 1)
 //        m_modelURL = "assets/models/arenas/stadium.obj";
@@ -42,6 +43,9 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_p
     m_items         = new Item*[m_maxItems];
 
     m_instance      = this;
+
+    m_debugMode = p_debugMode;
+
 }
 
 Arena::~Arena(){}
@@ -57,8 +61,16 @@ void Arena::spawnPlayers(){
     m_playerCount = 0;
     m_players = new Character*[4];
 
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1);
-    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -2);
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1, m_debugMode);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -2, m_debugMode);
+
+    if(m_debugMode){
+        for(int i = 0; i < m_playerCount; i++){
+            m_players[i]->modeDebug();
+        }
+        modeDebug();
+    }
+
 }
 
 //Returns number of players
@@ -74,7 +86,7 @@ Character* Arena::getPlayer(int p_index){
 
 void Arena::spawnItems(){
     float positionItem[3] = {-100, 10, 0};
-    
+    /*
     m_items[m_currentItems++] = new Item(0, positionItem);
     positionItem[0] = -80;
     m_items[m_currentItems++] = new Item(0, positionItem);
@@ -90,7 +102,7 @@ void Arena::spawnItems(){
     m_items[m_currentItems++] = new Item(2, positionItem);
     positionItem[0] = 30;
     m_items[m_currentItems++] = new Item(2, positionItem);
-    
+    */
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it
@@ -136,4 +148,9 @@ void Arena::animateBackground(){
 
 void Arena::restart(){
     
+}
+
+void Arena::modeDebug(){
+    if(m_debugMode)
+        m_debugBattlefield = new Debug(666, PhysicsManager::instance()->getShape(getId()));
 }

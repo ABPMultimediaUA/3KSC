@@ -58,7 +58,7 @@ class PhysicsManager{
     void updateGravity();
 
     b2World*        getWorld();
-    b2PolygonShape* getShape();
+    b2PolygonShape* getShape(int p_id);
     b2Body*         getBody(int p_id);
     void            destroyBody(int p_id);
     float           getTimeStep();

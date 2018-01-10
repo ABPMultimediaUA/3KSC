@@ -23,7 +23,7 @@
 #include "../headers/entities/Luka.hpp"
 #include <iostream>
 
-Luka::Luka(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj"){
+Luka::Luka(char* p_name, float p_position[3], int p_joystick, bool p_debugMode) : Character(p_name, p_position, p_joystick, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];

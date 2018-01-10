@@ -35,7 +35,7 @@ int main(){
     if (engineManager->createWindow()){  
         float position[3] = {0, 6, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0);
+        Arena* estadio = new Arena(position, scale, 0, true);
         
         estadio->spawnPlayers();
         estadio->spawnItems();
@@ -47,8 +47,10 @@ int main(){
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
 
-        //Debug *estadioDebug = new Debug(666, estadio->getBody(), estadio->getShape());
-        //Debug *playerDebug = new Debug(666, Arena::getInstance()->getPlayer(0)->getBody(), Arena::getInstance()->getPlayer(0)->getShape());
+        //Debug *estadioDebug = new Debug(666, physicsManager->getShape(Arena::getInstance()->getId()));
+
+        //Debug *playerDebug = new Debug(666, physicsManager->getShape(Arena::getInstance()->getPlayer(0)->getId()));
+
 
         //Game main loop
         while (engineManager->running()){
@@ -65,7 +67,6 @@ int main(){
                 currentPlayer->playerUpdate();
             }
 
-            //playerDebug->update();
             engineManager->drawScene();
         }
 
