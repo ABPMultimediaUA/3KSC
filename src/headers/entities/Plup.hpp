@@ -28,7 +28,7 @@
 
 class Plup: public Character {
     public:
-        Plup(char* p_name, float p_position[3], int p_joystick);
+        Plup(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
         ~Plup();
         void    jump();
         void    basicAttack();

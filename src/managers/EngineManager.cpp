@@ -58,8 +58,24 @@ float EngineManager::updateFrameDeltaTime(){
 }
 
 //Creates the game window
-bool EngineManager::createWindow(){
-    m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, this);
+bool EngineManager::createWindow(bool p_fullscreen){
+
+    core::dimension2d<u32> t_windowSize;
+
+    if (p_fullscreen){
+        //Create a null device to get the desktop resolution
+        IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
+        t_windowSize = t_nulldevice->getVideoModeList()->getDesktopResolution();
+        t_nulldevice->drop();
+    }
+
+    else{
+        t_windowSize = core::dimension2d<u32>(640, 480);
+    }
+ 
+    //Use the desktop resolution to create a real device
+    m_device = createDevice(video::EDT_OPENGL, t_windowSize, 16, p_fullscreen, false, false, this);
+    
     //If m_device is NULL
     if(!m_device)
         return false;

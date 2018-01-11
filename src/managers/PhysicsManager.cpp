@@ -79,17 +79,23 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
 }
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]){
+    /*
+        DEBERIA DE INTENTAR QUE CON UNA UNICA LLAMADA SE ME CREEN TODAS LAS PLATAFORMAS
+    */
     m_bodyDef = new b2BodyDef();
     m_bodyDef->position.Set(p_position[0], p_position[1]);
     
     m_body = m_world->CreateBody(m_bodyDef);
+    m_body->SetUserData(p_id); 
 
     m_shapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_shapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
+    m_shapeDef->SetAsBox((p_scale[0]), p_scale[1]);
     m_body->CreateShape(m_shapeDef);
-    m_body->SetUserData(p_id);    
+
+    m_shapeDef->SetAsBox((p_scale[0]), p_scale[1]*10, b2Vec2(-1 + 0.1, 1), -2);
+    m_body->CreateShape(m_shapeDef);
 
     m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
@@ -98,8 +104,25 @@ b2World* PhysicsManager::getWorld(){
     return m_world;
 }
 
-b2PolygonShape* PhysicsManager::getShape(){
-    return m_polygonShape;
+b2PolygonShape* PhysicsManager::getShape(int p_id){
+    b2Body* t_body = m_world->GetBodyList();
+    b2Shape* t_shape = 0;
+    int* t_id = 0;
+    int  t_value = 0;
+
+    while(t_body != NULL){
+        t_id = static_cast<int*>(t_body->GetUserData());
+        t_value = *t_id;
+        if(p_id == t_value){
+            t_shape = t_body->GetShapeList();
+            if(t_shape->GetType() == 1){
+                b2PolygonShape* t_polygonShape = (b2PolygonShape*)t_shape;
+                return t_polygonShape;
+            }
+        }        
+        t_body = t_body->GetNext();
+    }
+    return 0;
 }
 
 //An ID is receive and we look for the body with that ID

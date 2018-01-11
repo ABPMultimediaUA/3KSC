@@ -48,7 +48,7 @@ public:
     void timeStamp();
     float updateFrameDeltaTime();
 
-    bool createWindow();
+    bool createWindow(bool p_fullscreen = true);
     void createCamera();
     bool running();
     void stop();

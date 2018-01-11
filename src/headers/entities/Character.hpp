@@ -26,10 +26,11 @@
 #include "Entity.hpp"
 #include "Projectile.hpp"
 #include "../headers/managers/SoundManager.hpp"
+#include "../debug.hpp"
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL);
+    Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
     ~Character();
 	
     void            receiveAttack(int p_damage, bool p_block);
@@ -55,6 +56,8 @@ public:
     
     int             getDamage();
     int             getIndex();
+
+    void            modeDebug();
 
 protected:
     static int      m_playerCount;
@@ -84,6 +87,7 @@ protected:
     int             m_jumpCurrentTime;      // Control variable. Checks in which frame of the jump the character is in
     int             m_jumpMaxTime;          // Control the time in which the character is in the air (in frames)
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
+    int             m_jumpIndex;            //For double jump
 
     bool            m_basicAttack;
     bool            m_specialAttackUp;
@@ -98,6 +102,8 @@ protected:
     SoundManager*   m_soundManager;
     Sound soundSteps;
 
+    Debug *playerDebug;
+    bool            m_debugMode;
 private:
     //Conditions for each Input (they change depending on keyboard/joystick control)
     bool            m_upInput;
