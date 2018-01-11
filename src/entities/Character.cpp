@@ -51,6 +51,7 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_shielded              = false;
     m_winged                = false;    
     m_alive                 = true;
+    m_respawning            = false;
 
     m_runningFactor         = 1;
 
@@ -275,11 +276,7 @@ void Character::checkActions(){
         jump();
 
     if (m_basicAttack)
-    {
         basicAttack();
-        float position2[3] = {100, 60, 0};
-        moveCharacterTo(position2);
-    }
 
     if (m_specialAttackUp)
         specialAttackUp();
@@ -411,10 +408,19 @@ void Character::playerInput(){
 
 //Update state of player
 void Character::playerUpdate(){
-    updatePosition(m_jumping);
+    if(!m_respawning)
+        updatePosition(m_jumping);
+    else
+    {
+        updatePosition(true);
+        m_respawning = false;
+    }
     if(m_debugMode)
         playerDebug->update();
     //Increase magic every second and with attacks
+    if(getY() < -200){
+        die();
+    }
 }
 
 void Character::jump(){
@@ -504,7 +510,9 @@ void Character::modeDebug(){
         playerDebug = new Debug(666, PhysicsManager::instance()->getShape(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
 }
 
-void Character::moveCharacterTo(float p_position[3]){
-    float position2[3] = {100, 160, 0};
-    moveY(50);
+void Character::respawn(float p_position[3]){
+    m_respawning = true;
+    moveTo(p_position);
+    m_life = 100; //cambiar por vida inicial
+    UIManager::instance()->setLife(m_playerIndex, m_life);
 }

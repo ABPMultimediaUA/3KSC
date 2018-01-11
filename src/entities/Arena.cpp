@@ -154,13 +154,16 @@ void Arena::modeDebug(){
 }
 
 void Arena::setSpawnPositions(){
-  //  m_spawnPosition[0] = {-10, 50, 0}
-   //// m_spawnPosition[1] = {10, 50, 0};
-   // m_spawnPosition[2] = {-20, 50, 0};
-   // m_spawnPosition[3] = {20, 50, 0};
+   //m_spawnPosition[1] = {10, 100, 0};
+   //m_spawnPosition[2] = {-50, 100, 0};
+   //m_spawnPosition[0] = [-10, 100, 0};
+   //m_spawnPosition[3] = {50, 100, 0};
 }
 
 void Arena::respawnPlayer(int p_player){
-    float position[3] = {100, 60, 0};
-    m_players[p_player]->moveCharacterTo(position);
+
+    //int randNum = rand()%(m_spawnPosition.length());
+
+    float t_center[3] = {0, 100, 0};
+    m_players[p_player]->respawn(t_center);
 }
