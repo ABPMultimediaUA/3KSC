@@ -26,7 +26,7 @@
 //#include <iostream>
 
 //Static members
-const char* Arena::m_modelURLs[2] = {"assets/models/arenas/stadium.obj", "assets/models/arenas/stadium.obj"};
+const char* Arena::m_modelURLs[2] = {"assets/models/arenas/fusfus_stadium.obj", "assets/models/arenas/fusfus_stadium.obj"};
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
