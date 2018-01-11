@@ -22,9 +22,16 @@
 #define SOUND_MANAGER
 
 #include <fmod/wincompat.h>
-#include <fmod/fmod.hpp>
 #include <fmod/fmod_event.hpp>
 #include <fmod/fmod_errors.h>
+
+using namespace std;
+
+struct Vector3 {
+	float x;
+	float y;
+	float z;
+};
 
 typedef FMOD::Sound* Sound;
 

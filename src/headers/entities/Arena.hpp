@@ -32,10 +32,11 @@
 //#include "Branch.hpp"
 //#include "Platform.hpp"
 //#include "GravityZone.hpp"
+#include "../debug.hpp"
 
 class Arena : public Entity {
 public:
-	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex);
+	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode);
             ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
@@ -47,6 +48,9 @@ public:
     void            movePlatforms();
     void            animateBackground();
     void            restart();
+
+    void            modeDebug();
+
 private: 
     static Arena* m_instance;
     static const char*  m_modelURLs[2];
@@ -61,6 +65,9 @@ private:
 
     int         m_playerCount;
     Character** m_players;
+
+    Debug*      m_debugBattlefield;
+    bool        m_debugMode;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

@@ -33,9 +33,9 @@ int main(){
     SoundManager*   soundManager = SoundManager::instance();
 
     if (engineManager->createWindow()){  
-        float position[3] = {0, 6, 0};
+        float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0);
+        Arena* estadio = new Arena(position, scale, 0, false);
         
         estadio->spawnPlayers();
         estadio->spawnItems();
@@ -43,12 +43,14 @@ int main(){
         engineManager->createCamera();
         engineManager->timeStamp();
 
+        // Play music
+        Sound t_music;
+        soundManager->createSound(&t_music,"assets/FosfosStadium.mp3");
+        soundManager->playSound(t_music, true);
+
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
-
-        //Debug *estadioDebug = new Debug(666, estadio->getBody(), estadio->getShape());
-        //Debug *playerDebug = new Debug(666, Arena::getInstance()->getPlayer(0)->getBody(), Arena::getInstance()->getPlayer(0)->getShape());
 
         //Game main loop
         while (engineManager->running()){
@@ -64,11 +66,8 @@ int main(){
                 currentPlayer->playerInput();
                 currentPlayer->playerUpdate();
             }
-
-            //playerDebug->update();
             engineManager->drawScene();
         }
-
         engineManager->stop();
         return 0;
     }

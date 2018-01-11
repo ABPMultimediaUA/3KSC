@@ -24,6 +24,7 @@
 #include "../headers/entities/Character.hpp"
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/InputManager.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/extra/Keycodes.hpp"
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
@@ -33,7 +34,7 @@
 //Static members
 int Character::m_playerCount = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
     m_joystick              = p_joystick;
     m_lives                 = 3;
@@ -78,6 +79,9 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
 
     m_soundManager = SoundManager::instance();
     m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
+
+    m_debugMode = p_debugMode;
+
 }
 
 Character::~Character(){}
@@ -394,6 +398,8 @@ void Character::playerInput(){
 //Update state of player
 void Character::playerUpdate(){
     updatePosition(m_jumping);
+    if(m_debugMode)
+        playerDebug->update();
     //Increase magic every second and with attacks
 }
 
@@ -467,4 +473,9 @@ int Character::getDamage(){
 //Returns the index of the player
 int Character::getIndex(){
     return m_playerIndex;
+}
+
+void Character::modeDebug(){
+    if(m_debugMode)
+        playerDebug = new Debug(666, PhysicsManager::instance()->getShape(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
 }
