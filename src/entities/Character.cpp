@@ -50,6 +50,7 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_blocking              = false;
     m_shielded              = false;
     m_winged                = false;    
+    m_alive                 = true;
 
     m_runningFactor         = 1;
 
@@ -103,8 +104,9 @@ void Character::receiveAttack(int p_damage, bool p_block){
 void Character::changeLife(int p_variation){
     m_life += p_variation;
 
-    if (m_life < 0){
+    if (m_life <= 0){
         m_life = 0;
+        die();
     }
     
     else if (m_life > m_maxLife){
@@ -144,7 +146,8 @@ void Character::wings(){
 //Decreases number of lives
 void Character::die(){
     m_lives--;
-    
+    //m_alive = false;
+    Arena::getInstance()->respawnPlayer(m_playerIndex);
     //HUD Stuff
 
     //Delete when m_lives == 0
@@ -177,10 +180,11 @@ void Character::updateInputs(){
     
     //Update joysticks state first
     t_inputManager->updateJoysticks();
-
+    
     //Keyboard input
     if (m_joystick == -1){
-
+    
+    
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -266,11 +270,16 @@ void Character::updateInputs(){
 
 //Calls action functions when they are active
 void Character::checkActions(){
+ 
     if (m_jumping)
         jump();
 
     if (m_basicAttack)
+    {
         basicAttack();
+        float position2[3] = {100, 60, 0};
+        moveCharacterTo(position2);
+    }
 
     if (m_specialAttackUp)
         specialAttackUp();
@@ -305,7 +314,7 @@ void Character::playerInput(){
     if(t_inputManager->isKeyPressed(Key_Escape))
         EngineManager::instance()->stop();
 
-    if(!m_stunned)
+    if(!m_stunned && m_alive)
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
@@ -493,4 +502,9 @@ int Character::getLife(){
 void Character::modeDebug(){
     if(m_debugMode)
         playerDebug = new Debug(666, PhysicsManager::instance()->getShape(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+}
+
+void Character::moveCharacterTo(float p_position[3]){
+    float position2[3] = {100, 160, 0};
+    moveY(50);
 }
