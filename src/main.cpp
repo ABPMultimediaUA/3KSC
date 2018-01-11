@@ -31,6 +31,7 @@ int main(){
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
     SoundManager*   soundManager = SoundManager::instance();
+    UIManager*      uiManager = UIManager::instance();
 
     if (engineManager->createWindow()){  
         float position[3] = {0, 6, 0};
@@ -50,8 +51,10 @@ int main(){
         //Debug *estadioDebug = new Debug(666, estadio->getBody(), estadio->getShape());
         //Debug *playerDebug = new Debug(666, Arena::getInstance()->getPlayer(0)->getBody(), Arena::getInstance()->getPlayer(0)->getShape());
 
+
         //Game main loop
         while (engineManager->running()){
+            //sf::Context context;
             soundManager->update();
             engineManager->updateFrameDeltaTime();
 
@@ -67,6 +70,7 @@ int main(){
 
             //playerDebug->update();
             engineManager->drawScene();
+            uiManager->render();
         }
 
         engineManager->stop();

@@ -27,7 +27,9 @@
 #include "managers/InputManager.hpp"
 #include "managers/PhysicsManager.hpp"
 #include "managers/SoundManager.hpp"
+#include "managers/UIManager.hpp"
 #include "entities/Arena.hpp"
 #include "debug.hpp"
+#include <SFML/Window/Context.hpp>
 
 #endif
