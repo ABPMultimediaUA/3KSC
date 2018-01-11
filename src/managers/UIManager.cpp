@@ -40,16 +40,16 @@ UIManager::UIManager(){
     //this->m_buttons = 0;
     //this->m_menus = 0;
     //this->m_callbacks = 0;
-
+/*
     m_renderTexture = new sf::RenderTexture();
 
     if (!m_renderTexture->create(640, 480, true)){
         std::cout << "Error creando textura" << std::endl;
     }
 
-    const sf::Context* t_gameContext = sf::Context::getActiveContext();
-    m_gameContext = const_cast<sf::Context*>(t_gameContext);
-    std::cout << "Game Context: " << m_gameContext << std::endl;
+//    const sf::Context* t_gameContext = sf::Context::getActiveContext();
+//    m_gameContext = const_cast<sf::Context*>(t_gameContext);
+//    std::cout << "Game Context: " << m_gameContext << std::endl;
 //    
 //    sf::Context t_context;
 //    const sf::Context* t_SFMLContext = &t_context;
@@ -72,6 +72,7 @@ UIManager::UIManager(){
     m_renderTexture->create(360, 480, true);
     m_renderTexture->draw(rectangle);
     m_renderTexture->display();
+*/
 }
 
 //Destructor
@@ -84,15 +85,16 @@ void UIManager::update(){
 
 //Displays the texture
 void UIManager::render(){
+/*
     //std::cout << "Context GAME: " <<m_gameContext << std::endl;
     //std::cout << "Context SFML: " <<m_SFMLContext << std::endl;
-    std::cout << "Context 1: " <<sf::Context::getActiveContext() << std::endl;
-    sf::Context* t_context = new sf::Context();
-    std::cout << "Context 2: " <<sf::Context::getActiveContext() << std::endl;
+    //std::cout << "Context 1: " <<sf::Context::getActiveContext() << std::endl;
+    //sf::Context* t_context = new sf::Context();
+    //std::cout << "Context 2: " <<sf::Context::getActiveContext() << std::endl;
     //m_SFMLContext->setActive(true);
 
-    /*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClear(GL_COLOR_BUFFER_BIT);*/
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT);
 
     m_texture = &m_renderTexture->getTexture();
     sf::Texture::bind(m_texture);
@@ -111,8 +113,9 @@ void UIManager::render(){
         glVertex2f(0.0f, 0.0f);
     glEnd();
 
-    delete t_context;
-    m_gameContext->setActive(true);
+    //delete t_context;
+    //m_gameContext->setActive(true);
+*/
 }
 
 //Starts a game

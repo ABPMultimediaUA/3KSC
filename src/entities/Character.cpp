@@ -134,7 +134,7 @@ void Character::shield(){
 //Activates wings, if not already active
 void Character::wings(){
     if (!m_winged){
-        m_velocity *= 3;
+        m_velocity *= 2;
         m_winged = true;
     }
 }
@@ -308,13 +308,14 @@ void Character::playerInput(){
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
         if(m_jumpInput){
-            m_jumping = true;     // Begin jump movement
+            if (!m_waitRelease){
+                m_jumping = true;
+                m_waitRelease = true;
+            }
         }
 
-        m_runningFactor = 1;
-
         //Basic Attack
-        if(m_basicAttackInput){
+        else if(m_basicAttackInput){
             if (!m_waitRelease){
                 m_basicAttack = true;
                 m_waitRelease = true;
@@ -357,6 +358,8 @@ void Character::playerInput(){
         else{
             m_waitRelease = false;
         }
+
+        m_runningFactor = 1;
 
         //Sprint
         if(m_runInput){

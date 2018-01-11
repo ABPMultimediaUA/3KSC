@@ -87,6 +87,7 @@ protected:
     int             m_jumpCurrentTime;      // Control variable. Checks in which frame of the jump the character is in
     int             m_jumpMaxTime;          // Control the time in which the character is in the air (in frames)
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
+    int             m_jumpIndex;            //For double jump
 
     bool            m_basicAttack;
     bool            m_specialAttackUp;
