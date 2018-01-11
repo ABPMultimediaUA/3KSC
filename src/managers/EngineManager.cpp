@@ -59,23 +59,30 @@ float EngineManager::updateFrameDeltaTime(){
 }
 
 //Creates the game window
-bool EngineManager::createWindow(){
-    //Create a null device to get the desktop resolution
-/*
-    IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
-    core::dimension2d<u32> t_desktopResolution = t_nulldevice->getVideoModeList()->getDesktopResolution();
-    t_nulldevice->drop();
+bool EngineManager::createWindow(bool p_fullscreen){
+ 
+    core::dimension2d<u32> t_windowSize;
+ 
+    if (p_fullscreen){
+        //Create a null device to get the desktop resolution
+        IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
+        t_windowSize = t_nulldevice->getVideoModeList()->getDesktopResolution();
+        t_nulldevice->drop();
+    }
+ 
+    else{
+        t_windowSize = core::dimension2d<u32>(640, 480);
+    }
  
     //Use the desktop resolution to create a real device
-    m_device = createDevice(video::EDT_OPENGL, t_desktopResolution, 16, true, false, false, this);
-*/
-    m_device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false, false, false, this);
+    m_device = createDevice(video::EDT_OPENGL, t_windowSize, 16, p_fullscreen, false, false, this);
+    
     //If m_device is NULL
     if(!m_device)
         return false;
-
+ 
     m_device->setWindowCaption(L"3KSC");
-
+ 
     //Create video driver and scene manager
     m_vDriver = m_device->getVideoDriver();
     m_scene = m_device->getSceneManager();
@@ -161,7 +168,7 @@ void EngineManager::loadArena(const char* arenaModelURL){
 
     if (t_map){
         t_node = m_scene->addOctreeSceneNode(t_map->getMesh(0), 0, -1, 1024);
-        t_node->setPosition(core::vector3df(0,0,15));
+        t_node->setPosition(core::vector3df(0,0,0));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
         t_node->setScale(core::vector3df(10,10,10));
 
