@@ -26,6 +26,7 @@
 #include "Rawr.hpp"
 #include "Plup.hpp"
 #include "Item.hpp"
+#include <SFML/System/Clock.hpp>
 //#include "Skybox.hpp"
 //#include "Texture.hpp"
 //#include "WaterLily.hpp"
@@ -50,6 +51,8 @@ public:
     void            restart();
     void            setSpawnPositions();
     void            respawnPlayer(int p_player);
+    void            update();
+    void            spawnRandomItem();
 
     void            modeDebug();
 
@@ -64,6 +67,7 @@ private:
     int         m_maxItems;
     int         m_currentItems;
     Item**      m_items;
+    int         m_spawningTime;
 
     int         m_playerCount;
     Character** m_players;
@@ -72,6 +76,8 @@ private:
     bool        m_debugMode;
 
     float       m_spawnPositions[4][3];
+
+    sf::Clock   m_clock;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

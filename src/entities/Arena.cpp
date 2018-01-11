@@ -38,11 +38,12 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
 //
 //    t_engineManager->loadArena(m_modelURL);
 
-    m_maxItems      = 8;
+    m_maxItems      = 500; //cambiar esto
     m_currentItems  = 0;
     m_items         = new Item*[m_maxItems];
     m_instance      = this;
     m_debugMode = p_debugMode;
+    m_spawningTime  = 10;
     setSpawnPositions();
 }
 
@@ -83,7 +84,7 @@ Character* Arena::getPlayer(int p_index){
 
 
 void Arena::spawnItems(){
-    float positionItem[3] = {-100, 10, 0};
+   /* float positionItem[3] = {-100, 10, 0};
     
     m_items[m_currentItems++] = new Item(0, positionItem);
     positionItem[0] = -80;
@@ -99,7 +100,7 @@ void Arena::spawnItems(){
     positionItem[0] = -30;
     m_items[m_currentItems++] = new Item(2, positionItem);
     positionItem[0] = 30;
-    m_items[m_currentItems++] = new Item(2, positionItem);
+    m_items[m_currentItems++] = new Item(2, positionItem);*/
     
 }
 
@@ -166,4 +167,35 @@ void Arena::respawnPlayer(int p_player){
 
     float t_center[3] = {0, 100, 0};
     m_players[p_player]->respawn(t_center);
+}
+
+void Arena::update()
+{
+    float t_time = m_clock.getElapsedTime().asSeconds();
+    if(t_time > m_spawningTime)
+    {
+        m_clock.restart();
+        spawnRandomItem();
+    }
+}
+
+void Arena::spawnRandomItem()
+{
+    float positionItem[3] = {-100, 10, 0};
+    positionItem[0] = rand()%(120);
+    if(positionItem[0]< 60)
+    {
+        positionItem[1] = 54;
+    }
+    else
+    {
+        positionItem[1] = 10;
+    }
+
+    if(rand()%2 == 0)
+        positionItem[0] = positionItem[0] * (-1);
+
+    m_items[m_currentItems++] = new Item(rand()%3, positionItem);
+   
+
 }

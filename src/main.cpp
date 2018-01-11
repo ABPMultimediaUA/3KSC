@@ -68,6 +68,7 @@ int main(){
 
                 currentPlayer->playerInput();
                 currentPlayer->playerUpdate();
+                Arena::getInstance()->update();
             }
             
             engineManager->drawScene();
