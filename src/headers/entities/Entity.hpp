@@ -44,6 +44,8 @@ public:
     float getY();
     float getZ();
 
+    void rotate(float degrees);
+
     void updatePosition(bool p_jumping);
 
     static int getEntityCount();

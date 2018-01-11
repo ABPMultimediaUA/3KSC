@@ -58,6 +58,7 @@ public:
     void createEntity(int p_id, float p_position[3]);
     void deleteEntity(int p_id);
     void scale(int p_id, float p_scale[3]);
+    void setRotation(int p_id, float p_degrees);
     void drawScene();
 
     void load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
@@ -77,6 +78,8 @@ public:
     irr::scene::ISceneNode* getEntityNode(int p_id);
     irr::IrrlichtDevice* getDevice();
     float getFrameDeltaTime();
+
+
 };
 
 #endif

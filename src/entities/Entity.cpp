@@ -183,3 +183,7 @@ float Entity::getZ(){
 int Entity::getEntityCount(){
     return Entity::m_entityCount;
 }
+
+void Entity::rotate(float p_degrees){
+    EngineManager::instance()->setRotation(this->getId(), p_degrees);
+}
