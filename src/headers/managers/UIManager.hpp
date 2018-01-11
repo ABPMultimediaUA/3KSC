@@ -21,17 +21,28 @@
 #ifndef UI_MANAGER
 #define UI_MANAGER
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Window/Context.hpp>
+//#include <SFML/Graphics.hpp>
+//#include <SFML/Window/Context.hpp>
+#include <irrlicht.h>
 
 class UIManager{
     private:
         static UIManager*   m_instance;
-        sf::RenderTexture*  m_renderTexture;
-        const sf::Texture*  m_texture;
-        sf::Context*        m_gameContext;
-        sf::Context*        m_SFMLContext;
-        
+
+        //sf::RenderTexture*  m_renderTexture;
+        //const sf::Texture*  m_texture;
+        //sf::Context*        m_gameContext;
+        //sf::Context*        m_SFMLContext;
+
+        //irr::gui::IGUIStaticText** m_playerNames;
+        //irr::gui::IGUIStaticText** m_HPTexts;
+        //irr::gui::IGUIStaticText** m_playerHPs;
+        //irr::gui::IGUIStaticText** m_MPTexts;
+        //irr::gui::IGUIStaticText** m_playerMPs;
+
+        irr::gui::IGUIFont* m_font;
+        irr::scene::ITextSceneNode** m_playerHPs;
+
         int* m_buttons;
         int* m_menus;
         int* m_callbacks;
@@ -43,6 +54,8 @@ class UIManager{
         
         void update();
         void render();
+
+        void setLife(int p_player, int p_life);
 
         void start();
         void pause();

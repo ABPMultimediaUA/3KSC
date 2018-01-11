@@ -56,6 +56,8 @@ public:
     
     int             getDamage();
     int             getIndex();
+    char*           getName();
+    int             getLife();
 
     void            modeDebug();
 
