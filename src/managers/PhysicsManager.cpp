@@ -79,17 +79,23 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
 }
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]){
+    /*
+        DEBERIA DE INTENTAR QUE CON UNA UNICA LLAMADA SE ME CREEN TODAS LAS PLATAFORMAS
+    */
     m_bodyDef = new b2BodyDef();
     m_bodyDef->position.Set(p_position[0], p_position[1]);
     
     m_body = m_world->CreateBody(m_bodyDef);
+    m_body->SetUserData(p_id); 
 
     m_shapeDef = new b2PolygonDef();
 
     //scaleX = 50
-    m_shapeDef->SetAsBox((p_scale[0] * 10), p_scale[1]);
+    m_shapeDef->SetAsBox((p_scale[0]), p_scale[1]);
     m_body->CreateShape(m_shapeDef);
-    m_body->SetUserData(p_id);    
+
+    m_shapeDef->SetAsBox((p_scale[0]), p_scale[1]*10, b2Vec2(-1 + 0.1, 1), -2);
+    m_body->CreateShape(m_shapeDef);
 
     m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
@@ -113,8 +119,7 @@ b2PolygonShape* PhysicsManager::getShape(int p_id){
                 b2PolygonShape* t_polygonShape = (b2PolygonShape*)t_shape;
                 return t_polygonShape;
             }
-        }
-        
+        }        
         t_body = t_body->GetNext();
     }
     return 0;

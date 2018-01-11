@@ -33,9 +33,9 @@ int main(){
     SoundManager*   soundManager = SoundManager::instance();
 
     if (engineManager->createWindow()){  
-        float position[3] = {0, 6, 0};
+        float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, true);
+        Arena* estadio = new Arena(position, scale, 0, false);
         
         estadio->spawnPlayers();
         estadio->spawnItems();
@@ -46,11 +46,6 @@ int main(){
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
-
-        //Debug *estadioDebug = new Debug(666, physicsManager->getShape(Arena::getInstance()->getId()));
-
-        //Debug *playerDebug = new Debug(666, physicsManager->getShape(Arena::getInstance()->getPlayer(0)->getId()));
-
 
         //Game main loop
         while (engineManager->running()){
@@ -66,10 +61,8 @@ int main(){
                 currentPlayer->playerInput();
                 currentPlayer->playerUpdate();
             }
-
             engineManager->drawScene();
         }
-
         engineManager->stop();
         return 0;
     }
