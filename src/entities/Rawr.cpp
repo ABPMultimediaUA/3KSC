@@ -53,7 +53,7 @@ void Rawr::basicAttack(){
         (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
             if (checkCloseness(t_currentPlayer->getPosition(), 15)){
-                t_currentPlayer->receiveAttack(m_damage/5, true);
+                t_currentPlayer->receiveAttack(m_damage/2, true);
             }
         }
     }
@@ -75,7 +75,7 @@ void Rawr::specialAttackUp(){
 
         //Rival close enough
         if (checkCloseness(t_currentPlayer->getPosition(), 35)){
-            t_currentPlayer->receiveAttack(m_damage/2, true);
+            t_currentPlayer->receiveAttack(m_damage, true);
         }
     }
 

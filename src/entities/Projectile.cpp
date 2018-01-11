@@ -41,15 +41,15 @@ Projectile::Projectile(float p_position[3], float p_target[3], int p_owner, int 
     switch (p_type){
         //Rawr's fireball
         case 0:{
-            m_damage = t_damage/3;
+            m_damage = t_damage * 1.333;
             m_velocity = 2.5;
-            m_distanceLeft = 100;
+            m_distanceLeft = 120;
             break;
         }
 
         //Plup's snowmen's snowball
         case 1:{
-            m_damage = t_damage/4;
+            m_damage = t_damage/3;
             m_velocity = 3;
             m_distanceLeft = 150;
             break;
