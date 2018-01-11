@@ -25,6 +25,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
+#include "../headers/managers/UIManager.hpp"
 #include "../headers/extra/Keycodes.hpp"
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
@@ -107,10 +108,11 @@ void Character::changeLife(int p_variation){
     }
     
     else if (m_life > m_maxLife){
-        m_life = m_maxMagic;
+        m_life = m_maxLife;
     }
 
     //HUD Stuff
+    UIManager::instance()->setLife(m_playerIndex, m_life);
 }
 
 //Increases or decreases magic
@@ -121,7 +123,7 @@ void Character::changeMagic(int p_variation){
         m_magic = 0;
     
     else if (m_magic > m_maxMagic)
-        m_life = m_maxMagic;
+        m_magic = m_maxMagic;
 
     //HUD Stuff
 }
@@ -134,7 +136,7 @@ void Character::shield(){
 //Activates wings, if not already active
 void Character::wings(){
     if (!m_winged){
-        m_velocity *= 3;
+        m_velocity *= 2;
         m_winged = true;
     }
 }
@@ -308,13 +310,14 @@ void Character::playerInput(){
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
         if(m_jumpInput){
-            m_jumping = true;     // Begin jump movement
+            if (!m_waitRelease){
+                m_jumping = true;
+                m_waitRelease = true;
+            }
         }
 
-        m_runningFactor = 1;
-
         //Basic Attack
-        if(m_basicAttackInput){
+        else if(m_basicAttackInput){
             if (!m_waitRelease){
                 m_basicAttack = true;
                 m_waitRelease = true;
@@ -357,6 +360,8 @@ void Character::playerInput(){
         else{
             m_waitRelease = false;
         }
+
+        m_runningFactor = 1;
 
         //Sprint
         if(m_runInput){
@@ -473,6 +478,16 @@ int Character::getDamage(){
 //Returns the index of the player
 int Character::getIndex(){
     return m_playerIndex;
+}
+
+//Returns the name of the player
+char* Character::getName(){
+    return m_name;
+}
+
+//Returns the life of the player
+int Character::getLife(){
+    return m_life;
 }
 
 void Character::modeDebug(){

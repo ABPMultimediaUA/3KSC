@@ -51,9 +51,12 @@ int main(){
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
+        
+        UIManager*      uiManager = UIManager::instance();
 
         //Game main loop
         while (engineManager->running()){
+            //sf::Context context;
             soundManager->update();
             engineManager->updateFrameDeltaTime();
 
@@ -66,7 +69,9 @@ int main(){
                 currentPlayer->playerInput();
                 currentPlayer->playerUpdate();
             }
+            
             engineManager->drawScene();
+            uiManager->render();
         }
         engineManager->stop();
         return 0;

@@ -23,7 +23,6 @@
 
 #include <irrlicht.h>
 #include <vector>
-#include <iostream>
 #include "../entities/Entity.hpp"
 
 class EngineManager : public irr::IEventReceiver{
@@ -48,7 +47,7 @@ public:
     void timeStamp();
     float updateFrameDeltaTime();
 
-    bool createWindow();
+    bool createWindow(bool p_fullscreen = true);
     void createCamera();
     bool running();
     void stop();

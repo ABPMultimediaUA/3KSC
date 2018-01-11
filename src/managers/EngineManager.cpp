@@ -20,6 +20,7 @@
 
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/InputManager.hpp"
+#include <iostream>
 using namespace irr;
 
 //Instance initialization

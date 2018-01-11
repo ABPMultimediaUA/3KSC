@@ -24,7 +24,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
-#include <iostream>
+//#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -32,7 +32,6 @@ int Entity::m_entityCount = 0;
 //Create a new Entity for a player
 Entity::Entity(float p_position[3]){
     m_id = m_entityCount++;
-    std::cout << "[POS constructor] - m_id: " << m_id << " m_entityCount: " << m_entityCount << std::endl;
     for(int i = 0; i < 3; i++){
         m_lastPosition[i] = m_position[i];
         m_position[i] = p_position[i];
@@ -48,9 +47,7 @@ Entity::Entity(float p_position[3]){
 
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
-    m_id = m_entityCount++;
-    //std::cout << "[PSM constructor] -  m_id: " << m_id << " m_entityCount: " << m_entityCount << std::endl;
-    
+    m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
 
     switch (p_type){
@@ -82,7 +79,6 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 //Create entity with model (free scale)
 Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type){
     m_id = m_entityCount++;
-    //std::cout << "[FSM constructor] - m_id: " << m_id << " m_entityCount: " << m_entityCount << std::endl;
 
     switch (p_type){
         //Players and items
@@ -111,11 +107,8 @@ Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, in
 }
 
 Entity::~Entity(){
-    //std::cout << "Check" << std::endl;
     EngineManager::instance()->deleteEntity(m_id);
-    //std::cout << "Check2" << std::endl;
     PhysicsManager::instance()->destroyBody(m_id);
-    //std::cout << "Check3" << std::endl;
 }
 
 void Entity::updatePosition(bool p_jumping){
