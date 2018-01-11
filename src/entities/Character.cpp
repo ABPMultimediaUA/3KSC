@@ -477,5 +477,5 @@ int Character::getIndex(){
 
 void Character::modeDebug(){
     if(m_debugMode)
-        playerDebug = new Debug(666, PhysicsManager::instance()->getShape(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+        playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
 }

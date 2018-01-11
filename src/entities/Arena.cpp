@@ -55,8 +55,8 @@ Arena* Arena::getInstance(){
 }
 
 void Arena::spawnPlayers(){
-    float positionRawr[3] = {-10, 20, 0};
-    float positionPlup[3] = {10, 20, 0};
+    float positionRawr[3] = {-120, 20, 0};
+    float positionPlup[3] = {120, 20, 0};
 
     m_playerCount = 0;
     m_players = new Character*[4];
@@ -152,5 +152,5 @@ void Arena::restart(){
 
 void Arena::modeDebug(){
     if(m_debugMode)
-        m_debugBattlefield = new Debug(666, PhysicsManager::instance()->getShape(getId()));
+        m_debugBattlefield = new Debug(666, PhysicsManager::instance()->getBody(getId()));
 }
