@@ -23,7 +23,7 @@
 #include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
-//#include <iostream>
+#include <iostream>
 
 //Static members
 const char* Arena::m_modelURLs[2] = {"assets/models/arenas/fusfus_stadium.obj", "assets/models/arenas/fusfus_stadium.obj"};
@@ -41,11 +41,9 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_maxItems      = 8;
     m_currentItems  = 0;
     m_items         = new Item*[m_maxItems];
-
     m_instance      = this;
-
     m_debugMode = p_debugMode;
-
+    setSpawnPositions();
 }
 
 Arena::~Arena(){}
@@ -153,4 +151,19 @@ void Arena::restart(){
 void Arena::modeDebug(){
     if(m_debugMode)
         m_debugBattlefield = new Debug(666, PhysicsManager::instance()->getBody(getId()));
+}
+
+void Arena::setSpawnPositions(){
+   //m_spawnPosition[1] = {10, 100, 0};
+   //m_spawnPosition[2] = {-50, 100, 0};
+   //m_spawnPosition[0] = [-10, 100, 0};
+   //m_spawnPosition[3] = {50, 100, 0};
+}
+
+void Arena::respawnPlayer(int p_player){
+
+    //int randNum = rand()%(m_spawnPosition.length());
+
+    float t_center[3] = {0, 100, 0};
+    m_players[p_player]->respawn(t_center);
 }

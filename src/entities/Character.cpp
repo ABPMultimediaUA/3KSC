@@ -50,6 +50,8 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_blocking              = false;
     m_shielded              = false;
     m_winged                = false;    
+    m_alive                 = true;
+    m_respawning            = false;
 
     m_runningFactor         = 1;
 
@@ -103,8 +105,9 @@ void Character::receiveAttack(int p_damage, bool p_block){
 void Character::changeLife(int p_variation){
     m_life += p_variation;
 
-    if (m_life < 0){
+    if (m_life <= 0){
         m_life = 0;
+        die();
     }
     
     else if (m_life > m_maxLife){
@@ -144,7 +147,8 @@ void Character::wings(){
 //Decreases number of lives
 void Character::die(){
     m_lives--;
-    
+    //m_alive = false;
+    Arena::getInstance()->respawnPlayer(m_playerIndex);
     //HUD Stuff
 
     //Delete when m_lives == 0
@@ -177,10 +181,11 @@ void Character::updateInputs(){
     
     //Update joysticks state first
     t_inputManager->updateJoysticks();
-
+    
     //Keyboard input
     if (m_joystick == -1){
-
+    
+    
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -266,6 +271,7 @@ void Character::updateInputs(){
 
 //Calls action functions when they are active
 void Character::checkActions(){
+ 
     if (m_jumping)
         jump();
 
@@ -305,7 +311,7 @@ void Character::playerInput(){
     if(t_inputManager->isKeyPressed(Key_Escape))
         EngineManager::instance()->stop();
 
-    if(!m_stunned)
+    if(!m_stunned && m_alive)
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
@@ -402,10 +408,19 @@ void Character::playerInput(){
 
 //Update state of player
 void Character::playerUpdate(){
-    updatePosition(m_jumping);
+    if(!m_respawning)
+        updatePosition(m_jumping);
+    else
+    {
+        updatePosition(true);
+        m_respawning = false;
+    }
     if(m_debugMode)
         playerDebug->update();
     //Increase magic every second and with attacks
+    if(getY() < -200){
+        die();
+    }
 }
 
 void Character::jump(){
@@ -493,4 +508,11 @@ int Character::getLife(){
 void Character::modeDebug(){
     if(m_debugMode)
         playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+}
+
+void Character::respawn(float p_position[3]){
+    m_respawning = true;
+    moveTo(p_position);
+    m_life = 100; //cambiar por vida inicial
+    UIManager::instance()->setLife(m_playerIndex, m_life);
 }

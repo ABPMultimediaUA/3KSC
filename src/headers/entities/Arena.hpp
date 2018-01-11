@@ -48,6 +48,8 @@ public:
     void            movePlatforms();
     void            animateBackground();
     void            restart();
+    void            setSpawnPositions();
+    void            respawnPlayer(int p_player);
 
     void            modeDebug();
 
@@ -68,6 +70,8 @@ private:
 
     Debug*      m_debugBattlefield;
     bool        m_debugMode;
+
+    float       m_spawnPositions[4][3];
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

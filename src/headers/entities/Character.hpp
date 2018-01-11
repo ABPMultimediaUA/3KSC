@@ -45,6 +45,7 @@ public:
     void            assignJoystick(int p_joystick);
     void            playerInput();
     void            playerUpdate();
+    void            respawn(float p_position[3]);
 
     virtual void    jump();
     void            pickItem();
@@ -60,6 +61,7 @@ public:
     int             getLife();
 
     void            modeDebug();
+
 
 protected:
     static int      m_playerCount;
@@ -80,8 +82,9 @@ protected:
     bool            m_blocking;
     bool            m_shielded;
     bool            m_winged;
+    bool            m_alive;
     float           m_frameDeltaTime;       //For movement
-    
+    bool            m_respawning;
     int             m_runningFactor;
 
     //Jumps
