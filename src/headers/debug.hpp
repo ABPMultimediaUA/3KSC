@@ -30,7 +30,7 @@ using namespace irr;
 
 class Debug : public scene::ISceneNode{
 public:
-    Debug(s32 p_id, b2PolygonShape* p_shape);
+    Debug(s32 p_id, b2Body* p_body);
     void OnRegisterSceneNode();
     void render();
     const core::aabbox3d<f32>& getBoundingBox() const;
