@@ -86,7 +86,7 @@ Character* Arena::getPlayer(int p_index){
 
 void Arena::spawnItems(){
     float positionItem[3] = {-100, 10, 0};
-    /*
+    
     m_items[m_currentItems++] = new Item(0, positionItem);
     positionItem[0] = -80;
     m_items[m_currentItems++] = new Item(0, positionItem);
@@ -102,7 +102,7 @@ void Arena::spawnItems(){
     m_items[m_currentItems++] = new Item(2, positionItem);
     positionItem[0] = 30;
     m_items[m_currentItems++] = new Item(2, positionItem);
-    */
+    
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it
