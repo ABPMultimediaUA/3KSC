@@ -23,7 +23,6 @@
 
 #include <irrlicht.h>
 #include <vector>
-#include <iostream>
 #include "../entities/Entity.hpp"
 
 class EngineManager : public irr::IEventReceiver{
