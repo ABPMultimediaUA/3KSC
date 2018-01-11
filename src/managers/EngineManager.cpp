@@ -60,16 +60,16 @@ float EngineManager::updateFrameDeltaTime(){
 
 //Creates the game window
 bool EngineManager::createWindow(bool p_fullscreen){
-
+ 
     core::dimension2d<u32> t_windowSize;
-
+ 
     if (p_fullscreen){
         //Create a null device to get the desktop resolution
         IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
         t_windowSize = t_nulldevice->getVideoModeList()->getDesktopResolution();
         t_nulldevice->drop();
     }
-
+ 
     else{
         t_windowSize = core::dimension2d<u32>(640, 480);
     }
@@ -80,9 +80,9 @@ bool EngineManager::createWindow(bool p_fullscreen){
     //If m_device is NULL
     if(!m_device)
         return false;
-
+ 
     m_device->setWindowCaption(L"3KSC");
-
+ 
     //Create video driver and scene manager
     m_vDriver = m_device->getVideoDriver();
     m_scene = m_device->getSceneManager();
