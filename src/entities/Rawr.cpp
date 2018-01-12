@@ -24,7 +24,7 @@
 #include "../headers/entities/Arena.hpp"
 #include <iostream>
 
-Rawr::Rawr(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 10, 50.f, "assets/models/characters/rawr/rawr.obj"){
+Rawr::Rawr(char* p_name, float p_position[3], int p_joystick, bool p_debugMode) : Character(p_name, p_position, p_joystick, 100, 100, 15, 70.f, "assets/models/characters/rawr/rawr.obj", p_debugMode){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
@@ -43,7 +43,7 @@ void Rawr::basicAttack(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
@@ -53,7 +53,7 @@ void Rawr::basicAttack(){
         (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
             if (checkCloseness(t_currentPlayer->getPosition(), 15)){
-                t_currentPlayer->receiveAttack(m_damage/5, true);
+                t_currentPlayer->receiveAttack(m_damage/2, true);
             }
         }
     }
@@ -68,14 +68,14 @@ void Rawr::specialAttackUp(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Rival close enough
         if (checkCloseness(t_currentPlayer->getPosition(), 35)){
-            t_currentPlayer->receiveAttack(m_damage/2, true);
+            t_currentPlayer->receiveAttack(m_damage, true);
         }
     }
 
@@ -114,7 +114,7 @@ void Rawr::specialAttackSide(){
         }
 
         //Create attack and increase projectile count
-        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_id, 0);
+        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_playerIndex, 0);
         std::cout << m_name << ": Fireball" << std::endl;
     }
 

@@ -24,7 +24,8 @@
 #include "../headers/entities/Arena.hpp"
 #include <iostream>
 
-Plup::Plup(char* p_name, float p_position[3], int p_joystick) : Character(p_name, p_position, p_joystick, 100, 100, 10, 50.f, "assets/models/characters/plup/plup.obj"){
+Plup::Plup(char* p_name, float p_position[3], int p_joystick, bool p_debugMode) : Character(p_name, p_position, p_joystick, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode
+    ){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
@@ -47,7 +48,7 @@ void Plup::basicAttack(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
@@ -57,7 +58,7 @@ void Plup::basicAttack(){
         (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
             if (checkCloseness(t_currentPlayer->getPosition(), 15)){
-                t_currentPlayer->receiveAttack(m_damage/5, true);
+                t_currentPlayer->receiveAttack(m_damage/2, true);
             }
         }
     }
@@ -72,14 +73,14 @@ void Plup::specialAttackUp(){
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_id)
+        if (i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Rival close enough
         if (checkCloseness(t_currentPlayer->getPosition(), 35)){
-            t_currentPlayer->receiveAttack(m_damage/2, true);
+            t_currentPlayer->receiveAttack(m_damage, true);
         }
     }
 

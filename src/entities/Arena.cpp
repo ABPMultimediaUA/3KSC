@@ -22,24 +22,29 @@
 
 #include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
-//#include <iostream>
+#include "../headers/managers/PhysicsManager.hpp"
+#include <iostream>
 
+//Static members
+const char* Arena::m_modelURLs[2] = {"assets/models/arenas/fusfus_stadium.obj", "assets/models/arenas/fusfus_stadium.obj"};
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex):Entity(p_position, p_scale){
-    EngineManager* t_engineManager = EngineManager::instance();
-    if(p_arenaIndex == 1)
-        m_modelURL = "assets/models/arenas/stadium.obj";
+Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1){
+//    EngineManager* t_engineManager = EngineManager::instance();
+//    if(p_arenaIndex == 1)
+//        m_modelURL = "assets/models/arenas/stadium.obj";
+//
+//    t_engineManager->loadArena(m_modelURL);
 
-    t_engineManager->loadArena(m_modelURL);
-
-    m_maxItems      = 8;
+    m_maxItems      = 500; //cambiar esto
     m_currentItems  = 0;
     m_items         = new Item*[m_maxItems];
-
     m_instance      = this;
+    m_debugMode = p_debugMode;
+    m_spawningTime  = 10;
+    setSpawnPositions();
 }
 
 Arena::~Arena(){}
@@ -49,14 +54,22 @@ Arena* Arena::getInstance(){
 }
 
 void Arena::spawnPlayers(){
-    float positionRawr[3] = {-10, 20, 0};
-    float positionPlup[3] = {10, 20, 0};
+    float positionRawr[3] = {-120, 20, 0};
+    float positionPlup[3] = {120, 20, 0};
 
     m_playerCount = 0;
     m_players = new Character*[4];
 
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1);
-    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -2);
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1, m_debugMode);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -2, m_debugMode);
+
+    if(m_debugMode){
+        for(int i = 0; i < m_playerCount; i++){
+            m_players[i]->modeDebug();
+        }
+        modeDebug();
+    }
+
 }
 
 //Returns number of players
@@ -71,7 +84,8 @@ Character* Arena::getPlayer(int p_index){
 
 
 void Arena::spawnItems(){
-    float positionItem[3] = {-100, 10, 0};
+   /* float positionItem[3] = {-100, 10, 0};
+    
     m_items[m_currentItems++] = new Item(0, positionItem);
     positionItem[0] = -80;
     m_items[m_currentItems++] = new Item(0, positionItem);
@@ -86,7 +100,8 @@ void Arena::spawnItems(){
     positionItem[0] = -30;
     m_items[m_currentItems++] = new Item(2, positionItem);
     positionItem[0] = 30;
-    m_items[m_currentItems++] = new Item(2, positionItem);
+    m_items[m_currentItems++] = new Item(2, positionItem);*/
+    
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it
@@ -132,4 +147,55 @@ void Arena::animateBackground(){
 
 void Arena::restart(){
     
+}
+
+void Arena::modeDebug(){
+    if(m_debugMode)
+        m_debugBattlefield = new Debug(666, PhysicsManager::instance()->getBody(getId()));
+}
+
+void Arena::setSpawnPositions(){
+   //m_spawnPosition[1] = {10, 100, 0};
+   //m_spawnPosition[2] = {-50, 100, 0};
+   //m_spawnPosition[0] = [-10, 100, 0};
+   //m_spawnPosition[3] = {50, 100, 0};
+}
+
+void Arena::respawnPlayer(int p_player){
+
+    //int randNum = rand()%(m_spawnPosition.length());
+
+    float t_center[3] = {0, 170, 0};
+    m_players[p_player]->respawn(t_center);
+}
+
+void Arena::update()
+{
+    float t_time = m_clock.getElapsedTime().asSeconds();
+    if(t_time > m_spawningTime)
+    {
+        m_clock.restart();
+        spawnRandomItem();
+    }
+}
+
+void Arena::spawnRandomItem()
+{
+    float positionItem[3] = {-100, 10, 0};
+    positionItem[0] = rand()%(120);
+    if(positionItem[0]< 60)
+    {
+        positionItem[1] = 54;
+    }
+    else
+    {
+        positionItem[1] = 10;
+    }
+
+    if(rand()%2 == 0)
+        positionItem[0] = positionItem[0] * (-1);
+
+    m_items[m_currentItems++] = new Item(rand()%3, positionItem);
+   
+
 }

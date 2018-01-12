@@ -26,13 +26,12 @@
 //#include "../Model.hpp"
 //#include "../Texture.hpp"
 //#include "../Hitbox.hpp"
-#include <Box2D.h>
 
 class Entity {
 public:
     Entity(float p_position[3]);
-    Entity(float p_position[3], float p_scale[3]);
-    Entity(float p_position[3], float p_scale, const char* p_modelURL);
+    Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
+    Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type = 0);
     ~Entity();
     void moveTo(float p_position[3]);
     void moveX(float p_variation);
@@ -45,13 +44,9 @@ public:
     float getY();
     float getZ();
 
-    b2Body* getBody();
-    b2PolygonShape* getShape();
-
-    void updatePosition(float p_posY, bool p_jumping);
+    void updatePosition(bool p_jumping);
 
     static int getEntityCount();
-    
 protected:
     static int m_entityCount;
     int        m_id; 
@@ -62,11 +57,6 @@ protected:
     //Texture*   m_texture;
     //Hitbox*    m_hitbox;
     float      m_weight;
-    
-    b2BodyDef*      m_bodyDef;
-    b2Body*         m_body;
-    b2PolygonDef*   m_shapeDef;
-    b2PolygonShape* m_polygonShape;
 };
 
 #endif

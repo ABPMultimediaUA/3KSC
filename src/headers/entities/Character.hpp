@@ -26,10 +26,11 @@
 #include "Entity.hpp"
 #include "Projectile.hpp"
 #include "../headers/managers/SoundManager.hpp"
+#include "../debug.hpp"
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL);
+    Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
     ~Character();
 	
     void            receiveAttack(int p_damage, bool p_block);
@@ -44,6 +45,7 @@ public:
     void            assignJoystick(int p_joystick);
     void            playerInput();
     void            playerUpdate();
+    void            respawn(float p_position[3]);
 
     virtual void    jump();
     void            pickItem();
@@ -55,6 +57,11 @@ public:
     
     int             getDamage();
     int             getIndex();
+    char*           getName();
+    int             getLife();
+
+    void            modeDebug();
+
 
 protected:
     static int      m_playerCount;
@@ -75,15 +82,17 @@ protected:
     bool            m_blocking;
     bool            m_shielded;
     bool            m_winged;
+    bool            m_alive;
     float           m_frameDeltaTime;       //For movement
-    
-    int             m_runningFactor;
+    bool            m_respawning;
+    float           m_runningFactor;
 
     //Jumps
     bool            m_jumping;              // Controls if the jump is still going
     int             m_jumpCurrentTime;      // Control variable. Checks in which frame of the jump the character is in
     int             m_jumpMaxTime;          // Control the time in which the character is in the air (in frames)
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
+    int             m_jumpIndex;            //For double jump
 
     bool            m_basicAttack;
     bool            m_specialAttackUp;
@@ -98,6 +107,8 @@ protected:
     SoundManager*   m_soundManager;
     Sound soundSteps;
 
+    Debug *playerDebug;
+    bool            m_debugMode;
 private:
     //Conditions for each Input (they change depending on keyboard/joystick control)
     bool            m_upInput;
@@ -113,6 +124,7 @@ private:
     bool            m_specialAttackDownInput;
     bool            m_specialAttackSideInput;
     bool            m_ultimateAttackInput;
+    bool            m_waitRelease;
 
     void            updateInputs();
     void            checkActions();

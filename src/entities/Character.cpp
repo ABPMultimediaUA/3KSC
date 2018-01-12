@@ -22,8 +22,10 @@
 
 
 #include "../headers/entities/Character.hpp"
-#include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include "../headers/managers/InputManager.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
+#include "../headers/managers/UIManager.hpp"
 #include "../headers/extra/Keycodes.hpp"
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
@@ -33,7 +35,7 @@
 //Static members
 int Character::m_playerCount = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
     m_joystick              = p_joystick;
     m_lives                 = 3;
@@ -48,6 +50,8 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_blocking              = false;
     m_shielded              = false;
     m_winged                = false;    
+    m_alive                 = true;
+    m_respawning            = false;
 
     m_runningFactor         = 1;
 
@@ -71,10 +75,16 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
 
+    m_waitRelease           = false;
+
+
     m_playerIndex = Character::m_playerCount++;
 
     m_soundManager = SoundManager::instance();
     m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
+
+    m_debugMode = p_debugMode;
+
 }
 
 Character::~Character(){}
@@ -84,7 +94,8 @@ Character::~Character(){}
 void Character::receiveAttack(int p_damage, bool p_block){
     if((p_block && m_blocking) || m_shielded)
     {
-        std::cout << m_name << " blocked an attack and his life remains " << m_life << " HP." << std::endl << std::endl;
+        changeLife(-p_damage/2);
+        std::cout << m_name << " blocked an attack and now has " << m_life << " HP." << std::endl << std::endl;
     }else{
         changeLife(-p_damage);
         std::cout << m_name << " took an attack and now has " << m_life << " HP." << std::endl << std::endl;
@@ -95,15 +106,17 @@ void Character::receiveAttack(int p_damage, bool p_block){
 void Character::changeLife(int p_variation){
     m_life += p_variation;
 
-    if (m_life < 0){
+    if (m_life <= 0){
         m_life = 0;
+        die();
     }
     
     else if (m_life > m_maxLife){
-        m_life = m_maxMagic;
+        m_life = m_maxLife;
     }
 
     //HUD Stuff
+    UIManager::instance()->setLife(m_playerIndex, m_life);
 }
 
 //Increases or decreases magic
@@ -114,7 +127,7 @@ void Character::changeMagic(int p_variation){
         m_magic = 0;
     
     else if (m_magic > m_maxMagic)
-        m_life = m_maxMagic;
+        m_magic = m_maxMagic;
 
     //HUD Stuff
 }
@@ -127,7 +140,7 @@ void Character::shield(){
 //Activates wings, if not already active
 void Character::wings(){
     if (!m_winged){
-        m_velocity *= 3;
+        m_velocity *= 1.5f;
         m_winged = true;
     }
 }
@@ -135,7 +148,8 @@ void Character::wings(){
 //Decreases number of lives
 void Character::die(){
     m_lives--;
-    
+    //m_alive = false;
+    Arena::getInstance()->respawnPlayer(m_playerIndex);
     //HUD Stuff
 
     //Delete when m_lives == 0
@@ -168,10 +182,11 @@ void Character::updateInputs(){
     
     //Update joysticks state first
     t_inputManager->updateJoysticks();
-
+    
     //Keyboard input
     if (m_joystick == -1){
-
+    
+    
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -257,6 +272,7 @@ void Character::updateInputs(){
 
 //Calls action functions when they are active
 void Character::checkActions(){
+ 
     if (m_jumping)
         jump();
 
@@ -296,44 +312,75 @@ void Character::playerInput(){
     if(t_inputManager->isKeyPressed(Key_Escape))
         EngineManager::instance()->stop();
 
-    if(!m_stunned)
+    //Block
+    m_blocking = m_blockInput;
+
+    if(!m_stunned && !m_blocking && m_alive)
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
         if(m_jumpInput){
-            m_jumping = true;     // Begin jump movement
+            if (!m_waitRelease){
+                m_jumping = true;
+                m_waitRelease = true;
+            }
+        }
+
+        //Basic Attack
+        else if(m_basicAttackInput){
+            if (!m_waitRelease){
+                m_basicAttack = true;
+                m_waitRelease = true;
+            }
+        }
+
+        //Special attack up
+        else if(m_specialAttackUpInput){
+            if (!m_waitRelease){
+                m_specialAttackUp = true;
+                m_waitRelease = true;
+            }
+        }
+
+        //Special attack down
+        else if(m_specialAttackDownInput){
+            if (!m_waitRelease){
+                m_specialAttackDown = true;
+                m_waitRelease = true;
+            }
+        }
+
+        //Special attack side
+        else if(m_specialAttackSideInput){
+            if (!m_waitRelease){
+                m_specialAttackSide = true;
+                m_waitRelease = true;
+            }
+        }
+
+        //Ultimate Attack
+        else if(m_ultimateAttackInput){
+            if (!m_waitRelease){
+                m_ultimateAttack = true;
+                m_waitRelease = true;
+            }
+        }
+
+        //No attack
+        else{
+            m_waitRelease = false;
         }
 
         m_runningFactor = 1;
 
-        //Basic Attack
-        if(m_basicAttackInput){
-            m_basicAttack = true;
-        }
-
-        //Special attack up
-        if (m_specialAttackUpInput){
-            m_specialAttackUp = true;
-        }
-
-        //Special attack down
-        if (m_specialAttackDownInput){
-            m_specialAttackDown = true;
-        }
-
-        //Special attack side
-        if (m_specialAttackSideInput){
-            m_specialAttackSide = true;
-        }
-
-         //Ultimate Attack
-        if(m_ultimateAttackInput){
-            m_ultimateAttack = true;
-        }
-
         //Sprint
         if(m_runInput){
-            m_runningFactor = 2;
+            if(m_winged){
+                m_runningFactor = 1.5f;
+            }
+            else{
+                m_runningFactor = 2.0f;
+            }
             //std::cout << m_name << " is running" << std::endl;
         }
 
@@ -354,10 +401,10 @@ void Character::playerInput(){
         }
 
         //Block
-        m_blocking = m_blockInput;
-        if (m_blocking){
-            //std::cout << m_name << " is blocking" << std::endl;
-        }
+        //m_blocking = m_blockInput;
+        //if (m_blocking){
+        //    //std::cout << m_name << " is blocking" << std::endl;
+        //}
 
         //Pick object
         if (m_pickInput){
@@ -365,14 +412,24 @@ void Character::playerInput(){
         }
 
     }
-
     checkActions();    
 }
 
 //Update state of player
 void Character::playerUpdate(){
-    updatePosition(getBody()->GetPosition().y, m_jumping);
+    if(!m_respawning)
+        updatePosition(m_jumping);
+    else
+    {
+        updatePosition(true);
+        m_respawning = false;
+    }
+    if(m_debugMode)
+        playerDebug->update();
     //Increase magic every second and with attacks
+    if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
+        die();
+    }
 }
 
 void Character::jump(){
@@ -390,7 +447,7 @@ void Character::jump(){
 }
 
 void Character::pickItem(){
-    int t_itemType = Arena::getInstance()->catchItem(m_id, m_position);
+    int t_itemType = Arena::getInstance()->catchItem(m_playerIndex, m_position);
     
     switch (t_itemType){
         //Life tank
@@ -445,4 +502,34 @@ int Character::getDamage(){
 //Returns the index of the player
 int Character::getIndex(){
     return m_playerIndex;
+}
+
+//Returns the name of the player
+char* Character::getName(){
+    return m_name;
+}
+
+//Returns the life of the player
+int Character::getLife(){
+    return m_life;
+}
+
+void Character::modeDebug(){
+    if(m_debugMode)
+        playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+}
+
+void Character::respawn(float p_position[3]){
+    m_respawning = true;
+    moveTo(p_position);
+    m_life = m_maxLife;
+    m_magic = m_maxMagic;
+    m_shielded = false;
+
+    if(m_winged){
+        m_velocity /= 1.5f;
+        m_winged = false;
+    }
+
+    UIManager::instance()->setLife(m_playerIndex, m_life);
 }

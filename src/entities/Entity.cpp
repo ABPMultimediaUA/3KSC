@@ -29,107 +29,98 @@
 //Entity count initialization
 int Entity::m_entityCount = 0;
 
-//Create a new Etity for a player
+//Create a new Entity for a player
 Entity::Entity(float p_position[3]){
     m_id = m_entityCount++;
-
     for(int i = 0; i < 3; i++){
+        m_lastPosition[i] = m_position[i];
         m_position[i] = p_position[i];
-        m_lastPosition[i] = p_position[i];
     }
 
     EngineManager::instance()->createEntity(m_id, p_position);
     moveTo(p_position);
 
-    //Create a new body and positioning it in the coords of the Entity
-    m_bodyDef = new b2BodyDef();
-    m_bodyDef->position.Set(p_position[0], p_position[1]);
-    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
-
-    //Create a shape for the body
-    m_shapeDef = new b2PolygonDef();
-    m_shapeDef->SetAsBox(5, 5);
-    m_shapeDef->density = 10.0;
-    m_shapeDef->friction = 0.3;
-
-    //Attach the shape to the body
-    m_body->CreateShape(m_shapeDef);
-    m_body->SetMassFromShapes();
-
-    m_polygonShape = new b2PolygonShape(m_shapeDef);
+    float t_dimX = 5.0;
+    float t_dimY = 5.0;
+    PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
 }
 
-//Create a new Entity for a new Platform or Arena
-Entity::Entity(float p_position[3], float p_scale[3]){
-    /*
-    m_id = m_entityCount++;
+//Create entity with model (proportional scale)
+Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
+    m_id = m_entityCount++;    
+    float t_scale[3] = {p_scale, p_scale, p_scale};
 
-    EngineManager* t_engineManager = EngineManager::instance();
-    t_engineManager->createEntity(m_id, p_position);
-    t_engineManager->scale(m_id, p_scale);
-    moveTo(p_position);
-    */
+    switch (p_type){
+        //Players and items
+        case 0:{
+            for(int i = 0; i < 3; i++){
+                m_position[i] = p_position[i];
+                m_lastPosition[i] = p_position[i];
+            }
 
-    m_bodyDef = new b2BodyDef();
-    m_bodyDef->position.Set(p_position[0], p_position[1]);
-    
-    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
-    m_shapeDef = new b2PolygonDef();
+            EngineManager::instance()->load3DModel(m_id, p_position, t_scale, p_modelURL);
+            moveTo(p_position);
 
-    //scaleX = 50
-    m_shapeDef->SetAsBox((p_scale[0]), p_scale[1]);
-    m_body->CreateShape(m_shapeDef);  
+            float t_dimX = 5.0;
+            float t_dimY = 6.0;
+            PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
+            break;
+        }
 
-    m_polygonShape = new b2PolygonShape(m_shapeDef);
-
-}
-
-//Create entity with model
-Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL){
-    m_id = m_entityCount++;
-
-    for(int i = 0; i < 3; i++){
-        m_position[i] = p_position[i];
-        m_lastPosition[i] = p_position[i];
+        //Arenas
+        case 1:{
+            EngineManager::instance()->loadArena(p_modelURL);
+            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, t_scale);
+            break;
+        }
     }
-
-    EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
-    moveTo(p_position);
-
-    //Create a new body and positioning it in the coords of the Entity
-    m_bodyDef = new b2BodyDef();
-    m_bodyDef->position.Set(p_position[0], p_position[1]);
-    m_body = PhysicsManager::instance()->getWorld()->CreateBody(m_bodyDef);
-
-    //Create a shape for the body
-    m_shapeDef = new b2PolygonDef();
-    m_shapeDef->SetAsBox(5, 5);
-    m_shapeDef->density = 10.0;
-    m_shapeDef->friction = 0.3;
-
-    //Attach the shape to the body
-    m_body->CreateShape(m_shapeDef);
-    m_body->SetMassFromShapes();
-
-    m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
 
-//Destructor
+//Create entity with model (free scale)
+Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type){
+    m_id = m_entityCount++;
+
+    switch (p_type){
+        //Players and items
+        case 0:{
+            for(int i = 0; i < 3; i++){
+                m_position[i] = p_position[i];
+                m_lastPosition[i] = p_position[i];
+            }
+
+            EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
+            moveTo(p_position);
+
+            float t_dimX = 5.0;
+            float t_dimY = 10.0;
+            PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
+            break;
+        }
+
+        //Arenas
+        case 1:{
+            EngineManager::instance()->loadArena(p_modelURL);
+            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale);
+            break;
+        }
+    }
+}
+
 Entity::~Entity(){
     EngineManager::instance()->deleteEntity(m_id);
-    getBody()->GetWorld()->DestroyBody(getBody());
+    PhysicsManager::instance()->destroyBody(m_id);
 }
 
-void Entity::updatePosition(float p_posY, bool p_jumping){
+void Entity::updatePosition(bool p_jumping){
     if(p_jumping){
-        this->m_body->PutToSleep();
+        PhysicsManager::instance()->getBody(m_id)->PutToSleep();
     }
     else{
-        m_body->WakeUp();
-        m_position[1] = p_posY;
+        PhysicsManager::instance()->getBody(m_id)->WakeUp();
+        m_position[1] = PhysicsManager::instance()->getBody(m_id)->GetPosition().y;
     }
     b2Vec2 t_vec(m_position[0], m_position[1]);
-    m_body->SetXForm(t_vec, 0);
+    PhysicsManager::instance()->getBody(m_id)->SetXForm(t_vec, 0);
 
     EngineManager::instance()->moveEntity(this);
 }
@@ -166,18 +157,8 @@ bool Entity::checkCloseness(float* p_point, float p_range){
             return true;
         }
     }   
-
     return false;
 }
-
-b2Body* Entity::getBody(){
-    return m_body;
-}
-
-b2PolygonShape* Entity::getShape(){
-    return m_polygonShape;
-}
-
 
 int Entity::getId(){
     return m_id;

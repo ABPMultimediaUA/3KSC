@@ -26,16 +26,18 @@
 #include "Rawr.hpp"
 #include "Plup.hpp"
 #include "Item.hpp"
+#include <SFML/System/Clock.hpp>
 //#include "Skybox.hpp"
 //#include "Texture.hpp"
 //#include "WaterLily.hpp"
 //#include "Branch.hpp"
 //#include "Platform.hpp"
 //#include "GravityZone.hpp"
+#include "../debug.hpp"
 
 class Arena : public Entity {
 public:
-	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex);
+	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode);
             ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
@@ -47,8 +49,16 @@ public:
     void            movePlatforms();
     void            animateBackground();
     void            restart();
+    void            setSpawnPositions();
+    void            respawnPlayer(int p_player);
+    void            update();
+    void            spawnRandomItem();
+
+    void            modeDebug();
+
 private: 
     static Arena* m_instance;
+    static const char*  m_modelURLs[2];
 	//Skybox*     m_skybox;
     //Texture*    m_background;
     float       m_time;
@@ -57,9 +67,17 @@ private:
     int         m_maxItems;
     int         m_currentItems;
     Item**      m_items;
+    int         m_spawningTime;
 
     int         m_playerCount;
     Character** m_players;
+
+    Debug*      m_debugBattlefield;
+    bool        m_debugMode;
+
+    float       m_spawnPositions[4][3];
+
+    sf::Clock   m_clock;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;
