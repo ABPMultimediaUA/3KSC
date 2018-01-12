@@ -85,7 +85,7 @@ protected:
     bool            m_alive;
     float           m_frameDeltaTime;       //For movement
     bool            m_respawning;
-    int             m_runningFactor;
+    float           m_runningFactor;
 
     //Jumps
     bool            m_jumping;              // Controls if the jump is still going

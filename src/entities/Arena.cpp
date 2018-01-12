@@ -165,7 +165,7 @@ void Arena::respawnPlayer(int p_player){
 
     //int randNum = rand()%(m_spawnPosition.length());
 
-    float t_center[3] = {0, 100, 0};
+    float t_center[3] = {0, 170, 0};
     m_players[p_player]->respawn(t_center);
 }
 
