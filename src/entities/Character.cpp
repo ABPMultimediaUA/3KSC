@@ -94,7 +94,8 @@ Character::~Character(){}
 void Character::receiveAttack(int p_damage, bool p_block){
     if((p_block && m_blocking) || m_shielded)
     {
-        std::cout << m_name << " blocked an attack and his life remains " << m_life << " HP." << std::endl << std::endl;
+        changeLife(-p_damage/2);
+        std::cout << m_name << " blocked an attack and now has " << m_life << " HP." << std::endl << std::endl;
     }else{
         changeLife(-p_damage);
         std::cout << m_name << " took an attack and now has " << m_life << " HP." << std::endl << std::endl;
@@ -139,7 +140,7 @@ void Character::shield(){
 //Activates wings, if not already active
 void Character::wings(){
     if (!m_winged){
-        m_velocity *= 2;
+        m_velocity *= 1.5f;
         m_winged = true;
     }
 }
@@ -311,7 +312,10 @@ void Character::playerInput(){
     if(t_inputManager->isKeyPressed(Key_Escape))
         EngineManager::instance()->stop();
 
-    if(!m_stunned && m_alive)
+    //Block
+    m_blocking = m_blockInput;
+
+    if(!m_stunned && !m_blocking && m_alive)
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
@@ -371,7 +375,12 @@ void Character::playerInput(){
 
         //Sprint
         if(m_runInput){
-            m_runningFactor = 2;
+            if(m_winged){
+                m_runningFactor = 1.5f;
+            }
+            else{
+                m_runningFactor = 2.0f;
+            }
             //std::cout << m_name << " is running" << std::endl;
         }
 
@@ -392,10 +401,10 @@ void Character::playerInput(){
         }
 
         //Block
-        m_blocking = m_blockInput;
-        if (m_blocking){
-            //std::cout << m_name << " is blocking" << std::endl;
-        }
+        //m_blocking = m_blockInput;
+        //if (m_blocking){
+        //    //std::cout << m_name << " is blocking" << std::endl;
+        //}
 
         //Pick object
         if (m_pickInput){
@@ -418,7 +427,7 @@ void Character::playerUpdate(){
     if(m_debugMode)
         playerDebug->update();
     //Increase magic every second and with attacks
-    if(getY() < -200){
+    if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
     }
 }
@@ -513,6 +522,14 @@ void Character::modeDebug(){
 void Character::respawn(float p_position[3]){
     m_respawning = true;
     moveTo(p_position);
-    m_life = 100; //cambiar por vida inicial
+    m_life = m_maxLife;
+    m_magic = m_maxMagic;
+    m_shielded = false;
+
+    if(m_winged){
+        m_velocity /= 1.5f;
+        m_winged = false;
+    }
+
     UIManager::instance()->setLife(m_playerIndex, m_life);
 }

@@ -37,8 +37,8 @@ PhysicsManager* PhysicsManager::instance(){
 //Constructor
 PhysicsManager::PhysicsManager(){
     m_worldAABB = b2AABB();
-    b2Vec2 t_upperBound(200.f, 200.f);
-    b2Vec2 t_lowerBound(-200.f, -200.f);
+    b2Vec2 t_upperBound(250.f, 200.f);
+    b2Vec2 t_lowerBound(-250.f, -200.f);
     m_worldAABB.upperBound = t_upperBound;
     m_worldAABB.lowerBound = t_lowerBound;
 
@@ -48,7 +48,7 @@ PhysicsManager::PhysicsManager(){
 
     m_world = new b2World(m_worldAABB, m_gravity, m_doSleep);
 
-    m_timeStep = 3.0 / 60.0;
+    m_timeStep = 5.0 / 60.0;
     m_iterations = 10;
 }
 //Destructor
