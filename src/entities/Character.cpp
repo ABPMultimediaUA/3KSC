@@ -171,7 +171,7 @@ bool Character::isJumping(){
 //Assing joystick with index p_joystick (-1 for Keyboard)
 void Character::assignJoystick(int p_joystick){
     //Only assign to player 2 for now
-    if (m_playerIndex == 1)
+    if (m_playerIndex == 1 && m_joystick == -2)
         m_joystick = p_joystick;
 }
 
