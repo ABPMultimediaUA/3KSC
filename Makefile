@@ -3,7 +3,7 @@ SRCDIR	:= src/
 HDRDIR	:= src/headers/
 LIBDIR  := src/lib/
 OBJDIR	:= obj/
-SUBDIRS := $(OBJDIR)entities $(OBJDIR)managers
+SUBDIRS := $(OBJDIR)entities $(OBJDIR)managers $(OBJDIR)lib/glm/include/detail
 
 #Files
 SOURCES := $(shell find $(SRCDIR) -name '*.cpp')
@@ -12,8 +12,8 @@ BINARY 	:= 3KSC
 
 #Compiler set-up
 CC		:= g++
-INCLUDE := -I$(HDRDIR) -I$(LIBDIR)irrlicht/include -I$(LIBDIR)sfml/include -I$(LIBDIR)box2D/include -I$(LIBDIR)fmod/include
-LIBS	:= -L$(LIBDIR)irrlicht/lib/Linux -lIrrlicht -L$(LIBDIR) -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(LIBDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(LIBDIR)box2D/lib -lbox2d -L$(LIBDIR)fmod/lib -lfmodex64 -lfmodevent64 -Wl,-rpath $(LIBDIR)fmod/lib
+INCLUDE := -I$(HDRDIR) -I$(LIBDIR)irrlicht/include -I$(LIBDIR)sfml/include -I$(LIBDIR)box2D/include -I$(LIBDIR)fmod/include -I$(LIBDIR)assimp/include
+LIBS	:= -L$(LIBDIR)irrlicht/lib/Linux -lIrrlicht -L$(LIBDIR) -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(LIBDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(LIBDIR)box2D/lib -lbox2d -L$(LIBDIR)assimp/lib -lassimp -L$(LIBDIR)fmod/lib -lfmodex64 -lfmodevent64 -Wl,-rpath $(LIBDIR)fmod/lib
 #Make binary
 $(BINARY): $(OBJECTS)
 	$(CC) -o $@ $^ $(INCLUDE) $(LIBS)
