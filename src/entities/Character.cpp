@@ -152,7 +152,7 @@ void Character::die(){
 void Character::lookLeft(){
     if(m_orientation){
         m_orientation = false;
-        this->rotate(-180);
+        this->rotate(0);
     }
 }
 
