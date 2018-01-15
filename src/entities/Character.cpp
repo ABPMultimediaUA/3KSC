@@ -77,7 +77,6 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
 
     m_waitRelease           = false;
 
-
     m_playerIndex = Character::m_playerCount++;
 
     m_soundManager = SoundManager::instance();
@@ -155,13 +154,18 @@ void Character::die(){
     //Delete when m_lives == 0
 }
 
-
 void Character::lookLeft(){
-    m_orientation = false;
+    if(m_orientation){
+        m_orientation = false;
+        this->rotate(0);
+    }
 }
 
 void Character::lookRight(){
-    m_orientation = true;
+    if(!m_orientation){
+        m_orientation = true;
+        this->rotate(180);
+    }
 }
 
 bool Character::isJumping(){

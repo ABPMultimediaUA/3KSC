@@ -109,6 +109,7 @@ protected:
 
     Debug *playerDebug;
     bool            m_debugMode;
+
 private:
     //Conditions for each Input (they change depending on keyboard/joystick control)
     bool            m_upInput;
