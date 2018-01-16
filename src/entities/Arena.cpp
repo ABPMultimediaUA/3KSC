@@ -175,7 +175,8 @@ void Arena::update(){
         m_clock.restart();
         spawnRandomItem();
     }
-    m_debugBattlefield->update();
+    if(m_debugMode)
+        m_debugBattlefield->update();
 }
 
 void Arena::spawnRandomItem()
