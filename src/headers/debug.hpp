@@ -25,6 +25,7 @@
 
 #include <Box2D.h>
 #include <irrlicht.h>
+#include <vector>
 
 using namespace irr;
 
@@ -42,6 +43,7 @@ private:
     core::aabbox3d<f32> m_Box;
     video::S3DVertex    m_Vertices[4];
     video::SMaterial    m_Material;
+    std::vector<video::S3DVertex>    m_VerticesVector;
     
     b2Body*             m_body;
     b2PolygonShape*     m_shape;
