@@ -42,7 +42,7 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_currentItems  = 0;
     m_items         = new Item*[m_maxItems];
     m_instance      = this;
-    m_debugMode = p_debugMode;
+    m_debugMode     = p_debugMode;
     m_spawningTime  = 10;
     setSpawnPositions();
 }
@@ -69,7 +69,6 @@ void Arena::spawnPlayers(){
         }
         modeDebug();
     }
-
 }
 
 //Returns number of players
@@ -169,14 +168,14 @@ void Arena::respawnPlayer(int p_player){
     m_players[p_player]->respawn(t_center);
 }
 
-void Arena::update()
-{
+void Arena::update(){
     float t_time = m_clock.getElapsedTime().asSeconds();
     if(t_time > m_spawningTime)
     {
         m_clock.restart();
         spawnRandomItem();
     }
+    m_debugBattlefield->update();
 }
 
 void Arena::spawnRandomItem()

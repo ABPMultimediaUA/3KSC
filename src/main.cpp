@@ -24,7 +24,7 @@
 #include "headers/main.hpp"
 //#include "headers/debug.hpp"
 //#include <fmod.h>
-//#include <iostream>
+#include <iostream>
 
 int main(){
     EngineManager* engineManager = EngineManager::instance();
@@ -35,7 +35,7 @@ int main(){
     if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, false);
+        Arena* estadio = new Arena(position, scale, 0, true);
         
         estadio->spawnPlayers();
         estadio->spawnItems();
@@ -70,7 +70,7 @@ int main(){
                 currentPlayer->playerUpdate();
                 Arena::getInstance()->update();
             }
-            
+
             engineManager->drawScene();
             uiManager->render();
         }

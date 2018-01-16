@@ -423,8 +423,7 @@ void Character::playerInput(){
 void Character::playerUpdate(){
     if(!m_respawning)
         updatePosition(m_jumping);
-    else
-    {
+    else{
         updatePosition(true);
         m_respawning = false;
     }
