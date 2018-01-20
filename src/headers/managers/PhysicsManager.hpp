@@ -45,6 +45,8 @@ class PhysicsManager{
     b2PolygonDef*   m_shapeDef;
     b2PolygonShape* m_polygonShape;
 
+    b2RevoluteJointDef* m_jointDef;
+
     public:
     static PhysicsManager* instance();
     PhysicsManager();
@@ -63,6 +65,8 @@ class PhysicsManager{
     void            destroyBody(int p_id);
     float           getTimeStep();
     int             getIterations();
+
+    void createRevoluteJoint(b2Body* p_body1, b2Body* p_body2);
 };
 
 #endif

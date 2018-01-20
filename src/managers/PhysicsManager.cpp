@@ -167,3 +167,20 @@ void PhysicsManager::removeForce(){}
 
 //Handles gravity changes in Kawaiisaki map
 void PhysicsManager::updateGravity(){}
+
+void PhysicsManager::createRevoluteJoint(b2Body* p_body1, b2Body* p_body2){
+    m_jointDef = new b2RevoluteJointDef();
+    //m_jointDef->Initialize(p_body1, p_body2, p_body1->GetWorldCenter());
+
+    m_jointDef->body1 = p_body1;
+    m_jointDef->body2 = p_body2;
+    m_jointDef->collideConnected = false;
+
+
+    m_jointDef->localAnchor1.Set(20, 0);
+    m_jointDef->localAnchor2.Set(-20, 0);
+    
+
+    m_world->CreateJoint(m_jointDef);
+    std::cout << "OSEA HELLOOO!\n";
+}

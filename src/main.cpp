@@ -27,15 +27,15 @@
 #include <iostream>
 
 int main(){
-    EngineManager* engineManager = EngineManager::instance();
-    InputManager* inputManager = InputManager::instance();
-    PhysicsManager* physicsManager = PhysicsManager::instance();
-    SoundManager*   soundManager = SoundManager::instance();
+    EngineManager*  engineManager   = EngineManager::instance();
+    InputManager*   inputManager    = InputManager::instance();
+    PhysicsManager* physicsManager  = PhysicsManager::instance();
+    SoundManager*   soundManager    = SoundManager::instance();
 
     if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, false);
+        Arena* estadio = new Arena(position, scale, 0, true);
         
         estadio->spawnPlayers();
         estadio->spawnItems();

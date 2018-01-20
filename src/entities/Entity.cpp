@@ -112,9 +112,8 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(bool p_jumping){
-    if(p_jumping){
+    if(p_jumping)
         PhysicsManager::instance()->getBody(m_id)->PutToSleep();
-    }
     else{
         PhysicsManager::instance()->getBody(m_id)->WakeUp();
         m_position[1] = PhysicsManager::instance()->getBody(m_id)->GetPosition().y;

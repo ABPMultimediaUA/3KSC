@@ -60,15 +60,17 @@ void Arena::spawnPlayers(){
     m_playerCount = 0;
     m_players = new Character*[4];
 
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, 0, m_debugMode);
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1, m_debugMode);
     m_players[m_playerCount++] = new Plup("Player 2", positionPlup, 1, m_debugMode);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
             m_players[i]->modeDebug();
         }
-        modeDebug();
+        //modeDebug();
     }
+
+    PhysicsManager::instance()->createRevoluteJoint(PhysicsManager::instance()->getBody(m_players[0]->getId()), PhysicsManager::instance()->getBody(m_players[1]->getId()));
 }
 
 //Returns number of players
@@ -175,8 +177,8 @@ void Arena::update(){
         m_clock.restart();
         spawnRandomItem();
     }
-    if(m_debugMode)
-        m_debugBattlefield->update();
+    //if(m_debugMode)
+        //m_debugBattlefield->update();
 }
 
 void Arena::spawnRandomItem()
