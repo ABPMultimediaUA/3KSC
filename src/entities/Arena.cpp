@@ -60,7 +60,7 @@ void Arena::spawnPlayers(){
     m_playerCount = 0;
     m_players = new Character*[4];
 
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, 0, m_debugMode);
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, -1, m_debugMode);
     m_players[m_playerCount++] = new Plup("Player 2", positionPlup, 1, m_debugMode);
 
     if(m_debugMode){

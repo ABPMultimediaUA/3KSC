@@ -60,7 +60,7 @@ int main(){
             soundManager->update();
             engineManager->updateFrameDeltaTime();
 
-            physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
+            physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
 
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
