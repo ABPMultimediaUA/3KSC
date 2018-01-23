@@ -158,3 +158,28 @@ void PhysicsManager::removeForce(){}
 
 //Handles gravity changes in Kawaiisaki map
 void PhysicsManager::updateGravity(){}
+
+//Casts a ray between 2 points and returns the a number between 0 and 1. 1 is max distance collision.
+float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
+    //set up input
+    b2RayCastInput t_input;
+    t_input.p1 = p_p1;
+    t_input.p2 = p_p2;
+    t_input.maxFraction = 1;
+  
+    //check every fixture of every body to find closest
+    float t_closestFraction = 1; //start with end of line as p2
+
+    for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()) {
+        for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
+  
+            b2RayCastOutput t_output;
+            if ( ! f->RayCast( &t_output, t_input, 0 ) ) // No collision
+                continue;
+            if ( t_output.fraction < t_closestFraction ) {
+                t_closestFraction = t_output.fraction;
+            }            
+        }
+    }
+    return t_closestFraction;
+}

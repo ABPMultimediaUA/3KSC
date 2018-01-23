@@ -56,6 +56,8 @@ class PhysicsManager{
     void removeForce();
     void updateGravity();
 
+    float RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
+
     b2World*        getWorld();
     b2PolygonShape* getShape(int p_id);
     b2Body*         getBody(int p_id);
