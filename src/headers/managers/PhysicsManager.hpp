@@ -31,25 +31,24 @@ class PhysicsManager{
     //Entity** m_physicBodies;
     std::vector<b2Body*> m_physicBodies;
 
-    b2World* m_world;
-    b2AABB  m_worldAABB;
-    b2Vec2  m_gravity;
-    bool    m_doSleep;
-    
-    float   m_timeStep;
-    int     m_iterations;
-    //int*    m_id;
+    b2Vec2*     m_gravity;
+    b2World*     m_world;
     
     b2BodyDef*      m_bodyDef;
     b2Body*         m_body;
-    b2PolygonDef*   m_shapeDef;
     b2PolygonShape* m_polygonShape;
+    b2FixtureDef*   m_fixtureDef;
+
+    int32   m_velocityIterations;
+    int32   m_positionIterations;
+    float32 m_timeStep;
+    //int*    m_id;
 
     public:
     static PhysicsManager* instance();
     PhysicsManager();
     ~PhysicsManager();
-
+    
     void createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]);
 
@@ -61,8 +60,9 @@ class PhysicsManager{
     b2PolygonShape* getShape(int p_id);
     b2Body*         getBody(int p_id);
     void            destroyBody(int p_id);
-    float           getTimeStep();
-    int             getIterations();
+    int32           getVelocityIterations();
+    int32           getPositionIterations();
+    float32         getTimeStep();
 };
 
 #endif
