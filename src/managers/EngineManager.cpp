@@ -102,6 +102,7 @@ void EngineManager::createCamera(){
     scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
     if(cameraNode){
         cameraNode->setPosition(core::vector3df(0,90,-150));
+        //cameraNode->setPosition(core::vector3df(0,90,-1000));
         cameraNode->setTarget(core::vector3df(0,50,0));
     }
 }

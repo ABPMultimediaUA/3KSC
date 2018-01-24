@@ -37,6 +37,7 @@ PhysicsManager* PhysicsManager::instance(){
 //Constructor
 PhysicsManager::PhysicsManager(){
     b2Vec2 gravity(0.0f, -10.0f);
+    //b2Vec2 gravity(0.0f, 0.0f);
 
     m_world = new b2World(gravity);
 
@@ -80,6 +81,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
 
     m_polygonShape = new b2PolygonShape();
     //scaleX = 50
+    
     m_polygonShape->SetAsBox(50, 1);
     m_body->CreateFixture(m_polygonShape, 0.0f);
 
@@ -88,6 +90,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
   
     m_polygonShape->SetAsBox(50, 1, b2Vec2(90,45), 0);
     m_body->CreateFixture(m_polygonShape, 0.0f);
+    
 }
 
 b2World* PhysicsManager::getWorld(){
@@ -182,4 +185,24 @@ float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
         }
     }
     return t_closestFraction;
+}
+
+void PhysicsManager::createRevoluteJoint(b2Body* p_body1, b2Body* p_body2){
+    b2RevoluteJointDef* t_jointDef;
+    t_jointDef->bodyA = p_body1;
+    t_jointDef->bodyB = p_body2;
+    t_jointDef->localAnchorA = p_body1->GetWorldCenter();
+    t_jointDef->localAnchorB = p_body2->GetWorldCenter();
+
+    p_body1->SetType(b2_staticBody);
+
+    t_jointDef->enableLimit = true;
+    t_jointDef->lowerAngle = 0.0f; // 0 degrees
+    t_jointDef->upperAngle = b2_pi; // 180 degrees
+
+    t_jointDef->enableMotor = true;
+    t_jointDef->maxMotorTorque = 20000000.0f;
+    t_jointDef->motorSpeed = 10.0f;
+
+    m_revoluteJoint = (b2RevoluteJoint*)m_world->CreateJoint(t_jointDef);
 }

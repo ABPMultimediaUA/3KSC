@@ -31,13 +31,15 @@ class PhysicsManager{
     //Entity** m_physicBodies;
     std::vector<b2Body*> m_physicBodies;
 
-    b2Vec2*     m_gravity;
-    b2World*     m_world;
+    b2Vec2*         m_gravity;
+    b2World*        m_world;
     
     b2BodyDef*      m_bodyDef;
     b2Body*         m_body;
     b2PolygonShape* m_polygonShape;
     b2FixtureDef*   m_fixtureDef;
+
+    b2RevoluteJoint*    m_revoluteJoint;
 
     int32   m_velocityIterations;
     int32   m_positionIterations;
@@ -57,6 +59,8 @@ class PhysicsManager{
     void updateGravity();
 
     float RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
+
+    void createRevoluteJoint(b2Body* p_body1, b2Body* p_body2);
 
     b2World*        getWorld();
     b2PolygonShape* getShape(int p_id);

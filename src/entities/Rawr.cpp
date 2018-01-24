@@ -22,6 +22,7 @@
 
 #include "../headers/entities/Rawr.hpp"
 #include "../headers/entities/Arena.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
 #include <iostream>
 
 Rawr::Rawr(char* p_name, float p_position[3], int p_joystick, bool p_debugMode) : Character(p_name, p_position, p_joystick, 100, 100, 15, 70.f, "assets/models/characters/rawr/rawr.obj", p_debugMode){
@@ -85,6 +86,8 @@ void Rawr::specialAttackUp(){
 void Rawr::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": Special Attack Down" << std::endl;
+
+    PhysicsManager::instance()->createRevoluteJoint(PhysicsManager::instance()->getBody(this->getId()), PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(1)->getId()));
     
     m_specialAttackDown = false;
 }

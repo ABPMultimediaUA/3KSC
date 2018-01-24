@@ -35,7 +35,7 @@ int main(){
     if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, false);
+        Arena* estadio = new Arena(position, scale, 0, true);
         
         estadio->spawnPlayers();
         estadio->spawnItems();
@@ -60,7 +60,9 @@ int main(){
             soundManager->update();
             engineManager->updateFrameDeltaTime();
 
+
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
+            //std::cout << "(" << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().x << "," << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().y << ")" << std::endl;
 
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
@@ -73,6 +75,7 @@ int main(){
 
             engineManager->drawScene();
             uiManager->render();
+            //std::cout << "(" << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().x << "," << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().y << ")\n++++++++++++++++++++++++++++++++++++" << std::endl;
         }
         engineManager->stop();
         return 0;
