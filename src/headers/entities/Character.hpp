@@ -25,7 +25,6 @@
 
 #include "Entity.hpp"
 #include "Projectile.hpp"
-#include "../headers/managers/SoundManager.hpp"
 #include "../debug.hpp"
 
 class Character : public Entity{
@@ -103,9 +102,6 @@ protected:
     Projectile**    m_projectiles;
     int             m_maxProjectiles;
     int             m_currentProjectiles;
-
-    SoundManager*   m_soundManager;
-    Sound soundSteps;
 
     Debug *playerDebug;
     bool            m_debugMode;

@@ -24,6 +24,7 @@
 #include "../headers/entities/Character.hpp"
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/InputManager.hpp"
+#include "../headers/managers/SoundManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/managers/UIManager.hpp"
 #include "../headers/extra/Keycodes.hpp"
@@ -78,9 +79,6 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_waitRelease           = false;
 
     m_playerIndex = Character::m_playerCount++;
-
-    m_soundManager = SoundManager::instance();
-    m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
 
     m_debugMode = p_debugMode;
 
@@ -390,16 +388,12 @@ void Character::playerInput(){
 
         //Left
         if(m_leftInput){
-            if(!m_soundManager->isPlaying(&soundSteps))
-                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
             lookLeft();
         }
 
         //Right
         if(m_rightInput){
-            if(!m_soundManager->isPlaying(&soundSteps))
-                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
             lookRight();
         }
@@ -414,6 +408,16 @@ void Character::playerInput(){
         if (m_pickInput){
             pickItem();
         }
+
+        if(t_inputManager->isKeyPressed(Key_Num1))
+            SoundManager::instance()->modifyParameter(0.0f);
+        if(t_inputManager->isKeyPressed(Key_Num2))
+            SoundManager::instance()->modifyParameter(0.25f);
+        if(t_inputManager->isKeyPressed(Key_Num3))
+            SoundManager::instance()->modifyParameter(0.5f);
+        if(t_inputManager->isKeyPressed(Key_Num4))
+            SoundManager::instance()->modifyParameter(0.75f);
+
 
     }
     checkActions();    
