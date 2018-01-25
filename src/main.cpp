@@ -60,9 +60,7 @@ int main(){
             soundManager->update();
             engineManager->updateFrameDeltaTime();
 
-
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
-            //std::cout << "(" << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().x << "," << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().y << ")" << std::endl;
 
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
@@ -74,8 +72,7 @@ int main(){
             }
 
             engineManager->drawScene();
-            uiManager->render();
-            //std::cout << "(" << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().x << "," << physicsManager->getBody(Arena::getInstance()->getPlayer(1)->getId())->GetPosition().y << ")\n++++++++++++++++++++++++++++++++++++" << std::endl;
+            uiManager->render();            
         }
         engineManager->stop();
         return 0;

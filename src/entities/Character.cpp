@@ -83,6 +83,7 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
 
     m_debugMode = p_debugMode;
+    m_jointed = false;
 
 }
 
@@ -422,9 +423,9 @@ void Character::playerInput(){
 //Update state of player
 void Character::playerUpdate(){
     if(!m_respawning)
-        updatePosition(m_jumping);
+        updatePosition(m_jumping, m_jointed);
     else{
-        updatePosition(true);
+        updatePosition(true, m_jointed);
         m_respawning = false;
     }
     if(m_debugMode)
@@ -535,4 +536,8 @@ void Character::respawn(float p_position[3]){
     }
 
     UIManager::instance()->setLife(m_playerIndex, m_life);
+}
+
+void Character::setJointed(bool p_jointed){
+    m_jointed = p_jointed;
 }

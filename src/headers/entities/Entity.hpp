@@ -46,7 +46,7 @@ public:
 
     void rotate(float degrees);
 
-    void updatePosition(bool p_jumping);
+    void updatePosition(bool p_jumping, bool p_jointed);
 
     static int getEntityCount();
 protected:

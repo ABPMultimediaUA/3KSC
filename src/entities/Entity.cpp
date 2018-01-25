@@ -24,7 +24,7 @@
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
-//#include <iostream>
+#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -108,17 +108,28 @@ Entity::~Entity(){
     PhysicsManager::instance()->destroyBody(m_id);
 }
 
-void Entity::updatePosition(bool p_jumping){
-    if(p_jumping){
-        PhysicsManager::instance()->getBody(m_id)->SetAwake(false);
-    }
-    else{
-        PhysicsManager::instance()->getBody(m_id)->SetAwake(true);
+void Entity::updatePosition(bool p_jumping, bool p_jointed){
+    if(p_jointed){
+        m_position[0] = PhysicsManager::instance()->getBody(m_id)->GetPosition().x;
         m_position[1] = PhysicsManager::instance()->getBody(m_id)->GetPosition().y;
-    }
 
-    b2Vec2 t_vec(m_position[0], m_position[1]);
-    PhysicsManager::instance()->getBody(m_id)->SetTransform(t_vec, 0);
+        //std::cout << PhysicsManager::instance()->getJointAngle() << std::endl;
+
+        if(PhysicsManager::instance()->getJointAngle() >= 6){
+            PhysicsManager::instance()->destroyJoint();
+            p_jointed = false;
+        }
+    }else{
+        if(p_jumping){
+            PhysicsManager::instance()->getBody(m_id)->SetAwake(false);
+        }
+        else{
+            PhysicsManager::instance()->getBody(m_id)->SetAwake(true);
+            m_position[1] = PhysicsManager::instance()->getBody(m_id)->GetPosition().y;
+        }
+        b2Vec2 t_vec(m_position[0], m_position[1]);
+        PhysicsManager::instance()->getBody(m_id)->SetTransform(t_vec, 0);
+    }
 
     EngineManager::instance()->moveEntity(this);
 }

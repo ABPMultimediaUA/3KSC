@@ -88,6 +88,8 @@ void Rawr::specialAttackDown(){
     std::cout << m_name << ": Special Attack Down" << std::endl;
 
     PhysicsManager::instance()->createRevoluteJoint(PhysicsManager::instance()->getBody(this->getId()), PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(1)->getId()));
+
+    Arena::getInstance()->getPlayer(1)->setJointed(true);
     
     m_specialAttackDown = false;
 }

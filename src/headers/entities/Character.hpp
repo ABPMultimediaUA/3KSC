@@ -61,6 +61,8 @@ public:
     int             getLife();
 
     void            modeDebug();
+    void            setJointed(bool p_jointed);
+
 
 
 protected:
@@ -99,6 +101,7 @@ protected:
     bool            m_specialAttackDown;
     bool            m_specialAttackSide;
     bool            m_ultimateAttack;
+    bool            m_jointed;
 
     Projectile**    m_projectiles;
     int             m_maxProjectiles;

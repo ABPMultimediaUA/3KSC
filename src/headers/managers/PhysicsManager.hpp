@@ -61,6 +61,9 @@ class PhysicsManager{
     float RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
 
     void createRevoluteJoint(b2Body* p_body1, b2Body* p_body2);
+    void destroyJoint();
+
+    float getJointAngle();
 
     b2World*        getWorld();
     b2PolygonShape* getShape(int p_id);
