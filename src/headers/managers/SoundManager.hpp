@@ -21,11 +21,14 @@
 #ifndef SOUND_MANAGER
 #define SOUND_MANAGER
 
-#include <fmod/wincompat.h>
-#include <fmod/fmod_event.hpp>
+#include <fmod/fmod.hpp>
+#include <fmod/fmod_studio.hpp>
+#include <fmod/fmod_common.h>
 #include <fmod/fmod_errors.h>
 
 using namespace std;
+
+typedef FMOD::Sound* Sound;
 
 struct Vector3 {
 	float x;
@@ -33,26 +36,42 @@ struct Vector3 {
 	float z;
 };
 
-typedef FMOD::Sound* Sound;
-
 class SoundManager{
 private:
     static SoundManager* m_instance;
 
-    FMOD::System    *m_System;
-    FMOD_RESULT     m_Result;
-    FMOD::Channel   *m_channel[5];
+    FMOD_RESULT               m_Result;
+    FMOD::Studio::System     *m_system;
+    FMOD::System             *m_lowLevelSystem;
+    FMOD::Sound              *m_sound;
+    FMOD::Channel            *m_channel = 0;
+    
+    FMOD::Studio::Bank*       m_masterBank;
+    FMOD::Studio::Bank*       m_stringsBank;
+    FMOD::Studio::Bank*       m_musicBank;
+
+    FMOD::Studio::EventDescription*     m_musicEvent;
+
+    FMOD::Studio::EventInstance*        m_musicInstance;
+
+    void *m_extraDriverData;
+
+    char banksPath[];
 
 public:
     static SoundManager* instance();
     SoundManager();
     ~SoundManager();
-    void ERRCHECK(FMOD_RESULT result);
-    void createSound(Sound *pSound, const char *pFile);
-    void playSound(Sound pSound, bool bLoop);
-    void releaseSound(Sound pSound);
-    bool isPlaying(Sound *pSound);
+
+    void createSound(Sound p_sound, const char *pFile);
+    void playSound(Sound p_sound);
+
     void update();
+
+    void loadBanks();
+    void getEvents();
+    void modifyParameter(float num);
+
 };
 
 #endif

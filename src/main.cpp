@@ -22,8 +22,6 @@
 
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
-//#include "headers/debug.hpp"
-//#include <fmod.h>
 #include <iostream>
 
 int main(){
@@ -44,9 +42,6 @@ int main(){
         engineManager->timeStamp();
 
         // Play music
-        Sound t_music;
-        soundManager->createSound(&t_music,"assets/FosfosStadium.mp3");
-        soundManager->playSound(t_music, true);
 
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
