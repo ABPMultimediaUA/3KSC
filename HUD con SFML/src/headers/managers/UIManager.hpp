@@ -33,6 +33,7 @@ class UIManager{
         sf::Text*           m_magic;
         sf::Sprite*         m_magicBarBackground;
         sf::Sprite*         m_magicBarForeground;
+        int                 m_magicBarFragments;
         sf::Sprite*         m_player;
 
         int* m_buttons;
@@ -47,9 +48,12 @@ class UIManager{
         UIManager();
         ~UIManager();
 
-        void setLife(int p_player, int p_life);
         void update();
         void render();
+        
+        void setLife(int p_life);
+        void setLifeShield(int p_lifeShield);
+        void setMagic(int p_magic);
 
         sf::RenderWindow*   getWindow();
 

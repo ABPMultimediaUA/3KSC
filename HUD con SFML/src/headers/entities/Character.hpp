@@ -25,6 +25,7 @@
 
 class Character{
 public:
+    static Character* instance();
     Character();
     ~Character();
 	
@@ -59,6 +60,8 @@ protected:
     bool            m_ultimateAttack;
 
 private:
+    static Character* m_instance;
+
     //Conditions for each Input (they change depending on keyboard/joystick control)
     bool            m_upInput;
     bool            m_downInput;

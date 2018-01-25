@@ -25,9 +25,9 @@
 
 int main(){
     InputManager* inputManager = InputManager::instance();
-    UIManager* uiManager = UIManager::instance();    
+    UIManager* uiManager = UIManager::instance();
+    Character* player = Character::instance();
     
-    Character* player = new Character();
     sf::RenderWindow* window = uiManager->getWindow();
 
     bool keyPressed = false;
@@ -56,6 +56,8 @@ int main(){
         if (keyPressed){
             player->playerInput();
         }
+
+        player->playerUpdate();
 
         keyPressed = false;
 

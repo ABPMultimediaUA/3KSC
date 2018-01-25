@@ -20,8 +20,6 @@
 
 #include "../headers/managers/InputManager.hpp"
 //#include "../headers/managers/EngineManager.hpp"
-#include <SFML/Window/Event.hpp>
-#include <SFML/System/Clock.hpp>
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
@@ -48,6 +46,9 @@ InputManager::InputManager(){
     //Axis list
     sf::Joystick::Axis t_axis[8] = {sf::Joystick::X, sf::Joystick::Y, sf::Joystick::Z, sf::Joystick::R, sf::Joystick::U, sf::Joystick::V, sf::Joystick::PovX, sf::Joystick::PovY};
     std::memcpy(m_axis, t_axis, 8 * sizeof(sf::Joystick::Axis));
+
+    //Clock
+    m_clock = new sf::Clock;
 }
 
 //Destructor
@@ -81,4 +82,14 @@ float InputManager::getAxisPosition(int p_joystick, int p_axis){
 //Updates the state of all joysticks
 void InputManager::updateJoysticks(){
     sf::Joystick::update();
+}
+
+//Returns true after the indicated seconds
+bool InputManager::countTo(float p_time){
+    if (m_clock->getElapsedTime().asSeconds() >= p_time){
+        m_clock->restart();
+        return true;
+    }
+
+    return false;
 }

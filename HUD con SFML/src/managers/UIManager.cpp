@@ -19,8 +19,7 @@
 */
 
 #include "../headers/managers/UIManager.hpp"
-
-//#include <SFML/OpenGL.hpp>
+#include <string> //For std::to_string()
 #include <iostream>
 
 //Instance initialization
@@ -62,7 +61,7 @@ void UIManager::initializeHUDSprites(){
 
     //Clip specific sections
     m_magicBarBackground->setTextureRect(sf::IntRect(0, 0, 256, 256));
-    m_magicBarForeground->setTextureRect(sf::IntRect(385, (128 - 14), 1, (10 + 68 + 14)));
+    m_magicBarForeground->setTextureRect(sf::IntRect(385, (128 - 15), 1, (10 + 68 + 15)));
     m_player->setTextureRect(sf::IntRect(0, 256, 256, 256));
 
     //Place transformation origin at center of sprites
@@ -71,11 +70,12 @@ void UIManager::initializeHUDSprites(){
 
     //Place sprites
     m_magicBarBackground->setPosition(m_window->getSize().x / 2, m_window->getSize().y / 2);
-    m_magicBarForeground->setPosition(m_magicBarBackground->getPosition().x, m_magicBarBackground->getPosition().y - 14);
+    m_magicBarForeground->setPosition(m_magicBarBackground->getPosition().x, m_magicBarBackground->getPosition().y - 15);
     m_player->setPosition(m_magicBarBackground->getPosition().x, m_magicBarBackground->getPosition().y);
 
     //Initial rotation for magic bar
     m_magicBarForeground->rotate(-135);
+    m_magicBarFragments = 579;
 }
 
 
@@ -117,28 +117,23 @@ void UIManager::initializeHUDTexts(){
     m_magic->setPosition(m_life->getPosition().x, m_life->getPosition().y + 45);
 }
 
-
-//Returns a pointer to game window
-sf::RenderWindow* UIManager::getWindow(){
-    return m_window;
-}
-
-//Updates the render target
+//Updates the UI
 void UIManager::update(){
     
 }
 
-//Displays the texture
+//Displays the UI
 void UIManager::render(){
     m_window->clear(sf::Color(79,195,247));
     
     m_window->draw(*m_magicBarBackground);
 
-    for (int i = 0; i < 180; i++){
+    //Magic bar
+    for (int i = 0; i < m_magicBarFragments; i++){
         m_window->draw(*m_magicBarForeground);
-        m_magicBarForeground->rotate(0.466);
+        m_magicBarForeground->rotate(270.0 / 579.0);
     
-        if (i == 179){
+        if (i == m_magicBarFragments - 1){
             m_magicBarForeground->setRotation(-135);
         }
     }
@@ -146,15 +141,55 @@ void UIManager::render(){
     m_window->draw(*m_player);
 
     m_window->draw(*m_life);
-    m_window->draw(*m_lifeShield);
+
+    //Hide life shield at 0%
+    if (m_lifeShield->getString() != "0%"){
+        m_window->draw(*m_lifeShield);
+    }
+
     m_window->draw(*m_magic);
 
     m_window->display();
 }
 
 //Changes the HP of a player in the screen
-void UIManager::setLife(int p_player, int p_life){
-    
+void UIManager::setLife(int p_life){
+    m_life->setString(std::to_string(p_life) + "%");
+    m_life->setOrigin(m_life->getGlobalBounds().width / 2, m_life->getGlobalBounds().height / 2);
+    m_life->setPosition(m_magicBarBackground->getPosition().x, m_magicBarBackground->getPosition().y);
+
+    //Change face
+    if (p_life >= 30){
+        m_player->setTextureRect(sf::IntRect(0, 256, 256, 256));
+    }
+
+    else{
+        m_player->setTextureRect(sf::IntRect(256, 256, 256, 256));
+    }
+}
+
+//Changes the life shield of a player in the screen
+void UIManager::setLifeShield(int p_lifeShield){
+    m_lifeShield->setString(std::to_string(p_lifeShield) + "%");
+    m_lifeShield->setOrigin(m_lifeShield->getGlobalBounds().width / 2, m_lifeShield->getGlobalBounds().height / 2);
+    m_lifeShield->setPosition(m_life->getPosition().x, m_life->getPosition().y + 15);
+}
+
+//Changes the MP of a player in the screen
+void UIManager::setMagic(int p_magic){
+    //Magic counter
+    m_magic->setString(std::to_string(p_magic) + "%");
+    m_magic->setOrigin(m_magic->getGlobalBounds().width / 2, m_magic->getGlobalBounds().height / 2);
+    m_magic->setPosition(m_life->getPosition().x, m_life->getPosition().y + 45);
+
+    //Magic bar
+    m_magicBarFragments = (int) (p_magic * 579) / 100;
+}
+
+
+//Returns a pointer to game window
+sf::RenderWindow* UIManager::getWindow(){
+    return m_window;
 }
 
 //Starts a game

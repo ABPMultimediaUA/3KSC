@@ -29,6 +29,18 @@
 #include "../headers/extra/Buttons.hpp"
 #include <iostream>
 
+//Instance initialization
+Character* Character::m_instance = 0;
+
+//Returns the only instance of this class
+Character* Character::instance(){
+    if (!m_instance){
+        m_instance = new Character();
+    }
+
+    return m_instance;
+}
+
 Character::Character(){
     m_maxLife               = 100;
     m_maxLifeShield         = 25;
@@ -64,6 +76,8 @@ void Character::changeLife(int p_variation){
             m_life += m_lifeShield;
             m_lifeShield = 0;
         }
+
+        UIManager::instance()->setLifeShield(m_lifeShield);
     }
 
     //Life increase or no life shield
@@ -81,7 +95,7 @@ void Character::changeLife(int p_variation){
     }
 
     //HUD Stuff
-    //UIManager::instance()->setLife(m_playerIndex, m_life);
+    UIManager::instance()->setLife(m_life);
 }
 
 //Increases or decreases magic
@@ -95,6 +109,7 @@ void Character::changeMagic(int p_variation){
         m_magic = m_maxMagic;
 
     //HUD Stuff
+    UIManager::instance()->setMagic(m_magic);
 }
 
 //Resets life and magic
@@ -103,7 +118,8 @@ void Character::die(){
     m_lifeShield = 0;
     m_magic = m_maxMagic;
 
-    //UIManager::instance()->setLife(m_playerIndex, m_life);
+    UIManager::instance()->setLife(m_life);
+    UIManager::instance()->setMagic(m_magic);
 }
 
 
@@ -132,22 +148,50 @@ void Character::updateInputs(){
 
 //Calls action functions when they are active
 void Character::checkActions(){
-    if (m_specialAttackUp)
+    if (m_specialAttackUp){
         specialAttackUp();
+        m_specialAttackUp = false;
+    }
 
-    if (m_specialAttackDown)
+    if (m_specialAttackDown){
         specialAttackDown();
+        m_specialAttackDown = false;
+    }
 
-    if (m_specialAttackSide)
+    if (m_specialAttackSide){
         specialAttackSide();
+        m_specialAttackSide = false;
+    }
 
-    if (m_ultimateAttack)
+    if (m_ultimateAttack){
         ultimateAttack();
+        m_ultimateAttack = false;
+    }
 }
 
 void Character::playerInput(){
     InputManager* t_inputManager = InputManager::instance();
     updateInputs();    
+
+    //Increase life
+    if (t_inputManager->isKeyPressed(Key_H)){
+        changeLife(3);
+    }
+
+    //Decrease life
+    else if (t_inputManager->isKeyPressed(Key_G)){
+        changeLife(-3);
+    }
+
+    //Increase magic
+    else if (t_inputManager->isKeyPressed(Key_M)){
+        changeMagic(3);
+    }
+
+    //Decrease magic
+    else if (t_inputManager->isKeyPressed(Key_N)){
+        changeMagic(-3);
+    }
 
     //Special attack up
     if(m_specialAttackUpInput){
@@ -181,7 +225,7 @@ void Character::playerInput(){
         }
     }
 
-    //No attack
+    //Nothing
     else{
         m_waitRelease = false;
     }
@@ -191,25 +235,41 @@ void Character::playerInput(){
 
 //Update state of player
 void Character::playerUpdate(){
-    //Increase magic every second
+    //Increase magic over time
+    if (InputManager::instance()->countTo(1)){
+        changeMagic(1);
+    }
+}
 
+//Range attack
+void Character::specialAttackUp(){
+    if (m_magic >= 20){
+        changeMagic(-20);
+    }
 }
 
 //Life shield
-void Character::specialAttackUp(){
-
-}
-
 void Character::specialAttackDown(){
-
+    //Can't use another shield if one active
+    if (m_lifeShield == 0 && m_magic >= 30){
+        m_lifeShield = 25;
+        UIManager::instance()->setLifeShield(25);
+        changeMagic(-30);
+    }
 }
 
+//Special side attack
 void Character::specialAttackSide(){
-
+    if (m_magic >= 10){
+        changeMagic(-10);
+    }
 }
 
+//Ultimate attack
 void Character::ultimateAttack(){
-
+    if (m_magic >= 50){
+        changeMagic(-50);
+    }
 }
 
 //Returns the life of the player
