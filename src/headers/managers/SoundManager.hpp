@@ -21,9 +21,12 @@
 #ifndef SOUND_MANAGER
 #define SOUND_MANAGER
 
-#include <fmod/wincompat.h>
-#include <fmod/fmod_event.hpp>
+#include <fmod/fmod.hpp>
+#include <fmod/fmod_studio.hpp>
+#include <fmod/fmod_common.h>
 #include <fmod/fmod_errors.h>
+#include <string>
+#include <map>
 
 using namespace std;
 
@@ -33,26 +36,57 @@ struct Vector3 {
 	float z;
 };
 
-typedef FMOD::Sound* Sound;
+class SoundEvent;
 
 class SoundManager{
-private:
-    static SoundManager* m_instance;
-
-    FMOD::System    *m_System;
-    FMOD_RESULT     m_Result;
-    FMOD::Channel   *m_channel[5];
-
 public:
     static SoundManager* instance();
     SoundManager();
     ~SoundManager();
-    void ERRCHECK(FMOD_RESULT result);
-    void createSound(Sound *pSound, const char *pFile);
-    void playSound(Sound pSound, bool bLoop);
-    void releaseSound(Sound pSound);
-    bool isPlaying(Sound *pSound);
-    void update();
+
+    void createSoundEvent(const char* eventPath, const char* name);
+    void playSound(const char* name);
+
+
+    void setVolume(float p_vol);
+    void update(bool p_paused);
+
+    void loadBanks();
+    void getEvents();
+    void modifyParameter(const char* name, float num, const char* parameter);
+
+private:
+    static SoundManager* m_instance;
+
+    FMOD_RESULT               m_Result;
+    FMOD::Studio::System     *m_system;
+    FMOD::System             *m_lowLevelSystem;
+    
+    FMOD::Studio::Bank*       m_masterBank;
+    FMOD::Studio::Bank*       m_stringsBank;
+    FMOD::Studio::Bank*       m_musicBank;
+
+    //FMOD::Studio::EventDescription*     m_musicEvent;
+
+    std::map<const char*, SoundEvent*> m_soundEvents;
+};
+
+class SoundEvent{
+public:
+    SoundEvent(FMOD::Studio::EventDescription* p_eventDescription);
+    ~SoundEvent();
+
+    void start();
+    void stop();
+    void pause();
+    void setVolume(float p_vol);
+    bool isPlaying();
+
+    void modifyParameter(float num, const char* parameter);
+
+
+protected:
+    FMOD::Studio::EventInstance*    m_soundInstance;
 };
 
 #endif

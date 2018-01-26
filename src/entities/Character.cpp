@@ -77,11 +77,7 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
 
     m_waitRelease           = false;
 
-
     m_playerIndex = Character::m_playerCount++;
-
-    m_soundManager = SoundManager::instance();
-    m_soundManager->createSound(&soundSteps, "assets/pasos_1.wav");
 
     m_debugMode = p_debugMode;
 
@@ -155,13 +151,18 @@ void Character::die(){
     //Delete when m_lives == 0
 }
 
-
 void Character::lookLeft(){
-    m_orientation = false;
+    if(m_orientation){
+        m_orientation = false;
+        this->rotate(0);
+    }
 }
 
 void Character::lookRight(){
-    m_orientation = true;
+    if(!m_orientation){
+        m_orientation = true;
+        this->rotate(180);
+    }
 }
 
 bool Character::isJumping(){
@@ -272,7 +273,6 @@ void Character::updateInputs(){
 
 //Calls action functions when they are active
 void Character::checkActions(){
- 
     if (m_jumping)
         jump();
 
@@ -386,16 +386,12 @@ void Character::playerInput(){
 
         //Left
         if(m_leftInput){
-            if(!m_soundManager->isPlaying(&soundSteps))
-                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
             lookLeft();
         }
 
         //Right
         if(m_rightInput){
-            if(!m_soundManager->isPlaying(&soundSteps))
-                m_soundManager->playSound(soundSteps, false);
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
             lookRight();
         }
@@ -419,8 +415,7 @@ void Character::playerInput(){
 void Character::playerUpdate(){
     if(!m_respawning)
         updatePosition(m_jumping);
-    else
-    {
+    else{
         updatePosition(true);
         m_respawning = false;
     }

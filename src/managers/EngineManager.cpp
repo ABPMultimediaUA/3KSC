@@ -139,6 +139,12 @@ void EngineManager::scale(int p_id, float p_scale[3]){
     t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
 }
 
+void EngineManager::setRotation(int p_id, float p_degrees){
+    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
+    
+    t_node->setRotation(core::vector3df(0.0f, p_degrees, 0.0f));
+}
+
 //Scene render function
 void EngineManager::drawScene(){
     m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));

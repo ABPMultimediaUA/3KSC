@@ -24,6 +24,7 @@
 #include "../headers/entities/Character.hpp"
 #include "../headers/entities/Arena.hpp"
 #include "../headers/managers/EngineManager.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
 #include <iostream>
 
 //Constructor
@@ -56,13 +57,25 @@ bool Snowman::lockNLoad(){
                 m_target[0] = t_currentPlayer->getX();
                 m_target[1] = t_currentPlayer->getY();
                 m_target[2] = t_currentPlayer->getZ();
-                
-                //Create snowball (if any left)
-                if (m_ammo-- > 0){        
-                    m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, m_owner, 1);
-                    m_currentSnowballs++;
-                    std::cout << "Snowman: Take this!" << std::endl;
+
+                b2Vec2 t_p1 = b2Vec2(m_position[0], m_position[1]);
+                b2Vec2 t_p2 = b2Vec2(m_target[0], m_target[1]);
+
+                float t_closestBodyFraction = PhysicsManager::instance()->RaycastBetween(t_p1, t_p2);
+
+                //Attack ONLY if in range and in sight
+                if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
+                    {
+                        //Create snowball (if any left)
+                        if (m_ammo-- > 0){        
+                            m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, m_owner, 1);
+                            m_currentSnowballs++;
+                            std::cout << "Snowman: Take this!" << std::endl;
+                        }
+                    }
                 }
+                
+                
             }
         }
     }

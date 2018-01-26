@@ -36,71 +36,58 @@ PhysicsManager* PhysicsManager::instance(){
 
 //Constructor
 PhysicsManager::PhysicsManager(){
-    m_worldAABB = b2AABB();
-    b2Vec2 t_upperBound(250.f, 200.f);
-    b2Vec2 t_lowerBound(-250.f, -200.f);
-    m_worldAABB.upperBound = t_upperBound;
-    m_worldAABB.lowerBound = t_lowerBound;
+    b2Vec2 gravity(0.0f, -10.0f);
 
-    m_gravity = b2Vec2(0.0f, -10.0f);
-    
-    m_doSleep = true;
+    m_world = new b2World(gravity);
 
-    m_world = new b2World(m_worldAABB, m_gravity, m_doSleep);
-
-    m_timeStep = 5.0 / 60.0;
-    m_iterations = 10;
+    m_timeStep = 10.f/60.0f;
+    m_velocityIterations = 6;
+    m_positionIterations = 2;
 }
 //Destructor
 PhysicsManager::~PhysicsManager(){}
 
 void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY){
     //Create a new body and positioning it in the coords of the Entity
-    
     m_bodyDef = new b2BodyDef();
+    m_bodyDef->type = b2_dynamicBody;
     m_bodyDef->position.Set(p_position[0], p_position[1]);
     m_body = m_world->CreateBody(m_bodyDef);
 
     //Create a shape for the body
-    m_shapeDef = new b2PolygonDef();
-    m_shapeDef->SetAsBox(p_dimX, p_dimY);
-    m_shapeDef->density = 10.0;
-    m_shapeDef->friction = 0.3;
+    m_polygonShape = new b2PolygonShape();
+    m_polygonShape->SetAsBox(p_dimX, p_dimY);
+    
+    m_fixtureDef = new b2FixtureDef();
+    m_fixtureDef->shape = m_polygonShape;
+    m_fixtureDef->density = 1.0f;
+    m_fixtureDef->friction = 0.3f;
 
     //Attach the shape to the body
-    m_body->CreateShape(m_shapeDef);
-    m_body->SetMassFromShapes();
+    m_body->CreateFixture(m_fixtureDef);
     m_body->SetUserData(p_id);
 
     //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
     int *t_id = static_cast<int*>(m_body->GetUserData());
-
-    m_polygonShape = new b2PolygonShape(m_shapeDef);
 }
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]){
     m_bodyDef = new b2BodyDef();
-    m_bodyDef->position.Set(-90, 0);
+    m_bodyDef->position.Set(-90.0f, 0.0f);
     
     m_body = m_world->CreateBody(m_bodyDef);
     m_body->SetUserData(p_id);
 
-    m_shapeDef = new b2PolygonDef();
-
+    m_polygonShape = new b2PolygonShape();
     //scaleX = 50
-    m_shapeDef->SetAsBox(50, 1);
-    m_body->CreateShape(m_shapeDef);
+    m_polygonShape->SetAsBox(50, 1);
+    m_body->CreateFixture(m_polygonShape, 0.0f);
 
-    //m_polygonShape = new b2PolygonShape(m_shapeDef);
-
-    /**********************************/
-
-    m_shapeDef->SetAsBox(50, 1, b2Vec2(180,0), 0);
-    m_body->CreateShape(m_shapeDef);
+    m_polygonShape->SetAsBox(50, 1, b2Vec2(180,0), 0);
+    m_body->CreateFixture(m_polygonShape, 0.0f);
   
-    m_shapeDef->SetAsBox(50, 1, b2Vec2(90,45), 0);
-    m_body->CreateShape(m_shapeDef);
-
+    m_polygonShape->SetAsBox(50, 1, b2Vec2(90,45), 0);
+    m_body->CreateFixture(m_polygonShape, 0.0f);
 }
 
 b2World* PhysicsManager::getWorld(){
@@ -117,7 +104,7 @@ b2PolygonShape* PhysicsManager::getShape(int p_id){
         t_id = static_cast<int*>(t_body->GetUserData());
         t_value = *t_id;
         if(p_id == t_value){
-            t_shape = t_body->GetShapeList();
+            t_shape = t_body->GetFixtureList()->GetShape();
             if(t_shape->GetType() == 1){
                 b2PolygonShape* t_polygonShape = (b2PolygonShape*)t_shape;
                 return t_polygonShape;
@@ -139,7 +126,7 @@ b2Body* PhysicsManager::getBody(int p_id){
         t_value = *t_id;
         if(p_id == t_value)
             return t_body;
-        
+
         t_body = t_body->GetNext();
     }
     return 0;
@@ -151,12 +138,16 @@ void PhysicsManager::destroyBody(int p_id){
     m_world->DestroyBody(t_body);
 }
 
-float PhysicsManager::getTimeStep(){
-    return m_timeStep;
+int32 PhysicsManager::getVelocityIterations(){
+    return m_velocityIterations;
 }
 
-int PhysicsManager::getIterations(){
-    return m_iterations;
+int32 PhysicsManager::getPositionIterations(){
+    return m_positionIterations;
+}
+
+float32 PhysicsManager::getTimeStep(){
+    return m_timeStep;
 }
 
 //Adds a force to an entity
@@ -167,3 +158,28 @@ void PhysicsManager::removeForce(){}
 
 //Handles gravity changes in Kawaiisaki map
 void PhysicsManager::updateGravity(){}
+
+//Casts a ray between 2 points and returns the a number between 0 and 1. 1 is max distance collision.
+float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
+    //set up input
+    b2RayCastInput t_input;
+    t_input.p1 = p_p1;
+    t_input.p2 = p_p2;
+    t_input.maxFraction = 1;
+  
+    //check every fixture of every body to find closest
+    float t_closestFraction = 1; //start with end of line as p2
+
+    for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()) {
+        for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
+  
+            b2RayCastOutput t_output;
+            if ( ! f->RayCast( &t_output, t_input, 0 ) ) // No collision
+                continue;
+            if ( t_output.fraction < t_closestFraction ) {
+                t_closestFraction = t_output.fraction;
+            }            
+        }
+    }
+    return t_closestFraction;
+}

@@ -22,9 +22,7 @@
 
 //Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
-//#include "headers/debug.hpp"
-//#include <fmod.h>
-//#include <iostream>
+#include <iostream>
 
 int main(){
     EngineManager* engineManager = EngineManager::instance();
@@ -32,7 +30,7 @@ int main(){
     PhysicsManager* physicsManager = PhysicsManager::instance();
     SoundManager*   soundManager = SoundManager::instance();
 
-    if (engineManager->createWindow(true)){  
+    if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
         Arena* estadio = new Arena(position, scale, 0, false);
@@ -44,9 +42,8 @@ int main(){
         engineManager->timeStamp();
 
         // Play music
-        Sound t_music;
-        soundManager->createSound(&t_music,"assets/FosfosStadium.mp3");
-        soundManager->playSound(t_music, true);
+        soundManager->createSoundEvent("event:/Music/Music", "music");
+        soundManager->playSound("music");
 
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
@@ -57,10 +54,10 @@ int main(){
         //Game main loop
         while (engineManager->running()){
             //sf::Context context;
-            soundManager->update();
+            soundManager->update(true);
             engineManager->updateFrameDeltaTime();
 
-            physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getIterations(), 0);
+            physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
 
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
@@ -70,7 +67,7 @@ int main(){
                 currentPlayer->playerUpdate();
                 Arena::getInstance()->update();
             }
-            
+
             engineManager->drawScene();
             uiManager->render();
         }

@@ -36,7 +36,6 @@ Entity::Entity(float p_position[3]){
         m_lastPosition[i] = m_position[i];
         m_position[i] = p_position[i];
     }
-
     EngineManager::instance()->createEntity(m_id, p_position);
     moveTo(p_position);
 
@@ -57,7 +56,6 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
                 m_position[i] = p_position[i];
                 m_lastPosition[i] = p_position[i];
             }
-
             EngineManager::instance()->load3DModel(m_id, p_position, t_scale, p_modelURL);
             moveTo(p_position);
 
@@ -87,7 +85,6 @@ Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, in
                 m_position[i] = p_position[i];
                 m_lastPosition[i] = p_position[i];
             }
-
             EngineManager::instance()->load3DModel(m_id, p_position, p_scale, p_modelURL);
             moveTo(p_position);
 
@@ -113,14 +110,15 @@ Entity::~Entity(){
 
 void Entity::updatePosition(bool p_jumping){
     if(p_jumping){
-        PhysicsManager::instance()->getBody(m_id)->PutToSleep();
+        PhysicsManager::instance()->getBody(m_id)->SetAwake(false);
     }
     else{
-        PhysicsManager::instance()->getBody(m_id)->WakeUp();
+        PhysicsManager::instance()->getBody(m_id)->SetAwake(true);
         m_position[1] = PhysicsManager::instance()->getBody(m_id)->GetPosition().y;
     }
+
     b2Vec2 t_vec(m_position[0], m_position[1]);
-    PhysicsManager::instance()->getBody(m_id)->SetXForm(t_vec, 0);
+    PhysicsManager::instance()->getBody(m_id)->SetTransform(t_vec, 0);
 
     EngineManager::instance()->moveEntity(this);
 }
@@ -182,4 +180,8 @@ float Entity::getZ(){
 
 int Entity::getEntityCount(){
     return Entity::m_entityCount;
+}
+
+void Entity::rotate(float p_degrees){
+    EngineManager::instance()->setRotation(this->getId(), p_degrees);
 }

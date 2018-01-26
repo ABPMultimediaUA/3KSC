@@ -25,7 +25,6 @@
 
 #include "Entity.hpp"
 #include "Projectile.hpp"
-#include "../headers/managers/SoundManager.hpp"
 #include "../debug.hpp"
 
 class Character : public Entity{
@@ -104,11 +103,9 @@ protected:
     int             m_maxProjectiles;
     int             m_currentProjectiles;
 
-    SoundManager*   m_soundManager;
-    Sound soundSteps;
-
     Debug *playerDebug;
     bool            m_debugMode;
+
 private:
     //Conditions for each Input (they change depending on keyboard/joystick control)
     bool            m_upInput;
@@ -129,6 +126,7 @@ private:
     void            updateInputs();
     void            checkActions();
     int             m_joystick;                 //[0,3]: Joystick   -1: Keyboard   -2: NPC
+
 };
 
 #endif
