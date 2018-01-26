@@ -126,6 +126,7 @@ private:
     void            updateInputs();
     void            checkActions();
     int             m_joystick;                 //[0,3]: Joystick   -1: Keyboard   -2: NPC
+
 };
 
 #endif

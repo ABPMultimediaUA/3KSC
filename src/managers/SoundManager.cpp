@@ -54,23 +54,14 @@ SoundManager::SoundManager(){
     ERRCHECK(m_system->initialize(32, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
 
     loadBanks();
-    getEvents();
+    //getEvents();
 }
 
 //Destructor
 SoundManager::~SoundManager(){}
 
-void SoundManager::createSound(Sound p_sound, const char *pFile){
-    ERRCHECK(m_lowLevelSystem->createSound(pFile, FMOD_DEFAULT, 0, &p_sound));
-}
-
-void SoundManager::playSound(Sound p_sound){
-    ERRCHECK(m_lowLevelSystem->playSound(p_sound, 0, false, &m_channel));
-}
-
-void SoundManager::update(){
+void SoundManager::update(bool p_paused){
     ERRCHECK(m_system->update());
-    ERRCHECK(m_lowLevelSystem->update());
 }
 
 void SoundManager::loadBanks(){
@@ -80,7 +71,7 @@ void SoundManager::loadBanks(){
 
     ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Music.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
 }
-
+/*
 void SoundManager::getEvents(){
     ERRCHECK(m_system->getEvent("event:/Music/Music", &m_musicEvent));
 
@@ -88,8 +79,37 @@ void SoundManager::getEvents(){
 
     ERRCHECK(m_musicInstance->start());
 }
+*/
 
-void SoundManager::modifyParameter(float num){
-    ERRCHECK(m_musicInstance->setParameterValue("Intensity", num));
+void SoundManager::createSoundEvent(const char* eventPath, const char* name){
+    FMOD::Studio::EventDescription* t_eventDescription;
+
+    ERRCHECK(m_system->getEvent(eventPath, &t_eventDescription));
+
+    SoundEvent* t_soundEvent = new SoundEvent(t_eventDescription);
+
+    m_soundEvents.insert(std::pair<const char*, SoundEvent*>(name, t_soundEvent));
 }
 
+void SoundManager::playSound(const char* name){
+    m_soundEvents.at(name)->start();
+}
+
+void SoundManager::modifyParameter(const char* name, float num, const char* parameter){
+    m_soundEvents.at(name)->modifyParameter(num, parameter);
+}
+
+/*
+ * SOUND EVENT CLASS METHODS!
+ */
+SoundEvent::SoundEvent(FMOD::Studio::EventDescription* p_eventDescription){
+    ERRCHECK(p_eventDescription->createInstance(&m_soundInstance));
+}
+
+void SoundEvent::start(){
+    ERRCHECK(m_soundInstance->start());
+}
+
+void SoundEvent::modifyParameter(float num, const char* parameter){
+    ERRCHECK(m_soundInstance->setParameterValue(parameter, num));
+}

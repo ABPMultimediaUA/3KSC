@@ -25,10 +25,10 @@
 #include <fmod/fmod_studio.hpp>
 #include <fmod/fmod_common.h>
 #include <fmod/fmod_errors.h>
+#include <string>
+#include <map>
 
 using namespace std;
-
-typedef FMOD::Sound* Sound;
 
 struct Vector3 {
 	float x;
@@ -36,42 +36,57 @@ struct Vector3 {
 	float z;
 };
 
+class SoundEvent;
+
 class SoundManager{
+public:
+    static SoundManager* instance();
+    SoundManager();
+    ~SoundManager();
+
+    void createSoundEvent(const char* eventPath, const char* name);
+    void playSound(const char* name);
+
+
+    void setVolume(float p_vol);
+    void update(bool p_paused);
+
+    void loadBanks();
+    void getEvents();
+    void modifyParameter(const char* name, float num, const char* parameter);
+
 private:
     static SoundManager* m_instance;
 
     FMOD_RESULT               m_Result;
     FMOD::Studio::System     *m_system;
     FMOD::System             *m_lowLevelSystem;
-    FMOD::Sound              *m_sound;
-    FMOD::Channel            *m_channel = 0;
     
     FMOD::Studio::Bank*       m_masterBank;
     FMOD::Studio::Bank*       m_stringsBank;
     FMOD::Studio::Bank*       m_musicBank;
 
-    FMOD::Studio::EventDescription*     m_musicEvent;
+    //FMOD::Studio::EventDescription*     m_musicEvent;
 
-    FMOD::Studio::EventInstance*        m_musicInstance;
+    std::map<const char*, SoundEvent*> m_soundEvents;
+};
 
-    void *m_extraDriverData;
-
-    char banksPath[];
-
+class SoundEvent{
 public:
-    static SoundManager* instance();
-    SoundManager();
-    ~SoundManager();
+    SoundEvent(FMOD::Studio::EventDescription* p_eventDescription);
+    ~SoundEvent();
 
-    void createSound(Sound p_sound, const char *pFile);
-    void playSound(Sound p_sound);
+    void start();
+    void stop();
+    void pause();
+    void setVolume(float p_vol);
+    bool isPlaying();
 
-    void update();
+    void modifyParameter(float num, const char* parameter);
 
-    void loadBanks();
-    void getEvents();
-    void modifyParameter(float num);
 
+protected:
+    FMOD::Studio::EventInstance*    m_soundInstance;
 };
 
 #endif
