@@ -42,6 +42,8 @@ int main(){
         engineManager->timeStamp();
 
         // Play music
+        soundManager->createSoundEvent("event:/Music/Music", "music");
+        soundManager->playSound("music");
 
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
@@ -52,7 +54,7 @@ int main(){
         //Game main loop
         while (engineManager->running()){
             //sf::Context context;
-            soundManager->update();
+            soundManager->update(true);
             engineManager->updateFrameDeltaTime();
 
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());

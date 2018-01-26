@@ -35,6 +35,7 @@ public:
     void    specialAttackDown();
     void    specialAttackSide();
     void    ultimateAttack();
+
 };
 
 #endif
