@@ -68,11 +68,13 @@ int main(){
                 Arena::getInstance()->update();
             }
 
-            engineManager->drawScene();
+            engineManager->render();
             uiManager->render();
         }
         engineManager->stop();
         return 0;
     }
+
+    //Couldn't create window
     return 1;
 }

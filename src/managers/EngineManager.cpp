@@ -20,6 +20,8 @@
 
 #include "../headers/managers/EngineManager.hpp"
 #include "../headers/managers/InputManager.hpp"
+#include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 #include <iostream>
 using namespace irr;
 
@@ -45,32 +47,33 @@ EngineManager::~EngineManager(){}
 
 //Creates the game window
 bool EngineManager::createWindow(bool p_fullscreen){
+    
  
-    core::dimension2d<u32> t_windowSize;
- 
+    std::cout << "Check 1" << std::endl;
     if (p_fullscreen){
-        //Create a null device to get the desktop resolution
-        IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
-        t_windowSize = t_nulldevice->getVideoModeList()->getDesktopResolution();
-        t_nulldevice->drop();
+        m_window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "3KSC", sf::Style::Fullscreen);
     }
  
     else{
-        t_windowSize = core::dimension2d<u32>(640, 480);
+        m_window = new sf::RenderWindow(sf::VideoMode(640, 480), "3KSC");
+        std::cout << "Check 2" << std::endl;
     }
- 
-    //Use the desktop resolution to create a real device
-    m_device = createDevice(video::EDT_OPENGL, t_windowSize, 16, p_fullscreen, false, false, this);
+
+    m_device = createDevice(video::EDT_NULL);
     
     //If m_device is NULL
     if(!m_device)
         return false;
- 
-    m_device->setWindowCaption(L"3KSC");
+
+    m_window->setFramerateLimit(60);
+    glEnable(GL_TEXTURE_2D);
  
     //Create video driver and scene manager
+    std::cout << "Check 3" << std::endl;
     m_vDriver = m_device->getVideoDriver();
+    std::cout << "Check 4" << std::endl;
     m_scene = m_device->getSceneManager();
+    std::cout << "Check 5" << std::endl;
     
     return true;
 }
@@ -86,7 +89,8 @@ void EngineManager::createCamera(){
 
 //Returns whether the device is running or not
 bool EngineManager::running(){
-    return m_device->run();
+    //return m_device->run();
+    return m_window->isOpen();
 }
 
 //Drops the device
@@ -180,10 +184,18 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 }
 
 //Scene render function
-void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
-    m_scene->drawAll();
-    m_vDriver->endScene();
+void EngineManager::render(){
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
+   m_scene->drawAll();
+   m_vDriver->endScene();
+
+   //m_window->pushGLStates();
+   //
+   m_window->clear(sf::Color(79,195,247));
+   m_window->display();
+//
+   //m_window->popGLStates();
 }
 
 //Returns game window
