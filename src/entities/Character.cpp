@@ -26,9 +26,6 @@
 #include "../headers/managers/InputManager.hpp"
 #include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/managers/UIManager.hpp"
-#include "../headers/extra/Keycodes.hpp"
-#include "../headers/extra/Axis.hpp"
-#include "../headers/extra/Buttons.hpp"
 #include "../headers/entities/Arena.hpp"
 #include <iostream>
 
@@ -37,7 +34,6 @@ int Character::m_playerCount = 0;
 
 Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
-    m_joystick              = p_joystick;
     m_lives                 = 3;
     m_life                  = p_life;
     m_magic                 = p_magic;
@@ -75,9 +71,9 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
 
-    m_waitRelease           = false;
-
     m_playerIndex = Character::m_playerCount++;
+
+    InputManager::instance()->assignDevice(p_joystick, m_playerIndex);
 
     m_debugMode = p_debugMode;
 
@@ -169,110 +165,9 @@ bool Character::isJumping(){
     return m_jumping;
 }
 
-//Assing joystick with index p_joystick (-1 for Keyboard)
-void Character::assignJoystick(int p_joystick){
-    //Only assign to player 2 for now
-    if (m_playerIndex == 1 && m_joystick == -2)
-        m_joystick = p_joystick;
-}
-
-
-//Updates joysticks state and booleans for each action
-void Character::updateInputs(){
-    InputManager* t_inputManager = InputManager::instance();
-    
-    //Update joysticks state first
-    t_inputManager->updateJoysticks();
-    
-    //Keyboard input
-    if (m_joystick == -1){
-    
-    
-        /* Controls:
-            *   Left/Right or A/D           Movement
-            *   Space                       Jump
-            *   E                           Basic Attack
-            *   X + Up/W                    Up Special Attack
-            *   X + Down/S                  Down Special Attack
-            *   X + Left/Right or A/D       Side Special Attack
-            *   Q                           Pick item
-            *   B                           Block
-            *   LShift/RShift               Run
-            *   Z                           Ultimate Attack
-        */
-
-        m_upInput = t_inputManager->isKeyPressed(Key_W) || t_inputManager->isKeyPressed(Key_Up);
-        m_downInput = t_inputManager->isKeyPressed(Key_S) || t_inputManager->isKeyPressed(Key_Down);
-        m_leftInput = t_inputManager->isKeyPressed(Key_A) || t_inputManager->isKeyPressed(Key_Left);
-        m_rightInput = t_inputManager->isKeyPressed(Key_D) || t_inputManager->isKeyPressed(Key_Right);
-        
-        m_jumpInput = t_inputManager->isKeyPressed(Key_Space);
-        m_runInput = t_inputManager->isKeyPressed(Key_LShift) || t_inputManager->isKeyPressed(Key_RShift);
-        m_blockInput = t_inputManager->isKeyPressed(Key_B);
-        m_pickInput = t_inputManager->isKeyPressed(Key_Q);
-        
-        m_basicAttackInput = t_inputManager->isKeyPressed(Key_E);
-        m_specialAttackUpInput = t_inputManager->isKeyPressed(Key_X) && m_upInput;
-        m_specialAttackDownInput = t_inputManager->isKeyPressed(Key_X) && m_downInput;
-        m_specialAttackSideInput = t_inputManager->isKeyPressed(Key_X) && (m_leftInput || m_rightInput);
-        m_ultimateAttackInput = t_inputManager->isKeyPressed(Key_Z);
-    }
-
-    //Joystick input 
-    else if (m_joystick != -2){
-
-        /* Controls (XBOX 360 Controller):
-            *   Left/Right      Movement
-            *   A               Jump
-            *   X               Basic Attack
-            *   B + Up          Up Special Attack
-            *   B + Down        Down Special Attack
-            *   B + Left/Right  Side Special Attack
-            *   Y               Pick item
-            *   LB              Block
-            *   RB              Run
-            *   LT + RT         Ultimate Attack
-        */
-
-        m_upInput = t_inputManager->getAxisPosition(m_joystick, Axis_Y) <= -75 || t_inputManager->getAxisPosition(m_joystick, Axis_PovY) == -100;
-        m_downInput = t_inputManager->getAxisPosition(m_joystick, Axis_Y) >= 75 || t_inputManager->getAxisPosition(m_joystick, Axis_PovY) == 100;
-        m_leftInput = t_inputManager->getAxisPosition(m_joystick, Axis_X) <= -75 || t_inputManager->getAxisPosition(m_joystick, Axis_PovX) == -100;
-        m_rightInput = t_inputManager->getAxisPosition(m_joystick, Axis_X) >= 75 || t_inputManager->getAxisPosition(m_joystick, Axis_PovX) == 100;
-
-        m_jumpInput = t_inputManager->isButtonPressed(m_joystick, Button_A);
-        m_runInput = t_inputManager->isButtonPressed(m_joystick, Button_RB);
-        m_blockInput = t_inputManager->isButtonPressed(m_joystick, Button_LB);
-        m_pickInput = t_inputManager->isButtonPressed(m_joystick, Button_Y);
-
-        m_basicAttackInput = t_inputManager->isButtonPressed(m_joystick, Button_X);
-        m_specialAttackUpInput = t_inputManager->isButtonPressed(m_joystick, Button_B) && m_upInput;
-        m_specialAttackDownInput = t_inputManager->isButtonPressed(m_joystick, Button_B) && m_downInput;
-        m_specialAttackSideInput = t_inputManager->isButtonPressed(m_joystick, Button_B) && (m_leftInput || m_rightInput);
-        m_ultimateAttackInput = t_inputManager->getAxisPosition(m_joystick, Axis_Z) >= 0 && t_inputManager->getAxisPosition(m_joystick, Axis_R) >= 0;
-    }
-
-    //NPC
-    else{
-        m_upInput = false;
-        m_downInput = false;
-        m_leftInput = false;
-        m_rightInput = false;
-        
-        m_jumpInput = false;
-        m_runInput = false;
-        m_blockInput = false;
-        m_pickInput = false;
-        
-        m_basicAttackInput = false;
-        m_specialAttackUpInput = false;
-        m_specialAttackDownInput = false;
-        m_specialAttackSideInput = false;
-        m_ultimateAttackInput = false;
-    }
-}
 
 //Calls action functions when they are active
-void Character::checkActions(){
+void Character::doActions(){
     if (m_jumping)
         jump();
 
@@ -296,7 +191,7 @@ void Character::playerInput(){
     InputManager* t_inputManager = InputManager::instance();
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
-    updateInputs();
+    t_inputManager->updateInputs();
 
     //Change to keyboard
     //if (t_inputManager->isKeyPressed(Key_Return)){

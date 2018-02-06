@@ -37,12 +37,33 @@ class InputManager{
         bool    isButtonPressed(int p_joystick, int p_button);
         float   getAxisPosition(int p_joystick, int p_axis);
         void    updateJoysticks();
+        void    assignDevice(int p_device, int p_player, bool p_inGame = false);
+        void    updateInputs(int p_player);
     
     private:
         static InputManager*    m_instance;
         int**                   m_bindings;   
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];
+
+        //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
+        int*    m_inputDevices;
+
+        //Conditions for each Input (they change depending on keyboard/joystick control)
+        bool*   m_upInput;
+        bool*   m_downInput;
+        bool*   m_leftInput;
+        bool*   m_rightInput;
+        bool*   m_jumpInput;
+        bool*   m_runInput;
+        bool*   m_blockInput;
+        bool*   m_pickInput;
+        bool*   m_basicAttackInput;
+        bool*   m_specialAttackUpInput;
+        bool*   m_specialAttackDownInput;
+        bool*   m_specialAttackSideInput;
+        bool*   m_ultimateAttackInput;
+        bool*   m_waitRelease;
 };
 
 #endif
