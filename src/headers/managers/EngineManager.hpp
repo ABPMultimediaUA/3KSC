@@ -62,7 +62,8 @@ public:
     void drawScene();
 
     void load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
-    void loadArena(const char* arenaModelURL);
+    void loadSkybox(const char* p_skyboxURLs);
+    void loadArena(const char* p_arenaModelURL);
     void loadCharacter();
     void loadObject();
 
