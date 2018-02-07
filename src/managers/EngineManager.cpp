@@ -178,25 +178,25 @@ void EngineManager::loadArena(const char* p_arenaModelURL){
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
         t_node->setScale(core::vector3df(10,10,10));
 
-        std::cout<<"holaaaaaaaaaa"<<std::endl;
         //Add node to class node vector 
         m_entityNodes.push_back(t_node);
-        std::cout<<"Adiossssssss"<<std::endl;
     }
 }
 
-void EngineManager::loadSkybox(const char* p_skyboxURLs){
+void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
     m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
     scene::ISceneNode* t_skybox = m_scene->addSkyBoxSceneNode(
-        m_vDriver->getTexture(p_skyboxURLs),
-        m_vDriver->getTexture(p_skyboxURLs),
-        m_vDriver->getTexture(p_skyboxURLs),
-        m_vDriver->getTexture(p_skyboxURLs),
-        m_vDriver->getTexture(p_skyboxURLs),
-        m_vDriver->getTexture(p_skyboxURLs));
+        m_vDriver->getTexture(p_skyboxURLs[0]),
+        m_vDriver->getTexture(p_skyboxURLs[1]),
+        m_vDriver->getTexture(p_skyboxURLs[2]),
+        m_vDriver->getTexture(p_skyboxURLs[3]),
+        m_vDriver->getTexture(p_skyboxURLs[4]),
+        m_vDriver->getTexture(p_skyboxURLs[5]));
 
     m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
+
+    //m_entityNodes.push_back(t_skybox);
 }
 
 void EngineManager::loadCharacter(){

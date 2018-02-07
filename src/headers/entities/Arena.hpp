@@ -60,7 +60,7 @@ public:
 private: 
     static Arena* m_instance;
     static const char*  m_modelURLs[3];
-	static const char*  m_skyboxURLs[3];
+	static const char*  m_skyboxURLs[3][6];
     //Texture*    m_background;
     float       m_time;
     float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z

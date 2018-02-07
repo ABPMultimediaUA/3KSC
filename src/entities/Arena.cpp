@@ -27,7 +27,11 @@
 
 //Static members
 const char* Arena::m_modelURLs[3] = {"assets/models/arenas/fusfus_stadium.obj", "assets/models/arenas/Lago_sakura.obj", "assets/models/arenas/fabrica_kawaiisaki.obj"};
-const char* Arena::m_skyboxURLs[3] = {"assets/skyboxes/day_skybox.png", "assets/skyboxes/day_skybox.png", "assets/skyboxes/day_skybox.png"};
+const char* Arena::m_skyboxURLs[3][6] = {
+    {"assets/skyboxes/fusfus_skybox/cloudtop_up.tga", "assets/skyboxes/fusfus_skybox/cloudtop_dn.tga", "assets/skyboxes/fusfus_skybox/cloudtop_lt.tga", "assets/skyboxes/fusfus_skybox/cloudtop_rf.tga", "assets/skyboxes/fusfus_skybox/cloudtop_ft.tga", "assets/skyboxes/fusfus_skybox/cloudtop_bk.tga"},
+    {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"},
+    {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"}
+    };
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
@@ -56,7 +60,6 @@ void Arena::spawnPlayers(){
 
     m_playerCount = 0;
     m_players = new Character*[4];
-
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, 1, m_debugMode);
     m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -1, m_debugMode);
 
