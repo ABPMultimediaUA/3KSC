@@ -33,7 +33,7 @@
 //Static members
 int Character::m_playerCount = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
     m_lives                 = 3;
     m_life                  = p_life;
@@ -71,12 +71,10 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_specialAttackDown     = false;
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
-    
+
     m_waitRelease           = false;
 
     m_playerIndex = Character::m_playerCount++;
-
-    InputManager::instance()->assignDevice(p_joystick, m_playerIndex);
 
     m_debugMode = p_debugMode;
 
@@ -190,21 +188,22 @@ void Character::doActions(){
         ultimateAttack();
 }
 
-void Character::playerInput(){
+void Character::input(){
     InputManager* t_inputManager = InputManager::instance();
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
-    //t_inputManager->updateInputs();
+    t_inputManager->updateInputs(m_playerIndex);
 
-    //Change to keyboard
-    //if (t_inputManager->isKeyPressed(Key_Return)){
-    //    assignJoystick(-1);
-    //}
+    //Change to keyboard (RETURN KEY)
+    if (t_inputManager->isKeyPressed(58)){
+        t_inputManager->assignDevice(-1, m_playerIndex);
+    }
 
     //Change to joystick (START BUTTON)
-    //if (t_inputManager->isButtonPressed(0, Button_Start)){
-    //    assignJoystick(0);
-    //}
+    t_inputManager->updateJoysticks();
+    if (t_inputManager->isButtonPressed(0, 7)){
+        t_inputManager->assignDevice(0, m_playerIndex);
+    }
 
     //Exit
     //if(t_inputManager->isKeyPressed(Key_Escape))
@@ -310,7 +309,7 @@ void Character::playerInput(){
 }
 
 //Update state of player
-void Character::playerUpdate(){
+void Character::update(){
     if(!m_respawning)
         updatePosition(m_jumping);
     else{

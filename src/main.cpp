@@ -62,14 +62,11 @@ int main(){
             for (i = 0; i < playerCount; i++){
                 currentPlayer = Arena::getInstance()->getPlayer(i);
 
-                if(inputManager->eventHandler()){
-                    currentPlayer->playerInput();
-                }
-
-                //inputManager->eventHandler();
-                //currentPlayer->playerInput();
-                
-                currentPlayer->playerUpdate();
+                //if(inputManager->eventHandler()){
+                //    currentPlayer->input();
+                //}
+                currentPlayer->input();
+                currentPlayer->update();
                 Arena::getInstance()->update();
             }
 

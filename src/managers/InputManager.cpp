@@ -57,12 +57,11 @@ InputManager::InputManager(){
 
     //Devices initialization
     m_inputDevices[0]   = -1;
-    m_inputDevices[1]   = 0;
+    m_inputDevices[1]   = -2;
     m_inputDevices[2]   = -2;
     m_inputDevices[3]   = -2;
 
     //Conditions initializations
-
     for (int i = 0; i < 4; i++){
         m_upInput[i]                = false;
         m_downInput[i]              = false;
@@ -174,106 +173,105 @@ void InputManager::updateJoysticks(){
 }
 
 //Assing input device to player
-void InputManager::assignDevice(int p_device, int p_player, bool p_inGame){
-    //Only assign to player 2 while playing for now
-    if ((p_inGame && p_player == 1) || !p_inGame){
+void InputManager::assignDevice(int p_device, int p_player){
+    //Only change device of player 2 for now
+    if (p_player == 1){
         m_inputDevices[p_player] = p_device;
-        std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
-        //updateInputs(p_player);
+        //std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
     }
 }
 
 //Updates joysticks state and booleans for each action
-//void InputManager::updateInputs(int p_player){
-//    int t_inputDevice = m_inputDevices[p_player];
-//
-//    //Keyboard input
-//    if (t_inputDevice == -1){
-//    
-//        /* Controls:
-//            *   Left/Right or A/D           Movement
-//            *   Space                       Jump
-//            *   E                           Basic Attack
-//            *   X + Up/W                    Up Special Attack
-//            *   X + Down/S                  Down Special Attack
-//            *   X + Left/Right or A/D       Side Special Attack
-//            *   Q                           Pick item
-//            *   B                           Block
-//            *   LShift/RShift               Run
-//            *   Z                           Ultimate Attack
-//        */
-//
-//        m_upInput[p_player] = isKeyPressed(Key_W) || isKeyPressed(Key_Up);
-//        m_downInput[p_player] = isKeyPressed(Key_S) || isKeyPressed(Key_Down);
-//        m_leftInput[p_player] = isKeyPressed(Key_A) || isKeyPressed(Key_Left);
-//        m_rightInput[p_player] = isKeyPressed(Key_D) || isKeyPressed(Key_Right);
-//        
-//        m_jumpInput[p_player] = isKeyPressed(Key_Space);
-//        m_runInput[p_player] = isKeyPressed(Key_LShift) || isKeyPressed(Key_RShift);
-//        m_blockInput[p_player] = isKeyPressed(Key_B);
-//        m_pickInput[p_player] = isKeyPressed(Key_Q);
-//        
-//        m_basicAttackInput[p_player] = isKeyPressed(Key_E);
-//        m_specialAttackUpInput[p_player] = isKeyPressed(Key_X) && m_upInput[p_player];
-//        m_specialAttackDownInput[p_player] = isKeyPressed(Key_X) && m_downInput[p_player];
-//        m_specialAttackSideInput[p_player] = isKeyPressed(Key_X) && (m_leftInput[p_player] || m_rightInput[p_player]);
-//        m_ultimateAttackInput[p_player] = isKeyPressed(Key_Z);
-//    }
-//
-//    //Joystick input
-//    else if (t_inputDevice != -2){
-//        //Update joysticks state first
-//        updateJoysticks();
-//
-//        /* Controls (XBOX 360 Controller):
-//            *   Left/Right      Movement
-//            *   A               Jump
-//            *   X               Basic Attack
-//            *   B + Up          Up Special Attack
-//            *   B + Down        Down Special Attack
-//            *   B + Left/Right  Side Special Attack
-//            *   Y               Pick item
-//            *   LB              Block
-//            *   RB              Run
-//            *   LT + RT         Ultimate Attack
-//        */
-//
-//        m_upInput[p_player] = getAxisPosition(t_inputDevice, Axis_Y) <= -75 || getAxisPosition(t_inputDevice, Axis_PovY) == -100;
-//        m_downInput[p_player] = getAxisPosition(t_inputDevice, Axis_Y) >= 75 || getAxisPosition(t_inputDevice, Axis_PovY) == 100;
-//        m_leftInput[p_player] = getAxisPosition(t_inputDevice, Axis_X) <= -75 || getAxisPosition(t_inputDevice, Axis_PovX) == -100;
-//        m_rightInput[p_player] = getAxisPosition(t_inputDevice, Axis_X) >= 75 || getAxisPosition(t_inputDevice, Axis_PovX) == 100;
-//
-//        m_jumpInput[p_player] = isButtonPressed(t_inputDevice, Button_A);
-//        m_runInput[p_player] = isButtonPressed(t_inputDevice, Button_RB);
-//        m_blockInput[p_player] = isButtonPressed(t_inputDevice, Button_LB);
-//        m_pickInput[p_player] = isButtonPressed(t_inputDevice, Button_Y);
-//
-//        m_basicAttackInput[p_player] = isButtonPressed(t_inputDevice, Button_X);
-//        m_specialAttackUpInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && m_upInput[p_player];
-//        m_specialAttackDownInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && m_downInput[p_player];
-//        m_specialAttackSideInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && (m_leftInput[p_player] || m_rightInput[p_player]);
-//        m_ultimateAttackInput[p_player] = getAxisPosition(t_inputDevice, Axis_Z) >= 0 && getAxisPosition(m_joystick, Axis_R) >= 0;
-//    }
-//
-//    //NPC
-//    else{
-//        m_upInput[p_player] = false;
-//        m_downInput[p_player] = false;
-//        m_leftInput[p_player] = false;
-//        m_rightInput[p_player] = false;
-//        
-//        m_jumpInput[p_player] = false;
-//        m_runInput[p_player] = false;
-//        m_blockInput[p_player] = false;
-//        m_pickInput[p_player] = false;
-//        
-//        m_basicAttackInput[p_player] = false;
-//        m_specialAttackUpInput[p_player] = false;
-//        m_specialAttackDownInput[p_player] = false;
-//        m_specialAttackSideInput[p_player] = false;
-//        m_ultimateAttackInput[p_player] = false;
-//    }
-//}
+void InputManager::updateInputs(int p_player){
+    int t_inputDevice = m_inputDevices[p_player];
+
+    //Keyboard input
+    if (t_inputDevice == -1){
+    
+        /* Controls:
+            *   Left/Right or A/D           Movement
+            *   Space                       Jump
+            *   E                           Basic Attack
+            *   X + Up/W                    Up Special Attack
+            *   X + Down/S                  Down Special Attack
+            *   X + Left/Right or A/D       Side Special Attack
+            *   Q                           Pick item
+            *   B                           Block
+            *   LShift/RShift               Run
+            *   Z                           Ultimate Attack
+        */
+
+        m_upInput[p_player] = isKeyPressed(Key_W) || isKeyPressed(Key_Up);
+        m_downInput[p_player] = isKeyPressed(Key_S) || isKeyPressed(Key_Down);
+        m_leftInput[p_player] = isKeyPressed(Key_A) || isKeyPressed(Key_Left);
+        m_rightInput[p_player] = isKeyPressed(Key_D) || isKeyPressed(Key_Right);
+        
+        m_jumpInput[p_player] = isKeyPressed(Key_Space);
+        m_runInput[p_player] = isKeyPressed(Key_LShift) || isKeyPressed(Key_RShift);
+        m_blockInput[p_player] = isKeyPressed(Key_B);
+        m_pickInput[p_player] = isKeyPressed(Key_Q);
+        
+        m_basicAttackInput[p_player] = isKeyPressed(Key_E);
+        m_specialAttackUpInput[p_player] = isKeyPressed(Key_X) && m_upInput[p_player];
+        m_specialAttackDownInput[p_player] = isKeyPressed(Key_X) && m_downInput[p_player];
+        m_specialAttackSideInput[p_player] = isKeyPressed(Key_X) && (m_leftInput[p_player] || m_rightInput[p_player]);
+        m_ultimateAttackInput[p_player] = isKeyPressed(Key_Z);
+    }
+
+    //Joystick input
+    else if (t_inputDevice != -2){
+        //Update joysticks state first
+        updateJoysticks();
+
+        /* Controls (XBOX 360 Controller):
+            *   Left/Right      Movement
+            *   A               Jump
+            *   X               Basic Attack
+            *   B + Up          Up Special Attack
+            *   B + Down        Down Special Attack
+            *   B + Left/Right  Side Special Attack
+            *   Y               Pick item
+            *   LB              Block
+            *   RB              Run
+            *   LT + RT         Ultimate Attack
+        */
+
+        m_upInput[p_player] = getAxisPosition(t_inputDevice, Axis_Y) <= -75 || getAxisPosition(t_inputDevice, Axis_PovY) == -100;
+        m_downInput[p_player] = getAxisPosition(t_inputDevice, Axis_Y) >= 75 || getAxisPosition(t_inputDevice, Axis_PovY) == 100;
+        m_leftInput[p_player] = getAxisPosition(t_inputDevice, Axis_X) <= -75 || getAxisPosition(t_inputDevice, Axis_PovX) == -100;
+        m_rightInput[p_player] = getAxisPosition(t_inputDevice, Axis_X) >= 75 || getAxisPosition(t_inputDevice, Axis_PovX) == 100;
+
+        m_jumpInput[p_player] = isButtonPressed(t_inputDevice, Button_A);
+        m_runInput[p_player] = isButtonPressed(t_inputDevice, Button_RB);
+        m_blockInput[p_player] = isButtonPressed(t_inputDevice, Button_LB);
+        m_pickInput[p_player] = isButtonPressed(t_inputDevice, Button_Y);
+
+        m_basicAttackInput[p_player] = isButtonPressed(t_inputDevice, Button_X);
+        m_specialAttackUpInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && m_upInput[p_player];
+        m_specialAttackDownInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && m_downInput[p_player];
+        m_specialAttackSideInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && (m_leftInput[p_player] || m_rightInput[p_player]);
+        m_ultimateAttackInput[p_player] = getAxisPosition(t_inputDevice, Axis_Z) >= 0 && getAxisPosition(t_inputDevice, Axis_R) >= 0;
+    }
+
+    //NPC
+    else{
+        m_upInput[p_player] = false;
+        m_downInput[p_player] = false;
+        m_leftInput[p_player] = false;
+        m_rightInput[p_player] = false;
+        
+        m_jumpInput[p_player] = false;
+        m_runInput[p_player] = false;
+        m_blockInput[p_player] = false;
+        m_pickInput[p_player] = false;
+        
+        m_basicAttackInput[p_player] = false;
+        m_specialAttackUpInput[p_player] = false;
+        m_specialAttackDownInput[p_player] = false;
+        m_specialAttackSideInput[p_player] = false;
+        m_ultimateAttackInput[p_player] = false;
+    }
+}
 
 //Enables or disables inputs when key is pressed or released
 void InputManager::updateKeyInputs(int p_key, bool p_enableMode){
@@ -373,6 +371,17 @@ void InputManager::updateKeyInputs(int p_key, bool p_enableMode){
         }
     }
 }
+
+//Enables or disables inputs when button is pressed
+void InputManager::updateButtonInputs(int p_player, int p_button, bool p_enableMode){
+
+}
+
+//Enables or disables inputs when axis is moved
+void InputManager::updateAxisInputs(int p_player, int p_axis, bool p_enableMode){
+
+}
+
 
 //Returns true if the asked action's input is enabled
 bool InputManager::checkAction(int p_action, int p_player){

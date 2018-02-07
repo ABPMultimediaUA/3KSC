@@ -29,7 +29,7 @@
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
+    Character(char* p_name, float p_position[3], int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
     ~Character();
 	
     void            receiveAttack(int p_damage, bool p_block);
@@ -41,8 +41,8 @@ public:
     void            lookLeft();
     void            lookRight();
     bool            isJumping();
-    void            playerInput();
-    void            playerUpdate();
+    void            input();
+    void            update();
     void            respawn(float p_position[3]);
 
     virtual void    jump();

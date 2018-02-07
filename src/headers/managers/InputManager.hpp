@@ -40,13 +40,13 @@ class InputManager{
         bool    isButtonPressed(int p_joystick, int p_button);
         float   getAxisPosition(int p_joystick, int p_axis);
         void    updateJoysticks();
-        void    assignDevice(int p_device, int p_player, bool p_inGame = false);
+        void    assignDevice(int p_device, int p_player);
+        void    updateInputs(int p_player);        
+
         void    updateKeyInputs(int p_key, bool p_enableMode = true);
-        void    enableButtonInputs(int p_player, int p_button);
-        void    enableAxisInputs(int p_player, int p_axis);
-        void    disableKeyInputs(int p_key);
-        void    disableButtonInputs(int p_player, int p_button);
-        void    disableAxisInputs(int p_player, int p_axis);
+        void    updateButtonInputs(int p_player, int p_button, bool p_enableMode = true);
+        void    updateAxisInputs(int p_player, int p_axis, bool p_enableMode = true);
+        
         bool    checkAction(int p_action, int p_player);
     
     private:

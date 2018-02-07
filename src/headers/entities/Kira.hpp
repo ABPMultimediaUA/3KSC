@@ -27,7 +27,7 @@
 
 class Kira: public Character {
 public:
-    Kira(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
+    Kira(char* p_name, float p_position[3], bool p_debugMode);
     ~Kira();
     void    jump();
     void    basicAttack();
