@@ -22,8 +22,10 @@
 #define INPUT_MANAGER
 
 #include "../entities/Character.hpp"
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Joystick.hpp>
+#include <SFML/Window/Keyboard.hpp>//DELETE!!!
+#include <SFML/Window/Joystick.hpp>//DELETE!!!
+#include <SFML/Window/Window.hpp>
+#include <SFML/Window/Event.hpp>
 #include <SFML/System/Clock.hpp>
 
 class InputManager{
@@ -31,6 +33,7 @@ class InputManager{
         static InputManager* instance();
         InputManager();
         ~InputManager();
+        bool    eventHandler();
         void    onKeyPressed(int p_key);
         bool    isKeyPressed(int p_key);
         bool    isConnected(int p_joystick);
@@ -38,7 +41,13 @@ class InputManager{
         float   getAxisPosition(int p_joystick, int p_axis);
         void    updateJoysticks();
         void    assignDevice(int p_device, int p_player, bool p_inGame = false);
-        void    updateInputs(int p_player);
+        void    updateKeyInputs(int p_key, bool p_enableMode = true);
+        void    enableButtonInputs(int p_player, int p_button);
+        void    enableAxisInputs(int p_player, int p_axis);
+        void    disableKeyInputs(int p_key);
+        void    disableButtonInputs(int p_player, int p_button);
+        void    disableAxisInputs(int p_player, int p_axis);
+        bool    checkAction(int p_action, int p_player);
     
     private:
         static InputManager*    m_instance;
@@ -46,24 +55,30 @@ class InputManager{
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];
 
+        //Event handling
+        sf::Window* m_window;             
+        sf::Event*  m_event;
+
         //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
-        int*    m_inputDevices;
+        int     m_inputDevices[4];
 
         //Conditions for each Input (they change depending on keyboard/joystick control)
-        bool*   m_upInput;
-        bool*   m_downInput;
-        bool*   m_leftInput;
-        bool*   m_rightInput;
-        bool*   m_jumpInput;
-        bool*   m_runInput;
-        bool*   m_blockInput;
-        bool*   m_pickInput;
-        bool*   m_basicAttackInput;
-        bool*   m_specialAttackUpInput;
-        bool*   m_specialAttackDownInput;
-        bool*   m_specialAttackSideInput;
-        bool*   m_ultimateAttackInput;
-        bool*   m_waitRelease;
+        bool    m_upInput[4];
+        bool    m_downInput[4];
+        bool    m_leftInput[4];
+        bool    m_rightInput[4];
+        bool    m_jumpInput[4];
+        bool    m_runInput[4];
+        bool    m_blockInput[4];
+        bool    m_pickInput[4];
+        bool    m_basicAttackInput[4];
+        bool    m_specialAttackUpInput[4];
+        bool    m_specialAttackDownInput[4];
+        bool    m_specialAttackSideInput[4];
+        bool    m_ultimateAttackInput[4];
+        bool    m_waitRelease[4];
+
+        int     getKeyboardPlayer();
 };
 
 #endif

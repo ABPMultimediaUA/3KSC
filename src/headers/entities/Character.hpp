@@ -106,9 +106,8 @@ protected:
     bool            m_debugMode;
 
 private:
+    bool            m_waitRelease;
     void            doActions();
-    int             m_joystick;                 //[0,3]: Joystick   -1: Keyboard   -2: NPC
-
 };
 
 #endif

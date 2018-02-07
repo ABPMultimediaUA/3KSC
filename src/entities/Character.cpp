@@ -27,6 +27,7 @@
 #include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/managers/UIManager.hpp"
 #include "../headers/entities/Arena.hpp"
+#include "../headers/extra/Actions.hpp"
 #include <iostream>
 
 //Static members
@@ -70,6 +71,8 @@ Character::Character(char* p_name, float p_position[3], int p_joystick, int p_li
     m_specialAttackDown     = false;
     m_specialAttackSide     = false;
     m_ultimateAttack        = false;
+    
+    m_waitRelease           = false;
 
     m_playerIndex = Character::m_playerCount++;
 
@@ -191,7 +194,7 @@ void Character::playerInput(){
     InputManager* t_inputManager = InputManager::instance();
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
-    t_inputManager->updateInputs();
+    //t_inputManager->updateInputs();
 
     //Change to keyboard
     //if (t_inputManager->isKeyPressed(Key_Return)){
@@ -199,22 +202,22 @@ void Character::playerInput(){
     //}
 
     //Change to joystick (START BUTTON)
-    if (t_inputManager->isButtonPressed(0, Button_Start)){
-        assignJoystick(0);
-    }
+    //if (t_inputManager->isButtonPressed(0, Button_Start)){
+    //    assignJoystick(0);
+    //}
 
     //Exit
-    if(t_inputManager->isKeyPressed(Key_Escape))
-        EngineManager::instance()->stop();
+    //if(t_inputManager->isKeyPressed(Key_Escape))
+    //    EngineManager::instance()->stop();
 
     //Block
-    m_blocking = m_blockInput;
+    m_blocking = t_inputManager->checkAction(Action_Block, m_playerIndex);
 
     if(!m_stunned && !m_blocking && m_alive)
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-        if(m_jumpInput){
+        if(t_inputManager->checkAction(Action_Jump, m_playerIndex)){
             if (!m_waitRelease){
                 m_jumping = true;
                 m_waitRelease = true;
@@ -222,7 +225,7 @@ void Character::playerInput(){
         }
 
         //Basic Attack
-        else if(m_basicAttackInput){
+        else if(t_inputManager->checkAction(Action_BasicAttack, m_playerIndex)){
             if (!m_waitRelease){
                 m_basicAttack = true;
                 m_waitRelease = true;
@@ -230,7 +233,7 @@ void Character::playerInput(){
         }
 
         //Special attack up
-        else if(m_specialAttackUpInput){
+        else if(t_inputManager->checkAction(Action_SpecialAttackUp, m_playerIndex)){
             if (!m_waitRelease){
                 m_specialAttackUp = true;
                 m_waitRelease = true;
@@ -238,7 +241,7 @@ void Character::playerInput(){
         }
 
         //Special attack down
-        else if(m_specialAttackDownInput){
+        else if(t_inputManager->checkAction(Action_SpecialAttackDown, m_playerIndex)){
             if (!m_waitRelease){
                 m_specialAttackDown = true;
                 m_waitRelease = true;
@@ -246,7 +249,7 @@ void Character::playerInput(){
         }
 
         //Special attack side
-        else if(m_specialAttackSideInput){
+        else if(t_inputManager->checkAction(Action_SpecialAttackSide, m_playerIndex)){
             if (!m_waitRelease){
                 m_specialAttackSide = true;
                 m_waitRelease = true;
@@ -254,7 +257,7 @@ void Character::playerInput(){
         }
 
         //Ultimate Attack
-        else if(m_ultimateAttackInput){
+        else if(t_inputManager->checkAction(Action_UltimateAttack, m_playerIndex)){
             if (!m_waitRelease){
                 m_ultimateAttack = true;
                 m_waitRelease = true;
@@ -269,7 +272,7 @@ void Character::playerInput(){
         m_runningFactor = 1;
 
         //Sprint
-        if(m_runInput){
+        if(t_inputManager->checkAction(Action_Run, m_playerIndex)){
             if(m_winged){
                 m_runningFactor = 1.5f;
             }
@@ -280,30 +283,30 @@ void Character::playerInput(){
         }
 
         //Left
-        if(m_leftInput){
+        if(t_inputManager->checkAction(Action_Left, m_playerIndex)){
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
             lookLeft();
         }
 
         //Right
-        if(m_rightInput){
+        if(t_inputManager->checkAction(Action_Right, m_playerIndex)){
             moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
             lookRight();
         }
 
         //Block
-        //m_blocking = m_blockInput;
+        //m_blocking = m_block t_inputManager->checkAction(Action_, m_playerIndex;
         //if (m_blocking){
         //    //std::cout << m_name << " is blocking" << std::endl;
         //}
 
         //Pick object
-        if (m_pickInput){
+        if (t_inputManager->checkAction(Action_Pick, m_playerIndex)){
             pickItem();
         }
 
     }
-    checkActions();    
+    doActions();    
 }
 
 //Update state of player
