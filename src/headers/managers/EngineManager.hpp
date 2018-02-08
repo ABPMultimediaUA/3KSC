@@ -64,7 +64,7 @@ public:
     void setRotation(int p_id, float p_degrees);
     void scale(int p_id, float p_scale[3]);
     
-    void drawScene();
+    void render();
 
     sf::RenderWindow* getWindow();
     float getFrameDeltaTime();
