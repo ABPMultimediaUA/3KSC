@@ -27,7 +27,7 @@
 
 class Luka: public Character {
 public:
-	Luka(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
+	Luka(char* p_name, float p_position[3], bool p_debugMode);
     ~Luka();
     void    jump();
     void    basicAttack();

@@ -20,7 +20,6 @@
 *********************************************************************************
 *********************************************************************************/
 
-//Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
 #include <iostream>
 
@@ -50,7 +49,7 @@ int main(){
         Character* currentPlayer;
         
         UIManager*      uiManager = UIManager::instance();
-
+        
         //Game main loop
         while (engineManager->running()){
             //sf::Context context;
@@ -63,8 +62,11 @@ int main(){
             for (i = 0; i < playerCount; i++){
                 currentPlayer = Arena::getInstance()->getPlayer(i);
 
-                currentPlayer->playerInput();
-                currentPlayer->playerUpdate();
+                //if(inputManager->eventHandler()){
+                //    currentPlayer->input();
+                //}
+                currentPlayer->input();
+                currentPlayer->update();
                 Arena::getInstance()->update();
             }
 
