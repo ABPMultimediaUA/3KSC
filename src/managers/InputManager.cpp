@@ -44,8 +44,8 @@ InputManager::InputManager(){
     m_bindings = 0;
 
     //Event handling
-    m_window    = new sf::Window();
-    m_event     = new sf::Event();
+    m_window    = new sf::Window(sf::VideoMode(200, 200), "EVENTS");
+    m_event     = new   sf::Event();
 
     //Key list
     sf::Keyboard::Key t_keys[101] = {sf::Keyboard::A, sf::Keyboard::B, sf::Keyboard::C, sf::Keyboard::D, sf::Keyboard::E, sf::Keyboard::F, sf::Keyboard::G, sf::Keyboard::H, sf::Keyboard::I, sf::Keyboard::J, sf::Keyboard::K, sf::Keyboard::L, sf::Keyboard::M, sf::Keyboard::N, sf::Keyboard::O, sf::Keyboard::P, sf::Keyboard::Q, sf::Keyboard::R, sf::Keyboard::S, sf::Keyboard::T, sf::Keyboard::U, sf::Keyboard::V, sf::Keyboard::W, sf::Keyboard::X, sf::Keyboard::Y, sf::Keyboard::Z, sf::Keyboard::Num0, sf::Keyboard::Num1, sf::Keyboard::Num2, sf::Keyboard::Num3, sf::Keyboard::Num4, sf::Keyboard::Num5, sf::Keyboard::Num6, sf::Keyboard::Num7, sf::Keyboard::Num8, sf::Keyboard::Num9, sf::Keyboard::Escape, sf::Keyboard::LControl, sf::Keyboard::LShift, sf::Keyboard::LAlt, sf::Keyboard::LSystem , sf::Keyboard::RControl, sf::Keyboard::RShift, sf::Keyboard::RAlt, sf::Keyboard::RSystem , sf::Keyboard::Menu, sf::Keyboard::LBracket, sf::Keyboard::RBracket, sf::Keyboard::SemiColon , sf::Keyboard::Comma, sf::Keyboard::Period, sf::Keyboard::Quote, sf::Keyboard::Slash, sf::Keyboard::BackSlash, sf::Keyboard::Tilde, sf::Keyboard::Equal, sf::Keyboard::Dash, sf::Keyboard::Space, sf::Keyboard::Return, sf::Keyboard::BackSpace, sf::Keyboard::Tab, sf::Keyboard::PageUp, sf::Keyboard::PageDown, sf::Keyboard::End, sf::Keyboard::Home, sf::Keyboard::Insert, sf::Keyboard::Delete, sf::Keyboard::Add, sf::Keyboard::Subtract, sf::Keyboard::Multiply, sf::Keyboard::Divide, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Numpad0, sf::Keyboard::Numpad1, sf::Keyboard::Numpad2, sf::Keyboard::Numpad3, sf::Keyboard::Numpad4, sf::Keyboard::Numpad5, sf::Keyboard::Numpad6, sf::Keyboard::Numpad7, sf::Keyboard::Numpad8, sf::Keyboard::Numpad9, sf::Keyboard::F1, sf::Keyboard::F2, sf::Keyboard::F3, sf::Keyboard::F4, sf::Keyboard::F5, sf::Keyboard::F6, sf::Keyboard::F7, sf::Keyboard::F8, sf::Keyboard::F9, sf::Keyboard::F10, sf::Keyboard::F11, sf::Keyboard::F12, sf::Keyboard::F13, sf::Keyboard::F14, sf::Keyboard::F15, sf::Keyboard::Pause};
@@ -78,7 +78,6 @@ InputManager::InputManager(){
         m_specialAttackDownInput[i] = false;
         m_specialAttackSideInput[i] = false;
         m_ultimateAttackInput[i]    = false;
-        m_waitRelease[i]            = false;
     }
 }
 
@@ -90,10 +89,11 @@ bool InputManager::eventHandler(){
     bool t_eventReceived = false;
 
     while (m_window->pollEvent(*m_event)){
+        //std::cout << "Event" << std::endl;
         switch (m_event->type){
             //Keyboard key pressed
             case sf::Event::KeyPressed:{
-                std::cout << "Check" << std::endl;
+                std::cout << "KeyPressed" << std::endl;
                 updateKeyInputs(m_event->key.code, true);
 
                 t_eventReceived = true;
@@ -101,7 +101,8 @@ bool InputManager::eventHandler(){
             }
 
             //Keyboard key released
-            case sf::Event::KeyReleased:{         
+            case sf::Event::KeyReleased:{
+                std::cout << "KeyReleased" << std::endl;         
                 updateKeyInputs(m_event->key.code, false);
                 
                 t_eventReceived = true;
@@ -276,7 +277,6 @@ void InputManager::updateInputs(int p_player){
 //Enables or disables inputs when key is pressed or released
 void InputManager::updateKeyInputs(int p_key, bool p_enableMode){
     int t_keyboardPlayer = getKeyboardPlayer();
-    std::cout << t_keyboardPlayer << std::endl;
 
     if (t_keyboardPlayer != -1){
         switch (p_key){
@@ -346,18 +346,20 @@ void InputManager::updateKeyInputs(int p_key, bool p_enableMode){
             
             //Special Attacks
             case Key_X:{
+                m_specialAttackInput[t_keyboardPlayer] = p_enableMode;
+                
                 //Special Attack up
-                if (m_upInput[t_keyboardPlayer]){
+                if (m_specialAttackInput[t_keyboardPlayer] && m_upInput[t_keyboardPlayer]){
                     m_specialAttackUpInput[t_keyboardPlayer] = p_enableMode;
                 }
                 
                 //Special Attack Down
-                else if (m_downInput[t_keyboardPlayer]){
+                else if (m_specialAttackInput[t_keyboardPlayer] && m_downInput[t_keyboardPlayer]){
                     m_specialAttackDownInput[t_keyboardPlayer] = p_enableMode;
                 }
                 
                 //Special Attack Side
-                else if (m_leftInput[t_keyboardPlayer] || m_rightInput[t_keyboardPlayer]){
+                else if (m_specialAttackInput[t_keyboardPlayer] && (m_leftInput[t_keyboardPlayer] || m_rightInput[t_keyboardPlayer])){
                     m_specialAttackSideInput[t_keyboardPlayer] = p_enableMode;
                 }
                 break;

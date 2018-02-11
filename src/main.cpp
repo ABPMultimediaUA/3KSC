@@ -65,6 +65,8 @@ int main(){
                 //if(inputManager->eventHandler()){
                 //    currentPlayer->input();
                 //}
+                
+                inputManager->eventHandler();
                 currentPlayer->input();
                 currentPlayer->update();
                 Arena::getInstance()->update();

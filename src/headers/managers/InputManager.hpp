@@ -72,11 +72,11 @@ class InputManager{
         bool    m_blockInput[4];
         bool    m_pickInput[4];
         bool    m_basicAttackInput[4];
+        bool    m_specialAttackInput[4];
         bool    m_specialAttackUpInput[4];
         bool    m_specialAttackDownInput[4];
         bool    m_specialAttackSideInput[4];
         bool    m_ultimateAttackInput[4];
-        bool    m_waitRelease[4];
 
         int     getKeyboardPlayer();
 };

@@ -192,7 +192,7 @@ void Character::input(){
     InputManager* t_inputManager = InputManager::instance();
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
-    t_inputManager->updateInputs(m_playerIndex);
+    //t_inputManager->updateInputs(m_playerIndex);
 
     //Change to keyboard (RETURN KEY)
     if (t_inputManager->isKeyPressed(58)){
