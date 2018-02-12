@@ -37,6 +37,7 @@ EngineManager* EngineManager::instance(){
 
 //Constructor
 EngineManager::EngineManager(){
+    m_moveCamera = false;
     
 }
 
@@ -76,11 +77,81 @@ bool EngineManager::createWindow(bool p_fullscreen){
 }
 
 //Creates a camera
-void EngineManager::createCamera(){
-    scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
-    if(cameraNode){
-        cameraNode->setPosition(core::vector3df(0,90,-150));
-        cameraNode->setTarget(core::vector3df(0,50,0));
+void EngineManager::createCamera(float p_cameraPosition[3], float p_tarjet[3]){
+    m_cameraNode = m_scene->addCameraSceneNode();
+    if(m_cameraNode){
+        m_resetPosition[0] = m_cameraPosition[0] = p_cameraPosition[0];
+        m_resetPosition[1] = m_cameraPosition[1] = p_cameraPosition[1];
+        m_resetPosition[2] = m_cameraPosition[2] = p_cameraPosition[2];
+        m_resetPosition[3] = m_cameraPosition[3] = p_tarjet[0];
+        m_resetPosition[4] = m_cameraPosition[4] = p_tarjet[1];
+        m_resetPosition[5] = m_cameraPosition[5] = p_tarjet[2];
+        m_cameraNode->setPosition(core::vector3df(p_cameraPosition[0],p_cameraPosition[1],p_cameraPosition[2]));
+        m_cameraNode->setTarget(core::vector3df(p_tarjet[0],p_tarjet[1],p_tarjet[2]));
+    }
+}
+
+void EngineManager::moveCamera(float p_posX, float p_posY, float p_posZ){
+    if(m_cameraNode){
+        m_moveCamera = true;
+        m_amountTime = 0.0;
+
+        m_newCameraPosition[0] = p_posX;
+        m_newCameraPosition[1] = p_posY+35;
+        m_newCameraPosition[2] = p_posZ-75;
+        m_newCameraPosition[3] = p_posX;
+        m_newCameraPosition[4] = p_posY;
+        m_newCameraPosition[5] = p_posZ;
+
+        //m_cameraNode->setPosition(core::vector3df(p_posX, p_posY+35,p_posZ-75));
+        //m_cameraNode->setTarget(core::vector3df(p_posX, p_posY,p_posZ));
+    }
+}
+
+void EngineManager::resetCamera(){
+    if(m_cameraNode){
+        m_moveCamera = true;
+        m_amountTime = 0.0;
+
+        m_newCameraPosition[0] = m_resetPosition[0];
+        m_newCameraPosition[1] = m_resetPosition[1];
+        m_newCameraPosition[2] = m_resetPosition[2];
+        m_newCameraPosition[3] = m_resetPosition[3];
+        m_newCameraPosition[4] = m_resetPosition[4];
+        m_newCameraPosition[5] = m_resetPosition[5];
+        
+        //m_cameraNode->setPosition(core::vector3df(m_resetPosition[0], m_resetPosition[1], m_resetPosition[2]));
+        //m_cameraNode->setTarget(core::vector3df(m_resetPosition[3], m_resetPosition[4], m_resetPosition[5]));
+    }
+}
+
+void EngineManager::updateCamera(){
+    if(m_cameraNode && m_moveCamera){
+        float t_maxTime = 1.0;
+        m_amountTime += getFrameDeltaTime();
+
+        float posXCamera = (t_maxTime-m_amountTime)*m_cameraPosition[0] + m_amountTime*m_newCameraPosition[0];
+        float posYCamera = (t_maxTime-m_amountTime)*m_cameraPosition[1] + m_amountTime*m_newCameraPosition[1];
+        float posZCamera = (t_maxTime-m_amountTime)*m_cameraPosition[2] + m_amountTime*m_newCameraPosition[2];
+
+        float posXTarget = (t_maxTime-m_amountTime)*m_cameraPosition[3] + m_amountTime*m_newCameraPosition[3];
+        float posYTarget = (t_maxTime-m_amountTime)*m_cameraPosition[4] + m_amountTime*m_newCameraPosition[4];
+        float posZTarget = (t_maxTime-m_amountTime)*m_cameraPosition[5] + m_amountTime*m_newCameraPosition[5];
+
+        m_cameraNode->setPosition(core::vector3df(posXCamera, posYCamera, posZCamera));
+        m_cameraNode->setTarget(core::vector3df(posXTarget, posYTarget, posZTarget));
+
+        if(m_amountTime >= t_maxTime){
+            m_amountTime = 0.0;
+            m_moveCamera = false;
+
+            m_cameraPosition[0] = m_newCameraPosition[0];
+            m_cameraPosition[1] = m_newCameraPosition[1];
+            m_cameraPosition[2] = m_newCameraPosition[2];
+            m_cameraPosition[3] = m_newCameraPosition[3];
+            m_cameraPosition[4] = m_newCameraPosition[4];
+            m_cameraPosition[5] = m_newCameraPosition[5];
+        }
     }
 }
 
