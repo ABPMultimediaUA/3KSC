@@ -37,7 +37,9 @@ int main(){
         estadio->spawnPlayers();
         estadio->spawnItems();
 
-        engineManager->createCamera();
+        float cameraPosition[3] = {0, 90, -150};
+        float cameraTarget[3] = {0, 50, 0};
+        engineManager->createCamera(cameraPosition, cameraTarget);
         engineManager->timeStamp();
 
         // Play music
@@ -70,6 +72,7 @@ int main(){
                 Arena::getInstance()->update();
             }
 
+            engineManager->updateCamera();
             engineManager->drawScene();
             uiManager->render();
         }
