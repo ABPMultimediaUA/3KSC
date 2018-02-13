@@ -29,7 +29,7 @@
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_joystick, int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
+    Character(char* p_name, float p_position[3], int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
     ~Character();
 	
     void            receiveAttack(int p_damage, bool p_block);
@@ -41,9 +41,8 @@ public:
     void            lookLeft();
     void            lookRight();
     bool            isJumping();
-    void            assignJoystick(int p_joystick);
-    void            playerInput();
-    void            playerUpdate();
+    void            input();
+    void            update();
     void            respawn(float p_position[3]);
 
     virtual void    jump();
@@ -107,26 +106,8 @@ protected:
     bool            m_debugMode;
 
 private:
-    //Conditions for each Input (they change depending on keyboard/joystick control)
-    bool            m_upInput;
-    bool            m_downInput;
-    bool            m_leftInput;
-    bool            m_rightInput;
-    bool            m_jumpInput;
-    bool            m_runInput;
-    bool            m_blockInput;
-    bool            m_pickInput;
-    bool            m_basicAttackInput;
-    bool            m_specialAttackUpInput;
-    bool            m_specialAttackDownInput;
-    bool            m_specialAttackSideInput;
-    bool            m_ultimateAttackInput;
     bool            m_waitRelease;
-
-    void            updateInputs();
-    void            checkActions();
-    int             m_joystick;                 //[0,3]: Joystick   -1: Keyboard   -2: NPC
-
+    void            doActions();
 };
 
 #endif
