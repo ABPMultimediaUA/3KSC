@@ -36,6 +36,7 @@ PhysicsManager* PhysicsManager::instance(){
 
 //Constructor
 PhysicsManager::PhysicsManager(){
+    //b2Vec2 gravity(0.0f, 0.0f);
     b2Vec2 gravity(0.0f, -10.0f);
 
     m_world = new b2World(gravity);
@@ -71,7 +72,7 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
     int *t_id = static_cast<int*>(m_body->GetUserData());
 }
 
-void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]){
+void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex){
     m_bodyDef = new b2BodyDef();
     m_bodyDef->position.Set(-90.0f, 0.0f);
     
@@ -79,15 +80,46 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
     m_body->SetUserData(p_id);
 
     m_polygonShape = new b2PolygonShape();
-    //scaleX = 50
-    m_polygonShape->SetAsBox(50, 1);
-    m_body->CreateFixture(m_polygonShape, 0.0f);
+    if(p_arenaIndex == 0){
+        //scaleX = 50
+        //PLATAFORMAS DEL MAPA 1
+        m_polygonShape->SetAsBox(50, 1);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
 
-    m_polygonShape->SetAsBox(50, 1, b2Vec2(180,0), 0);
-    m_body->CreateFixture(m_polygonShape, 0.0f);
-  
-    m_polygonShape->SetAsBox(50, 1, b2Vec2(90,45), 0);
-    m_body->CreateFixture(m_polygonShape, 0.0f);
+        m_polygonShape->SetAsBox(50, 1, b2Vec2(180,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+      
+        m_polygonShape->SetAsBox(50, 1, b2Vec2(90,45), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+    }else if(p_arenaIndex == 1){
+        //Nenufar izquierda
+        m_polygonShape->SetAsBox(20, 1, b2Vec2(-25,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Nenufar derecha
+        m_polygonShape->SetAsBox(20, 1, b2Vec2(200,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+
+        //Plataforma central
+        m_polygonShape->SetAsBox(80, 1, b2Vec2(90,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Arbol izquierda rama grande
+        m_polygonShape->SetAsBox(32, 1, b2Vec2(-9,40), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Arbol izquierda rama pequeña
+        m_polygonShape->SetAsBox(16, 1, b2Vec2(-9,60), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+
+        //Arbol derecha rama grande
+        m_polygonShape->SetAsBox(32, 1, b2Vec2(182,40), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Arbol derecha rama pequeña
+        m_polygonShape->SetAsBox(8, 1, b2Vec2(172,65), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+    }
 }
 
 b2World* PhysicsManager::getWorld(){
