@@ -71,7 +71,7 @@ public:
     void deleteEntity(int p_id);
     void load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
     void loadArena(const char* arenaModelURL);
-
+    void loadSkybox(const char* p_skyboxURLs[6]); 
     void moveEntity(Entity* p_entity);
     void setRotation(int p_id, float p_degrees);
     void scale(int p_id, float p_scale[3]);

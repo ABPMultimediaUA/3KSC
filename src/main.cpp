@@ -50,8 +50,8 @@ int main(){
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
         
-        UIManager*      uiManager = UIManager::instance();
-        
+        UIManager* uiManager = UIManager::instance();
+
         //Game main loop
         while (engineManager->running()){
             //sf::Context context;
