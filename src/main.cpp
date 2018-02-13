@@ -32,7 +32,7 @@ int main(){
     if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, false);
+        Arena* estadio = new Arena(position, scale, 1, false);
         
         estadio->spawnPlayers();
         estadio->spawnItems();

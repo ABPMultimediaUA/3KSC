@@ -219,7 +219,7 @@ void EngineManager::loadArena(const char* p_arenaModelURL){
 
     if (t_map){
         t_node = m_scene->addOctreeSceneNode(t_map->getMesh(0), 0, -1, 1024);
-        t_node->setPosition(core::vector3df(0,0,0));
+        t_node->setPosition(core::vector3df(0,0,10));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
         t_node->setScale(core::vector3df(10,10,10));
 

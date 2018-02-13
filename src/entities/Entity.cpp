@@ -68,14 +68,14 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
         //Arenas
         case 1:{
             EngineManager::instance()->loadArena(p_modelURL);
-            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, t_scale);
+            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, t_scale, 0);
             break;
         }
     }
 }
 
 //Create entity with model (free scale)
-Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type){
+Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type, int p_arenaIndex){
     m_id = m_entityCount++;
 
     switch (p_type){
@@ -97,7 +97,7 @@ Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, in
         //Arenas
         case 1:{
             EngineManager::instance()->loadArena(p_modelURL);
-            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale);
+            PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale, p_arenaIndex);
             break;
         }
     }
