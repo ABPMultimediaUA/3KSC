@@ -22,6 +22,7 @@
 #define ENGINE_MANAGER
 
 #include <irrlicht.h>
+//#include <SFML/Graphics/RenderWindow.hpp>
 #include <vector>
 #include "../entities/Entity.hpp"
 
@@ -34,35 +35,57 @@ private:
     irr::video::IVideoDriver*               m_vDriver;
     irr::scene::ISceneManager*              m_scene;
 
+    irr::scene::ICameraSceneNode* m_cameraNode;
+
     irr::u32        m_prevTime;
     irr::u32        m_nowTime;
     irr::f32        m_frameDeltaTime;
+
+    float   m_resetPosition[6];
+    float   m_cameraPosition[6];
+    float   m_newCameraPosition[6];
+    bool    m_moveCamera;
+    float   m_amountTime;
+
+    //sf::RenderWindow* m_window;
 
 public:
     static EngineManager* instance();
     EngineManager();
     ~EngineManager();
 
+    bool createWindow(bool p_fullscreen = true);
+    bool running();
+    void stop();
+
     virtual bool OnEvent(const irr::SEvent& p_event); 
     void timeStamp();
     float updateFrameDeltaTime();
 
-    bool createWindow(bool p_fullscreen = true);
-    void createCamera();
-    bool running();
-    void stop();
-
-    irr::video::IVideoDriver* getVideoDriver();
-    irr::scene::ISceneManager* getSceneManager();
+    void createCamera(float p_cameraPosition[3], float p_tarjet[3]);
+    void moveCamera(float p_posX, float p_posY, float p_posZ);
+    void resetCamera();
+    void updateCamera();
 
     void createEntity(int p_id, float p_position[3]);
     void deleteEntity(int p_id);
-    void scale(int p_id, float p_scale[3]);
-    void setRotation(int p_id, float p_degrees);
-    void drawScene();
-
     void load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
     void loadArena(const char* arenaModelURL);
+    void loadSkybox(const char* p_skyboxURLs[6]); 
+    void moveEntity(Entity* p_entity);
+    void setRotation(int p_id, float p_degrees);
+    void scale(int p_id, float p_scale[3]);
+    
+    void drawScene();
+
+    //sf::RenderWindow* getWindow();
+    float getFrameDeltaTime();
+    irr::scene::ISceneManager* getSceneManager();
+    irr::scene::ISceneNode* getEntityNode(int p_id);
+
+    irr::video::IVideoDriver* getVideoDriver();
+    irr::IrrlichtDevice* getDevice();
+
     void loadCharacter();
     void loadObject();
 
@@ -72,14 +95,6 @@ public:
     void drawArena();
     void drawCharacter();
     void drawObject();
-
-    void moveEntity(Entity* p_entity);
-    
-    irr::scene::ISceneNode* getEntityNode(int p_id);
-    irr::IrrlichtDevice* getDevice();
-    float getFrameDeltaTime();
-
-
 };
 
 #endif

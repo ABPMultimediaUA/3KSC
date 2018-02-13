@@ -20,7 +20,6 @@
 *********************************************************************************
 *********************************************************************************/
 
-//Iostream esta incluido en el .hpp
 #include "headers/main.hpp"
 #include <iostream>
 
@@ -33,12 +32,14 @@ int main(){
     if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, false);
+        Arena* estadio = new Arena(position, scale, 1, false);
         
         estadio->spawnPlayers();
         estadio->spawnItems();
 
-        engineManager->createCamera();
+        float cameraPosition[3] = {0, 90, -150};
+        float cameraTarget[3] = {0, 50, 0};
+        engineManager->createCamera(cameraPosition, cameraTarget);
         engineManager->timeStamp();
 
         // Play music
@@ -49,7 +50,7 @@ int main(){
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
         
-        UIManager*      uiManager = UIManager::instance();
+        UIManager* uiManager = UIManager::instance();
 
         //Game main loop
         while (engineManager->running()){
@@ -63,11 +64,15 @@ int main(){
             for (i = 0; i < playerCount; i++){
                 currentPlayer = Arena::getInstance()->getPlayer(i);
 
-                currentPlayer->playerInput();
-                currentPlayer->playerUpdate();
+                //if(inputManager->eventHandler()){
+                //    currentPlayer->input();
+                //}
+                currentPlayer->input();
+                currentPlayer->update();
                 Arena::getInstance()->update();
             }
 
+            engineManager->updateCamera();
             engineManager->drawScene();
             uiManager->render();
         }
