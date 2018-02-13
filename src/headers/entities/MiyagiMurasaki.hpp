@@ -27,7 +27,7 @@
 
 class MiyagiMurasaki: public Character {
 public:
-	MiyagiMurasaki(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
+	MiyagiMurasaki(char* p_name, float p_position[3], bool p_debugMode);
     ~MiyagiMurasaki();
     void    jump();
     void    basicAttack();

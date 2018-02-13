@@ -43,21 +43,6 @@ EngineManager::EngineManager(){
 //Destructor
 EngineManager::~EngineManager(){}
 
-//Irrlicht events
-bool EngineManager::OnEvent(const SEvent& p_event){}
-
-//Sets m_prevTime for the first time
-void EngineManager::timeStamp(){
-    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
-}
-
-//Sets frame delta time of the last frame (in seconds) and prepares it for next update
-float EngineManager::updateFrameDeltaTime(){
-    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
-    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
-    m_prevTime = m_nowTime;
-}
-
 //Creates the game window
 bool EngineManager::createWindow(bool p_fullscreen){
  
@@ -90,14 +75,7 @@ bool EngineManager::createWindow(bool p_fullscreen){
     return true;
 }
 
-irr::video::IVideoDriver* EngineManager::getVideoDriver(){
-    return m_vDriver;
-}
-
-irr::scene::ISceneManager* EngineManager::getSceneManager(){
-    return m_scene;
-}
-
+//Creates a camera
 void EngineManager::createCamera(){
     scene::ICameraSceneNode * cameraNode = m_scene->addCameraSceneNode();
     if(cameraNode){
@@ -116,6 +94,21 @@ void EngineManager::stop(){
     m_device->drop();
 }
 
+//Irrlicht events
+bool EngineManager::OnEvent(const SEvent& p_event){}
+
+//Sets m_prevTime for the first time
+void EngineManager::timeStamp(){
+    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+}
+
+//Sets frame delta time of the last frame (in seconds) and prepares it for next update
+float EngineManager::updateFrameDeltaTime(){
+    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
+    m_prevTime = m_nowTime;
+}
+
 //Creates a new node
 void EngineManager::createEntity(int p_id, float p_position[3]){
     scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
@@ -131,25 +124,6 @@ void EngineManager::createEntity(int p_id, float p_position[3]){
 
 void EngineManager::deleteEntity(int p_id){
     m_entityNodes.at(p_id)->remove();
-}
-
-void EngineManager::scale(int p_id, float p_scale[3]){
-    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
-
-    t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
-}
-
-void EngineManager::setRotation(int p_id, float p_degrees){
-    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
-    
-    t_node->setRotation(core::vector3df(0.0f, p_degrees, 0.0f));
-}
-
-//Scene render function
-void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
-    m_scene->drawAll();
-    m_vDriver->endScene();
 }
 
 //Loads a 3D model
@@ -199,6 +173,65 @@ void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
     //m_entityNodes.push_back(t_skybox);
 }
 
+void EngineManager::moveEntity(Entity* p_entity){
+    core::vector3df t_position;
+    float*          t_entityPosition = p_entity->getPosition();
+    t_position.X = (f32) t_entityPosition[0];
+    t_position.Y = (f32) t_entityPosition[1];
+    t_position.Z = (f32) t_entityPosition[2];
+
+    m_entityNodes.at(p_entity->getId())->setPosition(t_position);
+}
+
+void EngineManager::setRotation(int p_id, float p_degrees){
+    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
+    
+    t_node->setRotation(core::vector3df(0.0f, p_degrees, 0.0f));
+}
+
+void EngineManager::scale(int p_id, float p_scale[3]){
+    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
+
+    t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
+}
+
+//Scene render function
+void EngineManager::drawScene(){
+    m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
+    m_scene->drawAll();
+    m_vDriver->endScene();
+}
+
+//Returns game window
+//sf::RenderWindow* EngineManager::getWindow(){
+//   return m_window;
+//}
+
+float EngineManager::getFrameDeltaTime(){
+    return (float) m_frameDeltaTime;
+}
+
+irr::scene::ISceneManager* EngineManager::getSceneManager(){
+    return m_scene;
+}
+
+scene::ISceneNode* EngineManager::getEntityNode(int p_id){
+    return m_entityNodes.at(p_id);
+}
+
+
+
+
+
+
+
+
+
+
+irr::video::IVideoDriver* EngineManager::getVideoDriver(){
+    return m_vDriver;
+}
+
 void EngineManager::loadCharacter(){
 }
 
@@ -226,24 +259,6 @@ void EngineManager::drawObject(){
 
 }
 
-void EngineManager::moveEntity(Entity* p_entity){
-    core::vector3df t_position;
-    float*          t_entityPosition = p_entity->getPosition();
-    t_position.X = (f32) t_entityPosition[0];
-    t_position.Y = (f32) t_entityPosition[1];
-    t_position.Z = (f32) t_entityPosition[2];
-
-    m_entityNodes.at(p_entity->getId())->setPosition(t_position);
-}
-
-scene::ISceneNode* EngineManager::getEntityNode(int p_id){
-    return m_entityNodes.at(p_id);
-}
-
 IrrlichtDevice* EngineManager::getDevice(){
     return m_device;
-}
-
-float EngineManager::getFrameDeltaTime(){
-    return (float) m_frameDeltaTime;
 }

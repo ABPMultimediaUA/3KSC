@@ -12,11 +12,13 @@ BINARY 	:= 3KSC
 
 #Compiler set-up
 CC		:= g++
-INCLUDE := -I$(HDRDIR) -I$(LIBDIR)irrlicht/include -I$(LIBDIR)sfml/include -I$(LIBDIR)box2D/include -I$(LIBDIR)fmod/include -I$(LIBDIR)assimp/include -I$(LIBDIR)raknet/include/raknet
-LIBS	:= -L$(LIBDIR)irrlicht/lib/Linux -lIrrlicht -L$(LIBDIR) -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(LIBDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(LIBDIR)assimp/lib -lassimp -L$(LIBDIR)box2D/lib -lBox2D -L$(LIBDIR)raknet/lib -lraknet -lRakNetLibStatic -L$(LIBDIR)fmod/lib -lfmod -lfmodL -lfmodstudio -lfmodstudioL -Wl,-rpath $(LIBDIR)fmod/lib -Wl,-rpath $(LIBDIR)raknet/lib
+LDFLAGS := -Wl,-rpath=$(LIBDIR)box2D/lib,-rpath=$(LIBDIR)raknet/lib,-rpath=$(LIBDIR)fmod/lib,-rpath=$(LIBDIR)assimp/lib,-rpath=$(LIBDIR)sfml/lib
+
+INCLUDE := -I$(HDRDIR) -I$(LIBDIR)irrlicht/include -I$(LIBDIR)sfml/include -I$(LIBDIR)assimp/include -I$(LIBDIR)box2D/include -I$(LIBDIR)raknet/include/raknet -I$(LIBDIR)fmod/include
+LIBS	:= -L$(LIBDIR)irrlicht/lib/Linux -lIrrlicht -L$(LIBDIR) -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(LIBDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(LIBDIR)assimp/lib -lassimp -L$(LIBDIR)box2D/lib -lBox2D -L$(LIBDIR)raknet/lib -lraknet -lRakNetLibStatic -L$(LIBDIR)fmod/lib -lfmod -lfmodL -lfmodstudio -lfmodstudioL 
 #Make binary
 $(BINARY): $(OBJECTS)
-	$(CC) -o $@ $^ $(INCLUDE) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(INCLUDE) $(LIBS)
 
 #Make objects
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
@@ -30,8 +32,8 @@ setup:
 #Deletes object files
 clean:
 	rm -R -f $(OBJDIR)
-	rm -f 3KSC
-	rm -f 3KSC.exe
+	rm -f $(BINARY)
+	rm -f $(BINARY).exe
 
 #Makes binary (previous clean)
 cleanc:
@@ -41,13 +43,13 @@ cleanc:
 #Runs after compiling
 run:
 	make
-	./3KSC
+	./$(BINARY)
 
 #Cleans, compiles and runs
 cleanr:
 	make clean
 	make
-	./3KSC
+	./$(BINARY)
 
 #Prints sources, objects and headers lists
 info:

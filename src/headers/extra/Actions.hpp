@@ -18,16 +18,21 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef AXIS
-#define AXIS
+#ifndef ACTIONS
+#define ACTIONS
 
-    #define Axis_X          0       ///The X Axis
-    #define Axis_Y          1       ///The Y Axis
-    #define Axis_Z          2       ///The Z Axis (LT)
-    #define Axis_R          3       ///The R Axis (RT)
-    #define Axis_U          4       ///The U Axis
-    #define Axis_V          5       ///The V Axis
-    #define Axis_PovX       6       ///The X Axis of the POV Hat
-    #define Axis_PovY       7       ///The Y Axis of the POV Hat
+    #define Action_Up                   0
+    #define Action_Down                 1
+    #define Action_Left                 2
+    #define Action_Right                3
+    #define Action_Jump                 4
+    #define Action_Run                  5
+    #define Action_Block                6
+    #define Action_Pick                 7
+    #define Action_BasicAttack          8
+    #define Action_SpecialAttackUp      9
+    #define Action_SpecialAttackDown    10
+    #define Action_SpecialAttackSide    11
+    #define Action_UltimateAttack       12
 
 #endif      
