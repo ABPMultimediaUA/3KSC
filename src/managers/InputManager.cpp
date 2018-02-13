@@ -57,7 +57,7 @@ InputManager::InputManager(){
 
     //Devices initialization
     m_inputDevices[0]   = -1;
-    m_inputDevices[1]   = -2;
+    m_inputDevices[1]   =  0;
     m_inputDevices[2]   = -2;
     m_inputDevices[3]   = -2;
 
