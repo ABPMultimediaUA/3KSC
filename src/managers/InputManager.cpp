@@ -24,6 +24,7 @@
 #include "../headers/extra/Axis.hpp"
 #include "../headers/extra/Buttons.hpp"
 #include "../headers/extra/Actions.hpp"
+
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
@@ -42,6 +43,7 @@ InputManager* InputManager::instance(){
 //Constructor
 InputManager::InputManager(){
     m_bindings = 0;
+    m_client = Client::instance();
 
     //Event handling
     m_window    = new sf::Window();
@@ -149,7 +151,16 @@ void InputManager::onKeyPressed(int p_key){
 
 //Returns whether key with code p_key is pressed or not
 bool InputManager::isKeyPressed(int p_key){
-    return sf::Keyboard::isKeyPressed(m_keys[p_key]);
+    bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
+    if(p_key == 0)
+        p_key = 1;
+    if(t_result){
+        std::string s = std::to_string(p_key);
+        char const *pchar = s.c_str();
+        m_client->send(pchar);
+        std::cout<<"sending: "<<pchar<<std::endl;
+    }
+    return t_result;
 }
 
 //Checks if controller with index p_index is connected
@@ -253,8 +264,9 @@ void InputManager::updateInputs(int p_player){
         m_ultimateAttackInput[p_player] = getAxisPosition(t_inputDevice, Axis_Z) >= 0 && getAxisPosition(t_inputDevice, Axis_R) >= 0;
     }
 
-    //NPC
+    //NPC NET?
     else{
+
         m_upInput[p_player] = false;
         m_downInput[p_player] = false;
         m_leftInput[p_player] = false;
@@ -270,7 +282,28 @@ void InputManager::updateInputs(int p_player){
         m_specialAttackDownInput[p_player] = false;
         m_specialAttackSideInput[p_player] = false;
         m_ultimateAttackInput[p_player] = false;
+        setNetPlayer(p_player);
     }
+}
+
+void InputManager::setNetPlayer(int p_player){
+    int action = m_client->getActions(p_player);
+    if(action == 0)
+        return;
+
+    if(action == 1)
+    {
+        m_leftInput[p_player] = true;
+    }
+    else if(action == 3)
+    {
+        m_rightInput[p_player] = true;
+    }
+    else if(action == 57)
+    {
+        m_jumpInput[p_player] = true;
+    }
+    std::cout<<"reciving this "<<action<<std::endl;
 }
 
 //Enables or disables inputs when key is pressed or released

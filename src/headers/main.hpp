@@ -30,6 +30,7 @@
 #include "managers/UIManager.hpp"
 #include "entities/Arena.hpp"
 #include "debug.hpp"
+#include "Client.hpp"
 #include <SFML/Window/Context.hpp>
 
 #endif

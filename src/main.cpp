@@ -28,6 +28,7 @@ int main(){
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
     SoundManager*   soundManager = SoundManager::instance();
+    Client* client = Client::instance();
 
     if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
@@ -36,10 +37,12 @@ int main(){
         
         estadio->spawnPlayers();
         estadio->spawnItems();
-
+        char hola[] = "prueba";
+  
         engineManager->createCamera();
         engineManager->timeStamp();
 
+        client->start();
         // Play music
         soundManager->createSoundEvent("event:/Music/Music", "music");
         soundManager->playSound("music");
@@ -54,6 +57,7 @@ int main(){
         while (engineManager->running()){
             //sf::Context context;
             soundManager->update(true);
+            client->recive();
             engineManager->updateFrameDeltaTime();
 
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());

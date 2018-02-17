@@ -195,10 +195,10 @@ void Character::input(){
     t_inputManager->updateInputs(m_playerIndex);
 
     //Change to keyboard (RETURN KEY)
-    if (t_inputManager->isKeyPressed(58)){
+  /*  if (t_inputManager->isKeyPressed(58)){
         t_inputManager->assignDevice(-1, m_playerIndex);
     }
-
+*/
     //Change to joystick (START BUTTON)
     t_inputManager->updateJoysticks();
     if (t_inputManager->isButtonPressed(0, 7)){
