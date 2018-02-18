@@ -37,7 +37,7 @@
 
 class Arena : public Entity {
 public:
-	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode);
+	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode = false);
             ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
@@ -53,13 +53,14 @@ public:
     void            respawnPlayer(int p_player);
     void            update();
     void            spawnRandomItem();
+    void            setSkybox(int p_arenaIndex);
 
     void            modeDebug();
 
 private: 
     static Arena* m_instance;
-    static const char*  m_modelURLs[2];
-	//Skybox*     m_skybox;
+    static const char*  m_modelURLs[3];
+	static const char*  m_skyboxURLs[3][6];
     //Texture*    m_background;
     float       m_time;
     float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z

@@ -43,7 +43,8 @@ InputManager* InputManager::instance(){
 //Constructor
 InputManager::InputManager(){
     m_bindings = 0;
-    m_client = Client::instance();
+
+
 
     //Event handling
     m_window    = new sf::Window();
@@ -59,7 +60,7 @@ InputManager::InputManager(){
 
     //Devices initialization
     m_inputDevices[0]   = -1;
-    m_inputDevices[1]   = -2;
+    m_inputDevices[1]   =  0;
     m_inputDevices[2]   = -2;
     m_inputDevices[3]   = -2;
 
@@ -144,6 +145,11 @@ bool InputManager::eventHandler(){
     return t_eventReceived;
 }
 
+void InputManager::onlineMode(){
+    m_client = Client::instance();
+    m_isOnline = true;
+}
+
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
@@ -154,7 +160,7 @@ bool InputManager::isKeyPressed(int p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
     if(p_key == 0)
         p_key = 1;
-    if(t_result){
+    if(t_result && m_isOnline){
         std::string s = std::to_string(p_key);
         char const *pchar = s.c_str();
         m_client->send(pchar);
@@ -282,7 +288,8 @@ void InputManager::updateInputs(int p_player){
         m_specialAttackDownInput[p_player] = false;
         m_specialAttackSideInput[p_player] = false;
         m_ultimateAttackInput[p_player] = false;
-        setNetPlayer(p_player);
+        if(m_isOnline)
+            setNetPlayer(p_player);
     }
 }
 

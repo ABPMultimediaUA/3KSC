@@ -42,7 +42,6 @@ Character::Character(char* p_name, float p_position[3], int p_life, int p_magic,
     m_maxMagic              = p_magic;
     m_damage                = p_damage;
     m_velocity              = p_velocity;
-    m_orientation           = true;
     m_stunned               = false;  
     m_blocking              = false;
     m_shielded              = false;
@@ -75,6 +74,15 @@ Character::Character(char* p_name, float p_position[3], int p_life, int p_magic,
     m_waitRelease           = false;
 
     m_playerIndex = Character::m_playerCount++;
+
+    switch(m_playerIndex){
+        case 0:
+            lookRight();
+            break;
+        case 1:
+            lookLeft();
+            break;
+    }
 
     m_debugMode = p_debugMode;
 
@@ -169,23 +177,25 @@ bool Character::isJumping(){
 
 //Calls action functions when they are active
 void Character::doActions(){
-    if (m_jumping)
+    if(m_jumping)
         jump();
 
-    if (m_basicAttack)
+    if(m_basicAttack)
         basicAttack();
 
-    if (m_specialAttackUp)
+    if(m_specialAttackUp)
         specialAttackUp();
 
-    if (m_specialAttackDown)
+    if(m_specialAttackDown)
         specialAttackDown();
 
-    if (m_specialAttackSide)
+    if(m_specialAttackSide)
         specialAttackSide();
 
-    if (m_ultimateAttack)
+    if(m_ultimateAttack){
+        EngineManager::instance()->moveCamera(getX(), getY(), getZ());
         ultimateAttack();
+    }
 }
 
 void Character::input(){
@@ -208,6 +218,11 @@ void Character::input(){
     //Exit
     //if(t_inputManager->isKeyPressed(Key_Escape))
     //    EngineManager::instance()->stop();
+
+    if(t_inputManager->isKeyPressed(15)){
+        EngineManager::instance()->resetCamera();
+    }
+
 
     //Block
     m_blocking = t_inputManager->checkAction(Action_Block, m_playerIndex);

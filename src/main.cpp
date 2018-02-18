@@ -22,6 +22,7 @@
 
 #include "headers/main.hpp"
 #include <iostream>
+#include <stdio.h>
 
 int main(){
     EngineManager* engineManager = EngineManager::instance();
@@ -37,12 +38,24 @@ int main(){
         
         estadio->spawnPlayers();
         estadio->spawnItems();
-        char hola[] = "prueba";
-  
-        engineManager->createCamera();
+
+        float cameraPosition[3] = {0, 90, -150};
+        float cameraTarget[3] = {0, 50, 0};
+        engineManager->createCamera(cameraPosition, cameraTarget);
         engineManager->timeStamp();
 
-        client->start();
+        //online stuff
+        char m_online[20];
+        bool m_isOnline = false;
+        std::cout<<"Online mode? (Y)/(N)"<<std::endl;
+        cin >> m_online;
+	    if (m_online[0] == 'y' || m_online[0] == 'Y')
+        {
+            m_isOnline = true;
+            client->start();
+            inputManager->onlineMode();
+        }
+
         // Play music
         soundManager->createSoundEvent("event:/Music/Music", "music");
         soundManager->playSound("music");
@@ -51,13 +64,14 @@ int main(){
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
         
-        UIManager*      uiManager = UIManager::instance();
-        
+        UIManager* uiManager = UIManager::instance();
+
         //Game main loop
         while (engineManager->running()){
             //sf::Context context;
             soundManager->update(true);
-            client->recive();
+            if(m_isOnline)
+                client->recive();
             engineManager->updateFrameDeltaTime();
 
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
@@ -74,6 +88,7 @@ int main(){
                 Arena::getInstance()->update();
             }
 
+            engineManager->updateCamera();
             engineManager->drawScene();
             uiManager->render();
         }

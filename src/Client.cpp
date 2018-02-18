@@ -144,8 +144,6 @@ void Client::recive(){
 }
 void Client::start()
 {
-	// Pointers to the interfaces of our server and client.
-	// Note we can easily have both in the same program
 	client=RakNet::RakPeerInterface::GetInstance();
 	//m_inputManager = InputManager::instance();
 

@@ -35,6 +35,7 @@ class InputManager{
         InputManager();
         ~InputManager();
         bool    eventHandler();
+        void    onlineMode();
         void    onKeyPressed(int p_key);
         bool    isKeyPressed(int p_key);
         bool    isConnected(int p_joystick);
@@ -78,6 +79,7 @@ class InputManager{
         bool    m_specialAttackSideInput[4];
         bool    m_ultimateAttackInput[4];
         bool    m_waitRelease[4];
+        bool    m_isOnline = false;
 
         int     getKeyboardPlayer();
 };
