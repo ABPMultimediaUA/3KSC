@@ -36,6 +36,7 @@
 #include "Gets.h"
 #include "headers/Client.hpp"
 #include <string>
+#include <iostream> 
 
 #if LIBCAT_SECURITY==1
 #include "SecureHandshake.h" // Include header for secure handshake
@@ -58,10 +59,8 @@ Client* Client::instance(){
 Client::Client(){}
 
 void Client::send(char const *mens){
-	if (kbhit())
-	{
+		std::cout<<"Sending :"<<mens<<std::endl;
 		client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-	}
 }
 
 void Client::recive(){
@@ -71,50 +70,17 @@ void Client::recive(){
 	#else
 		usleep(30 * 1000);
 	#endif
+	char const * t_first = "";
+
 	// Get a packet from either the server or the client
 	for (p=client->Receive(); p; client->DeallocatePacket(p), p=client->Receive())
-	{
+	{//printf("000\n");
 		// We got a packet, get the identifier with our handy function
 		packetIdentifier = GetPacketIdentifier(p);
 
 		// Check if this is a network message packet
 		switch (packetIdentifier)
 		{
-		case ID_DISCONNECTION_NOTIFICATION:
-			// Connection lost normally
-			printf("ID_DISCONNECTION_NOTIFICATION\n");
-			break;
-		case ID_ALREADY_CONNECTED:
-			// Connection lost normally
-			printf("ID_ALREADY_CONNECTED with guid %" PRINTF_64_BIT_MODIFIER "u\n", p->guid);
-			break;
-		case ID_INCOMPATIBLE_PROTOCOL_VERSION:
-			printf("ID_INCOMPATIBLE_PROTOCOL_VERSION\n");
-			break;
-		case ID_REMOTE_DISCONNECTION_NOTIFICATION: // Server telling the clients of another client disconnecting gracefully.  You can manually broadcast this in a peer to peer enviroment if you want.
-			printf("ID_REMOTE_DISCONNECTION_NOTIFICATION\n"); 
-			break;
-		case ID_REMOTE_CONNECTION_LOST: // Server telling the clients of another client disconnecting forcefully.  You can manually broadcast this in a peer to peer enviroment if you want.
-			printf("ID_REMOTE_CONNECTION_LOST\n");
-			break;
-		case ID_REMOTE_NEW_INCOMING_CONNECTION: // Server telling the clients of another client connecting.  You can manually broadcast this in a peer to peer enviroment if you want.
-			printf("ID_REMOTE_NEW_INCOMING_CONNECTION\n");
-			break;
-		case ID_CONNECTION_BANNED: // Banned from this server
-			printf("We are banned from this server.\n");
-			break;			
-		case ID_CONNECTION_ATTEMPT_FAILED:
-			printf("Connection attempt failed\n");
-			break;
-		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			// Sorry, the server is full.  I don't do anything here but
-			// A real app should tell the user
-			printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");
-			break;
-
-		case ID_INVALID_PASSWORD:
-			printf("ID_INVALID_PASSWORD\n");
-			break;
 
 		case ID_CONNECTION_LOST:
 			// Couldn't deliver a reliable packet - i.e. the other system was abnormally
@@ -126,17 +92,18 @@ void Client::recive(){
 			// This tells the client they have connected
 			printf("ID_CONNECTION_REQUEST_ACCEPTED to %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
 			printf("My external address is %s\n", client->GetExternalID(p->systemAddress).ToString(true));
-			break;
-		case ID_CONNECTED_PING:
-		case ID_UNCONNECTED_PING:
-			printf("Ping from %s\n", p->systemAddress.ToString(true));
+			t_first = "player";
+			send(t_first);
 			break;
 		default:
+			//printf("-\n");
 			// It's a client, so just show the message
 			std::string str;
 			str.append(reinterpret_cast<const char*>(p->data));
 			int mns = atoi(str.c_str());
 			m_action = mns;
+		
+			printf("%s\n",p->data);
 			break;
 		}
 	}

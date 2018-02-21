@@ -83,6 +83,7 @@ int main(){
                 //if(inputManager->eventHandler()){
                 //    currentPlayer->input();
                 //}
+                
                 currentPlayer->input();
                 currentPlayer->update();
                 Arena::getInstance()->update();

@@ -60,7 +60,7 @@ InputManager::InputManager(){
 
     //Devices initialization
     m_inputDevices[0]   = -1;
-    m_inputDevices[1]   =  0;
+    m_inputDevices[1]   = -2;
     m_inputDevices[2]   = -2;
     m_inputDevices[3]   = -2;
 
@@ -164,7 +164,7 @@ bool InputManager::isKeyPressed(int p_key){
         std::string s = std::to_string(p_key);
         char const *pchar = s.c_str();
         m_client->send(pchar);
-        std::cout<<"sending: "<<pchar<<std::endl;
+        //std::cout<<"sending: "<<pchar<<std::endl;
     }
     return t_result;
 }
@@ -201,10 +201,8 @@ void InputManager::assignDevice(int p_device, int p_player){
 //Updates joysticks state and booleans for each action
 void InputManager::updateInputs(int p_player){
     int t_inputDevice = m_inputDevices[p_player];
-
     //Keyboard input
     if (t_inputDevice == -1){
-    
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -289,7 +287,9 @@ void InputManager::updateInputs(int p_player){
         m_specialAttackSideInput[p_player] = false;
         m_ultimateAttackInput[p_player] = false;
         if(m_isOnline)
+        {
             setNetPlayer(p_player);
+        }
     }
 }
 
