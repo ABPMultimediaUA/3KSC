@@ -246,7 +246,7 @@ void Character::input(){
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-        if(t_inputManager->checkAction(Action_Jump, m_playerIndex)){
+        if(t_inputManager->checkAction(Action_Jump, m_playerIndex) && m_maxJumps > 0){
             if (!m_waitRelease){
                 m_jumping = true;
                 m_waitRelease = true;
@@ -352,6 +352,15 @@ void Character::update(){
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
     }
+
+    if(m_maxJumps < 2){
+        if(PhysicsManager::instance()->isTouchingGround()){
+            std::cout << m_name << " - Tocando el suelo" << std::endl;
+            m_maxJumps = 2;
+        }
+        else
+            std::cout << m_name << " - En el airee" << std::endl;
+    }
 }
 
 void Character::jump(){
@@ -360,20 +369,11 @@ void Character::jump(){
         moveY(m_jumpTable[m_jumpCurrentTime++]*2);
     }
     else{                                  // Jump has ended. Starting to go down
-        // Activate gravity
-        // Check collision with the floor
-        
-        /*
-        if(PhysicsManager::instance()->isTouchingGround(PhysicsManager::instance()->getBody(m_id)))
-            std::cout << "Tocando el suelo" << std::endl;
-        else
-            std::cout << "En el airee" << std::endl;
-        */
-        
         // If there is collision
+        m_maxJumps--;
         m_jumping = false;                 // We are on the floor. Reset jump
         m_jumpCurrentTime = 0;
-    }
+    }    
 }
 
 void Character::pickItem(){

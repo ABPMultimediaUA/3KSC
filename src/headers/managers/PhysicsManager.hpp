@@ -69,7 +69,10 @@ class PhysicsManager{
     int32           getPositionIterations();
     float32         getTimeStep();
 
-    bool            isTouchingGround(b2Body* p_body);
+    bool            isTouchingGround();
+
+    ContactManager* getContactManager();
+
 };
 
 #endif

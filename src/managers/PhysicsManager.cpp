@@ -76,7 +76,7 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
     int *t_id = static_cast<int*>(m_body->GetUserData());
 
     //add foot sensor fixture
-    m_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(0,-2), 0);
+    m_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
     m_fixtureDef->isSensor = true;
     b2Fixture* footSensorFixture = m_body->CreateFixture(m_fixtureDef);
     footSensorFixture->SetUserData( (void*)999 );
@@ -226,26 +226,13 @@ float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     return t_closestFraction;
 }
 
-bool PhysicsManager::isTouchingGround(b2Body* p_body){
-    //MIRAR COMO HACER LO DEL SALTO
-    /*
-    b2Body* t_body = m_world->GetBodyList();
-    b2Shape* t_shape = 0;
-    int* t_id = 0;
-    int  t_value = 0;
+bool PhysicsManager::isTouchingGround(){
+    if(getContactManager()->getJump() > 1)
+        return true;
+    else
+        return false;
+}
 
-    while(t_body != NULL){
-        t_id = static_cast<int*>(t_body->GetUserData());
-        t_value = *t_id;
-        if(t_value == -10){
-            t_shape = t_body->GetFixtureList()->GetShape();
-            if(t_shape->GetType() == 1){
-                b2PolygonShape* t_polygonShape = (b2PolygonShape*)t_shape;
-                return t_polygonShape;
-            }
-        }        
-        t_body = t_body->GetNext();
-    }
-    return 0;
-    */
+ContactManager* PhysicsManager::getContactManager(){
+    return m_contactManager;
 }
