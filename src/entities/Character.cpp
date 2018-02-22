@@ -51,6 +51,7 @@ Character::Character(char* p_name, float p_position[3], int p_life, int p_magic,
 
     m_runningFactor         = 1;
 
+    m_maxJumps              = 2;
     m_jumping               = false;
     m_jumpCurrentTime       = 0;
     m_jumpMaxTime           = 10;
@@ -180,17 +181,31 @@ void Character::doActions(){
     if(m_jumping)
         jump();
 
-    if(m_basicAttack)
+    if(m_basicAttack){
+        changeMagic(5);
         basicAttack();
+    }
 
-    if(m_specialAttackUp)
-        specialAttackUp();
+    if(m_specialAttackUp){
+        if(m_magic >= 30){
+            changeMagic(-30);
+            specialAttackUp();
+        }
+    }
 
-    if(m_specialAttackDown)
-        specialAttackDown();
+    if(m_specialAttackDown){
+        if(m_magic >= 35){
+            changeMagic(-35);
+            specialAttackDown();
+        }
+    }
 
-    if(m_specialAttackSide)
-        specialAttackSide();
+    if(m_specialAttackSide){
+        if(m_magic >= 25){
+            changeMagic(-25);
+            specialAttackSide();
+        }
+    }
 
     if(m_ultimateAttack){
         EngineManager::instance()->moveCamera(getX(), getY(), getZ());
@@ -231,7 +246,7 @@ void Character::input(){
     {
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-        if(t_inputManager->checkAction(Action_Jump, m_playerIndex)){
+        if(t_inputManager->checkAction(Action_Jump, m_playerIndex) && m_maxJumps > 0){
             if (!m_waitRelease){
                 m_jumping = true;
                 m_waitRelease = true;
@@ -337,6 +352,15 @@ void Character::update(){
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
     }
+
+    if(m_maxJumps < 2){
+        if(PhysicsManager::instance()->isTouchingGround()){
+            std::cout << m_name << " - Tocando el suelo" << std::endl;
+            m_maxJumps = 2;
+        }
+        else
+            std::cout << m_name << " - En el airee" << std::endl;
+    }
 }
 
 void Character::jump(){
@@ -344,13 +368,12 @@ void Character::jump(){
     if(m_jumpCurrentTime < m_jumpMaxTime){
         moveY(m_jumpTable[m_jumpCurrentTime++]*2);
     }
-    else{                                                                       // Jump has ended. Starting to go down
-        // Activate gravity
-        // Check collision with the floor
+    else{                                  // Jump has ended. Starting to go down
         // If there is collision
-        m_jumping = false;                                                          // We are on the floor. Reset jump
+        m_maxJumps--;
+        m_jumping = false;                 // We are on the floor. Reset jump
         m_jumpCurrentTime = 0;
-    }
+    }    
 }
 
 void Character::pickItem(){

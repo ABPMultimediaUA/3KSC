@@ -22,6 +22,7 @@
 #define PHYSICS_MANAGER
 
 #include "../entities/Entity.hpp"
+#include "../managers/ContactManager.hpp"
 #include <vector>
 #include <Box2D.h>
 
@@ -44,6 +45,8 @@ class PhysicsManager{
     float32 m_timeStep;
     //int*    m_id;
 
+    ContactManager* m_contactManager;
+
     public:
     static PhysicsManager* instance();
     PhysicsManager();
@@ -65,6 +68,11 @@ class PhysicsManager{
     int32           getVelocityIterations();
     int32           getPositionIterations();
     float32         getTimeStep();
+
+    bool            isTouchingGround();
+
+    ContactManager* getContactManager();
+
 };
 
 #endif
