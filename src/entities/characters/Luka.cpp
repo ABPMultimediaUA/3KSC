@@ -20,44 +20,44 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/MiyagiMurasaki.hpp"
+#include "../../include/entities/characters/Luka.hpp"
+#include "../../include/entities/Arena.hpp"
 #include <iostream>
 
-MiyagiMurasaki::MiyagiMurasaki(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode
-    ){
+Luka::Luka(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
 }
 
-MiyagiMurasaki::~MiyagiMurasaki(){}
+Luka::~Luka(){}
 
-void MiyagiMurasaki::jump(){
+void Luka::jump(){
     Character::jump();
 }
 
-void MiyagiMurasaki::basicAttack(){
+void Luka::basicAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "Basic Attack" << std::endl;
     
     m_basicAttack = false;
 }
 
-void MiyagiMurasaki::specialAttackUp(){
+void Luka::specialAttackUp(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Up" << std::endl;
 
     m_specialAttackUp = false;
 }
 
-void MiyagiMurasaki::specialAttackDown(){
+void Luka::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Down" << std::endl;
     
     m_specialAttackDown = false;
 }
 
-void MiyagiMurasaki::specialAttackSide(){
+void Luka::specialAttackSide(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Side" << std::endl;
 
@@ -65,7 +65,7 @@ void MiyagiMurasaki::specialAttackSide(){
 }
 
 
-void MiyagiMurasaki::ultimateAttack(){
+void Luka::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "ULTIMATE TIME!!!" << std::endl;
 

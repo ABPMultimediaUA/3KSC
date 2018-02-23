@@ -20,9 +20,10 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Plup.hpp"
-#include "../headers/entities/Arena.hpp"
-#include "../headers/managers/SoundManager.hpp"
+#include "../../include/entities/characters/Plup.hpp"
+#include "../../include/entities/Snowman.hpp"
+#include "../../include/entities/Arena.hpp"
+//#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode

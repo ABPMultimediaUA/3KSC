@@ -21,7 +21,6 @@
 #ifndef INPUT_MANAGER
 #define INPUT_MANAGER
 
-#include "../entities/Character.hpp"
 #include <SFML/Window/Keyboard.hpp>//DELETE!!!
 #include <SFML/Window/Joystick.hpp>//DELETE!!!
 #include <SFML/Window/Window.hpp>

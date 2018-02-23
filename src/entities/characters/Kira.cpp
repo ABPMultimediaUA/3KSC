@@ -20,43 +20,44 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Luka.hpp"
+#include "../../include/entities/characters/Kira.hpp"
+#include "../../include/entities/Arena.hpp"
 #include <iostream>
 
-Luka::Luka(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
+Kira::Kira(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
 }
 
-Luka::~Luka(){}
+Kira::~Kira(){}
 
-void Luka::jump(){
+void Kira::jump(){
     Character::jump();
 }
 
-void Luka::basicAttack(){
+void Kira::basicAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "Basic Attack" << std::endl;
     
     m_basicAttack = false;
 }
 
-void Luka::specialAttackUp(){
+void Kira::specialAttackUp(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Up" << std::endl;
 
     m_specialAttackUp = false;
 }
 
-void Luka::specialAttackDown(){
+void Kira::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Down" << std::endl;
     
     m_specialAttackDown = false;
 }
 
-void Luka::specialAttackSide(){
+void Kira::specialAttackSide(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Side" << std::endl;
 
@@ -64,7 +65,7 @@ void Luka::specialAttackSide(){
 }
 
 
-void Luka::ultimateAttack(){
+void Kira::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "ULTIMATE TIME!!!" << std::endl;
 

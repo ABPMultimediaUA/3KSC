@@ -20,9 +20,17 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Arena.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Arena.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/characters/Kira.hpp"
+#include "../include/entities/characters/Luka.hpp"
+#include "../include/entities/characters/MiyagiMurasaki.hpp"
+#include "../include/entities/characters/Plup.hpp"
+#include "../include/entities/characters/Rawr.hpp"
+#include "../include/entities/characters/Sparky.hpp"
+#include "../include/entities/Item.hpp"
+#include "../include/debug.hpp"
 #include <iostream>
 
 //Static members
@@ -44,6 +52,7 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_instance      = this;
     m_debugMode     = p_debugMode;
     m_spawningTime  = 10;
+    m_clock         = new sf::Clock();
     setSpawnPositions();
     setSkybox(p_arenaIndex);
 }
@@ -170,10 +179,10 @@ void Arena::respawnPlayer(int p_player){
 }
 
 void Arena::update(){
-    float t_time = m_clock.getElapsedTime().asSeconds();
+    float t_time = m_clock->getElapsedTime().asSeconds();
     if(t_time > m_spawningTime)
     {
-        m_clock.restart();
+        m_clock->restart();
         spawnRandomItem();
     }
     if(m_debugMode)

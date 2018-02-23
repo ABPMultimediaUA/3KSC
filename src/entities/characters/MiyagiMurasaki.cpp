@@ -20,43 +20,45 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Kira.hpp"
+#include "../../include/entities/characters/MiyagiMurasaki.hpp"
+#include "../../include/entities/Arena.hpp"
 #include <iostream>
 
-Kira::Kira(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
+MiyagiMurasaki::MiyagiMurasaki(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode
+    ){
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
 }
 
-Kira::~Kira(){}
+MiyagiMurasaki::~MiyagiMurasaki(){}
 
-void Kira::jump(){
+void MiyagiMurasaki::jump(){
     Character::jump();
 }
 
-void Kira::basicAttack(){
+void MiyagiMurasaki::basicAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "Basic Attack" << std::endl;
     
     m_basicAttack = false;
 }
 
-void Kira::specialAttackUp(){
+void MiyagiMurasaki::specialAttackUp(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Up" << std::endl;
 
     m_specialAttackUp = false;
 }
 
-void Kira::specialAttackDown(){
+void MiyagiMurasaki::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Down" << std::endl;
     
     m_specialAttackDown = false;
 }
 
-void Kira::specialAttackSide(){
+void MiyagiMurasaki::specialAttackSide(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Side" << std::endl;
 
@@ -64,7 +66,7 @@ void Kira::specialAttackSide(){
 }
 
 
-void Kira::ultimateAttack(){
+void MiyagiMurasaki::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "ULTIMATE TIME!!!" << std::endl;
 

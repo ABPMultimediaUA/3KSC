@@ -18,8 +18,8 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/debug.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/debug.hpp"
 #include <iostream>
 
 //Instance initialization

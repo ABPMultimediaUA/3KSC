@@ -20,9 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Item.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/entities/Arena.hpp"
+#include "../include/entities/Item.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/Arena.hpp"
 //#include <iostream>
 
 //Static members

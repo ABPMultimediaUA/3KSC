@@ -20,8 +20,8 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "headers/debug.hpp"
-#include "headers/managers/EngineManager.hpp"
+#include "include/debug.hpp"
+#include "include/managers/EngineManager.hpp"
 #include <iostream>
 
 Debug::Debug(s32 p_id, b2Body* p_body): scene::ISceneNode(EngineManager::instance()->getSceneManager()->getRootSceneNode(), EngineManager::instance()->getSceneManager(), p_id) {
