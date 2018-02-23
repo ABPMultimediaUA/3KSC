@@ -23,9 +23,10 @@
 #ifndef CHARACTER
 #define CHARACTER
 
-#include "Entity.hpp"
-#include "Projectile.hpp"
-#include "../debug.hpp"
+class Debug;
+
+#include "../Projectile.hpp"
+#include "../Entity.hpp"
 
 class Character : public Entity{
 public:
@@ -103,7 +104,7 @@ protected:
     int             m_maxProjectiles;
     int             m_currentProjectiles;
 
-    Debug *playerDebug;
+    Debug*          playerDebug;
     bool            m_debugMode;
 
 private:

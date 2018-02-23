@@ -21,13 +21,14 @@
 *********************************************************************************/
 
 
-#include "../headers/entities/Character.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/InputManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/managers/UIManager.hpp"
-#include "../headers/entities/Arena.hpp"
-#include "../headers/extra/Actions.hpp"
+#include "../../include/entities/characters/Character.hpp"
+#include "../../include/debug.hpp"
+#include "../../include/managers/EngineManager.hpp"
+#include "../../include/managers/InputManager.hpp"
+#include "../../include/managers/PhysicsManager.hpp"
+#include "../../include/managers/UIManager.hpp"
+#include "../../include/entities/Arena.hpp"
+#include "../../include/extra/Actions.hpp"
 #include <iostream>
 
 //Static members

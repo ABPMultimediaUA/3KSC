@@ -23,8 +23,9 @@
 #ifndef PLUP
 #define PLUP
 
+class Snowman;
+
 #include "Character.hpp"
-#include "Snowman.hpp"
 
 class Plup: public Character {
     public:

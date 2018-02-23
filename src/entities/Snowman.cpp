@@ -20,11 +20,12 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Snowman.hpp"
-#include "../headers/entities/Character.hpp"
-#include "../headers/entities/Arena.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Snowman.hpp"
+#include "../include/entities/Projectile.hpp"
+#include "../include/entities/characters/Character.hpp"
+#include "../include/entities/Arena.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include <iostream>
 
 //Constructor

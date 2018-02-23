@@ -20,9 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Entity.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Entity.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
 //#include <iostream>
 

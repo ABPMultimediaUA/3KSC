@@ -20,10 +20,10 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Projectile.hpp"
-#include "../headers/entities/Arena.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Projectile.hpp"
+#include "../include/entities/Arena.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
 #include <cmath> //For std::sqrt()
 //#include <iostream>

@@ -20,26 +20,15 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef SNOWMAN
-#define SNOWMAN
+#ifndef MAIN
+#define MAIN
 
-#include "Entity.hpp"
-#include "Projectile.hpp"
-
-class Snowman: public Entity {
-    public:
-        Snowman(float p_position[3], int p_owner);
-        ~Snowman();
-        bool lockNLoad();
-    
-    private:
-        int             m_lifetime;
-        Projectile**    m_snowballs;
-        int             m_maxSnowballs;
-        int             m_currentSnowballs;
-        int             m_ammo;
-        int             m_owner;
-        float           m_target[3];            //Position of the target
-};
+#include "managers/EngineManager.hpp"
+#include "managers/InputManager.hpp"
+#include "managers/PhysicsManager.hpp"
+#include "managers/SoundManager.hpp"
+#include "managers/UIManager.hpp"
+#include "entities/Arena.hpp"
+#include "debug.hpp"
 
 #endif

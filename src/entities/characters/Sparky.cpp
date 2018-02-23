@@ -20,7 +20,8 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Sparky.hpp"
+#include "../../include/entities/characters/Sparky.hpp"
+#include "../../include/entities/Arena.hpp"
 #include <iostream>
 
 Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
