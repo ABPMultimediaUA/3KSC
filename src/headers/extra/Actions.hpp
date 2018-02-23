@@ -21,18 +21,20 @@
 #ifndef ACTIONS
 #define ACTIONS
 
-    #define Action_Up                   0
-    #define Action_Down                 1
-    #define Action_Left                 2
-    #define Action_Right                3
-    #define Action_Jump                 4
-    #define Action_Run                  5
-    #define Action_Block                6
-    #define Action_Pick                 7
-    #define Action_BasicAttack          8
-    #define Action_SpecialAttackUp      9
-    #define Action_SpecialAttackDown    10
-    #define Action_SpecialAttackSide    11
-    #define Action_UltimateAttack       12
+    enum class Action{
+        Left = 0,
+        Right,
+        Jump,
+        Run,
+        Block,
+        Pick,
+        BassicAttack,
+        SpecialAttackUp,
+        SpecialAttackDown,
+        SpecialAttackSide,
+        UltimateAttack,
+
+        Count
+    };
 
 #endif      

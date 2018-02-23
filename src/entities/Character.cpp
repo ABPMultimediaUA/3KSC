@@ -28,7 +28,15 @@
 #include "../headers/managers/UIManager.hpp"
 #include "../headers/entities/Arena.hpp"
 #include "../headers/extra/Actions.hpp"
+
 #include <iostream>
+
+struct ActionMapping{
+    Action  action;                     //Action to map
+    void    (Character::*function);     //Function for the action
+    bool    onlyOnce;                   //Wait for input release?
+    bool    enabled;                    //Enabled or not
+};
 
 //Static members
 int Character::m_playerCount = 0;
@@ -66,11 +74,7 @@ Character::Character(char* p_name, float p_position[3], int p_life, int p_magic,
     m_jumpTable[8]          = 0.35;
     m_jumpTable[9]          = 0.15;
 
-    m_basicAttack           = false;
-    m_specialAttackUp       = false;
-    m_specialAttackDown     = false;
-    m_specialAttackSide     = false;
-    m_ultimateAttack        = false;
+    mapActions();
 
     m_waitRelease           = false;
 
@@ -91,10 +95,31 @@ Character::Character(char* p_name, float p_position[3], int p_life, int p_magic,
 
 Character::~Character(){}
 
+//Initializes actions mapping for this player
+void Character::mapActions(){
+    m_actions = new ActionMapping[Action::Count + 1];
+
+    m_actions = {
+        //Action                        //Function                          //onlyOnce  //Enabled
+        {Action::Left                   , &Character::left                  , false     , false},
+        {Action::Right                  , &Character::right                 , false     , false},
+        {Action::Jump                   , &Character::jump                  , true      , false},
+        {Action::Run                    , &Character::run                   , false     , false},
+        {Action::Block                  , &Character::block                 , false     , false},
+        {Action::Pick                   , &Character::pick                  , false     , false},
+        {Action::BassicAttack           , &Character::basicAttack           , true      , false},
+        {Action::SpecialAttackUp        , &Character::specialAttackUp       , true      , false},
+        {Action::SpecialAttackDown      , &Character::specialAttackDown     , true      , false},
+        {Action::SpecialAttackSide      , &Character::specialAttackSide     , true      , false},
+        {Action::UltimateAttack         , &Character::ultimateAttack        , true      , false},
+        {Action::Count                  , 0                                 , false     , false}
+    };
+}
+
 //Receives an attack from other player
 //Parameters: damage, can you block it?
 void Character::receiveAttack(int p_damage, bool p_block){
-    if((p_block && m_blocking) || m_shielded)
+    if((p_block && m_actions[(int) Action::Block]->enabled) || m_shielded)
     {
         changeLife(-p_damage/2);
         std::cout << m_name << " blocked an attack and now has " << m_life << " HP." << std::endl << std::endl;
@@ -172,12 +197,23 @@ void Character::lookRight(){
 }
 
 bool Character::isJumping(){
-    return m_jumping;
+    return m_actions[(int) Action::Jump]->enabled;
 }
 
 
 //Calls action functions when they are active
 void Character::doActions(){
+    ActionMapping* t_iterator = m_actions;
+
+    while(t_iterator->function){
+        if(t_iterator->enabled){
+            (this->*(t_iterator->function))();
+        }
+
+        ++t_iterator;
+    }
+
+    /*
     if(m_jumping)
         jump();
 
@@ -211,13 +247,13 @@ void Character::doActions(){
         EngineManager::instance()->moveCamera(getX(), getY(), getZ());
         ultimateAttack();
     }
+    */
 }
 
 void Character::input(){
     InputManager* t_inputManager = InputManager::instance();
-    m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
-
     t_inputManager->updateInputs(m_playerIndex);
+    //m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
     //Change to keyboard (RETURN KEY)
     if (t_inputManager->isKeyPressed(58)){
@@ -240,10 +276,39 @@ void Character::input(){
 
 
     //Block
-    m_blocking = t_inputManager->checkAction(Action_Block, m_playerIndex);
+    m_actions[(int) Action::Block]->enabled = t_inputManager->checkInput(Action::Block, m_playerIndex);
 
-    if(!m_stunned && !m_blocking && m_alive)
-    {
+    //Input blocked if stunned, blocking or dead
+    if(!m_stunned && !m_actions[(int) Action::Block]->enaed && m_alive){
+
+        ActionMapping* t_iterator = m_actions;
+        bool           t_keepWaiting = false;
+        
+        //Loop through actions to enable them
+        while(t_iterator->function){
+            if (t_inputManager->checkInput(t_iterator->action, m_playerIndex)){
+                //Wait for release (if necesary)
+                if (t_iterator->onlyOnce){
+                    t_keepWaiting = true;
+
+                    if (!m_waitRelease){
+                        t_iterator->enabled = true;
+                        m_waitRelease = true;
+                    }
+                }
+
+                else{
+                    t_iterator->enabled = true;
+                }
+            }
+
+            //If an "onlyOnce" input is detected, we still have to wait for release
+            m_waitRelease = t_keepWaiting;
+
+            ++t_iterator;
+        }
+
+        /*
         //Jump
         // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
         if(t_inputManager->checkAction(Action_Jump, m_playerIndex) && m_maxJumps > 0){
@@ -323,25 +388,20 @@ void Character::input(){
             lookRight();
         }
 
-        //Block
-        //m_blocking = m_block t_inputManager->checkAction(Action_, m_playerIndex;
-        //if (m_blocking){
-        //    //std::cout << m_name << " is blocking" << std::endl;
-        //}
-
         //Pick object
         if (t_inputManager->checkAction(Action_Pick, m_playerIndex)){
             pickItem();
         }
-
-    }
-    doActions();    
+        */
+    }    
 }
 
 //Update state of player
 void Character::update(){
+    doActions();
+    
     if(!m_respawning)
-        updatePosition(m_jumping);
+        updatePosition(m_actions[(int) Action::Jump]->enabled);
     else{
         updatePosition(true);
         m_respawning = false;
@@ -355,12 +415,72 @@ void Character::update(){
 
     if(m_maxJumps < 2){
         if(PhysicsManager::instance()->isTouchingGround()){
-            std::cout << m_name << " - Tocando el suelo" << std::endl;
+            //std::cout << m_name << " - Tocando el suelo" << std::endl;
             m_maxJumps = 2;
         }
         else
-            std::cout << m_name << " - En el airee" << std::endl;
+            //std::cout << m_name << " - En el airee" << std::endl;
     }
+}
+
+//Returns the damage of the player
+int Character::getDamage(){
+    return m_damage;
+}
+
+//Returns the index of the player
+int Character::getIndex(){
+    return m_playerIndex;
+}
+
+//Returns the name of the player
+char* Character::getName(){
+    return m_name;
+}
+
+//Returns the life of the player
+int Character::getLife(){
+    return m_life;
+}
+
+void Character::modeDebug(){
+    if(m_debugMode)
+        playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+}
+
+void Character::respawn(float p_position[3]){
+    m_respawning = true;
+    moveTo(p_position);
+    m_life = m_maxLife;
+    m_magic = m_maxMagic;
+    m_shielded = false;
+
+    if(m_winged){
+        m_velocity /= 1.5f;
+        m_winged = false;
+    }
+
+    UIManager::instance()->setLife(m_playerIndex, m_life);
+}
+
+
+
+
+
+
+
+
+
+
+//ACTIONS
+void Character::left(){
+    moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
+    lookLeft();
+}
+
+void Character::right(){
+    moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
+    lookRight();
 }
 
 void Character::jump(){
@@ -368,15 +488,29 @@ void Character::jump(){
     if(m_jumpCurrentTime < m_jumpMaxTime){
         moveY(m_jumpTable[m_jumpCurrentTime++]*2);
     }
-    else{                                  // Jump has ended. Starting to go down
+    // Jump has ended. Starting to go down
+    else{
         // If there is collision
         m_maxJumps--;
-        m_jumping = false;                 // We are on the floor. Reset jump
         m_jumpCurrentTime = 0;
-    }    
+        m_actions[(int) Action::Jump]->enabled = false; // We are on the floor. Reset jump
+    }
 }
 
-void Character::pickItem(){
+void Character::run(){
+    if(m_winged){
+        m_runningFactor = 1.5f;
+    }
+    else{
+        m_runningFactor = 2.0f;
+    }
+}
+
+void Character::block(){
+    m_actions[(int) Action::Block]->enabled = true;
+}
+
+void Character::pick(){
     int t_itemType = Arena::getInstance()->catchItem(m_playerIndex, m_position);
     
     switch (t_itemType){
@@ -423,43 +557,3 @@ void Character::specialAttackDown(){}
 void Character::specialAttackSide(){}
 
 void Character::ultimateAttack(){}
-
-//Returns the damage of the player
-int Character::getDamage(){
-    return m_damage;
-}
-
-//Returns the index of the player
-int Character::getIndex(){
-    return m_playerIndex;
-}
-
-//Returns the name of the player
-char* Character::getName(){
-    return m_name;
-}
-
-//Returns the life of the player
-int Character::getLife(){
-    return m_life;
-}
-
-void Character::modeDebug(){
-    if(m_debugMode)
-        playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
-}
-
-void Character::respawn(float p_position[3]){
-    m_respawning = true;
-    moveTo(p_position);
-    m_life = m_maxLife;
-    m_magic = m_maxMagic;
-    m_shielded = false;
-
-    if(m_winged){
-        m_velocity /= 1.5f;
-        m_winged = false;
-    }
-
-    UIManager::instance()->setLife(m_playerIndex, m_life);
-}

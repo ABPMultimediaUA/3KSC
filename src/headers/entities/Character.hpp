@@ -27,6 +27,8 @@
 #include "Projectile.hpp"
 #include "../debug.hpp"
 
+struct ActionMapping;
+
 class Character : public Entity{
 public:
     Character(char* p_name, float p_position[3], int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
@@ -44,20 +46,25 @@ public:
     void            input();
     void            update();
     void            respawn(float p_position[3]);
-
-    virtual void    jump();
-    void            pickItem();
+    
+    int             getDamage();
+    int             getIndex();
+    char*           getName();
+    int             getLife();
+    
+    //Actions
+    void            left();
+    void            right();
+    void            jump();
+    void            run();
+    void            block();
+    void            pick();
 	virtual void    basicAttack();
     virtual void    specialAttackUp();
     virtual void    specialAttackDown();
     virtual void    specialAttackSide();
     virtual void    ultimateAttack();
     
-    int             getDamage();
-    int             getIndex();
-    char*           getName();
-    int             getLife();
-
     void            modeDebug();
 
 
@@ -93,12 +100,10 @@ protected:
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
     int             m_jumpIndex;            //For double jump
 
-    bool            m_basicAttack;
-    bool            m_specialAttackUp;
-    bool            m_specialAttackDown;
-    bool            m_specialAttackSide;
-    bool            m_ultimateAttack;
 
+    ActionMapping*  m_actions;
+    void            mapActions();
+    
     Projectile**    m_projectiles;
     int             m_maxProjectiles;
     int             m_currentProjectiles;
