@@ -21,6 +21,8 @@
 #include "../headers/managers/PhysicsManager.hpp"
 #include "../headers/entities/Arena.hpp"
 #include "../headers/debug.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/debug.hpp"
 #include <iostream>
 
 //Instance initialization
@@ -37,6 +39,7 @@ PhysicsManager* PhysicsManager::instance(){
 
 //Constructor
 PhysicsManager::PhysicsManager(){
+    //b2Vec2 gravity(0.0f, 0.0f);
     b2Vec2 gravity(0.0f, -10.0f);
 
     m_world = new b2World(gravity);
@@ -44,6 +47,10 @@ PhysicsManager::PhysicsManager(){
     m_timeStep = 10.f/60.0f;
     m_velocityIterations = 6;
     m_positionIterations = 2;
+
+    m_contactManager = new ContactManager();
+
+    m_world->SetContactListener(m_contactManager);
 }
 //Destructor
 PhysicsManager::~PhysicsManager(){}
@@ -70,25 +77,62 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
 
     //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
     int *t_id = static_cast<int*>(m_body->GetUserData());
+
+    //add foot sensor fixture
+    m_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
+    m_fixtureDef->isSensor = true;
+    b2Fixture* footSensorFixture = m_body->CreateFixture(m_fixtureDef);
+    footSensorFixture->SetUserData( (void*)999 );
 }
 
-void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3]){
+void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex){
     m_bodyDef = new b2BodyDef();
     m_bodyDef->position.Set(-90.0f, 0.0f);
     
     m_body = m_world->CreateBody(m_bodyDef);
-    m_body->SetUserData(p_id);
+    //m_body->SetUserData(p_id);
 
     m_polygonShape = new b2PolygonShape();
-    //scaleX = 50
-    m_polygonShape->SetAsBox(50, 1);
-    m_body->CreateFixture(m_polygonShape, 0.0f);
+    if(p_arenaIndex == 0){
+        //scaleX = 50
+        //PLATAFORMAS DEL MAPA 1
+        m_polygonShape->SetAsBox(50, 1);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
 
-    m_polygonShape->SetAsBox(50, 1, b2Vec2(180,0), 0);
-    m_body->CreateFixture(m_polygonShape, 0.0f);
-  
-    m_polygonShape->SetAsBox(50, 1, b2Vec2(90,45), 0);
-    m_body->CreateFixture(m_polygonShape, 0.0f);
+        m_polygonShape->SetAsBox(50, 1, b2Vec2(180,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+      
+        m_polygonShape->SetAsBox(50, 1, b2Vec2(90,45), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+    }else if(p_arenaIndex == 1){
+        //Nenufar izquierda
+        m_polygonShape->SetAsBox(20, 1, b2Vec2(-25,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Nenufar derecha
+        m_polygonShape->SetAsBox(20, 1, b2Vec2(200,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+
+        //Plataforma central
+        m_polygonShape->SetAsBox(80, 1, b2Vec2(90,0), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Arbol izquierda rama grande
+        m_polygonShape->SetAsBox(32, 1, b2Vec2(-9,40), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Arbol izquierda rama pequeña
+        m_polygonShape->SetAsBox(16, 1, b2Vec2(-9,60), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+
+        //Arbol derecha rama grande
+        m_polygonShape->SetAsBox(32, 1, b2Vec2(182,40), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+        
+        //Arbol derecha rama pequeña
+        m_polygonShape->SetAsBox(8, 1, b2Vec2(172,65), 0);
+        m_body->CreateFixture(m_polygonShape, 0.0f);
+    }
 }
 
 b2World* PhysicsManager::getWorld(){
@@ -235,4 +279,15 @@ float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
     float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
 
     return(t_module);
+}
+
+bool PhysicsManager::isTouchingGround(){
+    if(getContactManager()->getJump() > 1)
+        return true;
+    else
+        return false;
+}
+
+ContactManager* PhysicsManager::getContactManager(){
+    return m_contactManager;
 }

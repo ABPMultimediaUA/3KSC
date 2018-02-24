@@ -20,10 +20,7 @@
 *********************************************************************************
 *********************************************************************************/
 
-//Iostream esta incluido en el .hpp
-#include "headers/main.hpp"
-//#include "headers/debug.hpp"
-//#include <fmod.h>
+#include "include/main.hpp"
 #include <iostream>
 
 int main(){
@@ -41,39 +38,50 @@ int main(){
         estadio->spawnPlayers();
         estadio->spawnItems();
 
-        engineManager->createCamera();
+        float cameraPosition[3] = {0, 90, -150};
+        float cameraTarget[3] = {0, 50, 0};
+        engineManager->createCamera(cameraPosition, cameraTarget);
         engineManager->timeStamp();
 
         // Play music
-        Sound t_music;
-        soundManager->createSound(&t_music,"assets/FosfosStadium.mp3");
-        soundManager->playSound(t_music, true);
+        soundManager->createSoundEvent("event:/Music/Music", "music");
+        soundManager->playSound("music");
 
         //For players loop
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
         
-        UIManager*      uiManager = UIManager::instance();
+        UIManager* uiManager = UIManager::instance();
 
         aiManager->buildTree();
 
         //Game main loop
         while (engineManager->running()){
+<<<<<<< HEAD
             //sf::Context context;
             soundManager->update();
             engineManager->updateFrameDeltaTime();            
             aiManager->update();
+=======
+            soundManager->update(true);
+            engineManager->updateFrameDeltaTime();
+
+>>>>>>> develop
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
             
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
                 currentPlayer = Arena::getInstance()->getPlayer(i);
 
-                currentPlayer->playerInput();
-                currentPlayer->playerUpdate();
+                //if(inputManager->eventHandler()){
+                //    currentPlayer->input();
+                //}
+                currentPlayer->input();
+                currentPlayer->update();
                 Arena::getInstance()->update();
             }
 
+            engineManager->updateCamera();
             engineManager->drawScene();
             uiManager->render();
         }

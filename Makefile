@@ -1,9 +1,10 @@
 #Directories
 SRCDIR	:= src/
-HDRDIR	:= src/headers/
-LIBDIR  := src/lib/
+HDRDIR	:= $(SRCDIR)include/
+LIBDIR  := lib/
+INCDIR  := include/
 OBJDIR	:= obj/
-SUBDIRS := $(OBJDIR)entities $(OBJDIR)managers $(OBJDIR)lib/glm/include/detail
+SUBDIRS := $(OBJDIR)entities $(OBJDIR)entities/characters $(OBJDIR)managers
 
 #Files
 SOURCES := $(shell find $(SRCDIR) -name '*.cpp')
@@ -12,11 +13,14 @@ BINARY 	:= 3KSC
 
 #Compiler set-up
 CC		:= g++
-INCLUDE := -I$(HDRDIR) -I$(LIBDIR)irrlicht/include -I$(LIBDIR)sfml/include -I$(LIBDIR)box2D/include -I$(LIBDIR)fmod/include -I$(LIBDIR)assimp/include -I$(LIBDIR)raknet/include/raknet
-LIBS	:= -L$(LIBDIR)irrlicht/lib/Linux -lIrrlicht -L$(LIBDIR) -lGL -lXxf86vm -lXext -lX11 -lXcursor -L$(LIBDIR)sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -L$(LIBDIR)assimp/lib -lassimp -L$(LIBDIR)box2D/lib -lBox2D -L$(LIBDIR)raknet/lib -lraknet -lRakNetLibStatic -L$(LIBDIR)fmod/lib -lfmodex64 -lfmodevent64 -Wl,-rpath $(LIBDIR)fmod/lib -Wl,-rpath $(LIBDIR)raknet/lib
+LDFLAGS := -Wl,-rpath=$(LIBDIR)
+
+INCLUDE := -I$(HDRDIR) -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)assimp -I$(INCDIR)box2D -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod
+LIBS	:= -L$(LIBDIR) -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL 
+
 #Make binary
 $(BINARY): $(OBJECTS)
-	$(CC) -o $@ $^ $(INCLUDE) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(INCLUDE) $(LIBS)
 
 #Make objects
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
@@ -30,8 +34,8 @@ setup:
 #Deletes object files
 clean:
 	rm -R -f $(OBJDIR)
-	rm -f 3KSC
-	rm -f 3KSC.exe
+	rm -f $(BINARY)
+	rm -f $(BINARY).exe
 
 #Makes binary (previous clean)
 cleanc:
@@ -41,17 +45,18 @@ cleanc:
 #Runs after compiling
 run:
 	make
-	./3KSC
+	./$(BINARY)
 
 #Cleans, compiles and runs
 cleanr:
 	make clean
 	make
-	./3KSC
+	./$(BINARY)
 
 #Prints sources, objects and headers lists
 info:
-	$(info $(SOURCES))
+	$(info $(BINARY))
 	$(info $(OBJECTS))
+	$(info $(SOURCES))
 	$(info $(INCLUDE))
 	$(info $(LIBS))

@@ -20,23 +20,31 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Arena.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Arena.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/characters/Kira.hpp"
+#include "../include/entities/characters/Luka.hpp"
+#include "../include/entities/characters/MiyagiMurasaki.hpp"
+#include "../include/entities/characters/Plup.hpp"
+#include "../include/entities/characters/Rawr.hpp"
+#include "../include/entities/characters/Sparky.hpp"
+#include "../include/entities/Item.hpp"
+#include "../include/debug.hpp"
 #include <iostream>
 
 //Static members
-const char* Arena::m_modelURLs[2] = {"assets/models/arenas/fusfus_stadium.obj", "assets/models/arenas/fusfus_stadium.obj"};
+const char* Arena::m_modelURLs[3] = {"assets/models/arenas/fusfus_stadium.obj", "assets/models/arenas/Lago_sakura.obj", "assets/models/arenas/fabrica_kawaiisaki.obj"};
+const char* Arena::m_skyboxURLs[3][6] = {
+    {"assets/skyboxes/fusfus_skybox/cloudtop_up.tga", "assets/skyboxes/fusfus_skybox/cloudtop_dn.tga", "assets/skyboxes/fusfus_skybox/cloudtop_lt.tga", "assets/skyboxes/fusfus_skybox/cloudtop_rf.tga", "assets/skyboxes/fusfus_skybox/cloudtop_ft.tga", "assets/skyboxes/fusfus_skybox/cloudtop_bk.tga"},
+    {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"},
+    {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"}
+    };
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1){
-//    EngineManager* t_engineManager = EngineManager::instance();
-//    if(p_arenaIndex == 1)
-//        m_modelURL = "assets/models/arenas/stadium.obj";
-//
-//    t_engineManager->loadArena(m_modelURL);
+Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1, p_arenaIndex){
 
     m_maxItems      = 500; //cambiar esto
     m_currentItems  = 0;
@@ -44,7 +52,9 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_instance      = this;
     m_debugMode     = p_debugMode;
     m_spawningTime  = 10;
+    m_clock         = new sf::Clock();
     setSpawnPositions();
+    setSkybox(p_arenaIndex);
 }
 
 Arena::~Arena(){}
@@ -60,8 +70,8 @@ void Arena::spawnPlayers(){
     m_playerCount = 0;
     m_players = new Character*[4];
 
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, 1, m_debugMode);
-    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, -1, m_debugMode);
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
@@ -169,18 +179,17 @@ void Arena::respawnPlayer(int p_player){
 }
 
 void Arena::update(){
-    float t_time = m_clock.getElapsedTime().asSeconds();
+    float t_time = m_clock->getElapsedTime().asSeconds();
     if(t_time > m_spawningTime)
     {
-        m_clock.restart();
+        m_clock->restart();
         spawnRandomItem();
     }
     if(m_debugMode)
         m_debugBattlefield->update();
 }
 
-void Arena::spawnRandomItem()
-{
+void Arena::spawnRandomItem(){
     float positionItem[3] = {-100, 10, 0};
     positionItem[0] = rand()%(120);
     if(positionItem[0]< 60)
@@ -197,5 +206,9 @@ void Arena::spawnRandomItem()
 
     m_items[m_currentItems++] = new Item(rand()%3, positionItem);
    
+}
+
+void Arena::setSkybox(int p_arenaIndex){
+    EngineManager::instance()->loadSkybox(m_skyboxURLs[p_arenaIndex]);
 
 }

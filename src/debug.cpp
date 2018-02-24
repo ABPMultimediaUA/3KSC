@@ -20,8 +20,8 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "headers/debug.hpp"
-#include "headers/managers/EngineManager.hpp"
+#include "include/debug.hpp"
+#include "include/managers/EngineManager.hpp"
 #include <iostream>
 
 Debug::Debug(s32 p_id, b2Body* p_body): scene::ISceneNode(EngineManager::instance()->getSceneManager()->getRootSceneNode(), EngineManager::instance()->getSceneManager(), p_id) {
@@ -50,7 +50,7 @@ Debug::Debug(s32 p_id, b2Body* p_body): scene::ISceneNode(EngineManager::instanc
             }
             
             for(int i = 0; i < 4; i++){
-                m_VerticesVector.push_back(video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0));
+                m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
             }
         }
         t_fixture = t_fixture->GetNext();
@@ -69,17 +69,10 @@ void Debug::render(){
     u16 indices[] = {0,2,3, 2,1,3, 1,0,3, 2,0,1};
     video::IVideoDriver* driver = SceneManager->getVideoDriver();
 
-    int t_times = m_VerticesVector.size();
-
-    for(int i = 0; i < t_times; i++){
-        for(int j = 0; j < 4; j++){
-            m_Vertices[j] = m_VerticesVector.back();
-            m_VerticesVector.pop_back();   
-        }
-        driver->setMaterial(m_Material);
-        driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-        driver->drawVertexPrimitiveList(&m_Vertices[0], 4, &indices[0], 4, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
-    }
+    driver->setMaterial(m_Material);
+    driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
+    driver->drawVertexPrimitiveList(&m_Vertices[0], 4, &indices[0], 4, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
+    
 }
 
 const core::aabbox3d<f32>& Debug::getBoundingBox() const{
@@ -115,7 +108,7 @@ void Debug::update(){
             }
             
             for(int i = 0; i < 4; i++){
-                m_VerticesVector.push_back(video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0));
+                m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
             }
         }
         t_fixture = t_fixture->GetNext();
