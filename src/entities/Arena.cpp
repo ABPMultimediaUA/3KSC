@@ -20,9 +20,17 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Arena.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Arena.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/characters/Kira.hpp"
+#include "../include/entities/characters/Luka.hpp"
+#include "../include/entities/characters/MiyagiMurasaki.hpp"
+#include "../include/entities/characters/Plup.hpp"
+#include "../include/entities/characters/Rawr.hpp"
+#include "../include/entities/characters/Sparky.hpp"
+#include "../include/entities/Item.hpp"
+#include "../include/debug.hpp"
 #include <iostream>
 
 //Static members
@@ -44,6 +52,7 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_instance      = this;
     m_debugMode     = p_debugMode;
     m_spawningTime  = 10;
+    m_clock         = new sf::Clock();
     setSpawnPositions();
     setSkybox(p_arenaIndex);
 }
@@ -56,13 +65,13 @@ Arena* Arena::getInstance(){
 
 void Arena::spawnPlayers(){
     float positionRawr[3] = {-120, 20, 0};
-    float positionPlup[3] = {120, 20, 0};
+   // float positionPlup[3] = {120, 20, 0};
 
     m_playerCount = 0;
     m_players = new Character*[4];
 
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
-    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
+  //  m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
@@ -70,6 +79,10 @@ void Arena::spawnPlayers(){
         }
         modeDebug();
     }
+}
+void Arena::addPlayer(){
+    float positionRawr[3] = {-120, 20, 0};
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
 }
 
 //Returns number of players
@@ -170,10 +183,10 @@ void Arena::respawnPlayer(int p_player){
 }
 
 void Arena::update(){
-    float t_time = m_clock.getElapsedTime().asSeconds();
+    float t_time = m_clock->getElapsedTime().asSeconds();
     if(t_time > m_spawningTime)
     {
-        m_clock.restart();
+        m_clock->restart();
         spawnRandomItem();
     }
     if(m_debugMode)
@@ -201,5 +214,4 @@ void Arena::spawnRandomItem(){
 
 void Arena::setSkybox(int p_arenaIndex){
     EngineManager::instance()->loadSkybox(m_skyboxURLs[p_arenaIndex]);
-
 }

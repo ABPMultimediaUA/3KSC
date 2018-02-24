@@ -18,8 +18,8 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/debug.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/debug.hpp"
 #include <iostream>
 
 //Instance initialization
@@ -44,6 +44,10 @@ PhysicsManager::PhysicsManager(){
     m_timeStep = 10.f/60.0f;
     m_velocityIterations = 6;
     m_positionIterations = 2;
+
+    m_contactManager = new ContactManager();
+
+    m_world->SetContactListener(m_contactManager);
 }
 //Destructor
 PhysicsManager::~PhysicsManager(){}
@@ -70,6 +74,12 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
 
     //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
     int *t_id = static_cast<int*>(m_body->GetUserData());
+
+    //add foot sensor fixture
+    m_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
+    m_fixtureDef->isSensor = true;
+    b2Fixture* footSensorFixture = m_body->CreateFixture(m_fixtureDef);
+    footSensorFixture->SetUserData( (void*)999 );
 }
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex){
@@ -77,7 +87,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
     m_bodyDef->position.Set(-90.0f, 0.0f);
     
     m_body = m_world->CreateBody(m_bodyDef);
-    m_body->SetUserData(p_id);
+    //m_body->SetUserData(p_id);
 
     m_polygonShape = new b2PolygonShape();
     if(p_arenaIndex == 0){
@@ -214,4 +224,15 @@ float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
         }
     }
     return t_closestFraction;
+}
+
+bool PhysicsManager::isTouchingGround(){
+    if(getContactManager()->getJump() > 1)
+        return true;
+    else
+        return false;
+}
+
+ContactManager* PhysicsManager::getContactManager(){
+    return m_contactManager;
 }

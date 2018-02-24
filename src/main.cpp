@@ -20,7 +20,7 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "headers/main.hpp"
+#include "include/main.hpp"
 #include <iostream>
 #include <stdio.h>
 
@@ -35,27 +35,29 @@ int main(){
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
         Arena* estadio = new Arena(position, scale, 0, false);
-        
-        estadio->spawnPlayers();
-        estadio->spawnItems();
-
-        float cameraPosition[3] = {0, 90, -150};
-        float cameraTarget[3] = {0, 50, 0};
-        engineManager->createCamera(cameraPosition, cameraTarget);
-        engineManager->timeStamp();
 
         //online stuff
-        char m_online[20];
+        char m_online[5];
         bool m_isOnline = false;
         std::cout<<"Online mode? (Y)/(N)"<<std::endl;
         cin >> m_online;
-	    if (m_online[0] == 'y' || m_online[0] == 'Y')
+        if (m_online[0] == 'y' || m_online[0] == 'Y')
         {
             m_isOnline = true;
             client->start();
             inputManager->onlineMode();
         }
-
+        else
+        {
+            estadio->spawnItems();
+        }
+        estadio->spawnPlayers();
+        estadio->addPlayer();
+        float cameraPosition[3] = {0, 90, -150};
+        float cameraTarget[3] = {0, 50, 0};
+        engineManager->createCamera(cameraPosition, cameraTarget);
+        engineManager->timeStamp();
+	    
         // Play music
         soundManager->createSoundEvent("event:/Music/Music", "music");
         soundManager->playSound("music");
@@ -68,7 +70,6 @@ int main(){
 
         //Game main loop
         while (engineManager->running()){
-            //sf::Context context;
             soundManager->update(true);
             if(m_isOnline)
                 client->recive();

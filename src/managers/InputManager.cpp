@@ -18,13 +18,12 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/InputManager.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/extra/Keycodes.hpp"
-#include "../headers/extra/Axis.hpp"
-#include "../headers/extra/Buttons.hpp"
-#include "../headers/extra/Actions.hpp"
-
+#include "../include/managers/InputManager.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/extra/Keycodes.hpp"
+#include "../include/extra/Axis.hpp"
+#include "../include/extra/Buttons.hpp"
+#include "../include/extra/Actions.hpp"
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
@@ -43,8 +42,6 @@ InputManager* InputManager::instance(){
 //Constructor
 InputManager::InputManager(){
     m_bindings = 0;
-
-
 
     //Event handling
     m_window    = new sf::Window();
@@ -158,9 +155,9 @@ void InputManager::onKeyPressed(int p_key){
 //Returns whether key with code p_key is pressed or not
 bool InputManager::isKeyPressed(int p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
-    if(p_key == 0)
-        p_key = 1;
     if(t_result && m_isOnline){
+        if(p_key == 0)
+            p_key = 1;
         std::string s = std::to_string(p_key);
         char const *pchar = s.c_str();
         m_client->send(pchar);
@@ -192,10 +189,11 @@ void InputManager::updateJoysticks(){
 //Assing input device to player
 void InputManager::assignDevice(int p_device, int p_player){
     //Only change device of player 2 for now
-    if (p_player == 1){
-        m_inputDevices[p_player] = p_device;
-        //std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
-    }
+    // if (p_player == 1){
+    //     m_inputDevices[p_player] = p_device;
+    //     //std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
+    // }
+    //COMENTADO PARA EL ONLINE
 }
 
 //Updates joysticks state and booleans for each action
@@ -270,7 +268,6 @@ void InputManager::updateInputs(int p_player){
 
     //NPC NET?
     else{
-
         m_upInput[p_player] = false;
         m_downInput[p_player] = false;
         m_leftInput[p_player] = false;

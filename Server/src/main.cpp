@@ -133,130 +133,126 @@ int main(void)
 	printf("\nMy GUID is %s\n", server->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS).ToString());
 	puts("'quit' to quit. 'stat' to show stats. 'ping' to ping.\n'pingip' to ping an ip address\n'ban' to ban an IP from connecting.\n'kick to kick the first connected player.\nType to talk.");
 	char message[2048];
-	bool mierda = false;
-
+	int m_playerNumber = 0;
+	std::string m_auxString;
+	char const *t_connection;
 	// Loop for input
 	while (1)
 	{
 
 	// This sleep keeps RakNet responsive
-	RakSleep(30);
-	if (kbhit())
-	{
-		// Notice what is not here: something to keep our network running.  It's
-		// fine to block on gets or anything we want
-		// Because the network engine was painstakingly written using threads.
-		Gets(message,sizeof(message));
-
-		if (strcmp(message, "quit")==0)
+		RakSleep(30);
+		if (kbhit())
 		{
-			puts("Quitting.");
-			break;
-		}
-
-		if (strcmp(message, "stat")==0)
-		{
-			rss=server->GetStatistics(server->GetSystemAddressFromIndex(0));
-			StatisticsToString(rss, message, 2);
-			printf("%s", message);
-			printf("Ping %i\n", server->GetAveragePing(server->GetSystemAddressFromIndex(0)));
-	
-			continue;
-		}
-
-		if (strcmp(message, "ping")==0)
-		{
-			server->Ping(clientID);
-
-			continue;
-		}
-
-		if (strcmp(message, "pingip")==0)
-		{
-			printf("Enter IP: ");
+			// Notice what is not here: something to keep our network running.  It's
+			// fine to block on gets or anything we want
+			// Because the network engine was painstakingly written using threads.
 			Gets(message,sizeof(message));
-			printf("Enter port: ");
-			Gets(portstring,sizeof(portstring));
-			if (portstring[0]==0)
-				strcpy(portstring, "1234");
-			server->Ping(message, atoi(portstring), false);
 
-			continue;
-		}
-
-		if (strcmp(message, "kick")==0)
-		{
-			server->CloseConnection(clientID, true, 0);
-
-			continue;
-		}
-
-		if (strcmp(message, "getconnectionlist")==0)
-		{
-			RakNet::SystemAddress systems[10];
-			unsigned short numConnections=10;
-			server->GetConnectionList((RakNet::SystemAddress*) &systems, &numConnections);
-			for (int i=0; i < numConnections; i++)
+			if (strcmp(message, "quit")==0)
 			{
-				printf("%i. %s\n", i+1, systems[i].ToString(true));
+				puts("Quitting.");
+				break;
 			}
-			continue;
+
+			if (strcmp(message, "stat")==0)
+			{
+				rss=server->GetStatistics(server->GetSystemAddressFromIndex(0));
+				StatisticsToString(rss, message, 2);
+				printf("%s", message);
+				printf("Ping %i\n", server->GetAveragePing(server->GetSystemAddressFromIndex(0)));
+		
+				continue;
+			}
+
+			if (strcmp(message, "ping")==0)
+			{
+				server->Ping(clientID);
+
+				continue;
+			}
+
+			if (strcmp(message, "pingip")==0)
+			{
+				printf("Enter IP: ");
+				Gets(message,sizeof(message));
+				printf("Enter port: ");
+				Gets(portstring,sizeof(portstring));
+				if (portstring[0]==0)
+					strcpy(portstring, "1234");
+				server->Ping(message, atoi(portstring), false);
+
+				continue;
+			}
+
+			if (strcmp(message, "kick")==0)
+			{
+				server->CloseConnection(clientID, true, 0);
+
+				continue;
+			}
+
+			if (strcmp(message, "getconnectionlist")==0)
+			{
+				RakNet::SystemAddress systems[10];
+				unsigned short numConnections=10;
+				server->GetConnectionList((RakNet::SystemAddress*) &systems, &numConnections);
+				for (int i=0; i < numConnections; i++)
+				{
+					printf("%i. %s\n", i+1, systems[i].ToString(true));
+				}
+				continue;
+			}
+
+			if (strcmp(message, "ban")==0)
+			{
+				printf("Enter IP to ban.  You can use * as a wildcard\n");
+				Gets(message,sizeof(message));
+				server->AddToBanList(message);
+				printf("IP %s added to ban list.\n", message);
+
+				continue;
+			}
+
+
+			// Message now holds what we want to broadcast
+			char message2[2048];
+
+			// Append Server: to the message so clients know that it ORIGINATED from the server
+			// All messages to all clients come from the server either directly or by being
+			// relayed from other clients
+			message2[0]=0;
+			const static char prefix[] = "Server: ";
+			strncpy(message2, prefix, sizeof(message2));
+			strncat(message2, message, sizeof(message2) - strlen(prefix) - 1);
+		
+			// message2 is the data to send
+			// strlen(message2)+1 is to send the null terminator
+			// HIGH_PRIORITY doesn't actually matter here because we don't use any other priority
+			// RELIABLE_ORDERED means make sure the message arrives in the right order
+			// We arbitrarily pick 0 for the ordering stream
+			// RakNet::UNASSIGNED_SYSTEM_ADDRESS means don't exclude anyone from the broadcast
+			// true means broadcast the message to everyone connected
+			server->Send(message2, (const int) strlen(message2)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 		}
-
-		if (strcmp(message, "ban")==0)
-		{
-			printf("Enter IP to ban.  You can use * as a wildcard\n");
-			Gets(message,sizeof(message));
-			server->AddToBanList(message);
-			printf("IP %s added to ban list.\n", message);
-
-			continue;
-		}
-
-
-		// Message now holds what we want to broadcast
-		char message2[2048];
-
-		// Append Server: to the message so clients know that it ORIGINATED from the server
-		// All messages to all clients come from the server either directly or by being
-		// relayed from other clients
-		message2[0]=0;
-		const static char prefix[] = "Server: ";
-		strncpy(message2, prefix, sizeof(message2));
-		strncat(message2, message, sizeof(message2) - strlen(prefix) - 1);
-	
-		// message2 is the data to send
-		// strlen(message2)+1 is to send the null terminator
-		// HIGH_PRIORITY doesn't actually matter here because we don't use any other priority
-		// RELIABLE_ORDERED means make sure the message arrives in the right order
-		// We arbitrarily pick 0 for the ordering stream
-		// RakNet::UNASSIGNED_SYSTEM_ADDRESS means don't exclude anyone from the broadcast
-		// true means broadcast the message to everyone connected
-		server->Send(message2, (const int) strlen(message2)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-	}
 
 		// Get a packet from either the server or the client
-		char const * t_first = "eya";
-
 		for (p=server->Receive(); p; server->DeallocatePacket(p), p=server->Receive())
 		{
-			// We got a packet, get the identifier with our handy function
 			packetIdentifier = GetPacketIdentifier(p);
-
-			// Check if this is a network message packet
 			switch (packetIdentifier)
 			{
 				case ID_DISCONNECTION_NOTIFICATION:
-					// Connection lost normally
 					printf("ID_DISCONNECTION_NOTIFICATION from %s\n", p->systemAddress.ToString(true));;
 					break;
 
-
 				case ID_NEW_INCOMING_CONNECTION:
-					// Somebody connected.  We have their IP now
 					printf("ID_NEW_INCOMING_CONNECTION from %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
 					clientID=p->systemAddress; // Record the player ID of the client
-					server->Send(t_first, (int) strlen(t_first)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
+					m_auxString = "new:"+std::to_string(m_playerNumber);
+					t_connection = m_auxString.c_str();  //use char const* as target type
+					server->Send(t_connection, (int) strlen(t_connection)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
+					++m_playerNumber;
 					break;
 
 				case ID_INCOMPATIBLE_PROTOCOL_VERSION:
@@ -269,14 +265,11 @@ int main(void)
 					break;
 
 				case ID_CONNECTION_LOST:
-					// Couldn't deliver a reliable packet - i.e. the other system was abnormally
-					// terminated
 					printf("ID_CONNECTION_LOST from %s\n", p->systemAddress.ToString(true));;
 					break;
 
 				default:
-					// The server knows the static data of all clients, so we can prefix the message
-					// With the name data
+
 					printf("%s\n", p->data);
 					//sprintf(message, "%s", p->data);
 					//std::string str;
@@ -286,17 +279,12 @@ int main(void)
 			}
 		}
 	}
-
 	server->Shutdown(300);
 	// We're done with the network
 	RakNet::RakPeerInterface::DestroyInstance(server);
-
 	return 0;
 }
 
-// Copied from Multiplayer.cpp
-// If the first byte is ID_TIMESTAMP, then we want the 5th byte
-// Otherwise we want the 1st byte
 unsigned char GetPacketIdentifier(RakNet::Packet *p)
 {
 	if (p==0)

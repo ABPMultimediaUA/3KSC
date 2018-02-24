@@ -20,9 +20,9 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Entity.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Entity.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
 //#include <iostream>
 
@@ -60,7 +60,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             moveTo(p_position);
 
             float t_dimX = 5.0;
-            float t_dimY = 6.0;
+            float t_dimY = 5.0;
             PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
             break;
         }
@@ -89,7 +89,7 @@ Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, in
             moveTo(p_position);
 
             float t_dimX = 5.0;
-            float t_dimY = 10.0;
+            float t_dimY = 5.0;
             PhysicsManager::instance()->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
             break;
         }
