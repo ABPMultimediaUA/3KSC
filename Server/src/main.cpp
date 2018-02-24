@@ -49,25 +49,22 @@ _CONSOLE_2_SetSystemProcessParams
 
 int main(void)
 {
-	// Pointers to the interfaces of our server and client.
-	// Note we can easily have both in the same program
+
 	RakNet::RakPeerInterface *server=RakNet::RakPeerInterface::GetInstance();
 	RakNet::RakNetStatistics *rss;
 	server->SetIncomingPassword("Rumpelstiltskin", (int)strlen("Rumpelstiltskin"));
 	server->SetTimeoutTime(30000,RakNet::UNASSIGNED_SYSTEM_ADDRESS);
-//	RakNet::PacketLogger packetLogger;
-//	server->AttachPlugin(&packetLogger);
 
-#if LIBCAT_SECURITY==1
-	cat::EasyHandshake handshake;
-	char public_key[cat::EasyHandshake::PUBLIC_KEY_BYTES];
-	char private_key[cat::EasyHandshake::PRIVATE_KEY_BYTES];
-	handshake.GenerateServerKey(public_key, private_key);
-	server->InitializeSecurity(public_key, private_key, false);
-	FILE *fp = fopen("publicKey.dat","wb");
-	fwrite(public_key,sizeof(public_key),1,fp);
-	fclose(fp);
-#endif
+	#if LIBCAT_SECURITY==1
+		cat::EasyHandshake handshake;
+		char public_key[cat::EasyHandshake::PUBLIC_KEY_BYTES];
+		char private_key[cat::EasyHandshake::PRIVATE_KEY_BYTES];
+		handshake.GenerateServerKey(public_key, private_key);
+		server->InitializeSecurity(public_key, private_key, false);
+		FILE *fp = fopen("publicKey.dat","wb");
+		fwrite(public_key,sizeof(public_key),1,fp);
+		fclose(fp);
+	#endif
 
 	// Holds packets
 	RakNet::Packet* p;
@@ -249,45 +246,44 @@ int main(void)
 			// Check if this is a network message packet
 			switch (packetIdentifier)
 			{
-			case ID_DISCONNECTION_NOTIFICATION:
-				// Connection lost normally
-				printf("ID_DISCONNECTION_NOTIFICATION from %s\n", p->systemAddress.ToString(true));;
-				break;
+				case ID_DISCONNECTION_NOTIFICATION:
+					// Connection lost normally
+					printf("ID_DISCONNECTION_NOTIFICATION from %s\n", p->systemAddress.ToString(true));;
+					break;
 
 
-			case ID_NEW_INCOMING_CONNECTION:
-				// Somebody connected.  We have their IP now
-				printf("ID_NEW_INCOMING_CONNECTION from %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
-				clientID=p->systemAddress; // Record the player ID of the client
-				server->Send(t_first, (int) strlen(t_first)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
-				break;
+				case ID_NEW_INCOMING_CONNECTION:
+					// Somebody connected.  We have their IP now
+					printf("ID_NEW_INCOMING_CONNECTION from %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
+					clientID=p->systemAddress; // Record the player ID of the client
+					server->Send(t_first, (int) strlen(t_first)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
+					break;
 
-			case ID_INCOMPATIBLE_PROTOCOL_VERSION:
-				printf("ID_INCOMPATIBLE_PROTOCOL_VERSION\n");
-				break;
+				case ID_INCOMPATIBLE_PROTOCOL_VERSION:
+					printf("ID_INCOMPATIBLE_PROTOCOL_VERSION\n");
+					break;
 
-			case ID_CONNECTED_PING:
-			case ID_UNCONNECTED_PING:
-				printf("Ping from %s\n", p->systemAddress.ToString(true));
-				break;
+				case ID_CONNECTED_PING:
+				case ID_UNCONNECTED_PING:
+					printf("Ping from %s\n", p->systemAddress.ToString(true));
+					break;
 
-			case ID_CONNECTION_LOST:
-				// Couldn't deliver a reliable packet - i.e. the other system was abnormally
-				// terminated
-				printf("ID_CONNECTION_LOST from %s\n", p->systemAddress.ToString(true));;
-				break;
+				case ID_CONNECTION_LOST:
+					// Couldn't deliver a reliable packet - i.e. the other system was abnormally
+					// terminated
+					printf("ID_CONNECTION_LOST from %s\n", p->systemAddress.ToString(true));;
+					break;
 
-			default:
-				// The server knows the static data of all clients, so we can prefix the message
-				// With the name data
-				printf("%s\n", p->data);
-				//sprintf(message, "%s", p->data);
-				//std::string str;
-				//str.append(reinterpret_cast<const char*>(p->data));
-				server->Send(message, (const int) strlen(message)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
-				break;
+				default:
+					// The server knows the static data of all clients, so we can prefix the message
+					// With the name data
+					printf("%s\n", p->data);
+					//sprintf(message, "%s", p->data);
+					//std::string str;
+					//str.append(reinterpret_cast<const char*>(p->data));
+					server->Send(message, (const int) strlen(message)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
+					break;
 			}
-
 		}
 	}
 
