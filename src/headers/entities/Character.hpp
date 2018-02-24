@@ -59,6 +59,7 @@ public:
     int             getIndex();
     char*           getName();
     int             getLife();
+    int             getMana();
 
     void            modeDebug();
 

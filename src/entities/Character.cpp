@@ -517,6 +517,11 @@ int Character::getLife(){
     return m_life;
 }
 
+//Returns the mana of the player
+int Character::getMana(){
+    return m_magic;
+}
+
 void Character::modeDebug(){
     if(m_debugMode)
         playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));

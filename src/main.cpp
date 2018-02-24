@@ -31,11 +31,12 @@ int main(){
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
     SoundManager*   soundManager = SoundManager::instance();
+    AIManager* aiManager = AIManager::instance();
 
     if (engineManager->createWindow(false)){  
         float position[3] = {0, 1, 0};
         float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, false);
+        Arena* estadio = new Arena(position, scale, 0, true);
         
         estadio->spawnPlayers();
         estadio->spawnItems();
@@ -54,14 +55,16 @@ int main(){
         
         UIManager*      uiManager = UIManager::instance();
 
+        aiManager->buildTree();
+
         //Game main loop
         while (engineManager->running()){
             //sf::Context context;
             soundManager->update();
-            engineManager->updateFrameDeltaTime();
-
+            engineManager->updateFrameDeltaTime();            
+            aiManager->update();
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
-
+            
             //Input and update for every character
             for (i = 0; i < playerCount; i++){
                 currentPlayer = Arena::getInstance()->getPlayer(i);

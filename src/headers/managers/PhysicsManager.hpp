@@ -22,6 +22,7 @@
 #define PHYSICS_MANAGER
 
 #include "../entities/Entity.hpp"
+#include "../entities/Character.hpp"
 #include <vector>
 #include <Box2D.h>
 
@@ -57,6 +58,8 @@ class PhysicsManager{
     void updateGravity();
 
     float RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
+    Character* getClosestCharacter(b2Vec2 p_p1);
+    float getDistanceToClosestCharacter(b2Vec2 p_p1);
 
     b2World*        getWorld();
     b2PolygonShape* getShape(int p_id);
