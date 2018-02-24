@@ -20,28 +20,20 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef PLUP
-#define PLUP
+#ifndef AI_MANAGER
+#define AI_MANAGER
 
-#include "Character.hpp"
-#include "Snowman.hpp"
-
-class Plup: public Character {
-    public:
-        Plup(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
-        ~Plup();
-        void    jump();
-        void    basicAttack();
-        void    specialAttackUp();
-        void    specialAttackDown();
-        void    specialAttackSide();
-        void    ultimateAttack();
-        int     getCurrentSnowmen();
+class AIManager{
     private:
-        int         m_maxSnowmen;
-        int         m_currentSnowmen;
-        Snowman**   m_snowmen;
-        
+        static AIManager* m_instance;
+    public:
+        static AIManager* instance();
+        AIManager();
+        ~AIManager();
+
+        virtual void update();
+        virtual void buildTree();
 };
 
 #endif
+

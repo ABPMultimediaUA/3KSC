@@ -20,28 +20,32 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef PLUP
-#define PLUP
-
-#include "Character.hpp"
-#include "Snowman.hpp"
-
-class Plup: public Character {
-    public:
-        Plup(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
-        ~Plup();
-        void    jump();
-        void    basicAttack();
-        void    specialAttackUp();
-        void    specialAttackDown();
-        void    specialAttackSide();
-        void    ultimateAttack();
-        int     getCurrentSnowmen();
-    private:
-        int         m_maxSnowmen;
-        int         m_currentSnowmen;
-        Snowman**   m_snowmen;
+#include "../headers/managers/AIKira.hpp"
+#include "../headers/managers/PhysicsManager.hpp"
+#include "../headers/entities/Character.hpp"
+#include "../headers/entities/Arena.hpp"
+#include <iostream>
+#include <string>
         
-};
+//Instance initialization
+AIKira* AIKira::m_instance = 0;
 
-#endif
+//Returns the only instance of this class
+AIKira* AIKira::instance(){
+    if (!m_instance)
+        m_instance = new AIKira();
+
+    return m_instance;
+}
+
+AIKira::AIKira(){}
+
+// Updates all the variables required by the tree to work properly
+void AIKira::update(){
+    
+}
+
+// Builds the tree containing Kira's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
+void AIKira::buildTree(){
+    
+}

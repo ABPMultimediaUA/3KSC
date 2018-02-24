@@ -19,6 +19,7 @@
 */
 
 #include "../headers/managers/PhysicsManager.hpp"
+#include "../headers/entities/Arena.hpp"
 #include "../headers/debug.hpp"
 #include <iostream>
 
@@ -182,4 +183,56 @@ float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
         }
     }
     return t_closestFraction;
+}
+
+//Returns the position to the closest character to p_p1
+Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
+    int t_playerCount = Arena::getInstance()->getPlayerCount();
+    Character* t_currentPlayer;
+    Character* t_closestPlayer;
+    float t_shortestModule = 0;
+
+    for (int i = 0; i < t_playerCount; i++){
+        t_currentPlayer = Arena::getInstance()->getPlayer(i);
+        float t_target_x = t_currentPlayer->getX();
+        float t_target_y = t_currentPlayer->getY();
+        float t_target_z = t_currentPlayer->getZ();
+
+        b2Vec2 t_p2 = b2Vec2(t_target_x, t_target_y); 
+
+        b2Vec2 t_p2p1 = b2Vec2(t_target_x - p_p1.x, t_target_y - p_p1.y);
+
+        float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
+
+        //We consider this as if the character is itself
+        if(t_module <= 0.5)
+            continue;
+
+        if(t_shortestModule==0){
+            t_shortestModule = t_module;
+        }
+        else{
+            if(t_module < t_shortestModule){
+                t_shortestModule = t_module;
+                t_closestPlayer = t_currentPlayer;
+            }
+        }
+    }
+
+    return(t_closestPlayer);
+}
+
+float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
+    Character* t_closestPlayer = getClosestCharacter(p_p1);
+    float t_target_x = t_closestPlayer->getX();
+    float t_target_y = t_closestPlayer->getY();
+    float t_target_z = t_closestPlayer->getZ();
+
+    b2Vec2 t_p2 = b2Vec2(t_target_x, t_target_y); 
+
+    b2Vec2 t_p2p1 = b2Vec2(t_target_x - p_p1.x, t_target_y - p_p1.y);
+
+    float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
+
+    return(t_module);
 }

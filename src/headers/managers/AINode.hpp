@@ -19,29 +19,25 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 *********************************************************************************
 *********************************************************************************/
+#ifndef AI_NODE
+#define AI_NODE
 
-#ifndef PLUP
-#define PLUP
+#include <iostream>
+#include <string>
 
-#include "Character.hpp"
-#include "Snowman.hpp"
-
-class Plup: public Character {
+class AINode{
+    private:                            // v----------------v  0  1  2   3   4
+        int      m_type;                // Type of comparison (>, <, ==, >=, <=)
+        float    m_comparison_value;
+        float*   m_data;
     public:
-        Plup(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
-        ~Plup();
-        void    jump();
-        void    basicAttack();
-        void    specialAttackUp();
-        void    specialAttackDown();
-        void    specialAttackSide();
-        void    ultimateAttack();
-        int     getCurrentSnowmen();
-    private:
-        int         m_maxSnowmen;
-        int         m_currentSnowmen;
-        Snowman**   m_snowmen;
-        
+        AINode** m_true_children;
+        AINode** m_false_children;
+        AINode(int p_type, float p_comparison_value, float *p_data, std::string action);
+        AINode(int p_type, float p_comparison_value, float *p_data);
+        ~AINode();
+        AINode* makeDecision(AINode* node);
+        std::string    m_action;
 };
 
 #endif

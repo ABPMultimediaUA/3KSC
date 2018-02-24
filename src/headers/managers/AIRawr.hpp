@@ -20,28 +20,32 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef PLUP
-#define PLUP
+#ifndef AI_RAWR
+#define AI_RAWR
 
-#include "Character.hpp"
-#include "Snowman.hpp"
+#include "AIManager.hpp"
+#include <Box2D.h>
+#include "AINode.hpp"
 
-class Plup: public Character {
-    public:
-        Plup(char* p_name, float p_position[3], int p_joystick, bool p_debugMode);
-        ~Plup();
-        void    jump();
-        void    basicAttack();
-        void    specialAttackUp();
-        void    specialAttackDown();
-        void    specialAttackSide();
-        void    ultimateAttack();
-        int     getCurrentSnowmen();
+class AIRawr : public AIManager{
     private:
-        int         m_maxSnowmen;
-        int         m_currentSnowmen;
-        Snowman**   m_snowmen;
-        
+        static AIRawr* m_instance;
+        float m_RAWR_distance_to_enemy;       // Fraction that determines if an enemy is close
+        float m_RAWR_distance_to_item;        // Fraction that determines if an item is close
+        float m_RAWR_life;                    // Plup's current life
+        float m_RAWR_mana;                    // Plup's current mana
+        float m_RAWR_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
+        float m_RAWR_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
+        float m_RAWR_special_check ;          // Determines if a snowman is already placed or not
+        b2Vec2 m_RAWR_position;               // Vector containing Plup's position
+        AINode* m_RAWR_root;                  // Root of Plup's tree
+    public:
+        static AIRawr* instance();
+        AIRawr();
+        ~AIRawr();
+        void update();
+        void buildTree();
 };
 
 #endif
+
