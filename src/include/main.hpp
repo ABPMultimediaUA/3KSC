@@ -29,7 +29,6 @@
 #include "managers/SoundManager.hpp"
 #include "managers/UIManager.hpp"
 #include "entities/Arena.hpp"
-#include "entities/NetArena.hpp"
 #include "debug.hpp"
 #include "Client.hpp"
 

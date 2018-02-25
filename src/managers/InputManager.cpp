@@ -157,10 +157,8 @@ bool InputManager::isKeyPressed(int p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
     if(t_result && m_isOnline){
         if(p_key == 0)
-            p_key = 1;
-        std::string s = std::to_string(p_key);
-        char const *pchar = s.c_str();
-        m_client->send(pchar);
+            p_key = 1;//0 means empty
+        m_client->sendAction(p_key);
         //std::cout<<"sending: "<<pchar<<std::endl;
     }
     return t_result;
@@ -292,6 +290,7 @@ void InputManager::updateInputs(int p_player){
 
 void InputManager::setNetPlayer(int p_player){
     int action = m_client->getActions(p_player);
+    //std::cout<<action<<std::endl;
     if(action == 0)
         return;
 
@@ -307,7 +306,6 @@ void InputManager::setNetPlayer(int p_player){
     {
         m_jumpInput[p_player] = true;
     }
-    std::cout<<"reciving this "<<action<<std::endl;
 }
 
 //Enables or disables inputs when key is pressed or released

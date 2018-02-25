@@ -42,12 +42,10 @@
 #include "SecureHandshake.h" // Include header for secure handshake
 #endif
 
-// We copy this from Multiplayer.cpp to keep things all in one file for this example
 unsigned char GetPacketIdentifier(RakNet::Packet *p);
 
 Client* Client::m_instance = 0;
 
-//Returns the only instance of this class
 Client* Client::instance(){
     if (!m_instance)
         m_instance = new Client();
@@ -59,7 +57,7 @@ Client* Client::instance(){
 Client::Client(){}
 
 void Client::send(char const *mens){
-		std::cout<<"Sending :"<<mens<<std::endl;
+		std::cout<<"Sending-> "<<mens<<std::endl;
 		client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
@@ -72,19 +70,13 @@ void Client::recive(){
 	#endif
 	char const * t_first = "";
 
-	// Get a packet from either the server or the client
 	for (p=client->Receive(); p; client->DeallocatePacket(p), p=client->Receive())
-	{//printf("000\n");
-		// We got a packet, get the identifier with our handy function
+	{
 		packetIdentifier = GetPacketIdentifier(p);
-
-		// Check if this is a network message packet
 		switch (packetIdentifier)
 		{
 
 		case ID_CONNECTION_LOST:
-			// Couldn't deliver a reliable packet - i.e. the other system was abnormally
-			// terminated
 			printf("ID_CONNECTION_LOST\n");
 			break;
 
@@ -98,21 +90,18 @@ void Client::recive(){
 		default:
 			//printf("-\n");
 			// It's a client, so just show the message
-			std::string str;
-			str.append(reinterpret_cast<const char*>(p->data));
-			int mns = atoi(str.c_str());
-			m_action = mns;
-		
-			printf("%s\n",p->data);
+			std::string t_messageReceived;
+			t_messageReceived.append(reinterpret_cast<const char*>(p->data));
+			readMessage(t_messageReceived);
+			//printf("Receiving-> %s\n",p->data);
 			break;
 		}
 	}
-	
 }
+
 void Client::start()
 {
 	client=RakNet::RakPeerInterface::GetInstance();
-	//m_inputManager = InputManager::instance();
 
 	// Record the first client that connects to us so we can pass it to the ping function
 	RakNet::SystemAddress clientID=RakNet::UNASSIGNED_SYSTEM_ADDRESS;
@@ -127,7 +116,6 @@ void Client::start()
 	client->AllowConnectionResponseIPMigration(false);
 	if (ip[0]==0)
 		strcpy(ip, "127.0.0.1");
-	// strcpy(ip, "natpunch.jenkinssoftware.com");
 	
 		
 	puts("Enter the port to connect to");
@@ -135,8 +123,6 @@ void Client::start()
 	if (serverPort[0]==0)
 		strcpy(serverPort, "1234");
 
-	// Connecting the client is very simple.  0 means we don't care about
-	// a connectionValidationInteger, and false for low priority threads
 	RakNet::SocketDescriptor socketDescriptor(atoi(clientPort),0);
 	socketDescriptor.socketFamily=AF_INET;
 	client->Startup(8,&socketDescriptor, 1);
@@ -185,9 +171,6 @@ int Client::getActions(int p_player){
 	return m_action;
 }
 
-// Copied from Multiplayer.cpp
-// If the first byte is ID_TIMESTAMP, then we want the 5th byte
-// Otherwise we want the 1st byte
 unsigned char GetPacketIdentifier(RakNet::Packet *p)
 {
 	if (p==0)
@@ -201,3 +184,29 @@ unsigned char GetPacketIdentifier(RakNet::Packet *p)
 	else
 		return (unsigned char) p->data[0];
 }
+
+void Client::readMessage(std::string p_message){
+	std::string t_delimiter = ":";
+	std::string t_property = p_message.substr(0, p_message.find(t_delimiter)); // t_property is "scott"
+	if(t_property == "new"){
+		std::string t_player = p_message.substr(p_message.find(t_delimiter)+1, p_message.length());
+		m_yourPlayer = atoi(t_player.c_str());
+		m_yourPlayerString = t_player;
+	}
+	else{
+		std::string t_action = p_message.substr(p_message.find(t_delimiter)+1, p_message.length());	
+		int mns = atoi(t_action.c_str());
+		m_action = mns;
+	}
+}
+
+int Client::getPlayer(){
+	return m_yourPlayer;
+}
+
+void Client::sendAction(int p_action){
+    std::string t_toSend = m_yourPlayerString + ":" + std::to_string(p_action);
+    char const *t_toSendChar = t_toSend.c_str();
+	send(t_toSendChar);
+}
+

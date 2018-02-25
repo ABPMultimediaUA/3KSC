@@ -269,11 +269,8 @@ int main(void)
 					break;
 
 				default:
-
 					printf("%s\n", p->data);
-					//sprintf(message, "%s", p->data);
-					//std::string str;
-					//str.append(reinterpret_cast<const char*>(p->data));
+					sprintf(message, "%s", p->data);
 					server->Send(message, (const int) strlen(message)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
 					break;
 			}
