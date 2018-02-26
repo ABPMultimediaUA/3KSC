@@ -17,6 +17,7 @@ LDFLAGS := -Wl,-rpath=$(LIBDIR)
 
 INCLUDE := -I$(HDRDIR) -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)assimp -I$(INCDIR)box2D -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod
 LIBS	:= -L$(LIBDIR) -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL 
+FAST	:= -j4
 
 #Make binary
 $(BINARY): $(OBJECTS)
@@ -40,18 +41,22 @@ clean:
 #Makes binary (previous clean)
 cleanc:
 	make clean
-	make
+	make $(FAST)
 
 #Runs after compiling
 run:
-	make
+	make $(FAST)
 	./$(BINARY)
 
 #Cleans, compiles and runs
 cleanr:
 	make clean
-	make
+	make $(FAST)
 	./$(BINARY)
+
+#Compile the program with 4 threads
+fast:
+	make $(FAST)
 
 #Prints sources, objects and headers lists
 info:
