@@ -23,6 +23,7 @@
 #ifndef MAIN
 #define MAIN
 
+#include "managers/AIManager.hpp"
 #include "managers/EngineManager.hpp"
 #include "managers/InputManager.hpp"
 #include "managers/PhysicsManager.hpp"

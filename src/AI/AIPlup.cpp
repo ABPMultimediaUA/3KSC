@@ -20,10 +20,10 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/managers/AIPlup.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/entities/Character.hpp"
-#include "../headers/entities/Arena.hpp"
+#include "../include/AI/AIPlup.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/characters/Character.hpp"
+#include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         
@@ -49,12 +49,12 @@ void AIPlup::update(){
     /*************************************************************/
     /****************      Get Plup's life        ****************/
     /*************************************************************/
-    m_PLUP_life = (float)Arena::getInstance()->getPlayer(t_PLUP_index)->getLife();
+    m_PLUP_life = (float)Arena::getInstance()->getPlayer(t_PLUP_index)->getHP();
 
     /*************************************************************/
     /****************      Get Plup's mana        ****************/
     /*************************************************************/
-    m_PLUP_mana = (float)Arena::getInstance()->getPlayer(t_PLUP_index)->getMana();
+    m_PLUP_mana = (float)Arena::getInstance()->getPlayer(t_PLUP_index)->getMP();
 
     /*************************************************************/
     /**************  Get distance to closest enemy  **************/

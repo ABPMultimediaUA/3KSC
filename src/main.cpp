@@ -57,16 +57,10 @@ int main(){
 
         //Game main loop
         while (engineManager->running()){
-<<<<<<< HEAD
             //sf::Context context;
-            soundManager->update();
+            soundManager->update(false);
             engineManager->updateFrameDeltaTime();            
             aiManager->update();
-=======
-            soundManager->update(true);
-            engineManager->updateFrameDeltaTime();
-
->>>>>>> develop
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
             
             //Input and update for every character

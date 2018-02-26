@@ -22,6 +22,7 @@
 #define PHYSICS_MANAGER
 
 #include "../entities/Entity.hpp"
+#include "../entities/characters/Character.hpp"
 #include "../managers/ContactManager.hpp"
 #include <vector>
 #include <Box2D.h>

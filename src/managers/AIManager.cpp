@@ -20,7 +20,7 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/managers/AIManager.hpp"
+#include "../include/managers/AIManager.hpp"
         
 //Instance initialization
 AIManager* AIManager::m_instance = 0;

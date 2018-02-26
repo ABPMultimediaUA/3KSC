@@ -20,32 +20,32 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/managers/AIRawr.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/entities/Character.hpp"
-#include "../headers/entities/Arena.hpp"
+#include "../include/AI/AILuka.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/characters/Character.hpp"
+#include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         
 //Instance initialization
-AIRawr* AIRawr::m_instance = 0;
+AILuka* AILuka::m_instance = 0;
 
 //Returns the only instance of this class
-AIRawr* AIRawr::instance(){
+AILuka* AILuka::instance(){
     if (!m_instance)
-        m_instance = new AIRawr();
+        m_instance = new AILuka();
 
     return m_instance;
 }
 
-AIRawr::AIRawr(){}
+AILuka::AILuka(){}
 
 // Updates all the variables required by the tree to work properly
-void AIRawr::update(){
+void AILuka::update(){
     
 }
 
 // Builds the tree containing Kira's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
-void AIRawr::buildTree(){
+void AILuka::buildTree(){
     
 }

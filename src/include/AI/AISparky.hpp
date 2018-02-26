@@ -20,29 +20,29 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef AI_KIRA
-#define AI_KIRA
+#ifndef AI_SPARKY
+#define AI_SPARKY
 
-#include "AIManager.hpp"
+#include "../managers/AIManager.hpp"
 #include <Box2D.h>
 #include "AINode.hpp"
 
-class AIKira : public AIManager{
+class AISparky : public AIManager{
     private:
-        static AIKira* m_instance;
-        float m_KIRA_distance_to_enemy;       // Fraction that determines if an enemy is close
-        float m_KIRA_distance_to_item;        // Fraction that determines if an item is close
-        float m_KIRA_life;                    // Plup's current life
-        float m_KIRA_mana;                    // Plup's current mana
-        float m_KIRA_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
-        float m_KIRA_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
-        float m_KIRA_special_check ;          // Determines if a snowman is already placed or not
-        b2Vec2 m_KIRA_position;               // Vector containing Plup's position
-        AINode* m_KIRA_root;                  // Root of Plup's tree
+        static AISparky* m_instance;
+        float m_SPARKY_distance_to_enemy;       // Fraction that determines if an enemy is close
+        float m_SPARKY_distance_to_item;        // Fraction that determines if an item is close
+        float m_SPARKY_life;                    // Plup's current life
+        float m_SPARKY_mana;                    // Plup's current mana
+        float m_SPARKY_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
+        float m_SPARKY_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
+        float m_SPARKY_special_check ;          // Determines if a snowman is already placed or not
+        b2Vec2 m_SPARKY_position;               // Vector containing Plup's position
+        AINode* m_SPARKY_root;                  // Root of Plup's tree
     public:
-        static AIKira* instance();
-        AIKira();
-        ~AIKira();
+        static AISparky* instance();
+        AISparky();
+        ~AISparky();
         void update();
         void buildTree();
 };

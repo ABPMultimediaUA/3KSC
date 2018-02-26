@@ -20,29 +20,29 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef AI_RAWR
-#define AI_RAWR
+#ifndef AI_KIRA
+#define AI_KIRA
 
-#include "AIManager.hpp"
+#include "../managers/AIManager.hpp"
 #include <Box2D.h>
 #include "AINode.hpp"
 
-class AIRawr : public AIManager{
+class AIKira : public AIManager{
     private:
-        static AIRawr* m_instance;
-        float m_RAWR_distance_to_enemy;       // Fraction that determines if an enemy is close
-        float m_RAWR_distance_to_item;        // Fraction that determines if an item is close
-        float m_RAWR_life;                    // Plup's current life
-        float m_RAWR_mana;                    // Plup's current mana
-        float m_RAWR_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
-        float m_RAWR_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
-        float m_RAWR_special_check ;          // Determines if a snowman is already placed or not
-        b2Vec2 m_RAWR_position;               // Vector containing Plup's position
-        AINode* m_RAWR_root;                  // Root of Plup's tree
+        static AIKira* m_instance;
+        float m_KIRA_distance_to_enemy;       // Fraction that determines if an enemy is close
+        float m_KIRA_distance_to_item;        // Fraction that determines if an item is close
+        float m_KIRA_life;                    // Plup's current life
+        float m_KIRA_mana;                    // Plup's current mana
+        float m_KIRA_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
+        float m_KIRA_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
+        float m_KIRA_special_check ;          // Determines if a snowman is already placed or not
+        b2Vec2 m_KIRA_position;               // Vector containing Plup's position
+        AINode* m_KIRA_root;                  // Root of Plup's tree
     public:
-        static AIRawr* instance();
-        AIRawr();
-        ~AIRawr();
+        static AIKira* instance();
+        AIKira();
+        ~AIKira();
         void update();
         void buildTree();
 };

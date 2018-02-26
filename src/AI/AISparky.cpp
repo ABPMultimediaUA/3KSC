@@ -20,10 +20,10 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/managers/AISparky.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/entities/Character.hpp"
-#include "../headers/entities/Arena.hpp"
+#include "../include/AI/AISparky.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/characters/Character.hpp"
+#include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         

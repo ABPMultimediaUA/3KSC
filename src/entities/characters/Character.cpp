@@ -441,8 +441,12 @@ char* Character::getName(){
 }
 
 //Returns the life of the player
-int Character::getLife(){
+int Character::getHP(){
     return m_life;
+}
+
+int Character::getMP(){
+    return m_magic;
 }
 
 void Character::modeDebug(){

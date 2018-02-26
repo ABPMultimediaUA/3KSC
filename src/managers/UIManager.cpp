@@ -42,8 +42,8 @@ UIManager::UIManager(){
     m_playerHPs = new irr::scene::ITextSceneNode*[2];
 
     m_font = EngineManager::instance()->getDevice()->getGUIEnvironment()->getBuiltInFont();
-    int t_life0 = Arena::getInstance()->getPlayer(0)->getLife();
-    int t_life1 = Arena::getInstance()->getPlayer(1)->getLife();
+    int t_life0 = Arena::getInstance()->getPlayer(0)->getHP();
+    int t_life1 = Arena::getInstance()->getPlayer(1)->getHP();
 
     //wchar_t* coso;
 
