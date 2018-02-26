@@ -18,8 +18,8 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/InputManager.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/InputManager.hpp"
 #include <iostream>
 using namespace irr;
 

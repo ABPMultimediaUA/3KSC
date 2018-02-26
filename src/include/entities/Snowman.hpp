@@ -23,8 +23,10 @@
 #ifndef SNOWMAN
 #define SNOWMAN
 
+class Projectile;
+
 #include "Entity.hpp"
-#include "Projectile.hpp"
+
 
 class Snowman: public Entity {
     public:

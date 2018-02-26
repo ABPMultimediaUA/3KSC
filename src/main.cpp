@@ -20,7 +20,7 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "headers/main.hpp"
+#include "include/main.hpp"
 #include <iostream>
 
 int main(){
@@ -54,7 +54,6 @@ int main(){
 
         //Game main loop
         while (engineManager->running()){
-            //sf::Context context;
             soundManager->update(true);
             engineManager->updateFrameDeltaTime();
 

@@ -18,9 +18,9 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/UIManager.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/entities/Arena.hpp"
+#include "../include/managers/UIManager.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/entities/Arena.hpp"
 
 //#include <SFML/OpenGL.hpp>
 #include <iostream>

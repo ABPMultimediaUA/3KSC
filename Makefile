@@ -1,10 +1,10 @@
 #Directories
 SRCDIR	:= src/
-HDRDIR	:= src/headers/
+HDRDIR	:= $(SRCDIR)include/
 LIBDIR  := lib/
-INCDIR  := src/include/
+INCDIR  := include/
 OBJDIR	:= obj/
-SUBDIRS := $(OBJDIR)entities $(OBJDIR)managers
+SUBDIRS := $(OBJDIR)entities $(OBJDIR)entities/characters $(OBJDIR)managers
 
 #Files
 SOURCES := $(shell find $(SRCDIR) -name '*.cpp')
@@ -17,6 +17,7 @@ LDFLAGS := -Wl,-rpath=$(LIBDIR)
 
 INCLUDE := -I$(HDRDIR) -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)assimp -I$(INCDIR)box2D -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod
 LIBS	:= -L$(LIBDIR) -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL 
+
 #Make binary
 $(BINARY): $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $^ $(INCLUDE) $(LIBS)
@@ -54,7 +55,8 @@ cleanr:
 
 #Prints sources, objects and headers lists
 info:
-	$(info $(SOURCES))
+	$(info $(BINARY))
 	$(info $(OBJECTS))
+	$(info $(SOURCES))
 	$(info $(INCLUDE))
 	$(info $(LIBS))

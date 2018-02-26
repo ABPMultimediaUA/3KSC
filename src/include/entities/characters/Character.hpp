@@ -23,9 +23,10 @@
 #ifndef CHARACTER
 #define CHARACTER
 
+class Debug;
+
 #include "Entity.hpp"
 #include "Projectile.hpp"
-#include "../debug.hpp"
 
 struct ActionMapping;
 

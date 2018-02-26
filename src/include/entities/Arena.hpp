@@ -23,9 +23,11 @@
 #ifndef ARENA
 #define ARENA
 
-#include "Rawr.hpp"
-#include "Plup.hpp"
-#include "Item.hpp"
+
+class Item;
+class Debug;
+
+#include "characters/Character.hpp"
 #include <SFML/System/Clock.hpp>
 //#include "Skybox.hpp"
 //#include "Texture.hpp"
@@ -33,12 +35,12 @@
 //#include "Branch.hpp"
 //#include "Platform.hpp"
 //#include "GravityZone.hpp"
-#include "../debug.hpp"
+
 
 class Arena : public Entity {
 public:
-	        Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode = false);
-            ~Arena();
+    Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode = false);
+    ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
     int             getPlayerCount();
@@ -78,7 +80,7 @@ private:
 
     float       m_spawnPositions[4][3];
 
-    sf::Clock   m_clock;
+    sf::Clock*  m_clock;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

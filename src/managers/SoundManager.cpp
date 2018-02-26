@@ -18,7 +18,7 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/SoundManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 #include <iostream>
 
 //Instance initialization

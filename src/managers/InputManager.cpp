@@ -18,10 +18,12 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/InputManager.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/extra/Inputs.hpp"
-#include "../headers/extra/Actions.hpp"
+#include "../include/managers/InputManager.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/extra/Keycodes.hpp"
+#include "../include/extra/Axis.hpp"
+#include "../include/extra/Buttons.hpp"
+#include "../include/extra/Actions.hpp"
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
