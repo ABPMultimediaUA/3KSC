@@ -21,19 +21,19 @@
 *********************************************************************************/
 
 
-#include "../headers/entities/Character.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/InputManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
-#include "../headers/managers/UIManager.hpp"
-#include "../headers/entities/Arena.hpp"
-#include "../headers/extra/Actions.hpp"
+#include "../include/entities/characters/Character.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/InputManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/managers/UIManager.hpp"
+#include "../include/entities/Arena.hpp"
+#include "../include/extra/Actions.hpp"
 
 #include <iostream>
 
 struct ActionMapping{
     Action  action;                     //Action to map
-    void    (Character::*function);     //Function for the action
+    void    (Character::*function)();   //Function for the action
     bool    onlyOnce;                   //Wait for input release?
     bool    enabled;                    //Enabled or not
 };
@@ -97,29 +97,27 @@ Character::~Character(){}
 
 //Initializes actions mapping for this player
 void Character::mapActions(){
-    m_actions = new ActionMapping[Action::Count + 1];
+    m_actions = new ActionMapping[(int) Action::Count + 1];
 
-    m_actions = {
-        //Action                        //Function                          //onlyOnce  //Enabled
-        {Action::Left                   , &Character::left                  , false     , false},
-        {Action::Right                  , &Character::right                 , false     , false},
-        {Action::Jump                   , &Character::jump                  , true      , false},
-        {Action::Run                    , &Character::run                   , false     , false},
-        {Action::Block                  , &Character::block                 , false     , false},
-        {Action::Pick                   , &Character::pick                  , false     , false},
-        {Action::BassicAttack           , &Character::basicAttack           , true      , false},
-        {Action::SpecialAttackUp        , &Character::specialAttackUp       , true      , false},
-        {Action::SpecialAttackDown      , &Character::specialAttackDown     , true      , false},
-        {Action::SpecialAttackSide      , &Character::specialAttackSide     , true      , false},
-        {Action::UltimateAttack         , &Character::ultimateAttack        , true      , false},
-        {Action::Count                  , 0                                 , false     , false}
-    };
+                      //Action                    //Function                      //onlyOnce  //Enabled
+    m_actions[0]    = {Action::Left               , &Character::left              , false     , false};
+    m_actions[1]    = {Action::Right              , &Character::right             , false     , false};
+    m_actions[2]    = {Action::Jump               , &Character::jump              , true      , false};
+    m_actions[3]    = {Action::Run                , &Character::run               , false     , false};
+    m_actions[4]    = {Action::Block              , &Character::block             , false     , false};
+    m_actions[5]    = {Action::Pick               , &Character::pick              , false     , false};
+    m_actions[6]    = {Action::BassicAttack       , &Character::basicAttack       , true      , false};
+    m_actions[7]    = {Action::SpecialAttackUp    , &Character::specialAttackUp   , true      , false};
+    m_actions[8]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
+    m_actions[9]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
+    m_actions[10]   = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
+    m_actions[11]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
 //Parameters: damage, can you block it?
 void Character::receiveAttack(int p_damage, bool p_block){
-    if((p_block && m_actions[(int) Action::Block]->enabled) || m_shielded)
+    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded)
     {
         changeLife(-p_damage/2);
         std::cout << m_name << " blocked an attack and now has " << m_life << " HP." << std::endl << std::endl;
@@ -197,7 +195,7 @@ void Character::lookRight(){
 }
 
 bool Character::isJumping(){
-    return m_actions[(int) Action::Jump]->enabled;
+    return m_actions[(int) Action::Jump].enabled;
 }
 
 
@@ -255,31 +253,31 @@ void Character::input(){
     t_inputManager->updateInputs(m_playerIndex);
     //m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
-    //Change to keyboard (RETURN KEY)
-    if (t_inputManager->isKeyPressed(58)){
-        t_inputManager->assignDevice(-1, m_playerIndex);
-    }
-
-    //Change to joystick (START BUTTON)
-    t_inputManager->updateJoysticks();
-    if (t_inputManager->isButtonPressed(0, 7)){
-        t_inputManager->assignDevice(0, m_playerIndex);
-    }
-
-    //Exit
-    //if(t_inputManager->isKeyPressed(Key_Escape))
-    //    EngineManager::instance()->stop();
-
-    if(t_inputManager->isKeyPressed(15)){
-        EngineManager::instance()->resetCamera();
-    }
+//    //Change to keyboard (RETURN KEY)
+//    if (t_inputManager->isKeyPressed(58)){
+//        t_inputManager->assignDevice(-1, m_playerIndex);
+//    }
+//    
+//    //Change to joystick (START BUTTON)
+//    t_inputManager->updateJoysticks();
+//    if (t_inputManager->isButtonPressed(0, 7)){
+//        t_inputManager->assignDevice(0, m_playerIndex);
+//    }
+//
+//    //Exit
+//    if(t_inputManager->isKeyPressed(Key_Escape))
+//        EngineManager::instance()->stop();
+//
+//    if(t_inputManager->isKeyPressed(15)){
+//        EngineManager::instance()->resetCamera();
+//    }
 
 
     //Block
-    m_actions[(int) Action::Block]->enabled = t_inputManager->checkInput(Action::Block, m_playerIndex);
+    m_actions[(int) Action::Block].enabled = t_inputManager->checkInput(Action::Block, m_playerIndex);
 
     //Input blocked if stunned, blocking or dead
-    if(!m_stunned && !m_actions[(int) Action::Block]->enaed && m_alive){
+    if(!m_stunned && !m_actions[(int) Action::Block].enabled && m_alive){
 
         ActionMapping* t_iterator = m_actions;
         bool           t_keepWaiting = false;
@@ -401,7 +399,7 @@ void Character::update(){
     doActions();
     
     if(!m_respawning)
-        updatePosition(m_actions[(int) Action::Jump]->enabled);
+        updatePosition(m_actions[(int) Action::Jump].enabled);
     else{
         updatePosition(true);
         m_respawning = false;
@@ -493,7 +491,7 @@ void Character::jump(){
         // If there is collision
         m_maxJumps--;
         m_jumpCurrentTime = 0;
-        m_actions[(int) Action::Jump]->enabled = false; // We are on the floor. Reset jump
+        m_actions[(int) Action::Jump].enabled = false; // We are on the floor. Reset jump
     }
 }
 
@@ -507,7 +505,7 @@ void Character::run(){
 }
 
 void Character::block(){
-    m_actions[(int) Action::Block]->enabled = true;
+    m_actions[(int) Action::Block].enabled = true;
 }
 
 void Character::pick(){

@@ -21,14 +21,14 @@
 #ifndef INPUT_MANAGER
 #define INPUT_MANAGER
 
-#include "../entities/Character.hpp"
+#include "../entities/characters/Character.hpp"
+#include "../extra/Actions.hpp"
+#include "../extra/Inputs.hpp"
 #include <SFML/Window/Keyboard.hpp>//DELETE!!!
 #include <SFML/Window/Joystick.hpp>//DELETE!!!
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Clock.hpp>
-#include "../extra/Actions.hpp"
-#include "../extra/Inputs.hpp"
 
 class InputManager{
     public:

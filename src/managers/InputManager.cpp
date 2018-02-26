@@ -20,9 +20,7 @@
 
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/EngineManager.hpp"
-#include "../include/extra/Keycodes.hpp"
-#include "../include/extra/Axis.hpp"
-#include "../include/extra/Buttons.hpp"
+#include "../include/extra/Inputs.hpp"
 #include "../include/extra/Actions.hpp"
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()

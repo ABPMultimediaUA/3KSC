@@ -25,8 +25,8 @@
 
 class Debug;
 
-#include "Entity.hpp"
-#include "Projectile.hpp"
+#include "../Entity.hpp"
+#include "../Projectile.hpp"
 
 struct ActionMapping;
 
