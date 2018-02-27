@@ -35,6 +35,7 @@ class InputManager{
         ~InputManager();
         bool    eventHandler();
         void    onlineMode();
+        void    setOnlineControl(int p_player);
         void    onKeyPressed(int p_key);
         bool    isKeyPressed(int p_key);
         bool    isConnected(int p_joystick);

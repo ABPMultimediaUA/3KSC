@@ -53,8 +53,11 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_debugMode     = p_debugMode;
     m_spawningTime  = 10;
     m_clock         = new sf::Clock();
+    m_playerCount   = 0;
+    m_players       = new Character*[4];
     setSpawnPositions();
     setSkybox(p_arenaIndex);
+
 }
 
 Arena::~Arena(){}
@@ -65,13 +68,13 @@ Arena* Arena::getInstance(){
 
 void Arena::spawnPlayers(){
     float positionRawr[3] = {-120, 20, 0};
-   // float positionPlup[3] = {120, 20, 0};
+    float positionPlup[3] = {120, 20, 0};
 
-    m_playerCount = 0;
-    m_players = new Character*[4];
+  
+   
 
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
-  //  m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
@@ -81,7 +84,7 @@ void Arena::spawnPlayers(){
     }
 }
 void Arena::addPlayer(){
-    float positionRawr[3] = {-120, 20, 0};
+    float positionRawr[3] = {0, 100, 0};
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
 }
 
@@ -175,9 +178,7 @@ void Arena::setSpawnPositions(){
 }
 
 void Arena::respawnPlayer(int p_player){
-
     //int randNum = rand()%(m_spawnPosition.length());
-
     float t_center[3] = {0, 170, 0};
     m_players[p_player]->respawn(t_center);
 }

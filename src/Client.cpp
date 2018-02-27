@@ -35,6 +35,8 @@
 #endif
 #include "Gets.h"
 #include "include/Client.hpp"
+#include "include/entities/Arena.hpp"
+#include "include/managers/InputManager.hpp"
 #include <string>
 #include <iostream> 
 
@@ -93,7 +95,7 @@ void Client::recive(){
 			std::string t_messageReceived;
 			t_messageReceived.append(reinterpret_cast<const char*>(p->data));
 			readMessage(t_messageReceived);
-			//printf("Receiving-> %s\n",p->data);
+			printf("Receiving-> %s\n",p->data);
 			break;
 		}
 	}
@@ -189,9 +191,14 @@ void Client::readMessage(std::string p_message){
 	std::string t_delimiter = ":";
 	std::string t_property = p_message.substr(0, p_message.find(t_delimiter)); // t_property is "scott"
 	if(t_property == "new"){
+		
 		std::string t_player = p_message.substr(p_message.find(t_delimiter)+1, p_message.length());
 		m_yourPlayer = atoi(t_player.c_str());
 		m_yourPlayerString = t_player;
+		for(int i = -1; i < m_yourPlayer; ++i){
+			Arena::getInstance()->addPlayer();
+		}
+		InputManager::instance()->setOnlineControl(m_yourPlayer);
 	}
 	else{
 		std::string t_action = p_message.substr(p_message.find(t_delimiter)+1, p_message.length());	
@@ -205,6 +212,8 @@ int Client::getPlayer(){
 }
 
 void Client::sendAction(int p_action){
+	if(p_action == 0) // 0 es el valor vacio de raknet
+		p_action = 1;
     std::string t_toSend = m_yourPlayerString + ":" + std::to_string(p_action);
     char const *t_toSendChar = t_toSend.c_str();
 	send(t_toSendChar);

@@ -50,9 +50,8 @@ int main(){
         else
         {
             estadio->spawnItems();
+            estadio->spawnPlayers();
         }
-        estadio->spawnPlayers();
-        estadio->addPlayer();
         float cameraPosition[3] = {0, 90, -150};
         float cameraTarget[3] = {0, 50, 0};
         engineManager->createCamera(cameraPosition, cameraTarget);
@@ -66,7 +65,7 @@ int main(){
         int i, playerCount = Arena::getInstance()->getPlayerCount();
         Character* currentPlayer;
         
-        UIManager* uiManager = UIManager::instance();
+        // UIManager* uiManager = UIManager::instance();
 
         //Game main loop
         while (engineManager->running()){
@@ -74,11 +73,10 @@ int main(){
             if(m_isOnline)
                 client->recive();
             engineManager->updateFrameDeltaTime();
-
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
 
             //Input and update for every character
-            for (i = 0; i < playerCount; i++){
+            for (i = 0; i < Arena::getInstance()->getPlayerCount(); i++){
                 currentPlayer = Arena::getInstance()->getPlayer(i);
 
                 //if(inputManager->eventHandler()){
@@ -92,7 +90,7 @@ int main(){
 
             engineManager->updateCamera();
             engineManager->drawScene();
-            uiManager->render();
+            // uiManager->render();
         }
         engineManager->stop();
         return 0;

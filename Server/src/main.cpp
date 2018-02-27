@@ -252,6 +252,9 @@ int main(void)
 					m_auxString = "new:"+std::to_string(m_playerNumber);
 					t_connection = m_auxString.c_str();  //use char const* as target type
 					server->Send(t_connection, (int) strlen(t_connection)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
+					m_auxString = "joined:"+std::to_string(m_playerNumber);
+					t_connection = m_auxString.c_str();
+					server->Send(t_connection, (int) strlen(t_connection)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
 					++m_playerNumber;
 					break;
 

@@ -92,6 +92,7 @@ bool InputManager::eventHandler(){
     while (m_window->pollEvent(*m_event)){
         switch (m_event->type){
             //Keyboard key pressed
+            
             case sf::Event::KeyPressed:{
                 std::cout << "Check" << std::endl;
                 updateKeyInputs(m_event->key.code, true);
@@ -145,8 +146,13 @@ bool InputManager::eventHandler(){
 void InputManager::onlineMode(){
     m_client = Client::instance();
     m_isOnline = true;
+    for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
+        m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno
 }
 
+void InputManager::setOnlineControl(int p_player){
+    m_inputDevices[p_player] = -1;
+}
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
@@ -155,12 +161,9 @@ void InputManager::onKeyPressed(int p_key){
 //Returns whether key with code p_key is pressed or not
 bool InputManager::isKeyPressed(int p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
-    if(t_result && m_isOnline){
-        if(p_key == 0)
-            p_key = 1;//0 means empty
+    if(t_result && m_isOnline)
         m_client->sendAction(p_key);
-        //std::cout<<"sending: "<<pchar<<std::endl;
-    }
+    
     return t_result;
 }
 
@@ -189,7 +192,7 @@ void InputManager::assignDevice(int p_device, int p_player){
     //Only change device of player 2 for now
     // if (p_player == 1){
     //     m_inputDevices[p_player] = p_device;
-    //     //std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
+    //     std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
     // }
     //COMENTADO PARA EL ONLINE
 }
@@ -211,22 +214,24 @@ void InputManager::updateInputs(int p_player){
             *   LShift/RShift               Run
             *   Z                           Ultimate Attack
         */
-
-        m_upInput[p_player] = isKeyPressed(Key_W) || isKeyPressed(Key_Up);
-        m_downInput[p_player] = isKeyPressed(Key_S) || isKeyPressed(Key_Down);
-        m_leftInput[p_player] = isKeyPressed(Key_A) || isKeyPressed(Key_Left);
-        m_rightInput[p_player] = isKeyPressed(Key_D) || isKeyPressed(Key_Right);
-        
-        m_jumpInput[p_player] = isKeyPressed(Key_Space);
-        m_runInput[p_player] = isKeyPressed(Key_LShift) || isKeyPressed(Key_RShift);
-        m_blockInput[p_player] = isKeyPressed(Key_B);
-        m_pickInput[p_player] = isKeyPressed(Key_Q);
-        
-        m_basicAttackInput[p_player] = isKeyPressed(Key_E);
-        m_specialAttackUpInput[p_player] = isKeyPressed(Key_X) && m_upInput[p_player];
-        m_specialAttackDownInput[p_player] = isKeyPressed(Key_X) && m_downInput[p_player];
-        m_specialAttackSideInput[p_player] = isKeyPressed(Key_X) && (m_leftInput[p_player] || m_rightInput[p_player]);
-        m_ultimateAttackInput[p_player] = isKeyPressed(Key_Z);
+        if(EngineManager::instance()->getDevice()->isWindowFocused())
+        {
+            m_upInput[p_player] = isKeyPressed(Key_W) || isKeyPressed(Key_Up);
+            m_downInput[p_player] = isKeyPressed(Key_S) || isKeyPressed(Key_Down);
+            m_leftInput[p_player] = isKeyPressed(Key_A) || isKeyPressed(Key_Left);
+            m_rightInput[p_player] = isKeyPressed(Key_D) || isKeyPressed(Key_Right);
+            
+            m_jumpInput[p_player] = isKeyPressed(Key_Space);
+            m_runInput[p_player] = isKeyPressed(Key_LShift) || isKeyPressed(Key_RShift);
+            m_blockInput[p_player] = isKeyPressed(Key_B);
+            m_pickInput[p_player] = isKeyPressed(Key_Q);
+            
+            m_basicAttackInput[p_player] = isKeyPressed(Key_E);
+            m_specialAttackUpInput[p_player] = isKeyPressed(Key_X) && m_upInput[p_player];
+            m_specialAttackDownInput[p_player] = isKeyPressed(Key_X) && m_downInput[p_player];
+            m_specialAttackSideInput[p_player] = isKeyPressed(Key_X) && (m_leftInput[p_player] || m_rightInput[p_player]);
+            m_ultimateAttackInput[p_player] = isKeyPressed(Key_Z);
+        }
     }
 
     //Joystick input
@@ -428,7 +433,6 @@ bool InputManager::checkAction(int p_action, int p_player){
         case Action_Down:{
             return m_downInput[p_player];
         }
-
         case Action_Left:{
             return m_leftInput[p_player];
         }
