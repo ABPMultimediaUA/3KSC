@@ -26,6 +26,7 @@
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Clock.hpp>
+#include <Client.hpp>
 
 class InputManager{
     public:
@@ -33,6 +34,8 @@ class InputManager{
         InputManager();
         ~InputManager();
         bool    eventHandler();
+        void    onlineMode();
+        void    setOnlineControl(int p_player);
         void    onKeyPressed(int p_key);
         bool    isKeyPressed(int p_key);
         bool    isConnected(int p_joystick);
@@ -41,7 +44,7 @@ class InputManager{
         void    updateJoysticks();
         void    assignDevice(int p_device, int p_player);
         void    updateInputs(int p_player);        
-
+        void    setNetPlayer(int p_player);
         void    updateKeyInputs(int p_key, bool p_enableMode = true);
         void    updateButtonInputs(int p_player, int p_button, bool p_enableMode = true);
         void    updateAxisInputs(int p_player, int p_axis, bool p_enableMode = true);
@@ -53,11 +56,12 @@ class InputManager{
         int**                   m_bindings;   
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];
-
+        Client* m_client;
         //Event handling
         sf::Window* m_window;             
         sf::Event*  m_event;
 
+        bool m_isOnline = false;
         //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
         int     m_inputDevices[4];
 

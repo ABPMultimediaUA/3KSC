@@ -57,7 +57,7 @@ InputManager::InputManager(){
 
     //Devices initialization
     m_inputDevices[0]   = -1;
-    m_inputDevices[1]   =  0;
+    m_inputDevices[1]   = -2;
     m_inputDevices[2]   = -2;
     m_inputDevices[3]   = -2;
 
@@ -92,6 +92,7 @@ bool InputManager::eventHandler(){
     while (m_window->pollEvent(*m_event)){
         switch (m_event->type){
             //Keyboard key pressed
+            
             case sf::Event::KeyPressed:{
                 std::cout << "Check" << std::endl;
                 updateKeyInputs(m_event->key.code, true);
@@ -142,6 +143,16 @@ bool InputManager::eventHandler(){
     return t_eventReceived;
 }
 
+void InputManager::onlineMode(){
+    m_client = Client::instance();
+    m_isOnline = true;
+    for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
+        m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno
+}
+
+void InputManager::setOnlineControl(int p_player){
+    m_inputDevices[p_player] = -1;
+}
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
@@ -149,7 +160,11 @@ void InputManager::onKeyPressed(int p_key){
 
 //Returns whether key with code p_key is pressed or not
 bool InputManager::isKeyPressed(int p_key){
-    return sf::Keyboard::isKeyPressed(m_keys[p_key]);
+    bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
+    if(t_result && m_isOnline)
+        m_client->sendAction(p_key);
+    
+    return t_result;
 }
 
 //Checks if controller with index p_index is connected
@@ -175,19 +190,18 @@ void InputManager::updateJoysticks(){
 //Assing input device to player
 void InputManager::assignDevice(int p_device, int p_player){
     //Only change device of player 2 for now
-    if (p_player == 1){
-        m_inputDevices[p_player] = p_device;
-        //std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
-    }
+    // if (p_player == 1){
+    //     m_inputDevices[p_player] = p_device;
+    //     std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
+    // }
+    //COMENTADO PARA EL ONLINE
 }
 
 //Updates joysticks state and booleans for each action
 void InputManager::updateInputs(int p_player){
     int t_inputDevice = m_inputDevices[p_player];
-
     //Keyboard input
     if (t_inputDevice == -1){
-    
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -200,22 +214,24 @@ void InputManager::updateInputs(int p_player){
             *   LShift/RShift               Run
             *   Z                           Ultimate Attack
         */
-
-        m_upInput[p_player] = isKeyPressed(Key_W) || isKeyPressed(Key_Up);
-        m_downInput[p_player] = isKeyPressed(Key_S) || isKeyPressed(Key_Down);
-        m_leftInput[p_player] = isKeyPressed(Key_A) || isKeyPressed(Key_Left);
-        m_rightInput[p_player] = isKeyPressed(Key_D) || isKeyPressed(Key_Right);
-        
-        m_jumpInput[p_player] = isKeyPressed(Key_Space);
-        m_runInput[p_player] = isKeyPressed(Key_LShift) || isKeyPressed(Key_RShift);
-        m_blockInput[p_player] = isKeyPressed(Key_B);
-        m_pickInput[p_player] = isKeyPressed(Key_Q);
-        
-        m_basicAttackInput[p_player] = isKeyPressed(Key_E);
-        m_specialAttackUpInput[p_player] = isKeyPressed(Key_X) && m_upInput[p_player];
-        m_specialAttackDownInput[p_player] = isKeyPressed(Key_X) && m_downInput[p_player];
-        m_specialAttackSideInput[p_player] = isKeyPressed(Key_X) && (m_leftInput[p_player] || m_rightInput[p_player]);
-        m_ultimateAttackInput[p_player] = isKeyPressed(Key_Z);
+        if(EngineManager::instance()->getDevice()->isWindowFocused())
+        {
+            m_upInput[p_player] = isKeyPressed(Key_W) || isKeyPressed(Key_Up);
+            m_downInput[p_player] = isKeyPressed(Key_S) || isKeyPressed(Key_Down);
+            m_leftInput[p_player] = isKeyPressed(Key_A) || isKeyPressed(Key_Left);
+            m_rightInput[p_player] = isKeyPressed(Key_D) || isKeyPressed(Key_Right);
+            
+            m_jumpInput[p_player] = isKeyPressed(Key_Space);
+            m_runInput[p_player] = isKeyPressed(Key_LShift) || isKeyPressed(Key_RShift);
+            m_blockInput[p_player] = isKeyPressed(Key_B);
+            m_pickInput[p_player] = isKeyPressed(Key_Q);
+            
+            m_basicAttackInput[p_player] = isKeyPressed(Key_E);
+            m_specialAttackUpInput[p_player] = isKeyPressed(Key_X) && m_upInput[p_player];
+            m_specialAttackDownInput[p_player] = isKeyPressed(Key_X) && m_downInput[p_player];
+            m_specialAttackSideInput[p_player] = isKeyPressed(Key_X) && (m_leftInput[p_player] || m_rightInput[p_player]);
+            m_ultimateAttackInput[p_player] = isKeyPressed(Key_Z);
+        }
     }
 
     //Joystick input
@@ -253,7 +269,7 @@ void InputManager::updateInputs(int p_player){
         m_ultimateAttackInput[p_player] = getAxisPosition(t_inputDevice, Axis_Z) >= 0 && getAxisPosition(t_inputDevice, Axis_R) >= 0;
     }
 
-    //NPC
+    //NPC NET?
     else{
         m_upInput[p_player] = false;
         m_downInput[p_player] = false;
@@ -270,6 +286,30 @@ void InputManager::updateInputs(int p_player){
         m_specialAttackDownInput[p_player] = false;
         m_specialAttackSideInput[p_player] = false;
         m_ultimateAttackInput[p_player] = false;
+        if(m_isOnline)
+        {
+            setNetPlayer(p_player);
+        }
+    }
+}
+
+void InputManager::setNetPlayer(int p_player){
+    int action = m_client->getActions(p_player);
+    //std::cout<<action<<std::endl;
+    if(action == 0)
+        return;
+
+    if(action == 1)
+    {
+        m_leftInput[p_player] = true;
+    }
+    else if(action == 3)
+    {
+        m_rightInput[p_player] = true;
+    }
+    else if(action == 57)
+    {
+        m_jumpInput[p_player] = true;
     }
 }
 
@@ -393,7 +433,6 @@ bool InputManager::checkAction(int p_action, int p_player){
         case Action_Down:{
             return m_downInput[p_player];
         }
-
         case Action_Left:{
             return m_leftInput[p_player];
         }

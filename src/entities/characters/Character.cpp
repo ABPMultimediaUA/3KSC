@@ -219,7 +219,7 @@ void Character::input(){
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
 
     t_inputManager->updateInputs(m_playerIndex);
-
+    
     //Change to keyboard (RETURN KEY)
     if (t_inputManager->isKeyPressed(58)){
         t_inputManager->assignDevice(-1, m_playerIndex);
@@ -466,5 +466,5 @@ void Character::respawn(float p_position[3]){
         m_winged = false;
     }
 
-    UIManager::instance()->setLife(m_playerIndex, m_life);
+    //UIManager::instance()->setLife(m_playerIndex, m_life);
 }

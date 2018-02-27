@@ -31,5 +31,6 @@
 #include "managers/UIManager.hpp"
 #include "entities/Arena.hpp"
 #include "debug.hpp"
+#include "Client.hpp"
 
 #endif
