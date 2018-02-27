@@ -114,6 +114,7 @@ protected:
 
 private:
     bool            m_waitRelease;
+    bool            m_keepWaiting;
     void            doActions();
 };
 

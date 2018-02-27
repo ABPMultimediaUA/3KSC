@@ -43,11 +43,7 @@ class InputManager{
         float   getAxisPosition(int p_joystick, Axis p_axis);
         void    updateJoysticks();
         void    assignDevice(int p_device, int p_player);
-        void    updateInputs(int p_player);        
-
-        void    updateKeyInputs(int p_key, bool p_enableMode = true);
-        void    updateButtonInputs(int p_player, int p_button, bool p_enableMode = true);
-        void    updateAxisInputs(int p_player, int p_axis, bool p_enableMode = true);
+        void    updateInputs(int p_player);
         
         bool    checkInput(Action p_action, int p_player);
     
@@ -67,8 +63,6 @@ class InputManager{
         //Conditions for each Input (they change depending on keyboard/joystick control)
         //Input booleans
         bool m_actions[4][(int) Action::Count];
-
-        int     getKeyboardPlayer();
 };
 
 #endif

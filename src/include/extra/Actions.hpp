@@ -28,7 +28,7 @@
         Run,
         Block,
         Pick,
-        BassicAttack,
+        BasicAttack,
         SpecialAttackUp,
         SpecialAttackDown,
         SpecialAttackSide,

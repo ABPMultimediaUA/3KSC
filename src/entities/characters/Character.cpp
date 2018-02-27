@@ -58,7 +58,7 @@ Character::Character(char* p_name, float p_position[3], int p_life, int p_magic,
     m_alive                 = true;
     m_respawning            = false;
 
-    m_runningFactor         = 1;
+    m_runningFactor         = 1.0f;
 
     m_maxJumps              = 2;
     m_jumping               = false;
@@ -78,6 +78,7 @@ Character::Character(char* p_name, float p_position[3], int p_life, int p_magic,
     mapActions();
 
     m_waitRelease           = false;
+    m_keepWaiting           = false;
 
     m_playerIndex = Character::m_playerCount++;
 
@@ -107,7 +108,7 @@ void Character::mapActions(){
     m_actions[3]    = {Action::Run                , &Character::run               , false     , false};
     m_actions[4]    = {Action::Block              , &Character::block             , false     , false};
     m_actions[5]    = {Action::Pick               , &Character::pick              , false     , false};
-    m_actions[6]    = {Action::BassicAttack       , &Character::basicAttack       , true      , false};
+    m_actions[6]    = {Action::BasicAttack        , &Character::basicAttack       , true      , false};
     m_actions[7]    = {Action::SpecialAttackUp    , &Character::specialAttackUp   , true      , false};
     m_actions[8]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
     m_actions[9]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
@@ -212,42 +213,6 @@ void Character::doActions(){
 
         ++t_iterator;
     }
-
-    /*
-    if(m_jumping)
-        jump();
-
-    if(m_basicAttack){
-        changeMagic(5);
-        basicAttack();
-    }
-
-    if(m_specialAttackUp){
-        if(m_magic >= 30){
-            changeMagic(-30);
-            specialAttackUp();
-        }
-    }
-
-    if(m_specialAttackDown){
-        if(m_magic >= 35){
-            changeMagic(-35);
-            specialAttackDown();
-        }
-    }
-
-    if(m_specialAttackSide){
-        if(m_magic >= 25){
-            changeMagic(-25);
-            specialAttackSide();
-        }
-    }
-
-    if(m_ultimateAttack){
-        EngineManager::instance()->moveCamera(getX(), getY(), getZ());
-        ultimateAttack();
-    }
-    */
 }
 
 void Character::input(){
@@ -256,7 +221,6 @@ void Character::input(){
     
     //For movement
     m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
-    m_runningFactor = 1.0f;
 
 //    //Change to keyboard (RETURN KEY)
 //    if (t_inputManager->isKeyPressed(58)){
@@ -283,119 +247,30 @@ void Character::input(){
 
     //Input blocked if stunned, blocking or dead
     if(!m_stunned && !m_actions[(int) Action::Block].enabled && m_alive){
-
-        ActionMapping* t_iterator = m_actions;
-        bool           t_keepWaiting = false;
+        ActionMapping* t_iterator   = m_actions;
         
         //Loop through actions to enable them
-        while(t_iterator->function){
-            if (t_inputManager->checkInput(t_iterator->action, m_playerIndex)){
-                //Wait for release (if necesary)
-                if (t_iterator->onlyOnce){
-                    t_keepWaiting = true;
+        while(t_iterator->function){    
+            if (t_iterator->onlyOnce){
+                if (t_inputManager->checkInput(t_iterator->action, m_playerIndex)){
+                    m_keepWaiting = true;
 
                     if (!m_waitRelease){
                         t_iterator->enabled = true;
                         m_waitRelease = true;
                     }
-                }
-
-                else{
-                    t_iterator->enabled = true;
-                }
+                }                
             }
 
-            //If an "onlyOnce" input is detected, we still have to wait for release
-            m_waitRelease = t_keepWaiting;
+            else{
+                t_iterator->enabled = t_inputManager->checkInput(t_iterator->action, m_playerIndex);
+            }
 
             ++t_iterator;
         }
 
-        /*
-        //Jump
-        // 10 frames going up, where gravity is disabled. Then gravity gets enabled again
-        if(t_inputManager->checkAction(Action_Jump, m_playerIndex) && m_maxJumps > 0){
-            if (!m_waitRelease){
-                m_jumping = true;
-                m_waitRelease = true;
-            }
-        }
-
-        //Basic Attack
-        else if(t_inputManager->checkAction(Action_BasicAttack, m_playerIndex)){
-            if (!m_waitRelease){
-                m_basicAttack = true;
-                m_waitRelease = true;
-            }
-        }
-
-        //Special attack up
-        else if(t_inputManager->checkAction(Action_SpecialAttackUp, m_playerIndex)){
-            if (!m_waitRelease){
-                m_specialAttackUp = true;
-                m_waitRelease = true;
-            }
-        }
-
-        //Special attack down
-        else if(t_inputManager->checkAction(Action_SpecialAttackDown, m_playerIndex)){
-            if (!m_waitRelease){
-                m_specialAttackDown = true;
-                m_waitRelease = true;
-            }
-        }
-
-        //Special attack side
-        else if(t_inputManager->checkAction(Action_SpecialAttackSide, m_playerIndex)){
-            if (!m_waitRelease){
-                m_specialAttackSide = true;
-                m_waitRelease = true;
-            }
-        }
-
-        //Ultimate Attack
-        else if(t_inputManager->checkAction(Action_UltimateAttack, m_playerIndex)){
-            if (!m_waitRelease){
-                m_ultimateAttack = true;
-                m_waitRelease = true;
-            }
-        }
-
-        //No attack
-        else{
-            m_waitRelease = false;
-        }
-
-        m_runningFactor = 1;
-
-        //Sprint
-        if(t_inputManager->checkAction(Action_Run, m_playerIndex)){
-            if(m_winged){
-                m_runningFactor = 1.5f;
-            }
-            else{
-                m_runningFactor = 2.0f;
-            }
-            //std::cout << m_name << " is running" << std::endl;
-        }
-
-        //Left
-        if(t_inputManager->checkAction(Action_Left, m_playerIndex)){
-            moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
-            lookLeft();
-        }
-
-        //Right
-        if(t_inputManager->checkAction(Action_Right, m_playerIndex)){
-            moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
-            lookRight();
-        }
-
-        //Pick object
-        if (t_inputManager->checkAction(Action_Pick, m_playerIndex)){
-            pickItem();
-        }
-        */
+        m_waitRelease = m_keepWaiting;
+        m_keepWaiting = false;
     }    
 }
 
@@ -480,6 +355,7 @@ void Character::respawn(float p_position[3]){
 bool Character::left(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     lookLeft();
+    m_runningFactor = 1.0f;
 
     return false;
 }
@@ -487,6 +363,7 @@ bool Character::left(){
 bool Character::right(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
+    m_runningFactor = 1.0f;
 
     return false;
 }

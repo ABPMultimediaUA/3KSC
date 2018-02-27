@@ -55,7 +55,7 @@ InputManager::InputManager(){
 
     //Devices initialization
     m_inputDevices[0]   = -1;
-    m_inputDevices[1]   =  0;
+    m_inputDevices[1]   = -2;
     m_inputDevices[2]   = -2;
     m_inputDevices[3]   = -2;
 
@@ -76,24 +76,6 @@ bool InputManager::eventHandler(){
 
     while (m_window->pollEvent(*m_event)){
         switch (m_event->type){
-            //Keyboard key pressed
-            case sf::Event::KeyPressed:{
-                std::cout << "Check" << std::endl;
-                updateKeyInputs(m_event->key.code, true);
-
-                t_eventReceived = true;
-                break;
-            }
-
-            //Keyboard key released
-            case sf::Event::KeyReleased:{         
-                updateKeyInputs(m_event->key.code, false);
-                
-                t_eventReceived = true;
-                break;
-            }
-
-
             //New Joystick connected
             case sf::Event::JoystickConnected:{
 
@@ -103,20 +85,6 @@ bool InputManager::eventHandler(){
 
             //Lost Joystick connection
             case sf::Event::JoystickDisconnected:{
-
-                t_eventReceived = true;
-                break;
-            }
-
-            //Joystick button pressed
-            case sf::Event::JoystickButtonPressed:{
-
-                t_eventReceived = true;
-                break;
-            }
-
-            //Joystick axis changed
-            case sf::Event::JoystickMoved:{
 
                 t_eventReceived = true;
                 break;
@@ -211,6 +179,8 @@ void InputManager::updateInputs(int p_player){
         m_actions[p_player][(int) Action::Pick] =
             isKeyPressed(Key::Q);      
 
+        m_actions[p_player][(int) Action::BasicAttack] =
+            isKeyPressed(Key::E);
         m_actions[p_player][(int) Action::SpecialAttackUp] =
             isKeyPressed(Key::X) &&
                 t_up;
@@ -265,6 +235,8 @@ void InputManager::updateInputs(int p_player){
         m_actions[p_player][(int) Action::Pick] =
             isButtonPressed(t_inputDevice, Button::Y);
 
+        m_actions[p_player][(int) Action::BasicAttack] =
+            isButtonPressed(t_inputDevice, Button::X);
         m_actions[p_player][(int) Action::SpecialAttackUp] =
             isButtonPressed(t_inputDevice, Button::B) &&
                 t_up;
@@ -288,129 +260,7 @@ void InputManager::updateInputs(int p_player){
     }
 }
 
-//Enables or disables inputs when key is pressed or released
-void InputManager::updateKeyInputs(int p_key, bool p_enableMode){
-//    int t_keyboardPlayer = getKeyboardPlayer();
-//    std::cout << t_keyboardPlayer << std::endl;
-//
-//    if (t_keyboardPlayer != -1){
-//        switch (p_key){
-//            /*********************************** COMMON INPUTS ***********************************/
-//            //Up input
-//            case Key_Up:
-//            case Key_W:{
-//                m_upInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//
-//            //Down input
-//            case Key_Down:
-//            case Key_S:{
-//                m_downInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//
-//            //Left input
-//            case Key_Left:
-//            case Key_A:{
-//                m_leftInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//
-//            //Right input
-//            case Key_Right:
-//            case Key_D:{
-//                m_rightInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//            /*********************************** MENU ACTIONS ***********************************/
-//
-//
-//            /*********************************** PLAYER ACTIONS ***********************************/
-//            //Jump input
-//            case Key_Space:{
-//                m_jumpInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//
-//            //Run input
-//            case Key_LShift:
-//            case Key_RShift:{
-//                m_runInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//
-//            //Block input
-//            case Key_B:{
-//                m_blockInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//
-//            //Pick input
-//            case Key_Q:{
-//                m_pickInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//
-//            /*********************************** ATTACKS ***********************************/
-//            //Basic Attack
-//            case Key_E:{
-//                m_basicAttackInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//            
-//            //Special Attacks
-//            case Key_X:{
-//                //Special Attack up
-//                if (m_upInput[t_keyboardPlayer]){
-//                    m_specialAttackUpInput[t_keyboardPlayer] = p_enableMode;
-//                }
-//                
-//                //Special Attack Down
-//                else if (m_downInput[t_keyboardPlayer]){
-//                    m_specialAttackDownInput[t_keyboardPlayer] = p_enableMode;
-//                }
-//                
-//                //Special Attack Side
-//                else if (m_leftInput[t_keyboardPlayer] || m_rightInput[t_keyboardPlayer]){
-//                    m_specialAttackSideInput[t_keyboardPlayer] = p_enableMode;
-//                }
-//                break;
-//            }
-//
-//            //Ultimate Attack
-//            case Key_Z:{
-//                m_ultimateAttackInput[t_keyboardPlayer] = p_enableMode;
-//                break;
-//            }
-//        }
-//    }
-//    
-}
-
-//Enables or disables inputs when button is pressed
-void InputManager::updateButtonInputs(int p_player, int p_button, bool p_enableMode){
-
-}
-
-//Enables or disables inputs when axis is moved
-void InputManager::updateAxisInputs(int p_player, int p_axis, bool p_enableMode){
-
-}
-
-
 //Returns true if the asked action's input is enabled
 bool InputManager::checkInput(Action p_action, int p_player){
     return m_actions[p_player][(int) p_action];
-}
-
-//Returns the index of the player playing with keyboard, or -1 if nobody is using it
-int InputManager::getKeyboardPlayer(){
-    for(int i = 0; i < 4; i++){
-        if(m_inputDevices[i] == -1){
-            return i;
-        }
-    }
-
-    return -1;
 }
