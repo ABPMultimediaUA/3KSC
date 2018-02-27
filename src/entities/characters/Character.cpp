@@ -21,19 +21,20 @@
 *********************************************************************************/
 
 
-#include "../include/entities/characters/Character.hpp"
-#include "../include/managers/EngineManager.hpp"
-#include "../include/managers/InputManager.hpp"
-#include "../include/managers/PhysicsManager.hpp"
-#include "../include/managers/UIManager.hpp"
-#include "../include/entities/Arena.hpp"
-#include "../include/extra/Actions.hpp"
+#include "../../include/entities/characters/Character.hpp"
+#include "../../include/managers/EngineManager.hpp"
+#include "../../include/managers/InputManager.hpp"
+#include "../../include/managers/PhysicsManager.hpp"
+#include "../../include/managers/UIManager.hpp"
+#include "../../include/debug.hpp"
+#include "../../include/entities/Arena.hpp"
+#include "../../include/extra/Actions.hpp"
 
 #include <iostream>
 
 struct ActionMapping{
     Action  action;                     //Action to map
-    void    (Character::*function)();   //Function for the action
+    bool    (Character::*function)();   //Function for the action
     bool    onlyOnce;                   //Wait for input release?
     bool    enabled;                    //Enabled or not
 };
@@ -205,7 +206,8 @@ void Character::doActions(){
 
     while(t_iterator->function){
         if(t_iterator->enabled){
-            (this->*(t_iterator->function))();
+            //We call the function, it'll return false when action finishes
+            t_iterator->enabled = (this->*(t_iterator->function))();
         }
 
         ++t_iterator;
@@ -251,7 +253,10 @@ void Character::doActions(){
 void Character::input(){
     InputManager* t_inputManager = InputManager::instance();
     t_inputManager->updateInputs(m_playerIndex);
-    //m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
+    
+    //For movement
+    m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
+    m_runningFactor = 1.0f;
 
 //    //Change to keyboard (RETURN KEY)
 //    if (t_inputManager->isKeyPressed(58)){
@@ -405,7 +410,7 @@ void Character::update(){
         m_respawning = false;
     }
     if(m_debugMode)
-        playerDebug->update();
+        m_playerDebug->update();
     //Increase magic every second and with attacks
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
@@ -416,8 +421,9 @@ void Character::update(){
             //std::cout << m_name << " - Tocando el suelo" << std::endl;
             m_maxJumps = 2;
         }
-        else
+        else{
             //std::cout << m_name << " - En el airee" << std::endl;
+        }
     }
 }
 
@@ -443,7 +449,7 @@ int Character::getLife(){
 
 void Character::modeDebug(){
     if(m_debugMode)
-        playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+        m_playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
 }
 
 void Character::respawn(float p_position[3]){
@@ -471,17 +477,21 @@ void Character::respawn(float p_position[3]){
 
 
 //ACTIONS
-void Character::left(){
+bool Character::left(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     lookLeft();
+
+    return false;
 }
 
-void Character::right(){
+bool Character::right(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
+
+    return false;
 }
 
-void Character::jump(){
+bool Character::jump(){
     // Start or continue jump movement
     if(m_jumpCurrentTime < m_jumpMaxTime){
         moveY(m_jumpTable[m_jumpCurrentTime++]*2);
@@ -491,24 +501,30 @@ void Character::jump(){
         // If there is collision
         m_maxJumps--;
         m_jumpCurrentTime = 0;
-        m_actions[(int) Action::Jump].enabled = false; // We are on the floor. Reset jump
+        return false; // We are on the floor. Reset jump
     }
+
+    return true;
 }
 
-void Character::run(){
+bool Character::run(){
     if(m_winged){
         m_runningFactor = 1.5f;
     }
     else{
         m_runningFactor = 2.0f;
     }
+
+    return false;
 }
 
-void Character::block(){
+bool Character::block(){
     m_actions[(int) Action::Block].enabled = true;
+
+    return false;
 }
 
-void Character::pick(){
+bool Character::pick(){
     int t_itemType = Arena::getInstance()->catchItem(m_playerIndex, m_position);
     
     switch (t_itemType){
@@ -544,14 +560,16 @@ void Character::pick(){
             //std::cout << "No object here" << std::endl;
         }
     }
+
+    return false;
 }
 
-void Character::basicAttack(){}
+bool Character::basicAttack(){}
 
-void Character::specialAttackUp(){}
+bool Character::specialAttackUp(){}
 
-void Character::specialAttackDown(){}
+bool Character::specialAttackDown(){}
 
-void Character::specialAttackSide(){}
+bool Character::specialAttackSide(){}
 
-void Character::ultimateAttack(){}
+bool Character::ultimateAttack(){}

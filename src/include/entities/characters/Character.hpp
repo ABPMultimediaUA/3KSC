@@ -54,17 +54,17 @@ public:
     int             getLife();
     
     //Actions
-    void            left();
-    void            right();
-    void            jump();
-    void            run();
-    void            block();
-    void            pick();
-	virtual void    basicAttack();
-    virtual void    specialAttackUp();
-    virtual void    specialAttackDown();
-    virtual void    specialAttackSide();
-    virtual void    ultimateAttack();
+    bool            left();
+    bool            right();
+    bool            jump();
+    bool            run();
+    bool            block();
+    bool            pick();
+	virtual bool    basicAttack();
+    virtual bool    specialAttackUp();
+    virtual bool    specialAttackDown();
+    virtual bool    specialAttackSide();
+    virtual bool    ultimateAttack();
     
     void            modeDebug();
 
@@ -109,7 +109,7 @@ protected:
     int             m_maxProjectiles;
     int             m_currentProjectiles;
 
-    Debug *playerDebug;
+    Debug*          m_playerDebug;
     bool            m_debugMode;
 
 private:
