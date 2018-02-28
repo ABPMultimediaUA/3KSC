@@ -42,13 +42,11 @@ struct ActionMapping{
 //Static members
 int Character::m_playerCount = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
     m_lives                 = 3;
-    m_life                  = p_life;
-    m_magic                 = p_magic;
-    m_maxLife               = p_life;
-    m_maxMagic              = p_magic;
+    m_HP                    = m_maxHP = p_HP;
+    m_MP                    = m_maxMP = p_MP;
     m_damage                = p_damage;
     m_velocity              = p_velocity;
     m_stunned               = false;  
@@ -121,40 +119,40 @@ void Character::mapActions(){
 void Character::receiveAttack(int p_damage, bool p_block){
     if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded)
     {
-        changeLife(-p_damage/2);
-        std::cout << m_name << " blocked an attack and now has " << m_life << " HP." << std::endl << std::endl;
+        changeHP(-p_damage/2);
+        std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }else{
-        changeLife(-p_damage);
-        std::cout << m_name << " took an attack and now has " << m_life << " HP." << std::endl << std::endl;
+        changeHP(-p_damage);
+        std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }
 }
 
 //Increases or decreases life
-void Character::changeLife(int p_variation){
-    m_life += p_variation;
+void Character::changeHP(int p_variation){
+    m_HP += p_variation;
 
-    if (m_life <= 0){
-        m_life = 0;
+    if (m_HP <= 0){
+        m_HP = 0;
         die();
     }
     
-    else if (m_life > m_maxLife){
-        m_life = m_maxLife;
+    else if (m_HP > m_maxHP){
+        m_HP = m_maxHP;
     }
 
     //HUD Stuff
-    UIManager::instance()->setLife(m_playerIndex, m_life);
+    UIManager::instance()->setLife(m_playerIndex, m_HP);
 }
 
 //Increases or decreases magic
-void Character::changeMagic(int p_variation){
-    m_magic += p_variation;
+void Character::changeMP(int p_variation){
+    m_MP += p_variation;
 
-    if (m_magic < 0)
-        m_magic = 0;
+    if (m_MP < 0)
+        m_MP = 0;
     
-    else if (m_magic > m_maxMagic)
-        m_magic = m_maxMagic;
+    else if (m_MP > m_maxMP)
+        m_MP = m_maxMP;
 
     //HUD Stuff
 }
@@ -317,9 +315,14 @@ char* Character::getName(){
     return m_name;
 }
 
-//Returns the life of the player
-int Character::getLife(){
-    return m_life;
+//Returns the HP of the player
+int Character::getHP(){
+    return m_HP;
+}
+
+//Returns the mp of the player
+int Character::getMP(){
+    return m_MP;
 }
 
 void Character::modeDebug(){
@@ -330,8 +333,8 @@ void Character::modeDebug(){
 void Character::respawn(float p_position[3]){
     m_respawning = true;
     moveTo(p_position);
-    m_life = m_maxLife;
-    m_magic = m_maxMagic;
+    m_HP = m_maxHP;
+    m_MP = m_maxMP;
     m_shielded = false;
 
     if(m_winged){
@@ -339,7 +342,7 @@ void Character::respawn(float p_position[3]){
         m_winged = false;
     }
 
-    UIManager::instance()->setLife(m_playerIndex, m_life);
+    //UIManager::instance()->setLife(m_playerIndex, m_HP);
 }
 
 
@@ -408,7 +411,7 @@ bool Character::pick(){
         //Life tank
         case 0:{
             std::cout << m_name <<" got a Life Tank." << std::endl
-            << m_name << "'s life is now " << m_life << " HP." << std::endl << std::endl;
+            << m_name << "'s life is now " << m_HP << " HP." << std::endl << std::endl;
             break;
         }
 
@@ -446,33 +449,7 @@ bool Character::basicAttack(){}
 bool Character::specialAttackUp(){}
 
 bool Character::specialAttackDown(){}
-//Returns the life of the player
-int Character::getHP(){
-    return m_life;
-}
 
 bool Character::specialAttackSide(){}
-int Character::getMP(){
-    return m_magic;
-}
-
-void Character::modeDebug(){
-    if(m_debugMode)
-        playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
-}
 
 bool Character::ultimateAttack(){}
-void Character::respawn(float p_position[3]){
-    m_respawning = true;
-    moveTo(p_position);
-    m_life = m_maxLife;
-    m_magic = m_maxMagic;
-    m_shielded = false;
-
-    if(m_winged){
-        m_velocity /= 1.5f;
-        m_winged = false;
-    }
-
-    //UIManager::instance()->setLife(m_playerIndex, m_life);
-}

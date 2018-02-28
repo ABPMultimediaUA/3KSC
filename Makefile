@@ -50,8 +50,7 @@ run:
 
 #Cleans, compiles and runs
 cleanr:
-	make clean
-	make $(FAST)
+	make cleanc
 	./$(BINARY)
 
 #Compile the program with 4 threads

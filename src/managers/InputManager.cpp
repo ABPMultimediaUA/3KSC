@@ -95,26 +95,16 @@ bool InputManager::eventHandler(){
     return t_eventReceived;
 }
 
-void InputManager::onlineMode(){
-    m_client = Client::instance();
-    m_isOnline = true;
-    for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
-        m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno
-}
-
-void InputManager::setOnlineControl(int p_player){
-    m_inputDevices[p_player] = -1;
-}
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
 }
 
 //Returns whether key with code p_key is pressed or not
-bool InputManager::isKeyPressed(int p_key){
-    bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
+bool InputManager::isKeyPressed(Key p_key){
+    bool t_result = sf::Keyboard::isKeyPressed(m_keys[(int) p_key]);
     if(t_result && m_isOnline)
-        m_client->sendAction(p_key);
+        m_client->sendAction((int) p_key);
     
     return t_result;
 }
@@ -147,6 +137,44 @@ void InputManager::assignDevice(int p_device, int p_player){
     //     std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
     // }
     //COMENTADO PARA EL ONLINE
+}
+
+void InputManager::onlineMode(){
+    m_client = Client::instance();
+    m_isOnline = true;
+    for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
+        m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno
+}
+
+void InputManager::setOnlineControl(int p_player){
+    m_inputDevices[p_player] = -1;
+}
+
+void InputManager::setNetPlayer(int p_player){
+    int t_action = m_client->getActions(p_player);
+    // std::cout << action << std::endl;
+    
+    switch (t_action){
+        case 0:{
+            return;
+            break;
+        }
+        
+        case 1:{
+            m_actions[p_player][(int) Action::Left] = true;
+            break;
+        }
+
+        case 3:{
+            m_actions[p_player][(int) Action::Right] = true;
+            break;
+        }
+
+        case 57:{
+            m_actions[p_player][(int) Action::Jump] = true;
+            break;
+        }
+    }
 }
 
 //Updates joysticks state and booleans for each action

@@ -37,8 +37,6 @@ class InputManager{
         InputManager();
         ~InputManager();
         bool    eventHandler();
-        void    onlineMode();
-        void    setOnlineControl(int p_player);
         void    onKeyPressed(int p_key);
         bool    isKeyPressed(Key p_key);
         bool    isConnected(int p_joystick);
@@ -46,6 +44,8 @@ class InputManager{
         float   getAxisPosition(int p_joystick, Axis p_axis);
         void    updateJoysticks();
         void    assignDevice(int p_device, int p_player);
+        void    onlineMode();
+        void    setOnlineControl(int p_player);
         void    setNetPlayer(int p_player);        
         void    updateInputs(int p_player);
         bool    checkInput(Action p_action, int p_player);
