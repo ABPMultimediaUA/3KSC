@@ -160,12 +160,14 @@ void InputManager::setNetPlayer(int p_player){
             break;
         }
         
-        case 1:{
+        case  1:
+        case 71:{
             m_actions[p_player][(int) Action::Left] = true;
             break;
         }
 
-        case 3:{
+        case  3:
+        case 72:{
             m_actions[p_player][(int) Action::Right] = true;
             break;
         }
