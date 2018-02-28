@@ -29,12 +29,12 @@ class Rawr: public Character{
 public:
 	Rawr(char* p_name, float p_position[3], bool p_debugMode);
     ~Rawr();
-    void    jump();
-    void    basicAttack();
-    void    specialAttackUp();
-    void    specialAttackDown();
-    void    specialAttackSide();
-    void    ultimateAttack();
+    bool    jump();
+    bool    basicAttack();
+    bool    specialAttackUp();
+    bool    specialAttackDown();
+    bool    specialAttackSide();
+    bool    ultimateAttack();
 
 };
 

@@ -23,6 +23,7 @@
 #ifndef MAIN
 #define MAIN
 
+#include "managers/AIManager.hpp"
 #include "managers/EngineManager.hpp"
 #include "managers/InputManager.hpp"
 #include "managers/PhysicsManager.hpp"
@@ -30,5 +31,6 @@
 #include "managers/UIManager.hpp"
 #include "entities/Arena.hpp"
 #include "debug.hpp"
+#include "Client.hpp"
 
 #endif

@@ -46,7 +46,7 @@ void Item::use(){
     switch (m_type){
         //Life tank
         case 0:{
-            Arena::getInstance()->getPlayer(m_owner)->changeLife(30);
+            Arena::getInstance()->getPlayer(m_owner)->changeMP(30);
             break;
         }
 

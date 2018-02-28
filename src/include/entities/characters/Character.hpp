@@ -25,53 +25,60 @@
 
 class Debug;
 
-#include "../Projectile.hpp"
 #include "../Entity.hpp"
+#include "../Projectile.hpp"
+
+struct ActionMapping;
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_life, int p_magic, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
+    Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
     ~Character();
 	
     void            receiveAttack(int p_damage, bool p_block);
-    virtual void    changeLife(int p_variation);
-    void            changeMagic(int p_variation);
+    virtual void    changeHP(int p_variation);
+    void            changeMP(int p_variation);
+    void            die();
+    void            respawn(float p_position[3]);
     void            shield();
     void            wings();
-    void            die();
     void            lookLeft();
     void            lookRight();
-    bool            isJumping();
     void            input();
     void            update();
-    void            respawn(float p_position[3]);
-
-    virtual void    jump();
-    void            pickItem();
-	virtual void    basicAttack();
-    virtual void    specialAttackUp();
-    virtual void    specialAttackDown();
-    virtual void    specialAttackSide();
-    virtual void    ultimateAttack();
     
     int             getDamage();
     int             getIndex();
     char*           getName();
-    int             getLife();
+    int             getHP();
+    int             getMP();
+    bool            isJumping();
+    
+    //Actions
+    bool            left();
+    bool            right();
+    bool            jump();
+    bool            run();
+    bool            block();
+    bool            pick();
+	virtual bool    basicAttack();
+    virtual bool    specialAttackUp();
+    virtual bool    specialAttackDown();
+    virtual bool    specialAttackSide();
+    virtual bool    ultimateAttack();
 
     void            modeDebug();
-
-
+    
 protected:
     static int      m_playerCount;
     int             m_playerIndex;
 
     char*           m_name;
     int             m_lives;
-    int             m_life;
-    int             m_magic;     
-    int             m_maxLife;
-    int             m_maxMagic;
+    int             m_HP;
+    int             m_MP;     
+    int             m_maxHP;
+    int             m_maxMP;
     int             m_damage;
     float           m_velocity;
     float           m_attackPosition[3];
@@ -82,8 +89,8 @@ protected:
     bool            m_shielded;
     bool            m_winged;
     bool            m_alive;
-    float           m_frameDeltaTime;       //For movement
     bool            m_respawning;
+    float           m_frameDeltaTime;       //For movement
     float           m_runningFactor;
 
     //Jumps
@@ -94,21 +101,20 @@ protected:
     float           m_jumpTable[10];        // Determines how high the player goes each frame while jumping
     int             m_jumpIndex;            //For double jump
 
-    bool            m_basicAttack;
-    bool            m_specialAttackUp;
-    bool            m_specialAttackDown;
-    bool            m_specialAttackSide;
-    bool            m_ultimateAttack;
 
+    ActionMapping*  m_actions;
+    void            mapActions();
+    
     Projectile**    m_projectiles;
     int             m_maxProjectiles;
     int             m_currentProjectiles;
 
-    Debug*          playerDebug;
+    Debug*          m_playerDebug;
     bool            m_debugMode;
 
 private:
     bool            m_waitRelease;
+    bool            m_keepWaiting;
     void            doActions();
 };
 
