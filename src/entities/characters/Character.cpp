@@ -446,7 +446,33 @@ bool Character::basicAttack(){}
 bool Character::specialAttackUp(){}
 
 bool Character::specialAttackDown(){}
+//Returns the life of the player
+int Character::getHP(){
+    return m_life;
+}
 
 bool Character::specialAttackSide(){}
+int Character::getMP(){
+    return m_magic;
+}
+
+void Character::modeDebug(){
+    if(m_debugMode)
+        playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+}
 
 bool Character::ultimateAttack(){}
+void Character::respawn(float p_position[3]){
+    m_respawning = true;
+    moveTo(p_position);
+    m_life = m_maxLife;
+    m_magic = m_maxMagic;
+    m_shielded = false;
+
+    if(m_winged){
+        m_velocity /= 1.5f;
+        m_winged = false;
+    }
+
+    //UIManager::instance()->setLife(m_playerIndex, m_life);
+}

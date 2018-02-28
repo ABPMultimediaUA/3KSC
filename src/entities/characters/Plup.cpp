@@ -140,3 +140,7 @@ bool Plup::ultimateAttack(){
 
     return false;
 }
+
+int Plup::getCurrentSnowmen(){
+    return m_currentSnowmen;
+}

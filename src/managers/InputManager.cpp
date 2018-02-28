@@ -95,14 +95,28 @@ bool InputManager::eventHandler(){
     return t_eventReceived;
 }
 
+void InputManager::onlineMode(){
+    m_client = Client::instance();
+    m_isOnline = true;
+    for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
+        m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno
+}
+
+void InputManager::setOnlineControl(int p_player){
+    m_inputDevices[p_player] = -1;
+}
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
 }
 
 //Returns whether key with code p_key is pressed or not
-bool InputManager::isKeyPressed(Key p_key){
-    return sf::Keyboard::isKeyPressed(m_keys[(int) p_key]);
+bool InputManager::isKeyPressed(int p_key){
+    bool t_result = sf::Keyboard::isKeyPressed(m_keys[p_key]);
+    if(t_result && m_isOnline)
+        m_client->sendAction(p_key);
+    
+    return t_result;
 }
 
 //Checks if controller with index p_index is connected
@@ -128,10 +142,11 @@ void InputManager::updateJoysticks(){
 //Assing input device to player
 void InputManager::assignDevice(int p_device, int p_player){
     //Only change device of player 2 for now
-    if (p_player == 1){
-        m_inputDevices[p_player] = p_device;
-        //std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
-    }
+    // if (p_player == 1){
+    //     m_inputDevices[p_player] = p_device;
+    //     std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
+    // }
+    //COMENTADO PARA EL ONLINE
 }
 
 //Updates joysticks state and booleans for each action
@@ -139,10 +154,8 @@ void InputManager::updateInputs(int p_player){
     int t_inputDevice = m_inputDevices[p_player];
     bool t_up, t_down; //They're not actions, but needed for some conditions
 
-
     //Keyboard input
     if (t_inputDevice == -1){
-    
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -252,10 +265,14 @@ void InputManager::updateInputs(int p_player){
                 getAxisPosition(t_inputDevice, Axis::R) >= 0;
     }
 
-    //NPC
+    //NPC NET?
     else{
         for (int i = 0; i < (int) Action::Count; i++){
             m_actions[p_player][i] = false;
+        }
+
+        if(m_isOnline){
+            setNetPlayer(p_player);
         }
     }
 }

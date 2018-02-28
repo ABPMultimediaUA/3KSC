@@ -37,6 +37,8 @@ class Plup: public Character {
         bool    specialAttackDown();
         bool    specialAttackSide();
         bool    ultimateAttack();
+
+        int     getCurrentSnowmen();
     private:
         int         m_maxSnowmen;
         int         m_currentSnowmen;

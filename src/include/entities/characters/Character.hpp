@@ -51,7 +51,8 @@ public:
     int             getDamage();
     int             getIndex();
     char*           getName();
-    int             getLife();
+    int             getHP();
+    int             getMP();
     
     //Actions
     bool            left();
@@ -65,10 +66,9 @@ public:
     virtual bool    specialAttackDown();
     virtual bool    specialAttackSide();
     virtual bool    ultimateAttack();
-    
+
     void            modeDebug();
-
-
+    
 protected:
     static int      m_playerCount;
     int             m_playerIndex;

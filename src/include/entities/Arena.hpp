@@ -43,6 +43,7 @@ public:
     ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
+    void            addPlayer();
     int             getPlayerCount();
     Character*      getPlayer(int p_index);
 	void            spawnItems();
