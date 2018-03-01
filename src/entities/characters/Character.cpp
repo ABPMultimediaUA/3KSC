@@ -42,7 +42,8 @@ struct ActionMapping{
 //Static members
 int Character::m_playerCount = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode)
+    : Entity(p_position, 5.f, p_modelURL){
     m_name                  = p_name;
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;

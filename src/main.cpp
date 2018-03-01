@@ -42,14 +42,12 @@ int main(){
         bool m_isOnline = false;
         std::cout<<"Online mode? (Y)/(N)"<<std::endl;
         cin >> m_online;
-        if (m_online[0] == 'y' || m_online[0] == 'Y')
-        {
+        if (m_online[0] == 'y' || m_online[0] == 'Y'){
             m_isOnline = true;
             client->start();
             inputManager->onlineMode();
         }
-        else
-        {
+        else{
             estadio->spawnItems();
             estadio->spawnPlayers();
         }
