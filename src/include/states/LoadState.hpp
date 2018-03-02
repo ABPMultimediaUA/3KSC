@@ -31,6 +31,9 @@ class LoadState : public State{
     public:
         LoadState(Game* p_game);
         ~LoadState();
+        void    input();
+        void    update();
+        void    render();
         void    nextState();
 };
 

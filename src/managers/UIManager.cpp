@@ -25,16 +25,10 @@
 //#include <SFML/OpenGL.hpp>
 #include <iostream>
 
-//Instance initialization
-UIManager* UIManager::m_instance = 0;
-
 //Returns the only instance of this class
-UIManager* UIManager::instance(){
-    if (!m_instance){
-        m_instance = new UIManager();
-    }
-
-    return m_instance;
+UIManager& UIManager::instance(){
+    static UIManager instance;
+    return instance;
 }
 
 //Constructor

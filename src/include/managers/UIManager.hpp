@@ -27,8 +27,6 @@
 
 class UIManager{
     private:
-        static UIManager*   m_instance;
-
         //sf::RenderTexture*  m_renderTexture;
         //const sf::Texture*  m_texture;
         //sf::Context*        m_gameContext;
@@ -48,7 +46,7 @@ class UIManager{
         int* m_callbacks;
 
     public:
-        static UIManager* instance();
+        static UIManager& instance();
         UIManager();
         ~UIManager();
         

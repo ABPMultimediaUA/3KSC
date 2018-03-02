@@ -31,6 +31,9 @@ class MenuState : public State{
     public:
         MenuState(Game* p_game);
         ~MenuState();
+        void    input();
+        void    update();
+        void    render();
         void    nextState();
 };
 

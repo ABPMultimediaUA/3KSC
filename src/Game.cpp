@@ -21,14 +21,25 @@
 #include "include/Game.hpp"
 #include "include/states/State.hpp"
 #include "include/states/InGameState.hpp"
+#include "include/managers/EngineManager.hpp"
+
+#include <iostream>
+#include <stdio.h>
 
 //Constructor
 Game::Game(){
-    m_state = new InGameState(this);
+    m_engineManager = &EngineManager::instance();
+
+    if (m_engineManager->createWindow(false)){
+        m_state = new InGameState(this);
+    }
 }
 
 //Destructor
-Game::~Game(){}
+Game::~Game(){
+    delete m_state;
+    delete m_engineManager;
+}
 
 //Changes to an specified state
 void Game::setState(State* p_state){
@@ -39,4 +50,15 @@ void Game::setState(State* p_state){
 //Changes to the next stage
 void Game::nextState(){
     m_state->nextState();
+}
+
+//Main loop of the game
+void Game::run(){
+    while (m_engineManager->running()){
+        m_state->input();
+        m_state->update();
+        m_state->render();
+    }
+
+    m_engineManager->stop();
 }

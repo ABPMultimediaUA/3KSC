@@ -24,10 +24,8 @@
 #define AI_MANAGER
 
 class AIManager{
-    private:
-        static AIManager* m_instance;
     public:
-        static AIManager* instance();
+        static AIManager& instance();
         AIManager();
         ~AIManager();
 

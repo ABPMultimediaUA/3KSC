@@ -25,17 +25,11 @@
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
-//Instance initialization
-InputManager* InputManager::m_instance = 0;
-
 //Returns the only instance of this class
-InputManager* InputManager::instance(){
-    if (!m_instance)
-        m_instance = new InputManager();
-
-    return m_instance;
+InputManager& InputManager::instance(){
+    static InputManager instance;
+    return instance;
 }
-
 
 //Constructor
 InputManager::InputManager(){
@@ -140,7 +134,7 @@ void InputManager::assignDevice(int p_device, int p_player){
 }
 
 void InputManager::onlineMode(){
-    m_client = Client::instance();
+    m_client = &Client::instance();
     m_isOnline = true;
     for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
         m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno

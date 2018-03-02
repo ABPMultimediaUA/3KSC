@@ -22,16 +22,19 @@
 #define GAME
 
 class State;
+class EngineManager;
 
 class Game{
     private:
-        State*  m_state;
+        State*          m_state;
+        EngineManager*  m_engineManager;
 
     public:
         Game();
         ~Game();
-        void    setState(State* p_state);
-        void    nextState();
+        void setState(State* p_state);
+        void nextState();
+        void run();
 };
 
 #endif

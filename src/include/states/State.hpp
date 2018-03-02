@@ -23,7 +23,10 @@
 
 class State{    
     public:
-        virtual void nextState() = 0;
+        virtual void input()        = 0;
+        virtual void update()       = 0;
+        virtual void render()       = 0;
+        virtual void nextState()    = 0;
 };
 
 #endif

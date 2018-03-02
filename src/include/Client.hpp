@@ -8,7 +8,7 @@
 
 class Client{
     public:
-        static Client* instance();
+        static Client& instance();
         Client();
         ~Client();
         void start();
@@ -19,7 +19,6 @@ class Client{
         int getPlayer();
         void sendAction(int p_action);
     private:
-        static Client* m_instance;
         RakNet::RakNetStatistics *rss;
         RakNet::RakPeerInterface *client;
 	    RakNet::Packet* p;

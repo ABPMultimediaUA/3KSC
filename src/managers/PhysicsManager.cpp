@@ -23,15 +23,10 @@
 #include "../include/debug.hpp"
 #include <iostream>
 
-//Instance initialization
-PhysicsManager* PhysicsManager::m_instance = 0;
-
 //Returns the only instance of this class
-PhysicsManager* PhysicsManager::instance(){
-    if (!m_instance)
-        m_instance = new PhysicsManager();
-
-    return m_instance;
+PhysicsManager& PhysicsManager::instance(){
+    static PhysicsManager instance;
+    return instance;
 }
   //at global scope
 

@@ -29,7 +29,6 @@
 
 class PhysicsManager{
     private:
-    static PhysicsManager* m_instance;
     //Entity** m_physicBodies;
     std::vector<b2Body*> m_physicBodies;
 
@@ -49,7 +48,7 @@ class PhysicsManager{
     ContactManager* m_contactManager;
 
     public:
-    static PhysicsManager* instance();
+    static PhysicsManager& instance();
     PhysicsManager();
     ~PhysicsManager();
     

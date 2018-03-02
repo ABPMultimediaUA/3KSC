@@ -46,13 +46,9 @@
 
 unsigned char GetPacketIdentifier(RakNet::Packet *p);
 
-Client* Client::m_instance = 0;
-
-Client* Client::instance(){
-    if (!m_instance)
-        m_instance = new Client();
-
-    return m_instance;
+Client& Client::instance(){
+    static Client instance;
+    return instance;
 }
 
 //Constructor

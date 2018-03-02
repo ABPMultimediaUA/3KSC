@@ -21,7 +21,7 @@
 #ifndef INPUT_MANAGER
 #define INPUT_MANAGER
 
-#include "../entities/characters/Character.hpp"
+//#include "../entities/characters/Character.hpp"
 #include "../extra/Actions.hpp"
 #include "../extra/Inputs.hpp"
 #include <SFML/Window/Keyboard.hpp>//DELETE!!!
@@ -33,7 +33,7 @@
 
 class InputManager{
     public:
-        static InputManager* instance();
+        static InputManager& instance();
         InputManager();
         ~InputManager();
         bool    eventHandler();
@@ -51,7 +51,6 @@ class InputManager{
         bool    checkInput(Action p_action, int p_player);
     
     private:
-        static InputManager*    m_instance;
         int**                   m_bindings;   
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];

@@ -28,11 +28,10 @@
 
 class GraphicManager{
 private:
-    static GraphicManager* m_instance;
     float m_scale;
 
 public:
-    static GraphicManager* instance();
+    static GraphicManager& instance();
     GraphicManager();
     ~GraphicManager();
     

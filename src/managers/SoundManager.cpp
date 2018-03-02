@@ -21,15 +21,10 @@
 #include "../include/managers/SoundManager.hpp"
 #include <iostream>
 
-//Instance initialization
-SoundManager* SoundManager::m_instance = 0;
-
 //Returns the only instance of this class
-SoundManager* SoundManager::instance(){
-    if(!m_instance)
-        m_instance = new SoundManager();
-
-    return m_instance;
+SoundManager& SoundManager::instance(){
+    static SoundManager instance;
+    return instance;
 }
 
 void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line)

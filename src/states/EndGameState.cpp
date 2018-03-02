@@ -29,6 +29,18 @@ EndGameState::EndGameState(Game* p_game)
 //Destructor
 EndGameState::~EndGameState(){}
 
+void EndGameState::input(){
+
+}
+
+void EndGameState::update(){
+
+}
+
+void EndGameState::render(){
+
+}
+
 //Change to next state
 void EndGameState::nextState(){
     m_game->setState(new MenuState(m_game));

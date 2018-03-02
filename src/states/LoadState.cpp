@@ -29,6 +29,18 @@ LoadState::LoadState(Game* p_game)
 //Destructor
 LoadState::~LoadState(){}
 
+void LoadState::input(){
+
+}
+
+void LoadState::update(){
+
+}
+
+void LoadState::render(){
+
+}
+
 //Change to next state
 void LoadState::nextState(){
     m_game->setState(new MenuState(m_game));

@@ -29,6 +29,18 @@ MenuState::MenuState(Game* p_game)
 //Destructor
 MenuState::~MenuState(){}
 
+void MenuState::input(){
+
+}
+
+void MenuState::update(){
+
+}
+
+void MenuState::render(){
+
+}
+
 //Change to next state
 void MenuState::nextState(){
     m_game->setState(new InGameState(m_game));

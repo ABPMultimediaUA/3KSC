@@ -20,12 +20,17 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "include/main.hpp"
+#include "include/Game.hpp"
+// #include "include/main.hpp"
+// #include <stdio.h>
 #include <iostream>
-#include <stdio.h>
 
 int main(){
-    EngineManager* engineManager = EngineManager::instance();
+    Game game();
+
+    game.run();
+
+    /* EngineManager* engineManager = EngineManager::instance();
     InputManager* inputManager = InputManager::instance();
     PhysicsManager* physicsManager = PhysicsManager::instance();
     SoundManager*   soundManager = SoundManager::instance();
@@ -97,5 +102,7 @@ int main(){
         engineManager->stop();
         return 0;
     }
-    return 1;
+    return 1; */
+
+    return 0;
 }

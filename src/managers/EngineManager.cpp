@@ -23,16 +23,10 @@
 #include <iostream>
 using namespace irr;
 
-//Instance initialization
-EngineManager* EngineManager::m_instance = 0;
-
 //Returns the only instance of this class
-EngineManager* EngineManager::instance(){
-    if (!m_instance){
-        m_instance = new EngineManager();
-    }
-
-    return m_instance;
+EngineManager& EngineManager::instance(){
+    static EngineManager instance;
+    return instance;
 }
 
 //Constructor

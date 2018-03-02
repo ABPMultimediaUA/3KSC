@@ -40,7 +40,7 @@ class SoundEvent;
 
 class SoundManager{
 public:
-    static SoundManager* instance();
+    static SoundManager& instance();
     SoundManager();
     ~SoundManager();
 
@@ -56,8 +56,6 @@ public:
     void modifyParameter(const char* name, float num, const char* parameter);
 
 private:
-    static SoundManager* m_instance;
-
     FMOD_RESULT               m_Result;
     FMOD::Studio::System     *m_system;
     FMOD::System             *m_lowLevelSystem;

@@ -22,15 +22,36 @@
 #define IN_GAME_STATE
 
 class Game;
+class EngineManager;
+class InputManager;
+class UIManager;
+class SoundManager;
+class PhysicsManager;
+class AIManager;
+class Client;
+class Arena;
 
 #include "State.hpp"
 
 class InGameState : public State{
     private:
-        Game*   m_game;
+        Game*           m_game;
+        EngineManager*  m_engineManager;
+        InputManager*   m_inputManager;
+        UIManager*      m_UIManager;
+        SoundManager*   m_soundManager;
+        PhysicsManager* m_physicManager;
+        AIManager*      m_AIManager;
+        Client*         m_client;
+        Arena*          m_arena;
+
+        bool            m_onlineMode;
     public:
         InGameState(Game* p_game);
         ~InGameState();
+        void    input();
+        void    update();
+        void    render();
         void    nextState();
 };
 

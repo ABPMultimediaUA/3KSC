@@ -28,8 +28,6 @@
 
 class EngineManager : public irr::IEventReceiver{
 private:
-    static EngineManager* m_instance;
-
     std::vector<irr::scene::ISceneNode*>    m_entityNodes;
     irr::IrrlichtDevice*                    m_device;
     irr::video::IVideoDriver*               m_vDriver;
@@ -50,7 +48,7 @@ private:
     //sf::RenderWindow* m_window;
 
 public:
-    static EngineManager* instance();
+    static EngineManager& instance();
     EngineManager();
     ~EngineManager();
 

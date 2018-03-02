@@ -21,16 +21,11 @@
 *********************************************************************************/
 
 #include "../include/managers/AIManager.hpp"
-        
-//Instance initialization
-AIManager* AIManager::m_instance = 0;
 
 //Returns the only instance of this class
-AIManager* AIManager::instance(){
-    if (!m_instance)
-        m_instance = new AIManager();
-
-    return m_instance;
+AIManager& AIManager::instance(){
+    static AIManager instance;
+    return instance;
 }
 
 AIManager::AIManager(){}

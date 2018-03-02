@@ -31,6 +31,9 @@ class EndGameState : public State{
     public:
         EndGameState(Game* p_game);
         ~EndGameState();
+        void    input();
+        void    update();
+        void    render();
         void    nextState();
 };
 
