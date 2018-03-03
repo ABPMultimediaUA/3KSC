@@ -291,11 +291,7 @@ void Character::update(){
 
     if(m_maxJumps < 2){
         if(PhysicsManager::instance()->isTouchingGround()){
-            //std::cout << m_name << " - Tocando el suelo" << std::endl;
             m_maxJumps = 2;
-        }
-        else{
-            //std::cout << m_name << " - En el airee" << std::endl;
         }
     }
 }
@@ -373,7 +369,7 @@ bool Character::right(){
 
 bool Character::jump(){
     // Start or continue jump movement
-    if(m_jumpCurrentTime < m_jumpMaxTime){
+    if(m_jumpCurrentTime < m_jumpMaxTime && m_maxJumps > 0){
         moveY(m_jumpTable[m_jumpCurrentTime++]*2);
     }
     // Jump has ended. Starting to go down

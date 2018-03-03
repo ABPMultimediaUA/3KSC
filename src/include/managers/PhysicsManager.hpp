@@ -54,6 +54,7 @@ class PhysicsManager{
     ~PhysicsManager();
     
     void createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex);
 
     void addForce();

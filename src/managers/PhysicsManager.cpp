@@ -83,6 +83,30 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
     footSensorFixture->SetUserData( (void*)999 );
 }
 
+void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY){
+    //Create a new body and positioning it in the coords of the Entity
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->type = b2_dynamicBody;
+    m_bodyDef->position.Set(p_position[0], p_position[1]);
+    m_body = m_world->CreateBody(m_bodyDef);
+
+    //Create a shape for the body
+    m_polygonShape = new b2PolygonShape();
+    m_polygonShape->SetAsBox(p_dimX, p_dimY);
+    
+    m_fixtureDef = new b2FixtureDef();
+    m_fixtureDef->shape = m_polygonShape;
+    m_fixtureDef->density = 1.0f;
+    m_fixtureDef->friction = 0.3f;
+
+    //Attach the shape to the body
+    m_body->CreateFixture(m_fixtureDef);
+    m_body->SetUserData(p_id);
+
+    //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
+    int *t_id = static_cast<int*>(m_body->GetUserData());
+}
+
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex){
     m_bodyDef = new b2BodyDef();
     m_bodyDef->position.Set(-90.0f, 0.0f);
