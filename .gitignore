@@ -1,5 +1,6 @@
 #Object folder and files
 /obj
+/Server/obj
 /src/*.o
 /src/entities/*.o
 /src/managers/*.o
@@ -7,6 +8,7 @@
 #Game binary
 3KSC
 3KSC.exe
+/Server/SERVER
 
 #Linux config file
 *.directory

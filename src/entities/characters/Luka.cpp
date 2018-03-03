@@ -22,6 +22,7 @@
 
 #include "../../include/entities/characters/Luka.hpp"
 #include "../../include/entities/Arena.hpp"
+#include "../../include/extra/Actions.hpp"
 #include <iostream>
 
 Luka::Luka(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
@@ -32,42 +33,42 @@ Luka::Luka(char* p_name, float p_position[3], bool p_debugMode) : Character(p_na
 
 Luka::~Luka(){}
 
-void Luka::jump(){
-    Character::jump();
+bool Luka::jump(){
+    return Character::jump();
 }
 
-void Luka::basicAttack(){
+bool Luka::basicAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "Basic Attack" << std::endl;
     
-    m_basicAttack = false;
+    return false;
 }
 
-void Luka::specialAttackUp(){
+bool Luka::specialAttackUp(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Up" << std::endl;
 
-    m_specialAttackUp = false;
+    return false;
 }
 
-void Luka::specialAttackDown(){
+bool Luka::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Down" << std::endl;
     
-    m_specialAttackDown = false;
+    return false;
 }
 
-void Luka::specialAttackSide(){
+bool Luka::specialAttackSide(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Side" << std::endl;
 
-    m_specialAttackSide = false;
+    return false;
 }
 
 
-void Luka::ultimateAttack(){
+bool Luka::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "ULTIMATE TIME!!!" << std::endl;
 
-    m_ultimateAttack = false;
+    return false;
 }

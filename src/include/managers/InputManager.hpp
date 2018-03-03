@@ -21,11 +21,15 @@
 #ifndef INPUT_MANAGER
 #define INPUT_MANAGER
 
+#include "../entities/characters/Character.hpp"
+#include "../extra/Actions.hpp"
+#include "../extra/Inputs.hpp"
 #include <SFML/Window/Keyboard.hpp>//DELETE!!!
 #include <SFML/Window/Joystick.hpp>//DELETE!!!
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Clock.hpp>
+#include <Client.hpp>
 
 class InputManager{
     public:
@@ -34,50 +38,35 @@ class InputManager{
         ~InputManager();
         bool    eventHandler();
         void    onKeyPressed(int p_key);
-        bool    isKeyPressed(int p_key);
+        bool    isKeyPressed(Key p_key);
         bool    isConnected(int p_joystick);
-        bool    isButtonPressed(int p_joystick, int p_button);
-        float   getAxisPosition(int p_joystick, int p_axis);
+        bool    isButtonPressed(int p_joystick, Button p_button);
+        float   getAxisPosition(int p_joystick, Axis p_axis);
         void    updateJoysticks();
         void    assignDevice(int p_device, int p_player);
-        void    updateInputs(int p_player);        
-
-        void    updateKeyInputs(int p_key, bool p_enableMode = true);
-        void    updateButtonInputs(int p_player, int p_button, bool p_enableMode = true);
-        void    updateAxisInputs(int p_player, int p_axis, bool p_enableMode = true);
-        
-        bool    checkAction(int p_action, int p_player);
+        void    onlineMode();
+        void    setOnlineControl(int p_player);
+        void    setNetPlayer(int p_player);        
+        void    updateInputs(int p_player);
+        bool    checkInput(Action p_action, int p_player);
     
     private:
         static InputManager*    m_instance;
         int**                   m_bindings;   
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];
-
+        Client* m_client;
         //Event handling
         sf::Window* m_window;             
         sf::Event*  m_event;
 
+        bool m_isOnline = false;
         //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
         int     m_inputDevices[4];
 
         //Conditions for each Input (they change depending on keyboard/joystick control)
-        bool    m_upInput[4];
-        bool    m_downInput[4];
-        bool    m_leftInput[4];
-        bool    m_rightInput[4];
-        bool    m_jumpInput[4];
-        bool    m_runInput[4];
-        bool    m_blockInput[4];
-        bool    m_pickInput[4];
-        bool    m_basicAttackInput[4];
-        bool    m_specialAttackUpInput[4];
-        bool    m_specialAttackDownInput[4];
-        bool    m_specialAttackSideInput[4];
-        bool    m_ultimateAttackInput[4];
-        bool    m_waitRelease[4];
-
-        int     getKeyboardPlayer();
+        //Input booleans
+        bool m_actions[4][(int) Action::Count];
 };
 
 #endif

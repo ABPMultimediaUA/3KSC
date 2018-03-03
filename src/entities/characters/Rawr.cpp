@@ -22,6 +22,7 @@
 
 #include "../../include/entities/characters/Rawr.hpp"
 #include "../../include/entities/Arena.hpp"
+#include "../../include/extra/Actions.hpp"
 //#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
@@ -33,12 +34,12 @@ Rawr::Rawr(char* p_name, float p_position[3], bool p_debugMode) : Character(p_na
 
 Rawr::~Rawr(){}
 
-void Rawr::jump(){
-    Character::jump();
+bool Rawr::jump(){
+    return Character::jump();
 }
 
 //Headbutt
-void Rawr::basicAttack(){
+bool Rawr::basicAttack(){
     std::cout << m_name << ": Headbutt!" << std::endl;
     Character* t_currentPlayer;
 
@@ -59,12 +60,12 @@ void Rawr::basicAttack(){
         }
     }
 
-    m_basicAttack = false;
+    return false;
 }
 
 //Range attack
-void Rawr::specialAttackUp(){
-    std::cout << m_name << ": Range attack" << std::endl;
+bool Rawr::specialAttackUp(){
+    std::cout << "Range attack" << std::endl;
     Character* t_currentPlayer;
 
     for (int i = 0; i < m_playerCount; i++){
@@ -80,18 +81,18 @@ void Rawr::specialAttackUp(){
         }
     }
 
-    m_specialAttackUp = false;
+    return false;
 }
 
-void Rawr::specialAttackDown(){
+bool Rawr::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": Special Attack Down" << std::endl;
     
-    m_specialAttackDown = false;
+    return false;
 }
 
 //Fireball
-void Rawr::specialAttackSide(){
+bool Rawr::specialAttackSide(){
     if (m_currentProjectiles < m_maxProjectiles){
         if(m_orientation){   // Looking right
             // Attack 5 units to the right
@@ -124,15 +125,17 @@ void Rawr::specialAttackSide(){
         if (!m_projectiles[i]->update()){
             delete m_projectiles[i];
             m_currentProjectiles--;
-            m_specialAttackSide = false;
+            return false;
         }
     }
+
+    return true;
 }
 
 
-void Rawr::ultimateAttack(){
+bool Rawr::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
-    m_ultimateAttack = false;
+    return false;
 }

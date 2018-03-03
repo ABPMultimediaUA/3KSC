@@ -22,6 +22,7 @@
 
 #include "../../include/entities/characters/MiyagiMurasaki.hpp"
 #include "../../include/entities/Arena.hpp"
+#include "../../include/extra/Actions.hpp"
 #include <iostream>
 
 MiyagiMurasaki::MiyagiMurasaki(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode
@@ -33,42 +34,42 @@ MiyagiMurasaki::MiyagiMurasaki(char* p_name, float p_position[3], bool p_debugMo
 
 MiyagiMurasaki::~MiyagiMurasaki(){}
 
-void MiyagiMurasaki::jump(){
-    Character::jump();
+bool MiyagiMurasaki::jump(){
+    return Character::jump();
 }
 
-void MiyagiMurasaki::basicAttack(){
+bool MiyagiMurasaki::basicAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "Basic Attack" << std::endl;
     
-    m_basicAttack = false;
+    return false;
 }
 
-void MiyagiMurasaki::specialAttackUp(){
+bool MiyagiMurasaki::specialAttackUp(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Up" << std::endl;
 
-    m_specialAttackUp = false;
+    return false;
 }
 
-void MiyagiMurasaki::specialAttackDown(){
+bool MiyagiMurasaki::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Down" << std::endl;
     
-    m_specialAttackDown = false;
+    return false;
 }
 
-void MiyagiMurasaki::specialAttackSide(){
+bool MiyagiMurasaki::specialAttackSide(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Side" << std::endl;
 
-    m_specialAttackSide = false;
+    return false;
 }
 
 
-void MiyagiMurasaki::ultimateAttack(){
+bool MiyagiMurasaki::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "ULTIMATE TIME!!!" << std::endl;
 
-    m_ultimateAttack = false;
+    return false;
 }
