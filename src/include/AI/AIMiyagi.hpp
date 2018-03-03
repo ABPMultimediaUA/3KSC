@@ -35,8 +35,10 @@ class AIMiyagi : public AIManager{
         float m_MIYAGI_life;                    // Plup's current life
         float m_MIYAGI_mana;                    // Plup's current mana
         float m_MIYAGI_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
+        float m_MIYAGI_special_down_range;      // Fraction that determines if an enemy is in range of special ability down
         float m_MIYAGI_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
-        float m_MIYAGI_special_check;          // Determines if a snowman is already placed or not
+        float m_MIYAGI_special_check;           // 
+        
         b2Vec2 m_MIYAGI_position;               // Vector containing Plup's position
         AINode* m_MIYAGI_root;                  // Root of Plup's tree
     public:

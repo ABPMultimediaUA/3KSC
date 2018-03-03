@@ -182,7 +182,7 @@ void AIMiyagi::buildTree(){
                             //Do PICADO atack!
                             m_MIYAGI_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_down");
                             //Can make BASIC atack?
-                            m_MIYAGI_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(0, 50.0, &m_MIYAGI_distance_to_enemy)
+                            m_MIYAGI_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(0, 50.0, &m_MIYAGI_distance_to_enemy);
                                 //Do BASIC atack!
                                 m_MIYAGI_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
                                 //MOVE!
@@ -256,7 +256,7 @@ void AIMiyagi::buildTree(){
                                 //Do PICADO atack!
                                 m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_down");
                                 //Can make BASIC atack?
-                                m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(0, 50.0, &m_MIYAGI_distance_to_enemy)
+                                m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(0, 50.0, &m_MIYAGI_distance_to_enemy);
                                     //Do BASIC atack!
                                     m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
                                     //MOVE!
@@ -330,7 +330,7 @@ void AIMiyagi::buildTree(){
                                 //Do PICADO atack!
                                 m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_down");
                                 //Can make BASIC atack?
-                                m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(0, 50.0, &m_MIYAGI_distance_to_enemy)
+                                m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(0, 50.0, &m_MIYAGI_distance_to_enemy);
                                     //Do BASIC atack!
                                     m_MIYAGI_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
                                     //MOVE!
