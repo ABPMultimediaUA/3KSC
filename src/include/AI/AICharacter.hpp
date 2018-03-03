@@ -20,17 +20,20 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef AI_MANAGER
-#define AI_MANAGER
+#ifndef AI_CHARACTER
+#define AI_CHARACTER
 
-class AIManager{
+class PhysicsManager;
+class Arena;
+
+class AICharacter{
+    protected:
+        PhysicsManager* m_physicsManager;
+        Arena*          m_arena;
+
     public:
-        static AIManager& instance();
-        AIManager();
-        ~AIManager();
-
-        virtual void update();
-        virtual void buildTree();
+        virtual void update()       = 0;
+        virtual void buildTree()    = 0;
 };
 
 #endif

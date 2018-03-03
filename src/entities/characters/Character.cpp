@@ -26,9 +26,9 @@
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/UIManager.hpp"
-#include "../../include/debug.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
+#include "../../include/debug.hpp"
 
 #include <iostream>
 
@@ -41,6 +41,13 @@ struct ActionMapping{
 
 //Static members
 int Character::m_playerCount = 0;
+
+//Pointers
+EngineManager*  m_engineManager     = &EngineManager::instance();
+InputManager*   m_inputManager      = &InputManager::instance();
+PhysicsManager* m_physicsManager    = &PhysicsManager::instance();
+UIManager*      m_UIManager         = &UIManager::instance();
+Arena*          m_arena             = Arena::getInstance();
 
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode)
     : Entity(p_position, 5.f, p_modelURL){
@@ -142,7 +149,7 @@ void Character::changeHP(int p_variation){
     }
 
     //HUD Stuff
-    UIManager::instance()->setLife(m_playerIndex, m_HP);
+    m_UIManager->setLife(m_playerIndex, m_HP);
 }
 
 //Increases or decreases magic
@@ -175,7 +182,7 @@ void Character::wings(){
 void Character::die(){
     m_lives--;
     //m_alive = false;
-    Arena::getInstance()->respawnPlayer(m_playerIndex);
+    m_arena->respawnPlayer(m_playerIndex);
     //HUD Stuff
 
     //Delete when m_lives == 0
@@ -215,34 +222,33 @@ void Character::doActions(){
 }
 
 void Character::input(){
-    InputManager* t_inputManager = InputManager::instance();
-    t_inputManager->updateInputs(m_playerIndex);
+    m_inputManager->updateInputs(m_playerIndex);
     
     //For movement
-    m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
+    m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
 //    //Change to keyboard (RETURN KEY)
-//    if (t_inputManager->isKeyPressed(58)){
-//        t_inputManager->assignDevice(-1, m_playerIndex);
+//    if (m_inputManager->isKeyPressed(58)){
+//        m_inputManager->assignDevice(-1, m_playerIndex);
 //    }
 //    
 //    //Change to joystick (START BUTTON)
-//    t_inputManager->updateJoysticks();
-//    if (t_inputManager->isButtonPressed(0, 7)){
-//        t_inputManager->assignDevice(0, m_playerIndex);
+//    m_inputManager->updateJoysticks();
+//    if (m_inputManager->isButtonPressed(0, 7)){
+//        m_inputManager->assignDevice(0, m_playerIndex);
 //    }
 //
 //    //Exit
-//    if(t_inputManager->isKeyPressed(Key_Escape))
-//        EngineManager::instance()->stop();
+//    if(m_inputManager->isKeyPressed(Key_Escape))
+//        m_engineManager->stop();
 //
-//    if(t_inputManager->isKeyPressed(15)){
-//        EngineManager::instance()->resetCamera();
+//    if(m_inputManager->isKeyPressed(15)){
+//        m_engineManager->resetCamera();
 //    }
 
 
     //Block
-    m_actions[(int) Action::Block].enabled = t_inputManager->checkInput(Action::Block, m_playerIndex);
+    m_actions[(int) Action::Block].enabled = m_inputManager->checkInput(Action::Block, m_playerIndex);
 
     //Input blocked if stunned, blocking or dead
     if(!m_stunned && !m_actions[(int) Action::Block].enabled && m_alive){
@@ -251,7 +257,7 @@ void Character::input(){
         //Loop through actions to enable them
         while(t_iterator->function){    
             if (t_iterator->onlyOnce){
-                if (t_inputManager->checkInput(t_iterator->action, m_playerIndex)){
+                if (m_inputManager->checkInput(t_iterator->action, m_playerIndex)){
                     m_keepWaiting = true;
 
                     if (!m_waitRelease){
@@ -262,7 +268,7 @@ void Character::input(){
             }
 
             else{
-                t_iterator->enabled = t_inputManager->checkInput(t_iterator->action, m_playerIndex);
+                t_iterator->enabled = m_inputManager->checkInput(t_iterator->action, m_playerIndex);
             }
 
             ++t_iterator;
@@ -291,7 +297,7 @@ void Character::update(){
     }
 
     if(m_maxJumps < 2){
-        if(PhysicsManager::instance()->isTouchingGround()){
+        if(m_physicsManager->isTouchingGround()){
             //std::cout << m_name << " - Tocando el suelo" << std::endl;
             m_maxJumps = 2;
         }
@@ -299,6 +305,16 @@ void Character::update(){
             //std::cout << m_name << " - En el airee" << std::endl;
         }
     }
+}
+
+//Returns the type of the player
+int Character::getType(){
+    return m_type;
+}
+
+//Returns if the player is an NPC
+bool Character::isNPC(){
+    return m_inputManager->getInputDevice(m_playerIndex) == -2;
 }
 
 //Returns the damage of the player
@@ -328,7 +344,7 @@ int Character::getMP(){
 
 void Character::modeDebug(){
     if(m_debugMode)
-        m_playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+        m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
 }
 
 void Character::respawn(float p_position[3]){
@@ -343,7 +359,7 @@ void Character::respawn(float p_position[3]){
         m_winged = false;
     }
 
-    //UIManager::instance()->setLife(m_playerIndex, m_HP);
+    //m_UIManager->setLife(m_playerIndex, m_HP);
 }
 
 
@@ -406,7 +422,7 @@ bool Character::block(){
 }
 
 bool Character::pick(){
-    int t_itemType = Arena::getInstance()->catchItem(m_playerIndex, m_position);
+    int t_itemType = m_arena->catchItem(m_playerIndex, m_position);
     
     switch (t_itemType){
         //Life tank

@@ -136,8 +136,8 @@ void InputManager::assignDevice(int p_device, int p_player){
 void InputManager::onlineMode(){
     m_client = &Client::instance();
     m_isOnline = true;
-    for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
-        m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno
+    for (int i = 0; i < sizeof(m_inputDevices) / sizeof(int); ++i)
+        m_inputDevices[i] = -2; //Unassign devices so server assigns one
 }
 
 void InputManager::setOnlineControl(int p_player){
@@ -304,4 +304,9 @@ void InputManager::updateInputs(int p_player){
 //Returns true if the asked action's input is enabled
 bool InputManager::checkInput(Action p_action, int p_player){
     return m_actions[p_player][(int) p_action];
+}
+
+//Returns the input device for the specified player
+int InputManager::getInputDevice(int p_player){
+    return m_inputDevices[p_player];
 }

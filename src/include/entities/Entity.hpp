@@ -23,42 +23,46 @@
 #ifndef ENTITY
 #define ENTITY
 
+class EngineManager;
+class PhysicsManager;
+
 //#include "../Model.hpp"
 //#include "../Texture.hpp"
 //#include "../Hitbox.hpp"
 
 class Entity {
-public:
-    Entity(float p_position[3]);
-    Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
-    Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type, int p_arenaIndex);
-    ~Entity();
-    void moveTo(float p_position[3]);
-    void moveX(float p_variation);
-    void moveY(float p_variation);
-    void moveZ(float p_variation);
-    bool checkCloseness(float* p_point, float p_range);
-    int getId();
-    float* getPosition();
-    float getX();
-    float getY();
-    float getZ();
+    protected:
+        static int m_entityCount;
+        int        m_id; 
+        float      m_position[3]; // [0] for x, [1] for y, [2] for z
+        float      m_lastPosition[3]; // [0] for x, [1] for y, [2] for z
+        const char* m_modelURL;
+        //Model*     m_model;
+        //Texture*   m_texture;
+        //Hitbox*    m_hitbox;
+        float      m_weight;
 
-    void rotate(float degrees);
+    public:
+        Entity(float p_position[3]);
+        Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
+        Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type, int p_arenaIndex);
+        ~Entity();
+        void moveTo(float p_position[3]);
+        void moveX(float p_variation);
+        void moveY(float p_variation);
+        void moveZ(float p_variation);
+        bool checkCloseness(float* p_point, float p_range);
+        int getId();
+        float* getPosition();
+        float getX();
+        float getY();
+        float getZ();
 
-    void updatePosition(bool p_jumping);
+        void rotate(float degrees);
 
-    static int getEntityCount();
-protected:
-    static int m_entityCount;
-    int        m_id; 
-    float      m_position[3]; // [0] for x, [1] for y, [2] for z
-    float      m_lastPosition[3]; // [0] for x, [1] for y, [2] for z
-    const char* m_modelURL;
-    //Model*     m_model;
-    //Texture*   m_texture;
-    //Hitbox*    m_hitbox;
-    float      m_weight;
+        void updatePosition(bool p_jumping);
+
+        static int getEntityCount();
 };
 
 #endif

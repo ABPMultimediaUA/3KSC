@@ -164,12 +164,12 @@ bool EngineManager::OnEvent(const SEvent& p_event){}
 
 //Sets m_prevTime for the first time
 void EngineManager::timeStamp(){
-    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_prevTime = getDevice()->getTimer()->getTime();
 }
 
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
 float EngineManager::updateFrameDeltaTime(){
-    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_nowTime = getDevice()->getTimer()->getTime();
     m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
     m_prevTime = m_nowTime;
 }

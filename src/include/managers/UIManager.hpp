@@ -21,12 +21,18 @@
 #ifndef UI_MANAGER
 #define UI_MANAGER
 
+class EngineManager;
+class Arena;
+
 //#include <SFML/Graphics.hpp>
 //#include <SFML/Window/Context.hpp>
 #include <irrlicht.h>
 
 class UIManager{
     private:
+        EngineManager*  m_engineManager;
+        Arena*          m_arena;
+
         //sf::RenderTexture*  m_renderTexture;
         //const sf::Texture*  m_texture;
         //sf::Context*        m_gameContext;

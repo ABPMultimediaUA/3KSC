@@ -41,6 +41,10 @@ const char* Arena::m_skyboxURLs[3][6] = {
     {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"}
     };
 
+EngineManager*  m_engineManager     = &EngineManager::instance();
+PhysicsManager* m_physicsManager    = &PhysicsManager::instance();
+
+
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
@@ -167,7 +171,7 @@ void Arena::restart(){
 
 void Arena::modeDebug(){
     if(m_debugMode)
-        m_debugBattlefield = new Debug(666, PhysicsManager::instance()->getBody(getId()));
+        m_debugBattlefield = new Debug(666, m_physicsManager->getBody(getId()));
 }
 
 void Arena::setSpawnPositions(){
@@ -214,5 +218,5 @@ void Arena::spawnRandomItem(){
 }
 
 void Arena::setSkybox(int p_arenaIndex){
-    EngineManager::instance()->loadSkybox(m_skyboxURLs[p_arenaIndex]);
+    m_engineManager->loadSkybox(m_skyboxURLs[p_arenaIndex]);
 }

@@ -52,7 +52,10 @@ Client& Client::instance(){
 }
 
 //Constructor
-Client::Client(){}
+Client::Client(){
+    m_inputManager  = &InputManager::instance();
+    m_arena         = Arena::getInstance();
+}
 
 void Client::send(char const *mens){
 		std::cout<<"Sending-> "<<mens<<std::endl;
@@ -192,9 +195,9 @@ void Client::readMessage(std::string p_message){
 		m_yourPlayer = atoi(t_player.c_str());
 		m_yourPlayerString = t_player;
 		for(int i = -1; i < m_yourPlayer; ++i){
-			Arena::getInstance()->addPlayer();
+			m_arena->addPlayer();
 		}
-		InputManager::instance()->setOnlineControl(m_yourPlayer);
+		m_inputManager->setOnlineControl(m_yourPlayer);
 	}
 	else{
 		std::string t_action = p_message.substr(p_message.find(t_delimiter)+1, p_message.length());	

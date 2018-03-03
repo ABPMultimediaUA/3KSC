@@ -20,23 +20,34 @@
 
 #include "../include/states/InGameState.hpp"
 #include "../include/states/EndGameState.hpp"
+#include "../include/Game.hpp"
+
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/UIManager.hpp"
 #include "../include/managers/SoundManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
-#include "../include/managers/AIManager.hpp"
-#include "../include/Game.hpp"
+#include "../include/entities/Arena.hpp"
+
+#include "../include/AI/AICharacter.hpp"
+#include "../include/AI/AIKira.hpp"
+#include "../include/AI/AILuka.hpp"
+#include "../include/AI/AIMiyagi.hpp"
+#include "../include/AI/AIPlup.hpp"
+#include "../include/AI/AIRawr.hpp"
+#include "../include/AI/AISparky.hpp"
+
+#include "../include/Client.hpp"
+
 
 //Constructor
 InGameState::InGameState(Game* p_game) 
     : m_game(p_game){
-    m_engineManager = &EngineManager::instance();
-    m_inputManager  = &InputManager::instance();
-    //m_UIManager     = &UIManager::instance();
-    m_soundManager  = &SoundManager::instance();
-    m_physicManager = &PhysicsManager::instance();
-    m_AIManager     = &AIManager::instance();
+    m_engineManager     = &EngineManager::instance();
+    m_inputManager      = &InputManager::instance();
+    // m_UIManager         = &UIManager::instance();
+    m_soundManager      = &SoundManager::instance();
+    m_physicsManager    = &PhysicsManager::instance();
 
     //Create arena
     float t_position[3] = {0, 1, 0};
@@ -73,7 +84,28 @@ InGameState::InGameState(Game* p_game)
     // UIManager* uiManager = UIManager::instance();
     
     //Initialize AI
-    m_AIManager->buildTree();
+    int i, t_playerCount = m_arena->getPlayerCount();
+    Character* t_currentPlayer;
+    m_AIPlayers = new AICharacter*[t_playerCount];
+
+    //Create AI instances for needed players and build trees
+    for (i = 0; i < t_playerCount; i++){
+        t_currentPlayer = m_arena->getPlayer(i);
+
+        if(t_currentPlayer->isNPC()){
+            //Create AI of specific type
+            switch (t_currentPlayer->getType()){
+                case 0:     m_AIPlayers[i] = new AIKira();      break;
+                case 1:     m_AIPlayers[i] = new AILuka();      break;
+                case 2:     m_AIPlayers[i] = new AIMiyagi();    break;
+                case 3:     m_AIPlayers[i] = new AIPlup();      break;
+                case 4:     m_AIPlayers[i] = new AIRawr();      break;
+                case 5:     m_AIPlayers[i] = new AISparky();    break;
+            }
+            
+            m_AIPlayers[i]->buildTree();
+        }
+    }
 
     m_engineManager->timeStamp();
 }
@@ -83,10 +115,10 @@ InGameState::~InGameState(){
     delete m_game;
     delete m_engineManager;
     delete m_inputManager;
-    delete m_UIManager;
+    // delete m_UIManager;
     delete m_soundManager;
-    delete m_physicManager;
-    delete m_AIManager;
+    delete m_physicsManager;
+    delete m_AIPlayers;
     delete m_client;
     delete m_arena;
 }
@@ -97,16 +129,24 @@ void InGameState::input(){
 
 void InGameState::update(){
     m_soundManager->update(false);
-    m_engineManager->updateFrameDeltaTime();            
-    m_AIManager->update();
+    m_engineManager->updateFrameDeltaTime();
+
+    int t_playerCount = m_arena->getPlayerCount();
+    int i;        
+
+    //Update AIs
+    for (i = 0; i < t_playerCount; i++){
+        if (m_AIPlayers[i] != nullptr){
+            m_AIPlayers[i]->update();
+        }
+    }
 
     if(m_onlineMode){
         m_client->recive();
     }
 
-    m_physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
+    m_physicsManager->getWorld()->Step(m_physicsManager->getTimeStep(), m_physicsManager->getVelocityIterations(), m_physicsManager->getPositionIterations());
     
-    int i, t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
 
     //Input and update for every character

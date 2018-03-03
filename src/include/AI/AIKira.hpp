@@ -23,13 +23,13 @@
 #ifndef AI_KIRA
 #define AI_KIRA
 
-#include "../managers/AIManager.hpp"
-#include <Box2D.h>
-#include "AINode.hpp"
+class AINode;
 
-class AIKira : public AIManager{
+#include "AICharacter.hpp"
+#include <Box2D.h>
+
+class AIKira : public AICharacter{
     private:
-        static AIKira* m_instance;
         float m_KIRA_distance_to_enemy;       // Fraction that determines if an enemy is close
         float m_KIRA_distance_to_item;        // Fraction that determines if an item is close
         float m_KIRA_life;                    // Plup's current life
@@ -40,7 +40,7 @@ class AIKira : public AIManager{
         b2Vec2 m_KIRA_position;               // Vector containing Plup's position
         AINode* m_KIRA_root;                  // Root of Plup's tree
     public:
-        static AIKira* instance();
+        static AIKira& instance();
         AIKira();
         ~AIKira();
         void update();

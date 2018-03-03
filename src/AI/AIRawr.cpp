@@ -21,24 +21,23 @@
 *********************************************************************************/
 
 #include "../include/AI/AIRawr.hpp"
+#include "../include/AI/AINode.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/characters/Character.hpp"
 #include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         
-//Instance initialization
-AIRawr* AIRawr::m_instance = 0;
-
 //Returns the only instance of this class
-AIRawr* AIRawr::instance(){
-    if (!m_instance)
-        m_instance = new AIRawr();
-
-    return m_instance;
+AIRawr& AIRawr::instance(){
+    static AIRawr instance;
+    return instance;
 }
 
-AIRawr::AIRawr(){}
+AIRawr::AIRawr(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
 
 // Updates all the variables required by the tree to work properly
 void AIRawr::update(){

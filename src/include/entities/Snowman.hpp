@@ -24,6 +24,9 @@
 #define SNOWMAN
 
 class Projectile;
+// class EngineManager;
+class PhysicsManager;
+class Arena;
 
 #include "Entity.hpp"
 
@@ -35,6 +38,10 @@ class Snowman: public Entity {
         bool lockNLoad();
     
     private:
+        // EngineManager*  m_engineManager;
+        PhysicsManager* m_physicsManager;
+        Arena*          m_arena;
+
         int             m_lifetime;
         Projectile**    m_snowballs;
         int             m_maxSnowballs;

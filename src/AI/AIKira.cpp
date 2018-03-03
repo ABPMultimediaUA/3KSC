@@ -21,24 +21,23 @@
 *********************************************************************************/
 
 #include "../include/AI/AIKira.hpp"
-#include "../include/managers/PhysicsManager.hpp"
+#include "../include/AI/AINode.hpp"
 #include "../include/entities/characters/Character.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         
-//Instance initialization
-AIKira* AIKira::m_instance = 0;
-
 //Returns the only instance of this class
-AIKira* AIKira::instance(){
-    if (!m_instance)
-        m_instance = new AIKira();
-
-    return m_instance;
+AIKira& AIKira::instance(){
+    static AIKira instance;
+    return instance;
 }
 
-AIKira::AIKira(){}
+AIKira::AIKira(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
 
 // Updates all the variables required by the tree to work properly
 void AIKira::update(){

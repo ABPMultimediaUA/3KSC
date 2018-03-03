@@ -27,18 +27,16 @@
 #include <iostream>
 #include <string>
         
-//Instance initialization
-AILuka* AILuka::m_instance = 0;
-
 //Returns the only instance of this class
-AILuka* AILuka::instance(){
-    if (!m_instance)
-        m_instance = new AILuka();
-
-    return m_instance;
+AILuka& AILuka::instance(){
+    static AILuka instance;
+    return instance;
 }
 
-AILuka::AILuka(){}
+AILuka::AILuka(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
 
 // Updates all the variables required by the tree to work properly
 void AILuka::update(){

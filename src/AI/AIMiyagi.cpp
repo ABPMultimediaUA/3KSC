@@ -21,24 +21,23 @@
 *********************************************************************************/
 
 #include "../include/AI/AIMiyagi.hpp"
-#include "../include/managers/PhysicsManager.hpp"
+#include "../include/AI/AINode.hpp"
 #include "../include/entities/characters/Character.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         
-//Instance initialization
-AIMiyagi* AIMiyagi::m_instance = 0;
-
 //Returns the only instance of this class
-AIMiyagi* AIMiyagi::instance(){
-    if (!m_instance)
-        m_instance = new AIMiyagi();
-
-    return m_instance;
+AIMiyagi& AIMiyagi::instance(){
+    static AIMiyagi instance;
+    return instance;
 }
 
-AIMiyagi::AIMiyagi(){}
+AIMiyagi::AIMiyagi(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
 
 // Updates all the variables required by the tree to work properly
 void AIMiyagi::update(){

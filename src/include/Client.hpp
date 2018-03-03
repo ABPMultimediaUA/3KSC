@@ -1,6 +1,8 @@
 #ifndef CLIENT
 #define CLIENT
 
+class InputManager;
+class Arena;
 
 #include "RakPeerInterface.h"
 #include "RakNetStatistics.h"
@@ -19,6 +21,9 @@ class Client{
         int getPlayer();
         void sendAction(int p_action);
     private:
+        InputManager*   m_inputManager;
+        Arena*          m_arena;
+
         RakNet::RakNetStatistics *rss;
         RakNet::RakPeerInterface *client;
 	    RakNet::Packet* p;

@@ -49,15 +49,16 @@ class InputManager{
         void    setNetPlayer(int p_player);        
         void    updateInputs(int p_player);
         bool    checkInput(Action p_action, int p_player);
+        int     getInputDevice(int p_player);
     
     private:
         int**                   m_bindings;   
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];
-        Client* m_client;
+        Client*                 m_client;
         //Event handling
-        sf::Window* m_window;             
-        sf::Event*  m_event;
+        sf::Window*             m_window;             
+        sf::Event*              m_event;
 
         bool m_isOnline = false;
         //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC

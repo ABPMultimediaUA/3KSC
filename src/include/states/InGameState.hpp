@@ -27,9 +27,9 @@ class InputManager;
 class UIManager;
 class SoundManager;
 class PhysicsManager;
-class AIManager;
-class Client;
+class AICharacter;
 class Arena;
+class Client;
 
 #include "State.hpp"
 
@@ -40,10 +40,10 @@ class InGameState : public State{
         InputManager*   m_inputManager;
         UIManager*      m_UIManager;
         SoundManager*   m_soundManager;
-        PhysicsManager* m_physicManager;
-        AIManager*      m_AIManager;
-        Client*         m_client;
+        PhysicsManager* m_physicsManager;
+        AICharacter**   m_AIPlayers;
         Arena*          m_arena;
+        Client*         m_client;
 
         bool            m_onlineMode;
     public:

@@ -33,11 +33,14 @@ UIManager& UIManager::instance(){
 
 //Constructor
 UIManager::UIManager(){
+    m_engineManager = &EngineManager::instance();
+    m_arena         = Arena::getInstance();
+
     m_playerHPs = new irr::scene::ITextSceneNode*[2];
 
-    m_font = EngineManager::instance()->getDevice()->getGUIEnvironment()->getBuiltInFont();
-    int t_life0 = Arena::getInstance()->getPlayer(0)->getHP();
-    int t_life1 = Arena::getInstance()->getPlayer(1)->getHP();
+    m_font = m_engineManager->getDevice()->getGUIEnvironment()->getBuiltInFont();
+    int t_life0 = m_arena->getPlayer(0)->getHP();
+    int t_life1 = m_arena->getPlayer(1)->getHP();
 
     //wchar_t* coso;
 
@@ -45,20 +48,20 @@ UIManager::UIManager(){
         //Postition for player 1
         float t_posX = -180, t_posY = -50, t_posZ = 0;
 
-        EngineManager::instance()->getSceneManager()->addTextSceneNode(m_font, L"PLAYER   1", irr::video::SColor(255, 0, 255, 255), 0, irr::core::vector3df(t_posX, t_posY, t_posZ));
-        EngineManager::instance()->getSceneManager()->addTextSceneNode(m_font, L"HP: ", irr::video::SColor(255, 0, 255, 255), 0, irr::core::vector3df(t_posX - 7, t_posY -10, t_posZ));
+        m_engineManager->getSceneManager()->addTextSceneNode(m_font, L"PLAYER   1", irr::video::SColor(255, 0, 255, 255), 0, irr::core::vector3df(t_posX, t_posY, t_posZ));
+        m_engineManager->getSceneManager()->addTextSceneNode(m_font, L"HP: ", irr::video::SColor(255, 0, 255, 255), 0, irr::core::vector3df(t_posX - 7, t_posY -10, t_posZ));
         
-        m_playerHPs[0] = EngineManager::instance()->getSceneManager()->addTextSceneNode(m_font, L"-", irr::video::SColor(255, 0, 255, 255), 0, irr::core::vector3df(t_posX + 3, t_posY -10, t_posZ));
+        m_playerHPs[0] = m_engineManager->getSceneManager()->addTextSceneNode(m_font, L"-", irr::video::SColor(255, 0, 255, 255), 0, irr::core::vector3df(t_posX + 3, t_posY -10, t_posZ));
         m_playerHPs[0]->setText(irr::core::stringw(t_life0).c_str());
 
         t_posX = -100;
         t_posY = -50;
         t_posZ = 0;
 
-        EngineManager::instance()->getSceneManager()->addTextSceneNode(m_font, L"PLAYER   2", irr::video::SColor(255, 255, 128, 0), 0, irr::core::vector3df(t_posX, t_posY, t_posZ));
-        EngineManager::instance()->getSceneManager()->addTextSceneNode(m_font, L"HP: ", irr::video::SColor(255, 255, 128, 0), 0, irr::core::vector3df(t_posX -7, t_posY -10, t_posZ));
+        m_engineManager->getSceneManager()->addTextSceneNode(m_font, L"PLAYER   2", irr::video::SColor(255, 255, 128, 0), 0, irr::core::vector3df(t_posX, t_posY, t_posZ));
+        m_engineManager->getSceneManager()->addTextSceneNode(m_font, L"HP: ", irr::video::SColor(255, 255, 128, 0), 0, irr::core::vector3df(t_posX -7, t_posY -10, t_posZ));
         
-        m_playerHPs[1] = EngineManager::instance()->getSceneManager()->addTextSceneNode(m_font, L"-", irr::video::SColor(255, 255, 128, 0), 0, irr::core::vector3df(t_posX + 3, t_posY -10, t_posZ));
+        m_playerHPs[1] = m_engineManager->getSceneManager()->addTextSceneNode(m_font, L"-", irr::video::SColor(255, 255, 128, 0), 0, irr::core::vector3df(t_posX + 3, t_posY -10, t_posZ));
         m_playerHPs[1]->setText(irr::core::stringw(t_life1).c_str());
     }
 

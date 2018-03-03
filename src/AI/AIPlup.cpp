@@ -21,24 +21,23 @@
 *********************************************************************************/
 
 #include "../include/AI/AIPlup.hpp"
-#include "../include/managers/PhysicsManager.hpp"
+#include "../include/AI/AINode.hpp"
 #include "../include/entities/characters/Character.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
-        
-//Instance initialization
-AIPlup* AIPlup::m_instance = 0;
 
 //Returns the only instance of this class
-AIPlup* AIPlup::instance(){
-    if (!m_instance)
-        m_instance = new AIPlup();
-
-    return m_instance;
+AIPlup& AIPlup::instance(){
+    static AIPlup instance;
+    return instance;
 }
 
-AIPlup::AIPlup(){}
+AIPlup::AIPlup(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
 
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
@@ -49,27 +48,27 @@ void AIPlup::update(){
     /*************************************************************/
     /****************      Get Plup's life        ****************/
     /*************************************************************/
-    m_PLUP_life = (float)Arena::getInstance()->getPlayer(t_PLUP_index)->getHP();
+    m_PLUP_life = (float)m_arena->getPlayer(t_PLUP_index)->getHP();
 
     /*************************************************************/
     /****************      Get Plup's mana        ****************/
     /*************************************************************/
-    m_PLUP_mana = (float)Arena::getInstance()->getPlayer(t_PLUP_index)->getMP();
+    m_PLUP_mana = (float)m_arena->getPlayer(t_PLUP_index)->getMP();
 
     /*************************************************************/
     /**************  Get distance to closest enemy  **************/
     /*************************************************************/
-    int t_playerCount = Arena::getInstance()->getPlayerCount();
+    int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
 
     // Get Plup's coordinates
-    t_currentPlayer = Arena::getInstance()->getPlayer(t_PLUP_index);
+    t_currentPlayer = m_arena->getPlayer(t_PLUP_index);
     float self_x = t_currentPlayer->getX();
     float self_y = t_currentPlayer->getY();
     float self_z = t_currentPlayer->getZ();
 
     m_PLUP_position = b2Vec2(self_x, self_y);
-    m_PLUP_distance_to_enemy = PhysicsManager::instance()->getDistanceToClosestCharacter(m_PLUP_position);
+    m_PLUP_distance_to_enemy = m_physicsManager->getDistanceToClosestCharacter(m_PLUP_position);
    
     /*************************************************************/
     /*   Check if an enemy is in range for a special attack up   */
@@ -84,7 +83,7 @@ void AIPlup::update(){
             continue;
 
         // Get enemy coordinates
-        t_currentPlayer = Arena::getInstance()->getPlayer(i);
+        t_currentPlayer = m_arena->getPlayer(i);
         float target_x = t_currentPlayer->getX();
         float target_y = t_currentPlayer->getY();
         float target_z = t_currentPlayer->getZ();
@@ -95,7 +94,7 @@ void AIPlup::update(){
         b2Vec2 t_p2 = b2Vec2(target_x, target_y);
         
         if(abs(target_x-self_x) < t_PLUP_special_up_wideness){
-            t_closestBodyFraction = PhysicsManager::instance()->RaycastBetween(t_p1, t_p2);
+            t_closestBodyFraction = m_physicsManager->RaycastBetween(t_p1, t_p2);
 
             // Check wether there is an object between the 2 characters
             if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
@@ -108,7 +107,7 @@ void AIPlup::update(){
         /*************************************************************/
         if(abs(target_x-self_x) < t_PLUP_special_side_wideness){
             if(abs(target_y-self_y) < t_PLUP_special_side_heighth){
-                float t_closestBodyFraction = PhysicsManager::instance()->RaycastBetween(t_p1, t_p2);
+                float t_closestBodyFraction = m_physicsManager->RaycastBetween(t_p1, t_p2);
 
                 // Check wether there is an object between the 2 characters
                 if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
@@ -121,7 +120,7 @@ void AIPlup::update(){
     /*************************************************************/
     /*******  Check if there is already a snowman placed  ********/
     /*************************************************************/
-    t_currentPlayer = Arena::getInstance()->getPlayer(t_PLUP_index);
+    t_currentPlayer = m_arena->getPlayer(t_PLUP_index);
     /*if(t_currentPlayer->getCurrentSnowmen() > 0)
         m_PLUP_snowman_placed = 1.0;
     else*/
