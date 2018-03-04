@@ -198,3 +198,15 @@ int Entity::getEntityCount(){
 void Entity::rotate(float p_degrees){
     EngineManager::instance()->setRotation(this->getId(), p_degrees);
 }
+
+void Entity::setX(float p_position){
+    m_lastPosition[0] = m_position[0];
+    m_position[0] = p_position;
+    EngineManager::instance()->moveEntity(this);
+}
+
+void Entity::setY(float p_position){
+    m_lastPosition[1] = m_position[1];
+    m_position[1] = p_position;
+    EngineManager::instance()->moveEntity(this);
+}

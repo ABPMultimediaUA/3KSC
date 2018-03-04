@@ -105,7 +105,6 @@ bool InputManager::isKeyPressed(Key p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[(int) p_key]);
     if(t_result && m_isOnline)
         m_client->sendAction((int) p_key);
-    
     return t_result;
 }
 
@@ -155,12 +154,12 @@ void InputManager::setNetPlayer(int p_player){
     // std::cout << action << std::endl;
     
     switch (t_action){
-        case 0:{
+        case -1:{
             return;
             break;
         }
         
-        case  1:
+        case  0:
         case 71:{
             m_actions[p_player][(int) Action::Left] = true;
             break;
@@ -183,9 +182,9 @@ void InputManager::setNetPlayer(int p_player){
 void InputManager::updateInputs(int p_player){
     int t_inputDevice = m_inputDevices[p_player];
     bool t_up, t_down; //They're not actions, but needed for some conditions
-
     //Keyboard input
     if (t_inputDevice == -1){
+        if(!EngineManager::instance() -> getDevice()->isWindowActive()) return;
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -240,6 +239,7 @@ void InputManager::updateInputs(int p_player){
 
     //Joystick input
     else if (t_inputDevice != -2){
+        if(!EngineManager::instance() -> getDevice()->isWindowActive()) return;
         //Update joysticks state first
         updateJoysticks();
 
