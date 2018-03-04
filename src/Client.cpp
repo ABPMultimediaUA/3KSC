@@ -38,6 +38,7 @@
 #include "include/entities/Arena.hpp"
 #include "include/managers/InputManager.hpp"
 #include <string>
+#include <stdio.h>
 
 #if LIBCAT_SECURITY==1
 #include "SecureHandshake.h" // Include header for secure handshake
@@ -58,8 +59,8 @@ Client* Client::instance(){
 Client::Client(){}
 
 void Client::send(char const *mens){
-		std::cout<<"Sending-> "<<mens<<std::endl;
-		client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+		//std::cout<<"Sending-> "<<mens<<std::endl;
+	client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
 void Client::recive(){
@@ -102,6 +103,12 @@ void Client::recive(){
 void Client::start()
 {
 	client=RakNet::RakPeerInterface::GetInstance();
+
+	char t_debug[5];
+	std::cout<<"Debug mode? (Y)/(N)"<<std::endl;
+	std::cin >> t_debug;
+	if (t_debug[0] == 'y' || t_debug[0] == 'Y')
+		m_debug = true;
 
 	RakNet::SystemAddress clientID=RakNet::UNASSIGNED_SYSTEM_ADDRESS;
 	puts("Enter the client port to listen on");
@@ -192,10 +199,12 @@ void Client::readMessage(std::string p_message){
 			Arena::getInstance()->addPlayer();
 		}
 		InputManager::instance()->setOnlineControl(m_yourPlayer);
+		if(m_debug) std::cout<<"Bienvenido, "<<t_parsed[1]<<" jugadores en la partida"<<std::endl;
 	}
 	else if(t_parsed[0] == "joined"){
 		Arena::getInstance()->addPlayer();
 		sendAction(-1);
+		if(m_debug) std::cout<<"Nuevo jugador en la partida"<<std::endl;
 	}
 	else{
 		if(t_parsed.size()<4)
@@ -204,7 +213,19 @@ void Client::readMessage(std::string p_message){
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setX(std::stof(t_parsed[1]));
 		int mns = std::stoi(t_parsed[3]);
 		m_action = mns;
+
+		if(m_debug)
+		{
+			std::cout<<"-- Recibiendo del servidor --"<<std::endl;
+			std::cout<<"Jugador: "<<t_parsed[0]<<std::endl;
+			std::cout<<"Posicion: ("<<t_parsed[1]<<","<<t_parsed[2]<<")"<<std::endl;
+			std::cout<<"Accion: "<<t_parsed[3]<<std::endl;
+			std::cout<<"Ping: "<<client->GetLastPing(client->GetSystemAddressFromIndex(0))<<std::endl;
+			//printf("Ping: %i\n", client->GetLastPing(client->GetSystemAddressFromIndex(0)));
+			std::cout<<""<<std::endl;
+		}
 	}
+
 }
 
 int Client::getPlayer(){
@@ -222,6 +243,14 @@ void Client::sendAction(int p_action){
 							+ ":" + std::to_string(p_action);
     char const *t_toSendChar = t_toSend.c_str();
 	send(t_toSendChar);
+	if(m_debug)
+	{
+		std::cout<<"-- Enviando al servidor --"<<std::endl;
+		std::cout<<"ID: "<<m_yourPlayerString<<std::endl;
+		std::cout<<"Posicion: ("<<t_xPos<<","<<t_yPos<<")"<<std::endl;
+		std::cout<<"Accion: "<<p_action<<std::endl;
+		std::cout<<""<<std::endl;
+	}
 }
 
 const std::vector<std::string> Client::explode(const std::string& s, const char& c)

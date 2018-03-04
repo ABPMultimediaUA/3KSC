@@ -77,8 +77,11 @@ int main(){
             aiManager->update();
             if(m_isOnline)
                 client->recive();
+            else
+                Arena::getInstance()->update();
+
             physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
-            
+
             //Input and update for every character
             for (i = 0; i < Arena::getInstance()->getPlayerCount(); i++){
                 currentPlayer = Arena::getInstance()->getPlayer(i);
@@ -86,10 +89,8 @@ int main(){
                 //if(inputManager->eventHandler()){
                 //    currentPlayer->input();
                 //}
-                
                 currentPlayer->input();
                 currentPlayer->update();
-                Arena::getInstance()->update();
             }
 
             engineManager->updateCamera();

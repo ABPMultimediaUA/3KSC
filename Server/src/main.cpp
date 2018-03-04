@@ -214,6 +214,13 @@ int main(void)
 				continue;
 			}
 
+			if (strcmp(message, "reset")==0)
+			{
+				m_playerNumber = 0;
+				continue;
+			}
+
+
 
 			// Message now holds what we want to broadcast
 			char message2[2048];

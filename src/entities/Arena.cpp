@@ -182,6 +182,7 @@ void Arena::respawnPlayer(int p_player){
 
 void Arena::update(){
     float t_time = m_clock->getElapsedTime().asSeconds();
+    
     if(t_time > m_spawningTime)
     {
         m_clock->restart();

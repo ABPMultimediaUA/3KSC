@@ -32,6 +32,7 @@ class Client{
         char ip[64], serverPort[30], clientPort[30];
         int m_action;
         int m_yourPlayer;
+        bool m_debug = false;
         std::string m_yourPlayerString;
         
 };
