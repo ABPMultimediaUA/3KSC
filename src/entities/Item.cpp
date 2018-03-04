@@ -28,7 +28,7 @@
 //Static members
 const char* Item::m_modelURLs[4] = {"assets/models/items/life_tank.obj", "assets/models/items/shield.obj", "assets/models/items/movement_wings.obj", "assets/models/items/life_tank.obj"};
 
-Item::Item(int p_type, float p_position[3]):Entity(p_position, 4.f, Item::m_modelURLs[p_type]){
+Item::Item(int p_type, float p_position[3]):Entity(p_position, 4.f, Item::m_modelURLs[p_type], 2){
     m_type = p_type;
 }
 
@@ -46,7 +46,7 @@ void Item::use(){
     switch (m_type){
         //Life tank
         case 0:{
-            Arena::getInstance()->getPlayer(m_owner)->changeLife(30);
+            Arena::getInstance()->getPlayer(m_owner)->changeMP(30);
             break;
         }
 

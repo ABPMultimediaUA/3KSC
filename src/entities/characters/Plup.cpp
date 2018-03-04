@@ -23,6 +23,7 @@
 #include "../../include/entities/characters/Plup.hpp"
 #include "../../include/entities/Snowman.hpp"
 #include "../../include/entities/Arena.hpp"
+#include "../../include/extra/Actions.hpp"
 //#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
@@ -39,12 +40,12 @@ Plup::Plup(char* p_name, float p_position[3], bool p_debugMode) : Character(p_na
 
 Plup::~Plup(){}
 
-void Plup::jump(){
-    Character::jump();
+bool Plup::jump(){
+    return Character::jump();
 }
 
 //Slap
-void Plup::basicAttack(){
+bool Plup::basicAttack(){
     std::cout << m_name << ": Slap!" << std::endl;
     Character* t_currentPlayer;
 
@@ -65,11 +66,11 @@ void Plup::basicAttack(){
         }
     }
     
-    m_basicAttack = false;
+    return false;
 }
 
 //Range attack
-void Plup::specialAttackUp(){
+bool Plup::specialAttackUp(){
     std::cout << m_name << ": Range attack" << std::endl;
     Character* t_currentPlayer;
 
@@ -86,11 +87,11 @@ void Plup::specialAttackUp(){
         }
     }
 
-    m_specialAttackUp = false;
+    return false;
 }
 
 //Snowman
-void Plup::specialAttackDown(){
+bool Plup::specialAttackDown(){
     if (m_currentSnowmen < m_maxSnowmen){
         //Looking right
         if (m_orientation){
@@ -118,24 +119,26 @@ void Plup::specialAttackDown(){
         if (!m_snowmen[i]->lockNLoad()){
             delete m_snowmen[i];
             m_currentSnowmen--;
-            m_specialAttackDown = false;
+            return false;
         }
     }
+
+    return true;
 }
 
-void Plup::specialAttackSide(){
+bool Plup::specialAttackSide(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": Special Attack Side" << std::endl;
 
-    m_specialAttackSide = false;
+    return false;
 }
 
 
-void Plup::ultimateAttack(){
+bool Plup::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
-    m_ultimateAttack = false;
+    return false;
 }
 
 int Plup::getCurrentSnowmen(){

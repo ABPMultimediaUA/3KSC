@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
+#include <iostream> //For std::memcpy()
 //#include <iostream>
 
 //Entity count initialization
@@ -48,7 +49,6 @@ Entity::Entity(float p_position[3]){
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
     m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
-
     switch (p_type){
         //Players and items
         case 0:{
@@ -69,6 +69,19 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
         case 1:{
             EngineManager::instance()->loadArena(p_modelURL);
             PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, t_scale, 0);
+            break;
+        }
+        case 2:{
+            for(int i = 0; i < 3; i++){
+                m_position[i] = p_position[i];
+                m_lastPosition[i] = p_position[i];
+            }
+            EngineManager::instance()->load3DModel(m_id, p_position, t_scale, p_modelURL);
+            moveTo(p_position);
+
+            float t_dimX = 5.0;
+            float t_dimY = 5.0;
+            PhysicsManager::instance()->createPhysicBoxObject(&m_id, p_position, t_dimX, t_dimY);
             break;
         }
     }

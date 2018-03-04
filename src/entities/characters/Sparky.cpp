@@ -22,6 +22,7 @@
 
 #include "../../include/entities/characters/Sparky.hpp"
 #include "../../include/entities/Arena.hpp"
+#include "../../include/extra/Actions.hpp"
 #include <iostream>
 
 Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 30, 50.f, "assets/models/characters/plup/plup.obj", p_debugMode){
@@ -32,42 +33,42 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode) : Character(
 
 Sparky::~Sparky(){}
 
-void Sparky::jump(){
-    Character::jump();
+bool Sparky::jump(){
+    return Character::jump();
 }
 
-void Sparky::basicAttack(){
+bool Sparky::basicAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "Basic Attack" << std::endl;
     
-    m_basicAttack = false;
+    return false;
 }
 
-void Sparky::specialAttackUp(){
+bool Sparky::specialAttackUp(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Up" << std::endl;
 
-    m_specialAttackUp = false;
+    return false;
 }
 
-void Sparky::specialAttackDown(){
+bool Sparky::specialAttackDown(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Down" << std::endl;
     
-    m_specialAttackDown = false;
+    return false;
 }
 
-void Sparky::specialAttackSide(){
+bool Sparky::specialAttackSide(){
     //PENDING IMPLEMENTATION
     std::cout << "Special Attack Side" << std::endl;
 
-    m_specialAttackSide = false;
+    return false;
 }
 
 
-void Sparky::ultimateAttack(){
+bool Sparky::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << "ULTIMATE TIME!!!" << std::endl;
 
-    m_ultimateAttack = false;
+    return false;
 }

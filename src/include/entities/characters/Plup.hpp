@@ -31,12 +31,13 @@ class Plup: public Character {
     public:
         Plup(char* p_name, float p_position[3], bool p_debugMode);
         ~Plup();
-        void    jump();
-        void    basicAttack();
-        void    specialAttackUp();
-        void    specialAttackDown();
-        void    specialAttackSide();
-        void    ultimateAttack();
+        bool    jump();
+        bool    basicAttack();
+        bool    specialAttackUp();
+        bool    specialAttackDown();
+        bool    specialAttackSide();
+        bool    ultimateAttack();
+
         int     getCurrentSnowmen();
     private:
         int         m_maxSnowmen;
