@@ -47,7 +47,7 @@ public:
     int             getPlayerCount();
     Character*      getPlayer(int p_index);
 	void            spawnItems();
-    int             catchItem(int p_owner, float p_where[3]);
+    void            catchItem(int p_owner, float p_where[3]);
 	void            finishRound();
     void            movePlatforms();
     void            animateBackground();

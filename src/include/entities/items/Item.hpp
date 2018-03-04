@@ -23,18 +23,22 @@
 #ifndef ITEM
 #define ITEM
 
-#include "Entity.hpp"
+class PhysicsManager;
+class Arena;
+
+#include "../Entity.hpp"
 
 class Item: public Entity {
     public:
-        Item(int p_type, float p_position[3]);
+        Item(float p_position[3], const char* p_modelURL);
         ~Item();
-        int             getType();
-        void            setOwner(int p_owner);
-        void            use();
+        virtual void    setOwner(int p_owner);
+        virtual void    use();
         
-    private:
-        int                 m_type;             //0-3: {Life Tank, Shield, Wings, F.O.A.H}
+    protected:
+        PhysicsManager*     m_physicsManager;
+        Arena*              m_arena;
+
         int                 m_owner;
         float               m_duration;
         float               m_durationGround;

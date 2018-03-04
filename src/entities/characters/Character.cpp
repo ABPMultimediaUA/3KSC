@@ -428,9 +428,9 @@ bool Character::block(){
 }
 
 bool Character::pick(){
-    int t_itemType = m_arena->catchItem(m_playerIndex, m_position);
+    /* int t_itemType =  */m_arena->catchItem(m_playerIndex, m_position);
     
-    switch (t_itemType){
+    /* switch (t_itemType){
         //Life tank
         case 0:{
             std::cout << m_name <<" got a Life Tank." << std::endl
@@ -462,7 +462,7 @@ bool Character::pick(){
         default:{
             //std::cout << "No object here" << std::endl;
         }
-    }
+    }*/
 
     return false;
 }

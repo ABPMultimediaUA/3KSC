@@ -23,13 +23,21 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
+
 #include "../include/entities/characters/Kira.hpp"
 #include "../include/entities/characters/Luka.hpp"
 #include "../include/entities/characters/MiyagiMurasaki.hpp"
 #include "../include/entities/characters/Plup.hpp"
 #include "../include/entities/characters/Rawr.hpp"
 #include "../include/entities/characters/Sparky.hpp"
-#include "../include/entities/Item.hpp"
+
+#include "../include/entities/items/Item.hpp"
+#include "../include/entities/items/LifeTank.hpp"
+#include "../include/entities/items/Shield.hpp"
+#include "../include/entities/items/Wings.hpp"
+#include "../include/entities/items/FOAH.hpp"
+#include "../include/entities/items/Portal.hpp"
+
 #include "../include/debug.hpp"
 #include <iostream>
 
@@ -123,11 +131,9 @@ void Arena::spawnItems(){
     
 }
 
-//Checks if any of the items in the screen is where the player wants to pick it
-//Returns -1 if no item found or the type of the item
-int Arena::catchItem(int p_owner, float p_where[3]){
-    int t_type = -1;
-    
+//Checks if any of the items in the screen is where the player wants to pick it and uses it
+void Arena::catchItem(int p_owner, float p_where[3]){    
+    //Check if there's an item here and use it
     for (int i = 0; i < m_currentItems; i++){
         //Check not null
         if (m_items[i]){
@@ -139,8 +145,6 @@ int Arena::catchItem(int p_owner, float p_where[3]){
                     m_items[i]->setOwner(p_owner);
                     m_items[i]->use();
 
-                    //Save return value and delete item
-                    t_type = m_items[i]->getType();
                     delete m_items[i];
                     m_items[i] = 0;
                     break;
@@ -148,8 +152,6 @@ int Arena::catchItem(int p_owner, float p_where[3]){
             }
         }
     }
-
-    return t_type;
 }
 
 void Arena::finishRound(){
@@ -198,21 +200,29 @@ void Arena::update(){
 }
 
 void Arena::spawnRandomItem(){
-    float positionItem[3] = {-100, 10, 0};
-    positionItem[0] = rand()%(120);
-    if(positionItem[0]< 60)
-    {
-        positionItem[1] = 54;
+    //Position
+    float t_position[3] = {-100, 10, 0};
+    t_position[0] = rand()%(120);
+    if(t_position[0]< 60){
+        t_position[1] = 54;
     }
-    else
-    {
-        positionItem[1] = 10;
+
+    else{
+        t_position[1] = 10;
     }
 
     if(rand()%2 == 0)
-        positionItem[0] = positionItem[0] * (-1);
+        t_position[0] = t_position[0] * (-1);
 
-    m_items[m_currentItems] = new Item(rand()%3, positionItem);
+    //Type
+    int t_type = rand()%3;
+
+    switch (t_type){
+        case 0:     { m_items[m_currentItems] = new LifeTank(t_position);   }   break;
+        case 1:     { m_items[m_currentItems] = new Shield(t_position);     }   break;
+        case 2:     { m_items[m_currentItems] = new Wings(t_position);      }   break;
+    }
+
     m_currentItems++;   
 }
 
