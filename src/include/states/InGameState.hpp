@@ -47,7 +47,7 @@ class InGameState : public State{
 
         bool            m_onlineMode;
     public:
-        InGameState(Game* p_game);
+        InGameState(Game* p_game, bool p_onlineMode = false);
         ~InGameState();
         void    input();
         void    update();

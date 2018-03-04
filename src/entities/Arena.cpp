@@ -51,7 +51,7 @@ Arena* Arena::m_instance = 0;
 Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1, p_arenaIndex){
 
     m_maxItems      = 500; //cambiar esto
-    m_currentItems  = 0;
+    m_currentItems      = 0;
     m_items         = new Item*[m_maxItems];
     m_instance      = this;
     m_debugMode     = p_debugMode;
@@ -72,9 +72,7 @@ Arena* Arena::getInstance(){
 
 void Arena::spawnPlayers(){
     float positionRawr[3] = {-120, 20, 0};
-    float positionPlup[3] = {120, 20, 0};
-
-  
+    float positionPlup[3] = {120, 20, 0}; 
    
 
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
@@ -87,6 +85,7 @@ void Arena::spawnPlayers(){
         modeDebug();
     }
 }
+
 void Arena::addPlayer(){
     float positionRawr[3] = {0, 100, 0};
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
@@ -213,8 +212,8 @@ void Arena::spawnRandomItem(){
     if(rand()%2 == 0)
         positionItem[0] = positionItem[0] * (-1);
 
-    m_items[m_currentItems++] = new Item(rand()%3, positionItem);
-   
+    m_items[m_currentItems] = new Item(rand()%3, positionItem);
+    m_currentItems++;   
 }
 
 void Arena::setSkybox(int p_arenaIndex){

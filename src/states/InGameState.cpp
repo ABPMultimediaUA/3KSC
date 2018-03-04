@@ -43,7 +43,7 @@
 
 
 //Constructor
-InGameState::InGameState(Game* p_game) 
+InGameState::InGameState(Game* p_game, bool p_onlineMode) 
     : m_game(p_game){
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
@@ -57,12 +57,13 @@ InGameState::InGameState(Game* p_game)
     m_arena = new Arena(t_position, t_scale, 0, false);
 
     //Online stuff
-    char t_onlinePrompt[5];
-    m_onlineMode = false;
-    std::cout<<"Online mode? (Y)/(N)"<<std::endl;
-    std::cin >> t_onlinePrompt;
+    m_onlineMode = p_onlineMode;
+    // char t_onlinePrompt[5];
+    // std::cout<<"Online mode? (Y)/(N)"<<std::endl;
+    // std::cin >> t_onlinePrompt;
 
-    if (t_onlinePrompt[0] == 'y' || t_onlinePrompt[0] == 'Y'){
+    // if (t_onlinePrompt[0] == 'y' || t_onlinePrompt[0] == 'Y'){
+    if (m_onlineMode){
         m_client = &Client::instance();
         m_client->start();
         m_inputManager->onlineMode();
@@ -136,7 +137,7 @@ void InGameState::update(){
     //Update AIs
     for (i = 0; i < t_playerCount; i++){
         if (m_AIPlayers[i] != nullptr){
-            //m_AIPlayers[i]->update();
+            // m_AIPlayers[i]->update();
         }
     }
 

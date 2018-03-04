@@ -47,10 +47,11 @@ int Character::m_playerCount = 0;
 // PhysicsManager* m_physicsManager    = &PhysicsManager::instance();
 InputManager*   m_inputManager      = &InputManager::instance();
 // UIManager*      m_UIManager         = &UIManager::instance();
-Arena*          m_arena             = Arena::getInstance();
+Arena*          m_arena             = 0;
 
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode)
     : Entity(p_position, 5.f, p_modelURL){
+    m_arena                 = Arena::getInstance();
     m_name                  = p_name;
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
@@ -113,7 +114,7 @@ void Character::mapActions(){
     m_actions[2]    = {Action::Jump               , &Character::jump              , true      , false};
     m_actions[3]    = {Action::Run                , &Character::run               , false     , false};
     m_actions[4]    = {Action::Block              , &Character::block             , false     , false};
-    m_actions[5]    = {Action::Pick               , &Character::pick              , false     , false};
+    m_actions[5]    = {Action::Pick               , &Character::pick              , true      , false};
     m_actions[6]    = {Action::BasicAttack        , &Character::basicAttack       , true      , false};
     m_actions[7]    = {Action::SpecialAttackUp    , &Character::specialAttackUp   , true      , false};
     m_actions[8]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
@@ -250,7 +251,7 @@ void Character::input(){
 
 
     //Block
-    m_actions[(int) Action::Block].enabled = m_inputManager->checkInput(Action::Block, m_playerIndex);
+    m_actions[(int) Action::Block].enabled = m_inputManager->checkAction(Action::Block, m_playerIndex);
 
     //Input blocked if stunned, blocking or dead
     if(!m_stunned && !m_actions[(int) Action::Block].enabled && m_alive){
@@ -259,7 +260,7 @@ void Character::input(){
         //Loop through actions to enable them
         while(t_iterator->function){    
             if (t_iterator->onlyOnce){
-                if (m_inputManager->checkInput(t_iterator->action, m_playerIndex)){
+                if (m_inputManager->checkAction(t_iterator->action, m_playerIndex)){
                     m_keepWaiting = true;
 
                     if (!m_waitRelease){
@@ -270,7 +271,7 @@ void Character::input(){
             }
 
             else{
-                t_iterator->enabled = m_inputManager->checkInput(t_iterator->action, m_playerIndex);
+                t_iterator->enabled = m_inputManager->checkAction(t_iterator->action, m_playerIndex);
             }
 
             ++t_iterator;

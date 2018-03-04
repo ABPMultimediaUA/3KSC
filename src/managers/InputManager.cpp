@@ -302,7 +302,7 @@ void InputManager::updateInputs(int p_player){
 }
 
 //Returns true if the asked action's input is enabled
-bool InputManager::checkInput(Action p_action, int p_player){
+bool InputManager::checkAction(Action p_action, int p_player){
     return m_actions[p_player][(int) p_action];
 }
 

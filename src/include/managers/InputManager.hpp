@@ -48,7 +48,7 @@ class InputManager{
         void    setOnlineControl(int p_player);
         void    setNetPlayer(int p_player);        
         void    updateInputs(int p_player);
-        bool    checkInput(Action p_action, int p_player);
+        bool    checkAction(Action p_action, int p_player);
         int     getInputDevice(int p_player);
     
     private:

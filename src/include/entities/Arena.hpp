@@ -68,10 +68,10 @@ private:
     float       m_time;
     float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
     
-    int         m_maxItems;
-    int         m_currentItems;
     Item**      m_items;
     int         m_spawningTime;
+    int         m_maxItems;
+    int         m_currentItems;
 
     int         m_playerCount;
     Character** m_players;
