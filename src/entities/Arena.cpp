@@ -70,9 +70,6 @@ void Arena::spawnPlayers(){
     float positionRawr[3] = {-120, 20, 0};
     float positionPlup[3] = {120, 20, 0};
 
-  
-   
-
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
     m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
 

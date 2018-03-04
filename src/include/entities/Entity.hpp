@@ -43,6 +43,8 @@ public:
     float getX();
     float getY();
     float getZ();
+    void setX(float p_position);
+    void setY(float p_position);
 
     void rotate(float degrees);
 

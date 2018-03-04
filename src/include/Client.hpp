@@ -5,6 +5,7 @@
 #include "RakPeerInterface.h"
 #include "RakNetStatistics.h"
 #include <iostream>
+#include <vector>
 
 class Client{
     public:
@@ -18,6 +19,8 @@ class Client{
         void readMessage(std::string p_message);
         int getPlayer();
         void sendAction(int p_action);
+        const std::vector<std::string> explode(const std::string& s, const char& c);
+        
     private:
         static Client* m_instance;
         RakNet::RakNetStatistics *rss;
@@ -30,6 +33,7 @@ class Client{
         int m_action;
         int m_yourPlayer;
         std::string m_yourPlayerString;
+        
 };
 
 #endif

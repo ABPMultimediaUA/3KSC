@@ -38,7 +38,6 @@
 #include "include/entities/Arena.hpp"
 #include "include/managers/InputManager.hpp"
 #include <string>
-#include <iostream> 
 
 #if LIBCAT_SECURITY==1
 #include "SecureHandshake.h" // Include header for secure handshake
@@ -90,12 +89,11 @@ void Client::recive(){
 			send(t_first);
 			break;
 		default:
-			//printf("-\n");
 			// It's a client, so just show the message
 			std::string t_messageReceived;
 			t_messageReceived.append(reinterpret_cast<const char*>(p->data));
 			readMessage(t_messageReceived);
-			printf("Receiving-> %s\n",p->data);
+			//printf("Receiving-> %s\n",p->data);
 			break;
 		}
 	}
@@ -105,9 +103,7 @@ void Client::start()
 {
 	client=RakNet::RakPeerInterface::GetInstance();
 
-	// Record the first client that connects to us so we can pass it to the ping function
 	RakNet::SystemAddress clientID=RakNet::UNASSIGNED_SYSTEM_ADDRESS;
-	// Get our input
 	puts("Enter the client port to listen on");
 	Gets(clientPort,sizeof(clientPort));
 	if (clientPort[0]==0)
@@ -132,20 +128,20 @@ void Client::start()
 
 
 	#if LIBCAT_SECURITY==1
-	char public_key[cat::EasyHandshake::PUBLIC_KEY_BYTES];
-	FILE *fp = fopen("publicKey.dat","rb");
-	fread(public_key,sizeof(public_key),1,fp);
-	fclose(fp);
+		char public_key[cat::EasyHandshake::PUBLIC_KEY_BYTES];
+		FILE *fp = fopen("publicKey.dat","rb");
+		fread(public_key,sizeof(public_key),1,fp);
+		fclose(fp);
 	#endif
 
 	#if LIBCAT_SECURITY==1
-	RakNet::PublicKey pk;
-	pk.remoteServerPublicKey=public_key;
-	pk.publicKeyMode=RakNet::PKM_USE_KNOWN_PUBLIC_KEY;
-	bool b = client->Connect(ip, atoi(serverPort), "Rumpelstiltskin", (int) strlen("Rumpelstiltskin"), &pk)==RakNet::CONNECTION_ATTEMPT_STARTED;	
-	#else
-	RakNet::ConnectionAttemptResult car = client->Connect(ip, atoi(serverPort), "Rumpelstiltskin", (int) strlen("Rumpelstiltskin"));
-	RakAssert(car==RakNet::CONNECTION_ATTEMPT_STARTED);
+		RakNet::PublicKey pk;
+		pk.remoteServerPublicKey=public_key;
+		pk.publicKeyMode=RakNet::PKM_USE_KNOWN_PUBLIC_KEY;
+		bool b = client->Connect(ip, atoi(serverPort), "Rumpelstiltskin", (int) strlen("Rumpelstiltskin"), &pk)==RakNet::CONNECTION_ATTEMPT_STARTED;	
+		#else
+		RakNet::ConnectionAttemptResult car = client->Connect(ip, atoi(serverPort), "Rumpelstiltskin", (int) strlen("Rumpelstiltskin"));
+		RakAssert(car==RakNet::CONNECTION_ATTEMPT_STARTED);
 	#endif
 
 	printf("\nMy IP addresses:\n");
@@ -188,21 +184,25 @@ unsigned char GetPacketIdentifier(RakNet::Packet *p)
 }
 
 void Client::readMessage(std::string p_message){
-	std::string t_delimiter = ":";
-	std::string t_property = p_message.substr(0, p_message.find(t_delimiter)); // t_property is "scott"
-	if(t_property == "new"){
-		
-		std::string t_player = p_message.substr(p_message.find(t_delimiter)+1, p_message.length());
-		m_yourPlayer = atoi(t_player.c_str());
-		m_yourPlayerString = t_player;
+	std::vector<std::string> t_parsed{explode(p_message, ':')};
+	if(t_parsed[0] == "new"){
+		m_yourPlayer = std::stoi(t_parsed[1]);
+		m_yourPlayerString = t_parsed[1];
 		for(int i = -1; i < m_yourPlayer; ++i){
 			Arena::getInstance()->addPlayer();
 		}
 		InputManager::instance()->setOnlineControl(m_yourPlayer);
 	}
+	else if(t_parsed[0] == "joined"){
+		Arena::getInstance()->addPlayer();
+		sendAction(-1);
+	}
 	else{
-		std::string t_action = p_message.substr(p_message.find(t_delimiter)+1, p_message.length());	
-		int mns = atoi(t_action.c_str());
+		if(t_parsed.size()<4)
+			return;
+		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setY(std::stof(t_parsed[2]));
+		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setX(std::stof(t_parsed[1]));
+		int mns = std::stoi(t_parsed[3]);
 		m_action = mns;
 	}
 }
@@ -214,8 +214,27 @@ int Client::getPlayer(){
 void Client::sendAction(int p_action){
 	if(p_action == 0) // 0 es el valor vacio de raknet
 		p_action = 1;
-    std::string t_toSend = m_yourPlayerString + ":" + std::to_string(p_action);
+	//estructura del mensaje
+	//ID Player: Posicion X : Posicion Y : Acción
+	int t_xPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getX();
+	int t_yPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getY();
+    std::string t_toSend 	= m_yourPlayerString + ":" + std::to_string(t_xPos) + ":" + std::to_string(t_yPos) 
+							+ ":" + std::to_string(p_action);
     char const *t_toSendChar = t_toSend.c_str();
 	send(t_toSendChar);
 }
 
+const std::vector<std::string> Client::explode(const std::string& s, const char& c)
+{
+	std::string buff{""};
+	std::vector<std::string> v;
+	
+	for(auto n:s)
+	{
+		if(n != c) buff+=n; else
+		if(n == c && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if(buff != "") v.push_back(buff);
+	
+	return v;
+}

@@ -465,6 +465,5 @@ void Character::respawn(float p_position[3]){
         m_velocity /= 1.5f;
         m_winged = false;
     }
-
     //UIManager::instance()->setLife(m_playerIndex, m_life);
 }
