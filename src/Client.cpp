@@ -63,7 +63,7 @@ void Client::send(char const *mens){
 }
 
 void Client::recive(){
-	m_action = 0;
+	m_action = -1;
 	#ifdef _WIN32
 		Sleep(30);
 	#else
@@ -213,7 +213,7 @@ int Client::getPlayer(){
 
 void Client::sendAction(int p_action){
 	if(p_action == 0) // 0 es el valor vacio de raknet
-		p_action = 1;
+		p_action = 0;
 	//estructura del mensaje
 	//ID Player: Posicion X : Posicion Y : Acción
 	int t_xPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getX();
