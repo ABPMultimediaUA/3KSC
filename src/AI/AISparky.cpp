@@ -39,12 +39,16 @@ AISparky::AISparky(){
     m_arena             = Arena::getInstance();
 }
 
+AISparky::~AISparky(){
+    
+}
+
 // Updates all the variables required by the tree to work properly
 void AISparky::update(){
     
 }
 
-// Builds the tree containing Kira's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
+// Builds the tree containing Sparky's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AISparky::buildTree(){
     
 }

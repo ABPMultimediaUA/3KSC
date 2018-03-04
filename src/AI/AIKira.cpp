@@ -39,6 +39,10 @@ AIKira::AIKira(){
     m_arena             = Arena::getInstance();
 }
 
+AIKira::~AIKira(){
+    
+}
+
 // Updates all the variables required by the tree to work properly
 void AIKira::update(){
     

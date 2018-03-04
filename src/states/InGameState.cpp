@@ -24,7 +24,7 @@
 
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
-#include "../include/managers/UIManager.hpp"
+// #include "../include/managers/UIManager.hpp"
 #include "../include/managers/SoundManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
@@ -38,6 +38,8 @@
 #include "../include/AI/AISparky.hpp"
 
 #include "../include/Client.hpp"
+
+#include <iostream>
 
 
 //Constructor
@@ -80,8 +82,6 @@ InGameState::InGameState(Game* p_game)
     // Play music
     m_soundManager->createSoundEvent("event:/Music/Music", "music");
     m_soundManager->playSound("music");
-    
-    // UIManager* uiManager = UIManager::instance();
     
     //Initialize AI
     int i, t_playerCount = m_arena->getPlayerCount();
@@ -130,14 +130,13 @@ void InGameState::input(){
 void InGameState::update(){
     m_soundManager->update(false);
     m_engineManager->updateFrameDeltaTime();
-
     int t_playerCount = m_arena->getPlayerCount();
     int i;        
 
     //Update AIs
     for (i = 0; i < t_playerCount; i++){
         if (m_AIPlayers[i] != nullptr){
-            m_AIPlayers[i]->update();
+            //m_AIPlayers[i]->update();
         }
     }
 

@@ -38,12 +38,16 @@ AILuka::AILuka(){
     m_arena             = Arena::getInstance();
 }
 
+AILuka::~AILuka(){
+    
+}
+
 // Updates all the variables required by the tree to work properly
 void AILuka::update(){
     
 }
 
-// Builds the tree containing Kira's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
+// Builds the tree containing Luka's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AILuka::buildTree(){
     
 }

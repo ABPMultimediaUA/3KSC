@@ -32,13 +32,13 @@ class AIKira : public AICharacter{
     private:
         float m_KIRA_distance_to_enemy;       // Fraction that determines if an enemy is close
         float m_KIRA_distance_to_item;        // Fraction that determines if an item is close
-        float m_KIRA_life;                    // Plup's current life
-        float m_KIRA_mana;                    // Plup's current mana
+        float m_KIRA_life;                    // Kira's current life
+        float m_KIRA_mana;                    // Kira's current mana
         float m_KIRA_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
         float m_KIRA_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
         float m_KIRA_special_check ;          // Determines if a snowman is already placed or not
-        b2Vec2 m_KIRA_position;               // Vector containing Plup's position
-        AINode* m_KIRA_root;                  // Root of Plup's tree
+        b2Vec2 m_KIRA_position;               // Vector containing Kira's position
+        AINode* m_KIRA_root;                  // Root of Kira's tree
     public:
         static AIKira& instance();
         AIKira();

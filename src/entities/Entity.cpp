@@ -29,8 +29,8 @@
 //Entity count initialization
 int Entity::m_entityCount = 0;
 
-EngineManager*  m_engineManager     = &EngineManager::instance();
-PhysicsManager* m_physicsManager    = &PhysicsManager::instance();
+EngineManager*  Entity::m_engineManager     = &EngineManager::instance();
+PhysicsManager* Entity::m_physicsManager    = &PhysicsManager::instance();
 
 //Create a new Entity for a player
 Entity::Entity(float p_position[3]){

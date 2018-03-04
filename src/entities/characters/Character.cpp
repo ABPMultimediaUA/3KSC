@@ -43,10 +43,10 @@ struct ActionMapping{
 int Character::m_playerCount = 0;
 
 //Pointers
-EngineManager*  m_engineManager     = &EngineManager::instance();
+// EngineManager*  m_engineManager     = &EngineManager::instance();
+// PhysicsManager* m_physicsManager    = &PhysicsManager::instance();
 InputManager*   m_inputManager      = &InputManager::instance();
-PhysicsManager* m_physicsManager    = &PhysicsManager::instance();
-UIManager*      m_UIManager         = &UIManager::instance();
+// UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = Arena::getInstance();
 
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode)
@@ -149,7 +149,7 @@ void Character::changeHP(int p_variation){
     }
 
     //HUD Stuff
-    m_UIManager->setLife(m_playerIndex, m_HP);
+    // m_UIManager->setHP(m_playerIndex, m_HP);
 }
 
 //Increases or decreases magic
@@ -163,6 +163,7 @@ void Character::changeMP(int p_variation){
         m_MP = m_maxMP;
 
     //HUD Stuff
+    // m_UIManager->setMP(m_playerIndex, m_MP);
 }
 
 //Activates shield
@@ -183,6 +184,7 @@ void Character::die(){
     m_lives--;
     //m_alive = false;
     m_arena->respawnPlayer(m_playerIndex);
+    
     //HUD Stuff
 
     //Delete when m_lives == 0
@@ -283,27 +285,28 @@ void Character::input(){
 void Character::update(){
     doActions();
     
-    if(!m_respawning)
+    if(!m_respawning){
         updatePosition(m_actions[(int) Action::Jump].enabled);
+    }
     else{
         updatePosition(true);
         m_respawning = false;
     }
     if(m_debugMode)
         m_playerDebug->update();
+
     //Increase magic every second and with attacks
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
     }
 
     if(m_maxJumps < 2){
-        if(m_physicsManager->isTouchingGround()){
+        // if(m_physicsManager->isTouchingGround()){
             //std::cout << m_name << " - Tocando el suelo" << std::endl;
             m_maxJumps = 2;
-        }
-        else{
-            //std::cout << m_name << " - En el airee" << std::endl;
-        }
+    }
+    else{
+        //std::cout << m_name << " - En el airee" << std::endl;
     }
 }
 
@@ -343,8 +346,9 @@ int Character::getMP(){
 }
 
 void Character::modeDebug(){
-    if(m_debugMode)
-        m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
+    if(m_debugMode){
+        // m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
+    }
 }
 
 void Character::respawn(float p_position[3]){
@@ -359,7 +363,8 @@ void Character::respawn(float p_position[3]){
         m_winged = false;
     }
 
-    //m_UIManager->setLife(m_playerIndex, m_HP);
+    //m_UIManager->setHP(m_playerIndex, m_HP);
+    //m_UIManafer->setMP(m_playerIndex, m_MP);
 }
 
 

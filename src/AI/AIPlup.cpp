@@ -39,9 +39,14 @@ AIPlup::AIPlup(){
     m_arena             = Arena::getInstance();
 }
 
+AIPlup::~AIPlup(){
+    
+}
+
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
     std::cout<<std::endl; // SIN ESTO NO FUNCIONA WTFFFF
+    
     int t_PLUP_index = 1;
     m_PLUP_special_up_range = 0.0;
     m_PLUP_special_side_range = 0.0;

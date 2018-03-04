@@ -57,6 +57,11 @@ Client::Client(){
     m_arena         = Arena::getInstance();
 }
 
+//Destructor
+Client::~Client(){
+    
+}
+
 void Client::send(char const *mens){
 		std::cout<<"Sending-> "<<mens<<std::endl;
 		client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);

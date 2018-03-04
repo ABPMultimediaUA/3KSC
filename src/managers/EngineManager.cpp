@@ -268,9 +268,9 @@ void EngineManager::drawScene(){
 }
 
 //Returns game window
-//sf::RenderWindow* EngineManager::getWindow(){
-//   return m_window;
-//}
+// sf::RenderWindow* EngineManager::getWindow(){
+//    return m_window;
+// }
 
 float EngineManager::getFrameDeltaTime(){
     return (float) m_frameDeltaTime;

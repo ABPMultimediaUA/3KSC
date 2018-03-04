@@ -39,12 +39,16 @@ AIMiyagi::AIMiyagi(){
     m_arena             = Arena::getInstance();
 }
 
+AIMiyagi::~AIMiyagi(){
+    
+}
+
 // Updates all the variables required by the tree to work properly
 void AIMiyagi::update(){
     
 }
 
-// Builds the tree containing Kira's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
+// Builds the tree containing Miyagi's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AIMiyagi::buildTree(){
     
 }

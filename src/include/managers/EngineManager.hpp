@@ -76,7 +76,7 @@ public:
     
     void drawScene();
 
-    //sf::RenderWindow* getWindow();
+    // sf::RenderWindow* getWindow();
     float getFrameDeltaTime();
     irr::scene::ISceneManager* getSceneManager();
     irr::scene::ISceneNode* getEntityNode(int p_id);

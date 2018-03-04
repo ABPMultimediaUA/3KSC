@@ -32,6 +32,9 @@ class PhysicsManager;
 
 class Entity {
     protected:
+        static EngineManager*  m_engineManager;
+        static PhysicsManager* m_physicsManager;
+
         static int m_entityCount;
         int        m_id; 
         float      m_position[3]; // [0] for x, [1] for y, [2] for z
