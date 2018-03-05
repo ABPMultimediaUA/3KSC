@@ -19,6 +19,7 @@
 */
 
 #include "../include/managers/PhysicsManager.hpp"
+#include "../include/managers/EngineManager.hpp"
 #include "../include/entities/Arena.hpp"
 #include "../include/debug.hpp"
 #include <iostream>
@@ -109,23 +110,53 @@ void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex){
     m_bodyDef = new b2BodyDef();
-    m_bodyDef->position.Set(-90.0f, 0.0f);
+    m_bodyDef->position.Set(0.0f, 0.0f);
     
     m_body = m_world->CreateBody(m_bodyDef);
     //m_body->SetUserData(p_id);
 
     m_polygonShape = new b2PolygonShape();
-    if(p_arenaIndex == 0){
-        //scaleX = 50
-        //PLATAFORMAS DEL MAPA 1
-        m_polygonShape->SetAsBox(50, 1);
-        m_body->CreateFixture(m_polygonShape, 0.0f);
+    //if(p_arenaIndex == 0){ 
+    float t_minX, t_maxX;
+    float t_minY, t_maxY;
+    float t_dimX, t_dimY;
+    float t_factor = 4.5;
 
-        m_polygonShape->SetAsBox(50, 1, b2Vec2(180,0), 0);
+    for(int i = 0; i < EngineManager::instance()->getTotalVertex()-2; i++){
+        t_minX = EngineManager::instance()->getTotalVertexX().at(i*2);
+        t_maxX = EngineManager::instance()->getTotalVertexX().at((i*2)+1);
+
+        t_minY = EngineManager::instance()->getTotalVertexY().at(i*2);
+        t_maxY = EngineManager::instance()->getTotalVertexY().at((i*2)+1);
+
+        if(t_minX >= 0 && t_maxX > 0)
+            t_dimX = (t_maxX - t_minX) * t_factor;
+        else if(t_minX < 0 && t_maxX <= 0)
+            t_dimX = (abs(t_minX) - abs(t_maxX)) * t_factor;
+        else
+            t_dimX = (abs(t_minX) + t_maxX) * t_factor;
+
+        if(t_minY >= 0 && t_maxY > 0)
+            t_dimY = (t_maxY - t_minY) * t_factor;
+        else if(t_minY < 0 && t_maxY <= 0)
+            t_dimY = (abs(t_minY) - abs(t_maxY)) * t_factor;
+        else
+            t_dimY = (abs(t_minY) + t_maxY) * t_factor;
+
+        //std::cout << t_dimX << std::endl;
+        //std::cout << t_dimY << std::endl;
+
+        if(t_minX < 0 && t_maxX > 0)
+            m_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_minX + t_maxX) ,(t_minY*11)), 0);
+        else if(t_minX >= 0)
+            m_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_minX*26.3) ,(t_minY*11)), 0);
+        else
+            m_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_maxX*26.3) ,(t_minY*11)), 0);
+        
         m_body->CreateFixture(m_polygonShape, 0.0f);
-      
-        m_polygonShape->SetAsBox(50, 1, b2Vec2(90,45), 0);
-        m_body->CreateFixture(m_polygonShape, 0.0f);
+    }
+
+    /*
     }else if(p_arenaIndex == 1){
         //Nenufar izquierda
         m_polygonShape->SetAsBox(20, 1, b2Vec2(-25,0), 0);
@@ -155,6 +186,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
         m_polygonShape->SetAsBox(8, 1, b2Vec2(172,65), 0);
         m_body->CreateFixture(m_polygonShape, 0.0f);
     }
+    */
 }
 
 b2World* PhysicsManager::getWorld(){
