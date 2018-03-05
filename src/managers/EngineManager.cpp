@@ -26,16 +26,10 @@
 #include <string>
 using namespace irr;
 
-//Instance initialization
-EngineManager* EngineManager::m_instance = 0;
-
 //Returns the only instance of this class
-EngineManager* EngineManager::instance(){
-    if (!m_instance){
-        m_instance = new EngineManager();
-    }
-
-    return m_instance;
+EngineManager& EngineManager::instance(){
+    static EngineManager instance;
+    return instance;
 }
 
 //Constructor
@@ -173,12 +167,12 @@ bool EngineManager::OnEvent(const SEvent& p_event){}
 
 //Sets m_prevTime for the first time
 void EngineManager::timeStamp(){
-    m_prevTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_prevTime = getDevice()->getTimer()->getTime();
 }
 
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
 float EngineManager::updateFrameDeltaTime(){
-    m_nowTime = EngineManager::instance()->getDevice()->getTimer()->getTime();
+    m_nowTime = getDevice()->getTimer()->getTime();
     m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
     m_prevTime = m_nowTime;
 }
@@ -277,9 +271,9 @@ void EngineManager::drawScene(){
 }
 
 //Returns game window
-//sf::RenderWindow* EngineManager::getWindow(){
-//   return m_window;
-//}
+// sf::RenderWindow* EngineManager::getWindow(){
+//    return m_window;
+// }
 
 float EngineManager::getFrameDeltaTime(){
     return (float) m_frameDeltaTime;

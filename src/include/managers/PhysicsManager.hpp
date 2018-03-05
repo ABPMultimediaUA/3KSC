@@ -21,6 +21,8 @@
 #ifndef PHYSICS_MANAGER
 #define PHYSICS_MANAGER
 
+class EngineManager;
+
 #include "../entities/Entity.hpp"
 #include "../entities/characters/Character.hpp"
 #include "../managers/ContactManager.hpp"
@@ -29,7 +31,7 @@
 
 class PhysicsManager{
     private:
-    static PhysicsManager* m_instance;
+    static EngineManager* m_engineManager;
     //Entity** m_physicBodies;
     std::vector<b2Body*> m_physicBodies;
 
@@ -49,7 +51,7 @@ class PhysicsManager{
     ContactManager* m_contactManager;
 
     public:
-    static PhysicsManager* instance();
+    static PhysicsManager& instance();
     PhysicsManager();
     ~PhysicsManager();
     

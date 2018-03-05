@@ -26,9 +26,9 @@
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/UIManager.hpp"
-#include "../../include/debug.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
+#include "../../include/debug.hpp"
 
 #include <iostream>
 
@@ -42,7 +42,14 @@ struct ActionMapping{
 //Static members
 int Character::m_playerCount = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
+//Pointers
+InputManager*   m_inputManager      = &InputManager::instance();
+// UIManager*      m_UIManager         = &UIManager::instance();
+Arena*          m_arena             = 0;
+
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode)
+    : Entity(p_position, 5.f, p_modelURL){
+    m_arena                 = Arena::getInstance();
     m_name                  = p_name;
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
@@ -58,7 +65,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
 
     m_runningFactor         = 1.0f;
 
-    m_maxJumps              = 2;
+    m_maxJumps              = 1;
     m_jumping               = false;
     m_jumpCurrentTime       = 0;
     m_jumpMaxTime           = 10;
@@ -105,7 +112,7 @@ void Character::mapActions(){
     m_actions[2]    = {Action::Jump               , &Character::jump              , true      , false};
     m_actions[3]    = {Action::Run                , &Character::run               , false     , false};
     m_actions[4]    = {Action::Block              , &Character::block             , false     , false};
-    m_actions[5]    = {Action::Pick               , &Character::pick              , false     , false};
+    m_actions[5]    = {Action::Pick               , &Character::pick              , true      , false};
     m_actions[6]    = {Action::BasicAttack        , &Character::basicAttack       , true      , false};
     m_actions[7]    = {Action::SpecialAttackUp    , &Character::specialAttackUp   , true      , false};
     m_actions[8]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
@@ -141,7 +148,7 @@ void Character::changeHP(int p_variation){
     }
 
     //HUD Stuff
-    UIManager::instance()->setLife(m_playerIndex, m_HP);
+    // m_UIManager->setHP(m_playerIndex, m_HP);
 }
 
 //Increases or decreases magic
@@ -155,6 +162,7 @@ void Character::changeMP(int p_variation){
         m_MP = m_maxMP;
 
     //HUD Stuff
+    // m_UIManager->setMP(m_playerIndex, m_MP);
 }
 
 //Activates shield
@@ -174,7 +182,8 @@ void Character::wings(){
 void Character::die(){
     m_lives--;
     //m_alive = false;
-    Arena::getInstance()->respawnPlayer(m_playerIndex);
+    m_arena->respawnPlayer(m_playerIndex);
+    
     //HUD Stuff
 
     //Delete when m_lives == 0
@@ -214,34 +223,33 @@ void Character::doActions(){
 }
 
 void Character::input(){
-    InputManager* t_inputManager = InputManager::instance();
-    t_inputManager->updateInputs(m_playerIndex);
+    m_inputManager->updateActions(m_playerIndex);
     
     //For movement
-    m_frameDeltaTime = EngineManager::instance()->getFrameDeltaTime();
+    m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
 //    //Change to keyboard (RETURN KEY)
-//    if (t_inputManager->isKeyPressed(58)){
-//        t_inputManager->assignDevice(-1, m_playerIndex);
+//    if (m_inputManager->isKeyPressed(58)){
+//        m_inputManager->assignDevice(-1, m_playerIndex);
 //    }
 //    
 //    //Change to joystick (START BUTTON)
-//    t_inputManager->updateJoysticks();
-//    if (t_inputManager->isButtonPressed(0, 7)){
-//        t_inputManager->assignDevice(0, m_playerIndex);
+//    m_inputManager->updateJoysticks();
+//    if (m_inputManager->isButtonPressed(0, 7)){
+//        m_inputManager->assignDevice(0, m_playerIndex);
 //    }
 //
 //    //Exit
-//    if(t_inputManager->isKeyPressed(Key_Escape))
-//        EngineManager::instance()->stop();
+//    if(m_inputManager->isKeyPressed(Key_Escape))
+//        m_engineManager->stop();
 //
-//    if(t_inputManager->isKeyPressed(15)){
-//        EngineManager::instance()->resetCamera();
+//    if(m_inputManager->isKeyPressed(15)){
+//        m_engineManager->resetCamera();
 //    }
 
 
     //Block
-    m_actions[(int) Action::Block].enabled = t_inputManager->checkInput(Action::Block, m_playerIndex);
+    m_actions[(int) Action::Block].enabled = m_inputManager->checkAction(Action::Block, m_playerIndex);
 
     //Input blocked if stunned, blocking or dead
     if(!m_stunned && !m_actions[(int) Action::Block].enabled && m_alive){
@@ -250,7 +258,7 @@ void Character::input(){
         //Loop through actions to enable them
         while(t_iterator->function){    
             if (t_iterator->onlyOnce){
-                if (t_inputManager->checkInput(t_iterator->action, m_playerIndex)){
+                if (m_inputManager->checkAction(t_iterator->action, m_playerIndex)){
                     m_keepWaiting = true;
 
                     if (!m_waitRelease){
@@ -261,7 +269,7 @@ void Character::input(){
             }
 
             else{
-                t_iterator->enabled = t_inputManager->checkInput(t_iterator->action, m_playerIndex);
+                t_iterator->enabled = m_inputManager->checkAction(t_iterator->action, m_playerIndex);
             }
 
             ++t_iterator;
@@ -276,24 +284,40 @@ void Character::input(){
 void Character::update(){
     doActions();
     
-    if(!m_respawning)
+    if(!m_respawning){
         updatePosition(m_actions[(int) Action::Jump].enabled);
+    }
     else{
         updatePosition(true);
         m_respawning = false;
     }
     if(m_debugMode)
         m_playerDebug->update();
+
     //Increase magic every second and with attacks
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
     }
 
-    if(m_maxJumps < 2){
-        if(PhysicsManager::instance()->isTouchingGround()){
-            m_maxJumps = 2;
+    if(m_maxJumps < 1){
+        if(m_physicsManager->isTouchingGround()){
+            m_maxJumps = 1;
         }
     }
+
+    else{
+        //std::cout << m_name << " - En el airee" << std::endl;
+    }
+}
+
+//Returns the type of the player
+int Character::getType(){
+    return m_type;
+}
+
+//Returns if the player is an NPC
+bool Character::isNPC(){
+    return m_inputManager->getInputDevice(m_playerIndex) == -2;
 }
 
 //Returns the damage of the player
@@ -322,8 +346,9 @@ int Character::getMP(){
 }
 
 void Character::modeDebug(){
-    if(m_debugMode)
-        m_playerDebug = new Debug(666, PhysicsManager::instance()->getBody(Arena::getInstance()->getPlayer(m_playerIndex)->getId()));
+    if(m_debugMode){
+        // m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
+    }
 }
 
 void Character::respawn(float p_position[3]){
@@ -338,7 +363,8 @@ void Character::respawn(float p_position[3]){
         m_winged = false;
     }
 
-    //UIManager::instance()->setLife(m_playerIndex, m_HP);
+    //m_UIManager->setHP(m_playerIndex, m_HP);
+    //m_UIManafer->setMP(m_playerIndex, m_MP);
 }
 
 
@@ -370,7 +396,7 @@ bool Character::right(){
 bool Character::jump(){
     // Start or continue jump movement
     if(m_jumpCurrentTime < m_jumpMaxTime && m_maxJumps > 0){
-        moveY(m_jumpTable[m_jumpCurrentTime++]*2);
+        moveY(m_jumpTable[m_jumpCurrentTime++]*3.0f);
     }
     // Jump has ended. Starting to go down
     else{
@@ -401,42 +427,8 @@ bool Character::block(){
 }
 
 bool Character::pick(){
-    int t_itemType = Arena::getInstance()->catchItem(m_playerIndex, m_position);
+    m_arena->catchItem(m_playerIndex, m_position);
     
-    switch (t_itemType){
-        //Life tank
-        case 0:{
-            std::cout << m_name <<" got a Life Tank." << std::endl
-            << m_name << "'s life is now " << m_HP << " HP." << std::endl << std::endl;
-            break;
-        }
-
-        //Shield
-        case 1:{
-            std::cout << m_name <<" got a Shield." << std::endl
-            << m_name << "'s now protected against attacks." << std::endl << std::endl;
-            break;
-        }
-
-        //Wings
-        case 2:{
-            std::cout << m_name <<" got Wings." << std::endl
-            << m_name << "'s speed increased." << std::endl << std::endl;
-            break;
-        }
-
-        //Fosforian Obedience Automatic Hammer (F.O.A.H)
-        case 3:{
-            std::cout << m_name <<" got a F.O.A.H." << std::endl
-            << m_name << "'s going to make rivals suffer." << std::endl << std::endl;
-            break;
-        }
-
-        default:{
-            //std::cout << "No object here" << std::endl;
-        }
-    }
-
     return false;
 }
 

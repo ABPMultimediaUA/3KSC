@@ -47,6 +47,8 @@ public:
     void            input();
     void            update();
     
+    int             getType();
+    bool            isNPC();
     int             getDamage();
     int             getIndex();
     char*           getName();
@@ -73,6 +75,7 @@ protected:
     static int      m_playerCount;
     int             m_playerIndex;
 
+    int             m_type;                 //0-5: {Kira, Luka, Miyagi, Plup, Rawr, Sparky}
     char*           m_name;
     int             m_lives;
     int             m_HP;

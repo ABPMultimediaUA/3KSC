@@ -23,13 +23,13 @@
 #ifndef AI_PLUP
 #define AI_PLUP
 
-#include "../managers/AIManager.hpp"
-#include <Box2D.h>
-#include "AINode.hpp"
+class AINode;
 
-class AIPlup : public AIManager{
+#include "AICharacter.hpp"
+#include <Box2D.h>
+
+class AIPlup : public AICharacter{
     private:
-        static AIPlup* m_instance;
         float m_PLUP_distance_to_enemy;       // Fraction that determines if an enemy is close
         float m_PLUP_distance_to_item;        // Fraction that determines if an item is close
         float m_PLUP_life;                    // Plup's current life
@@ -40,7 +40,7 @@ class AIPlup : public AIManager{
         b2Vec2 m_PLUP_position;               // Vector containing Plup's position
         AINode* m_PLUP_root;                  // Root of Plup's tree
     public:
-        static AIPlup* instance();
+        static AIPlup& instance();
         AIPlup();
         ~AIPlup();
         void update();

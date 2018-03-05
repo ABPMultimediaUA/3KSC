@@ -23,13 +23,21 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
+
 #include "../include/entities/characters/Kira.hpp"
 #include "../include/entities/characters/Luka.hpp"
 #include "../include/entities/characters/MiyagiMurasaki.hpp"
 #include "../include/entities/characters/Plup.hpp"
 #include "../include/entities/characters/Rawr.hpp"
 #include "../include/entities/characters/Sparky.hpp"
-#include "../include/entities/Item.hpp"
+
+#include "../include/entities/items/Item.hpp"
+#include "../include/entities/items/LifeTank.hpp"
+#include "../include/entities/items/Shield.hpp"
+#include "../include/entities/items/Wings.hpp"
+#include "../include/entities/items/FOAH.hpp"
+#include "../include/entities/items/Portal.hpp"
+
 #include "../include/debug.hpp"
 #include <iostream>
 
@@ -41,13 +49,17 @@ const char* Arena::m_skyboxURLs[3][6] = {
     {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"}
     };
 
+EngineManager*  Arena::m_engineManager     = &EngineManager::instance();
+PhysicsManager* Arena::m_physicsManager    = &PhysicsManager::instance();
+
+
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
 Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1, p_arenaIndex){
 
     m_maxItems      = 500; //cambiar esto
-    m_currentItems  = 0;
+    m_currentItems      = 0;
     m_items         = new Item*[m_maxItems];
     m_instance      = this;
     m_debugMode     = p_debugMode;
@@ -80,6 +92,7 @@ void Arena::spawnPlayers(){
         modeDebug();
     }
 }
+
 void Arena::addPlayer(){
     float positionRawr[3] = {0, 100, 0};
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
@@ -117,11 +130,9 @@ void Arena::spawnItems(){
     
 }
 
-//Checks if any of the items in the screen is where the player wants to pick it
-//Returns -1 if no item found or the type of the item
-int Arena::catchItem(int p_owner, float p_where[3]){
-    int t_type = -1;
-    
+//Checks if any of the items in the screen is where the player wants to pick it and uses it
+void Arena::catchItem(int p_owner, float p_where[3]){    
+    //Check if there's an item here and use it
     for (int i = 0; i < m_currentItems; i++){
         //Check not null
         if (m_items[i]){
@@ -133,8 +144,6 @@ int Arena::catchItem(int p_owner, float p_where[3]){
                     m_items[i]->setOwner(p_owner);
                     m_items[i]->use();
 
-                    //Save return value and delete item
-                    t_type = m_items[i]->getType();
                     delete m_items[i];
                     m_items[i] = 0;
                     break;
@@ -142,8 +151,6 @@ int Arena::catchItem(int p_owner, float p_where[3]){
             }
         }
     }
-
-    return t_type;
 }
 
 void Arena::finishRound(){
@@ -164,7 +171,7 @@ void Arena::restart(){
 
 void Arena::modeDebug(){
     if(m_debugMode)
-        m_debugBattlefield = new Debug(666, PhysicsManager::instance()->getBody(getId()));
+        m_debugBattlefield = new Debug(666, m_physicsManager->getBody(getId()));
 }
 
 void Arena::setSpawnPositions(){
@@ -192,24 +199,32 @@ void Arena::update(){
 }
 
 void Arena::spawnRandomItem(){
-    float positionItem[3] = {-100, 10, 0};
-    positionItem[0] = rand()%(120);
-    if(positionItem[0]< 60)
-    {
-        positionItem[1] = 54;
+    //Position
+    float t_position[3] = {-100, 10, 0};
+    t_position[0] = rand()%(120);
+    if(t_position[0]< 60){
+        t_position[1] = 54;
     }
-    else
-    {
-        positionItem[1] = 10;
+
+    else{
+        t_position[1] = 10;
     }
 
     if(rand()%2 == 0)
-        positionItem[0] = positionItem[0] * (-1);
+        t_position[0] = t_position[0] * (-1);
 
-    m_items[m_currentItems++] = new Item(rand()%3, positionItem);
-   
+    //Type
+    int t_type = rand()%3;
+
+    switch (t_type){
+        case 0:     { m_items[m_currentItems] = new LifeTank(t_position);   }   break;
+        case 1:     { m_items[m_currentItems] = new Shield(t_position);     }   break;
+        case 2:     { m_items[m_currentItems] = new Wings(t_position);      }   break;
+    }
+
+    m_currentItems++;   
 }
 
 void Arena::setSkybox(int p_arenaIndex){
-    EngineManager::instance()->loadSkybox(m_skyboxURLs[p_arenaIndex]);
+    m_engineManager->loadSkybox(m_skyboxURLs[p_arenaIndex]);
 }

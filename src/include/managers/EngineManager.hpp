@@ -28,8 +28,6 @@
 
 class EngineManager : public irr::IEventReceiver{
 private:
-    static EngineManager* m_instance;
-
     std::vector<irr::scene::ISceneNode*>    m_entityNodes;
     irr::IrrlichtDevice*                    m_device;
     irr::video::IVideoDriver*               m_vDriver;
@@ -54,7 +52,7 @@ private:
     std::vector<float>      m_VertexZ;
 
 public:
-    static EngineManager* instance();
+    static EngineManager& instance();
     EngineManager();
     ~EngineManager();
 
@@ -82,7 +80,7 @@ public:
     
     void drawScene();
 
-    //sf::RenderWindow* getWindow();
+    // sf::RenderWindow* getWindow();
     float getFrameDeltaTime();
     irr::scene::ISceneManager* getSceneManager();
     irr::scene::ISceneNode* getEntityNode(int p_id);

@@ -20,21 +20,21 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../include/managers/AIManager.hpp"
-        
-//Instance initialization
-AIManager* AIManager::m_instance = 0;
+#ifndef AI_CHARACTER
+#define AI_CHARACTER
 
-//Returns the only instance of this class
-AIManager* AIManager::instance(){
-    if (!m_instance)
-        m_instance = new AIManager();
+class PhysicsManager;
+class Arena;
 
-    return m_instance;
-}
+class AICharacter{
+    protected:
+        PhysicsManager* m_physicsManager;
+        Arena*          m_arena;
 
-AIManager::AIManager(){}
-AIManager::~AIManager(){}
+    public:
+        virtual void update()       = 0;
+        virtual void buildTree()    = 0;
+};
 
-void AIManager::update(){}
-void AIManager::buildTree(){}
+#endif
+

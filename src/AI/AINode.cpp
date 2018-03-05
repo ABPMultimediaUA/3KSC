@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../include/AI/AINode.hpp"
+#include <iostream>
 
 AINode::AINode(int p_type, float p_comparison_value, float *p_data, std::string p_action){
     m_type = p_type;

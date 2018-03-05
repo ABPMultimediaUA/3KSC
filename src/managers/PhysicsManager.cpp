@@ -24,20 +24,19 @@
 #include "../include/debug.hpp"
 #include <iostream>
 
-//Instance initialization
-PhysicsManager* PhysicsManager::m_instance = 0;
+EngineManager* PhysicsManager::m_engineManager = 0;
 
 //Returns the only instance of this class
-PhysicsManager* PhysicsManager::instance(){
-    if (!m_instance)
-        m_instance = new PhysicsManager();
-
-    return m_instance;
+PhysicsManager& PhysicsManager::instance(){
+    static PhysicsManager instance;
+    return instance;
 }
   //at global scope
 
 //Constructor
 PhysicsManager::PhysicsManager(){
+    m_engineManager = &EngineManager::instance();
+
     //b2Vec2 gravity(0.0f, 0.0f);
     b2Vec2 gravity(0.0f, -10.0f);
 
@@ -122,12 +121,12 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
     float t_dimX, t_dimY;
     float t_factor = 4.5;
 
-    for(int i = 0; i < EngineManager::instance()->getTotalVertex()-2; i++){
-        t_minX = EngineManager::instance()->getTotalVertexX().at(i*2);
-        t_maxX = EngineManager::instance()->getTotalVertexX().at((i*2)+1);
+    for(int i = 0; i < m_engineManager->getTotalVertex()-2; i++){
+        t_minX = m_engineManager->getTotalVertexX().at(i*2);
+        t_maxX = m_engineManager->getTotalVertexX().at((i*2)+1);
 
-        t_minY = EngineManager::instance()->getTotalVertexY().at(i*2);
-        t_maxY = EngineManager::instance()->getTotalVertexY().at((i*2)+1);
+        t_minY = m_engineManager->getTotalVertexY().at(i*2);
+        t_maxY = m_engineManager->getTotalVertexY().at((i*2)+1);
 
         if(t_minX >= 0 && t_maxX > 0)
             t_dimX = (t_maxX - t_minX) * t_factor;

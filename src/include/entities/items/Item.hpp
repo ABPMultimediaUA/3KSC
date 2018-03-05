@@ -20,20 +20,29 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef AI_MANAGER
-#define AI_MANAGER
+#ifndef ITEM
+#define ITEM
 
-class AIManager{
-    private:
-        static AIManager* m_instance;
+class PhysicsManager;
+class Arena;
+
+#include "../Entity.hpp"
+
+class Item: public Entity {
     public:
-        static AIManager* instance();
-        AIManager();
-        ~AIManager();
+        Item(float p_position[3], const char* p_modelURL);
+        ~Item();
+        virtual void    setOwner(int p_owner);
+        virtual void    use();
+        
+    protected:
+        PhysicsManager*     m_physicsManager;
+        Arena*              m_arena;
 
-        virtual void update();
-        virtual void buildTree();
+        int                 m_owner;
+        float               m_duration;
+        float               m_durationGround;
+        static const char*  m_modelURLs[4];
 };
 
 #endif
-

@@ -25,20 +25,16 @@
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
-//Instance initialization
-InputManager* InputManager::m_instance = 0;
-
 //Returns the only instance of this class
-InputManager* InputManager::instance(){
-    if (!m_instance)
-        m_instance = new InputManager();
-
-    return m_instance;
+InputManager& InputManager::instance(){
+    static InputManager instance;
+    return instance;
 }
-
 
 //Constructor
 InputManager::InputManager(){
+    m_engineManager = &EngineManager::instance();
+
     m_bindings = 0;
 
     //Event handling
@@ -139,10 +135,10 @@ void InputManager::assignDevice(int p_device, int p_player){
 }
 
 void InputManager::onlineMode(){
-    m_client = Client::instance();
+    m_client = &Client::instance();
     m_isOnline = true;
-    for (int i = 0; i< sizeof(m_inputDevices) / sizeof(int); ++i)
-        m_inputDevices[i] = -2; //desasignar controles para que el servidor te asigne uno
+    for (int i = 0; i < sizeof(m_inputDevices) / sizeof(int); ++i)
+        m_inputDevices[i] = -2; //Unassign devices so server assigns one
 }
 
 void InputManager::setOnlineControl(int p_player){
@@ -179,12 +175,12 @@ void InputManager::setNetPlayer(int p_player){
 }
 
 //Updates joysticks state and booleans for each action
-void InputManager::updateInputs(int p_player){
+void InputManager::updateActions(int p_player){
     int t_inputDevice = m_inputDevices[p_player];
     bool t_up, t_down; //They're not actions, but needed for some conditions
     //Keyboard input
     if (t_inputDevice == -1){
-        if(!EngineManager::instance() -> getDevice()->isWindowActive()) return;
+        if(!m_engineManager->getDevice()->isWindowActive()) return;
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -239,7 +235,7 @@ void InputManager::updateInputs(int p_player){
 
     //Joystick input
     else if (t_inputDevice != -2){
-        if(!EngineManager::instance() -> getDevice()->isWindowActive()) return;
+        if(!m_engineManager->getDevice()->isWindowActive()) return;
         //Update joysticks state first
         updateJoysticks();
 
@@ -308,6 +304,11 @@ void InputManager::updateInputs(int p_player){
 }
 
 //Returns true if the asked action's input is enabled
-bool InputManager::checkInput(Action p_action, int p_player){
+bool InputManager::checkAction(Action p_action, int p_player){
     return m_actions[p_player][(int) p_action];
+}
+
+//Returns the input device for the specified player
+int InputManager::getInputDevice(int p_player){
+    return m_inputDevices[p_player];
 }

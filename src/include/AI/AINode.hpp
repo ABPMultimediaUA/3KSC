@@ -22,7 +22,6 @@
 #ifndef AI_NODE
 #define AI_NODE
 
-#include <iostream>
 #include <string>
 
 class AINode{

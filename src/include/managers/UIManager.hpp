@@ -21,41 +21,49 @@
 #ifndef UI_MANAGER
 #define UI_MANAGER
 
-//#include <SFML/Graphics.hpp>
-//#include <SFML/Window/Context.hpp>
-#include <irrlicht.h>
+#include <SFML/Graphics.hpp>
 
 class UIManager{
     private:
-        static UIManager*   m_instance;
+        sf::RenderWindow*       m_window;
 
-        //sf::RenderTexture*  m_renderTexture;
-        //const sf::Texture*  m_texture;
-        //sf::Context*        m_gameContext;
-        //sf::Context*        m_SFMLContext;
+        sf::Sprite**            m_faces;            //Player faces
+        sf::Sprite**            m_names;            //Player names
+        sf::CircleShape***      m_lives;            //Player lives left
+        sf::RectangleShape**    m_barsBG;            //Basic bars backgrounds
+        sf::RectangleShape**    m_HPBarsFG;         //HP bars foregrounds
+        sf::RectangleShape**    m_HPShieldBarsFG;   //HP Shields foregrounds
+        sf::RectangleShape**    m_MPBarsFG;         //MP foregrounds
+        sf::Text**              m_barTexts;         //Text over bars
+        sf::RectangleShape*     m_selected;         //Rectangle over selected player
 
-        //irr::gui::IGUIStaticText** m_playerNames;
-        //irr::gui::IGUIStaticText** m_HPTexts;
-        //irr::gui::IGUIStaticText** m_playerHPs;
-        //irr::gui::IGUIStaticText** m_MPTexts;
-        //irr::gui::IGUIStaticText** m_playerMPs;
-
-        irr::gui::IGUIFont* m_font;
-        irr::scene::ITextSceneNode** m_playerHPs;
+        int m_players;
+        int* m_playersLives;
 
         int* m_buttons;
         int* m_menus;
         int* m_callbacks;
+        
+        void initializeHUD();
+        void clipFace(int p_player, int p_face, int p_variant);
+        void clipFace(int p_player, int p_variant);
+        void clipName(int p_player, int p_name, int p_variant);
+        void clipName(int p_player, int p_variant);
 
     public:
-        static UIManager* instance();
+        static UIManager& instance();
         UIManager();
         ~UIManager();
-        
+
+        void setLives(int p_player, int p_lives);
+        void setHP(int p_player, int p_HP);
+        void setHPShield(int p_player, int p_HPShield);
+        void setMP(int p_player, int p_MP);
+        void selectPlayer(int p_player);
+
         void update();
         void render();
-
-        void setLife(int p_player, int p_life);
+        
 
         void start();
         void pause();

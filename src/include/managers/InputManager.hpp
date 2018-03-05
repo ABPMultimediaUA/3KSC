@@ -21,7 +21,9 @@
 #ifndef INPUT_MANAGER
 #define INPUT_MANAGER
 
-#include "../entities/characters/Character.hpp"
+class EngineManager;
+
+//#include "../entities/characters/Character.hpp"
 #include "../extra/Actions.hpp"
 #include "../extra/Inputs.hpp"
 #include <SFML/Window/Keyboard.hpp>//DELETE!!!
@@ -33,7 +35,7 @@
 
 class InputManager{
     public:
-        static InputManager* instance();
+        static InputManager& instance();
         InputManager();
         ~InputManager();
         bool    eventHandler();
@@ -47,18 +49,19 @@ class InputManager{
         void    onlineMode();
         void    setOnlineControl(int p_player);
         void    setNetPlayer(int p_player);        
-        void    updateInputs(int p_player);
-        bool    checkInput(Action p_action, int p_player);
+        void    updateActions(int p_player);
+        bool    checkAction(Action p_action, int p_player);
+        int     getInputDevice(int p_player);
     
     private:
-        static InputManager*    m_instance;
+        EngineManager*          m_engineManager;
         int**                   m_bindings;   
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];
-        Client* m_client;
+        Client*                 m_client;
         //Event handling
-        sf::Window* m_window;             
-        sf::Event*  m_event;
+        sf::Window*             m_window;             
+        sf::Event*              m_event;
 
         bool m_isOnline = false;
         //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC

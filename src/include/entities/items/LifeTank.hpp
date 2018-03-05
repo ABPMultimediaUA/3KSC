@@ -20,17 +20,17 @@
 *********************************************************************************
 *********************************************************************************/
 
-#ifndef MAIN
-#define MAIN
+#ifndef LIFE_TANK
+#define LIFE_TANK
 
-#include "managers/AIManager.hpp"
-#include "managers/EngineManager.hpp"
-#include "managers/InputManager.hpp"
-#include "managers/PhysicsManager.hpp"
-#include "managers/SoundManager.hpp"
-#include "managers/UIManager.hpp"
-#include "entities/Arena.hpp"
-#include "debug.hpp"
-#include "Client.hpp"
+#include "Item.hpp"
+
+class LifeTank: public Item {
+    public:
+        LifeTank(float p_position[3]);
+        ~LifeTank();
+        void    setOwner(int p_owner) override;
+        void    use() override;
+};
 
 #endif
