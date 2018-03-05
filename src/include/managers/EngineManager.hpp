@@ -47,7 +47,11 @@ private:
     bool    m_moveCamera;
     float   m_amountTime;
 
-    //sf::RenderWindow* m_window;
+    //Vectors for reading the vertex of the batllefields
+    int                     m_totalVertex;
+    std::vector<float>      m_VertexX;
+    std::vector<float>      m_VertexY;
+    std::vector<float>      m_VertexZ;
 
 public:
     static EngineManager* instance();
@@ -95,6 +99,16 @@ public:
     void drawArena();
     void drawCharacter();
     void drawObject();
+
+    void parseOBJ(const char* p_filename);
+    void compareMaxAndMin(float p_value, float &p_max, float &p_min);
+    void pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ);
+
+    int                getTotalVertex(); 
+    std::vector<float> getTotalVertexX();
+    std::vector<float> getTotalVertexY();
+    std::vector<float> getTotalVertexZ();
+
 };
 
 #endif

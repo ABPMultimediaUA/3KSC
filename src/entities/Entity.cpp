@@ -24,8 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
-#include <iostream> //For std::memcpy()
-//#include <iostream>
+#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -109,6 +108,7 @@ Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, in
 
         //Arenas
         case 1:{
+            EngineManager::instance()->parseOBJ(p_modelURL);
             EngineManager::instance()->loadArena(p_modelURL);
             PhysicsManager::instance()->createPhysicBoxPlatform(&m_id, p_position, p_scale, p_arenaIndex);
             break;

@@ -21,6 +21,9 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 using namespace irr;
 
 //Instance initialization
@@ -332,4 +335,90 @@ void EngineManager::drawObject(){
 
 IrrlichtDevice* EngineManager::getDevice(){
     return m_device;
+}
+
+void EngineManager::parseOBJ(const char* p_filename){
+    m_VertexX.clear();
+    m_VertexY.clear();
+    m_VertexZ.clear();
+
+    bool t_newObject = false;
+
+    float t_X    =  0.0,   t_Y    =  0.0,   t_Z    =  0.0;
+    float t_maxX = -999.0, t_maxY = -999.0, t_maxZ = -999.0;
+    float t_minX =  999.0, t_minY =  999.0, t_minZ =  999.0;
+
+    std::ifstream t_file(p_filename);
+    std::string t_line;
+    std::string t_name;
+    while(std::getline(t_file, t_line)){
+        if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
+            continue;
+
+        std::istringstream t_lineStream(t_line);
+        t_lineStream >> t_name;
+
+        if(t_name == "o"){
+            if(m_totalVertex != 0){
+                pushVertex(t_minX, t_maxX, t_minY, t_maxY, t_minZ, t_maxZ);
+
+                t_maxX = -999.0, t_maxY = -999.0, t_maxZ = -999.0;
+                t_minX =  999.0, t_minY =  999.0, t_minZ =  999.0;
+            }
+            m_totalVertex++;
+        }
+
+        if(t_name == "v"){// Vertex
+            sscanf(t_line.c_str(), "%*s %f %f %f", &t_X, &t_Y, &t_Z);
+
+            compareMaxAndMin(t_X, t_maxX, t_minX);
+            compareMaxAndMin(t_Y, t_maxY, t_minY);
+            compareMaxAndMin(t_Z, t_maxZ, t_minZ);
+        }
+    }
+    pushVertex(t_minX, t_maxX, t_minY, t_maxY, t_minZ, t_maxZ);
+}
+
+void EngineManager::compareMaxAndMin(float p_value, float &p_max, float &p_min){
+    if(p_value > p_max)
+        p_max = p_value;
+
+    if(p_value < p_min)
+        p_min = p_value;
+}
+
+void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ){
+    m_VertexX.push_back(p_minX);
+    m_VertexX.push_back(p_maxX);
+
+    m_VertexY.push_back(p_minY);
+    m_VertexY.push_back(p_maxY);
+
+    m_VertexZ.push_back(p_minZ);
+    m_VertexZ.push_back(p_maxZ);
+
+    /*
+    std::cout <<
+        "Objeto: " << m_totalVertex << "\n" <<
+        "PosMin: " << p_minX << "," << p_minY << "," << p_minZ << "\n" <<
+        "PosMax: " << p_maxX << "," << p_maxY << "," << p_maxZ << "\n" <<
+        "---------------------------------\n";
+    */
+}
+
+
+int EngineManager::getTotalVertex(){
+    return m_totalVertex;
+}
+
+std::vector<float> EngineManager::getTotalVertexX(){
+    return m_VertexX;
+}
+
+std::vector<float> EngineManager::getTotalVertexY(){
+    return m_VertexY;
+}
+
+std::vector<float> EngineManager::getTotalVertexZ(){
+    return m_VertexZ;
 }
