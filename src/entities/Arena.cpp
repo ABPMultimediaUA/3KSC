@@ -31,6 +31,7 @@
 #include "../include/entities/characters/Sparky.hpp"
 #include "../include/entities/Item.hpp"
 #include "../include/debug.hpp"
+#include "Client.hpp"
 #include <iostream>
 
 //Static members
@@ -55,6 +56,8 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_clock         = new sf::Clock();
     m_playerCount   = 0;
     m_players       = new Character*[4];
+    m_spawnedItems  = 0;
+    m_usedItems     = 0;
     setSpawnPositions();
     setSkybox(p_arenaIndex);
 
@@ -137,6 +140,7 @@ int Arena::catchItem(int p_owner, float p_where[3]){
                     t_type = m_items[i]->getType();
                     delete m_items[i];
                     m_items[i] = 0;
+                    ++m_usedItems;
                     break;
                 }
             }
@@ -192,25 +196,42 @@ void Arena::update(){
         m_debugBattlefield->update();
 }
 
-void Arena::spawnRandomItem(){
+bool Arena::spawnRandomItem(){
+    if(m_spawnedItems - m_usedItems >= m_maxItemsOnScreen)
+        return false;
+    ++m_spawnedItems;
     float positionItem[3] = {-100, 10, 0};
     positionItem[0] = rand()%(120);
     if(positionItem[0]< 60)
-    {
         positionItem[1] = 54;
-    }
     else
-    {
         positionItem[1] = 10;
-    }
 
     if(rand()%2 == 0)
         positionItem[0] = positionItem[0] * (-1);
 
-    m_items[m_currentItems++] = new Item(rand()%3, positionItem);
-   
+    spawnItemAt(rand()%3, positionItem[0], positionItem[1]);
+    return true;
 }
 
 void Arena::setSkybox(int p_arenaIndex){
     EngineManager::instance()->loadSkybox(m_skyboxURLs[p_arenaIndex]);
+}
+
+void Arena::onlineUpdate(){
+    float t_time = m_clock->getElapsedTime().asSeconds();
+    if(t_time > m_spawningTime)
+    {
+        m_clock->restart();
+        if(spawnRandomItem())
+            Client::instance()->spawnItem(m_items[m_currentItems-1]->getType(), m_items[m_currentItems-1]->getX(), m_items[m_currentItems-1]->getY());
+    }
+    if(m_debugMode)
+    m_debugBattlefield->update();
+}
+
+void Arena::spawnItemAt(int p_type, int x, int y)
+{
+    float t_position[3] = {x, y, 0};
+    m_items[m_currentItems++] = new Item(p_type, t_position);
 }

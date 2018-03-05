@@ -55,10 +55,11 @@ public:
     void            setSpawnPositions();
     void            respawnPlayer(int p_player);
     void            update();
-    void            spawnRandomItem();
+    bool            spawnRandomItem();
     void            setSkybox(int p_arenaIndex);
-
     void            modeDebug();
+    void            onlineUpdate();
+    void            spawnItemAt(int p_type, int x, int y);
 
 private: 
     static Arena* m_instance;
@@ -72,6 +73,9 @@ private:
     int         m_currentItems;
     Item**      m_items;
     int         m_spawningTime;
+    int         m_spawnedItems;
+    int         m_usedItems;
+    int         m_maxItemsOnScreen = 5;
 
     int         m_playerCount;
     Character** m_players;

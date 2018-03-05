@@ -13,13 +13,15 @@ class Client{
         Client();
         ~Client();
         void start();
-        void recive();
+        void update();
+        void listen();
         void send(char const *mens);
         int getActions(int p_player);
         void readMessage(std::string p_message);
         int getPlayer();
         void sendAction(int p_action);
         const std::vector<std::string> explode(const std::string& s, const char& c);
+        void spawnItem(int p_type, int x, int y);
         
     private:
         static Client* m_instance;

@@ -76,7 +76,9 @@ int main(){
             engineManager->updateFrameDeltaTime();            
             aiManager->update();
             if(m_isOnline)
-                client->recive();
+            {
+                client->update();
+            }
             else
                 Arena::getInstance()->update();
 

@@ -63,7 +63,14 @@ void Client::send(char const *mens){
 	client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
-void Client::recive(){
+void Client::update(){
+	listen();
+	if(m_yourPlayer == 0)
+	{
+		Arena::getInstance()->onlineUpdate();
+	}
+}
+void Client::listen(){
 	m_action = -1;
 	#ifdef _WIN32
 		Sleep(30);
@@ -98,10 +105,13 @@ void Client::recive(){
 			break;
 		}
 	}
+
+
 }
 
 void Client::start()
 {
+	m_yourPlayer = -1;
 	client=RakNet::RakPeerInterface::GetInstance();
 
 	char t_debug[5];
@@ -206,6 +216,10 @@ void Client::readMessage(std::string p_message){
 		sendAction(-1);
 		if(m_debug) std::cout<<"Nuevo jugador en la partida"<<std::endl;
 	}
+	else if(t_parsed[0] == "item"){
+		Arena::getInstance()->spawnItemAt(std::stof(t_parsed[1]), std::stof(t_parsed[2]), std::stof(t_parsed[3]));
+		if(m_debug) std::cout<<"Objeto de tipo "<<t_parsed[1]<<" añadido"<<std::endl;
+	}
 	else{
 		if(t_parsed.size()<4)
 			return;
@@ -266,4 +280,13 @@ const std::vector<std::string> Client::explode(const std::string& s, const char&
 	if(buff != "") v.push_back(buff);
 	
 	return v;
+}
+
+void Client::spawnItem(int p_type, int x, int y)
+{
+	std::string t_toSend 	= "item:" + std::to_string(p_type) + ":" + std::to_string(x) 
+							+ ":" + std::to_string(y);
+    char const *t_toSendChar = t_toSend.c_str();
+	std::cout<<t_toSendChar<<std::endl;
+	send(t_toSendChar);
 }
