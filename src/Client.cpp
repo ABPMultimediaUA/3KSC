@@ -289,13 +289,9 @@ const std::vector<std::string> Client::explode(const std::string& s, const char&
 
 void Client::spawnItem(int p_type, int x, int y)
 {
-	std::cout<<3333<<std::endl;
 	std::string t_toSend 	= "item:" + std::to_string(p_type) + ":" + std::to_string(x) 
 							+ ":" + std::to_string(y);
-							std::cout<<444444<<std::endl;
     char const *t_toSendChar = t_toSend.c_str();
-	std::cout<<55555555<<std::endl;
 	std::cout<<t_toSendChar<<std::endl;
 	send(t_toSendChar);
-	std::cout<<66666<<std::endl;
 }

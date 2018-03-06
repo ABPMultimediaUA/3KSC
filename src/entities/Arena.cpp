@@ -60,7 +60,7 @@ Arena* Arena::m_instance = 0;
 Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1, p_arenaIndex){
 
     m_maxItems      = 500; //cambiar esto
-    m_currentItems      = 0;
+    m_currentItems  = 0;
     m_items         = new Item*[m_maxItems];
     m_instance      = this;
     m_debugMode     = p_debugMode;
@@ -232,8 +232,9 @@ void Arena::onlineUpdate(){
     if(t_time > m_spawningTime)
     {
         m_clock->restart();
-        //if(spawnRandomItem())
-            //Client::instance().spawnItem(m_lastItemType, m_items[m_currentItems-1]->getX(), m_items[m_currentItems-1]->getY());
+        if(spawnRandomItem()){
+            Client::instance().spawnItem(m_lastItemType, m_items[m_currentItems]->getX(), m_items[m_currentItems]->getY());
+        }
     }
     if(m_debugMode)
     m_debugBattlefield->update();
@@ -247,5 +248,7 @@ void Arena::spawnItemAt(int p_type, int x, int y)
         case 1:     { m_items[m_currentItems] = new Shield(t_position);     }   break;
         case 2:     { m_items[m_currentItems] = new Wings(t_position);      }   break;
     }
+
+    m_currentItems++;
     m_lastItemType = p_type;
 }
