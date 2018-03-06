@@ -21,31 +21,34 @@
 *********************************************************************************/
 
 #include "../include/AI/AISparky.hpp"
+#include "../include/AI/AINode.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/characters/Character.hpp"
 #include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         
-//Instance initialization
-AISparky* AISparky::m_instance = 0;
-
 //Returns the only instance of this class
-AISparky* AISparky::instance(){
-    if (!m_instance)
-        m_instance = new AISparky();
-
-    return m_instance;
+AISparky& AISparky::instance(){
+    static AISparky instance;
+    return instance;
 }
 
-AISparky::AISparky(){}
+AISparky::AISparky(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
+
+AISparky::~AISparky(){
+    
+}
 
 // Updates all the variables required by the tree to work properly
 void AISparky::update(){
     
 }
 
-// Builds the tree containing Kira's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
+// Builds the tree containing Sparky's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AISparky::buildTree(){
     
 }

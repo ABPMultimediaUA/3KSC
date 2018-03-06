@@ -23,13 +23,13 @@
 #ifndef AI_LUKA
 #define AI_LUKA
 
-#include "../managers/AIManager.hpp"
-#include <Box2D.h>
-#include "AINode.hpp"
+class AINode;
 
-class AILuka : public AIManager{
+#include "AICharacter.hpp"
+#include <Box2D.h>
+
+class AILuka : public AICharacter{
     private:
-        static AILuka* m_instance;
         float m_LUKA_distance_to_enemy;       // Fraction that determines if an enemy is close
         float m_LUKA_distance_to_item;        // Fraction that determines if an item is close
         float m_LUKA_life;                    // Plup's current life
@@ -40,7 +40,7 @@ class AILuka : public AIManager{
         b2Vec2 m_LUKA_position;               // Vector containing Plup's position
         AINode* m_LUKA_root;                  // Root of Plup's tree
     public:
-        static AILuka* instance();
+        static AILuka& instance();
         AILuka();
         ~AILuka();
         void update();

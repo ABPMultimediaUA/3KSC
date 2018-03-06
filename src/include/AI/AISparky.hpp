@@ -23,13 +23,13 @@
 #ifndef AI_SPARKY
 #define AI_SPARKY
 
-#include "../managers/AIManager.hpp"
-#include <Box2D.h>
-#include "AINode.hpp"
+class AINode;
 
-class AISparky : public AIManager{
+#include "AICharacter.hpp"
+#include <Box2D.h>
+
+class AISparky : public AICharacter{
     private:
-        static AISparky* m_instance;
         float m_SPARKY_distance_to_enemy;       // Fraction that determines if an enemy is close
         float m_SPARKY_distance_to_item;        // Fraction that determines if an item is close
         float m_SPARKY_life;                    // Plup's current life
@@ -40,7 +40,7 @@ class AISparky : public AIManager{
         b2Vec2 m_SPARKY_position;               // Vector containing Plup's position
         AINode* m_SPARKY_root;                  // Root of Plup's tree
     public:
-        static AISparky* instance();
+        static AISparky& instance();
         AISparky();
         ~AISparky();
         void update();

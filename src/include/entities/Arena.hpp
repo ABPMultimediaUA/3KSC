@@ -23,7 +23,8 @@
 #ifndef ARENA
 #define ARENA
 
-
+class EngineManager;
+class PhysicsManager;
 class Item;
 class Debug;
 
@@ -47,7 +48,7 @@ public:
     int             getPlayerCount();
     Character*      getPlayer(int p_index);
 	void            spawnItems();
-    int             catchItem(int p_owner, float p_where[3]);
+    void            catchItem(int p_owner, float p_where[3]);
 	void            finishRound();
     void            movePlatforms();
     void            animateBackground();
@@ -62,20 +63,24 @@ public:
     void            spawnItemAt(int p_type, int x, int y);
 
 private: 
-    static Arena* m_instance;
+    static Arena*           m_instance;
+    static EngineManager*   m_engineManager;
+    static PhysicsManager*  m_physicsManager;
+    
     static const char*  m_modelURLs[3];
 	static const char*  m_skyboxURLs[3][6];
     //Texture*    m_background;
     float       m_time;
     float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
     
-    int         m_maxItems;
-    int         m_currentItems;
     Item**      m_items;
     int         m_spawningTime;
     int         m_spawnedItems;
     int         m_usedItems;
     int         m_maxItemsOnScreen = 5;
+    int         m_maxItems;
+    int         m_currentItems;
+    int         m_lastItemType = 0;
 
     int         m_playerCount;
     Character** m_players;

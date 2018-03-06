@@ -46,17 +46,21 @@
 
 unsigned char GetPacketIdentifier(RakNet::Packet *p);
 
-Client* Client::m_instance = 0;
-
-Client* Client::instance(){
-    if (!m_instance)
-        m_instance = new Client();
-
-    return m_instance;
+Client& Client::instance(){
+    static Client instance;
+    return instance;
 }
 
 //Constructor
-Client::Client(){}
+Client::Client(){
+    m_inputManager  = &InputManager::instance();
+    m_arena         = Arena::getInstance();
+}
+
+//Destructor
+Client::~Client(){
+    
+}
 
 void Client::send(char const *mens){
 		//std::cout<<"Sending-> "<<mens<<std::endl;
@@ -206,10 +210,10 @@ void Client::readMessage(std::string p_message){
 		m_yourPlayer = std::stoi(t_parsed[1]);
 		m_yourPlayerString = t_parsed[1];
 		for(int i = -1; i < m_yourPlayer; ++i){
-			Arena::getInstance()->addPlayer();
+			m_arena->addPlayer();
 		}
-		InputManager::instance()->setOnlineControl(m_yourPlayer);
 		if(m_debug) std::cout<<"Bienvenido, "<<t_parsed[1]<<" jugadores en la partida"<<std::endl;
+		m_inputManager->setOnlineControl(m_yourPlayer);
 	}
 	else if(t_parsed[0] == "joined"){
 		Arena::getInstance()->addPlayer();
@@ -217,6 +221,7 @@ void Client::readMessage(std::string p_message){
 		if(m_debug) std::cout<<"Nuevo jugador en la partida"<<std::endl;
 	}
 	else if(t_parsed[0] == "item"){
+		std::cout<<"item"<<std::endl;
 		Arena::getInstance()->spawnItemAt(std::stof(t_parsed[1]), std::stof(t_parsed[2]), std::stof(t_parsed[3]));
 		if(m_debug) std::cout<<"Objeto de tipo "<<t_parsed[1]<<" añadido"<<std::endl;
 	}
@@ -284,9 +289,13 @@ const std::vector<std::string> Client::explode(const std::string& s, const char&
 
 void Client::spawnItem(int p_type, int x, int y)
 {
+	std::cout<<3333<<std::endl;
 	std::string t_toSend 	= "item:" + std::to_string(p_type) + ":" + std::to_string(x) 
 							+ ":" + std::to_string(y);
+							std::cout<<444444<<std::endl;
     char const *t_toSendChar = t_toSend.c_str();
+	std::cout<<55555555<<std::endl;
 	std::cout<<t_toSendChar<<std::endl;
 	send(t_toSendChar);
+	std::cout<<66666<<std::endl;
 }

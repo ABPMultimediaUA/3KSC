@@ -1,6 +1,8 @@
 #ifndef CLIENT
 #define CLIENT
 
+class InputManager;
+class Arena;
 
 #include "RakPeerInterface.h"
 #include "RakNetStatistics.h"
@@ -9,7 +11,7 @@
 
 class Client{
     public:
-        static Client* instance();
+        static Client& instance();
         Client();
         ~Client();
         void start();
@@ -24,7 +26,9 @@ class Client{
         void spawnItem(int p_type, int x, int y);
         
     private:
-        static Client* m_instance;
+        InputManager*   m_inputManager;
+        Arena*          m_arena;
+
         RakNet::RakNetStatistics *rss;
         RakNet::RakPeerInterface *client;
 	    RakNet::Packet* p;

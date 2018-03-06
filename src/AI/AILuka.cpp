@@ -27,25 +27,27 @@
 #include <iostream>
 #include <string>
         
-//Instance initialization
-AILuka* AILuka::m_instance = 0;
-
 //Returns the only instance of this class
-AILuka* AILuka::instance(){
-    if (!m_instance)
-        m_instance = new AILuka();
-
-    return m_instance;
+AILuka& AILuka::instance(){
+    static AILuka instance;
+    return instance;
 }
 
-AILuka::AILuka(){}
+AILuka::AILuka(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
+
+AILuka::~AILuka(){
+    
+}
 
 // Updates all the variables required by the tree to work properly
 void AILuka::update(){
     
 }
 
-// Builds the tree containing Kira's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
+// Builds the tree containing Luka's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AILuka::buildTree(){
     
 }

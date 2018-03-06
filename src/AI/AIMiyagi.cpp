@@ -21,24 +21,27 @@
 *********************************************************************************/
 
 #include "../include/AI/AIMiyagi.hpp"
-#include "../include/managers/PhysicsManager.hpp"
+#include "../include/AI/AINode.hpp"
 #include "../include/entities/characters/Character.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
 #include <iostream>
 #include <string>
         
-//Instance initialization
-AIMiyagi* AIMiyagi::m_instance = 0;
-
 //Returns the only instance of this class
-AIMiyagi* AIMiyagi::instance(){
-    if (!m_instance)
-        m_instance = new AIMiyagi();
-
-    return m_instance;
+AIMiyagi& AIMiyagi::instance(){
+    static AIMiyagi instance;
+    return instance;
 }
 
-AIMiyagi::AIMiyagi(){}
+AIMiyagi::AIMiyagi(){
+    m_physicsManager    = &PhysicsManager::instance();
+    m_arena             = Arena::getInstance();
+}
+
+AIMiyagi::~AIMiyagi(){
+    
+}
 
 // Updates all the variables required by the tree to work properly
 void AIMiyagi::update(){
@@ -49,27 +52,27 @@ void AIMiyagi::update(){
     /*************************************************************/
     /****************      Get MIYAGI's life        ****************/
     /*************************************************************/
-    m_MIYAGI_life = (float)Arena::getInstance()->getPlayer(t_MIYAGI_index)->getHP();
+    m_MIYAGI_life = (float)m_arena->getPlayer(t_MIYAGI_index)->getHP();
 
     /*************************************************************/
     /****************      Get MIYAGI's mana        ****************/
     /*************************************************************/
-    m_MIYAGI_mana = (float)Arena::getInstance()->getPlayer(t_MIYAGI_index)->getMP();
+    m_MIYAGI_mana = (float)m_arena->getPlayer(t_MIYAGI_index)->getMP();
 
     /*************************************************************/
     /**************  Get distance to closest enemy  **************/
     /*************************************************************/
-    int t_playerCount = Arena::getInstance()->getPlayerCount();
+    int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
 
     // Get MIYAGI's coordinates
-    t_currentPlayer = Arena::getInstance()->getPlayer(t_MIYAGI_index);
+    t_currentPlayer = m_arena->getPlayer(t_MIYAGI_index);
     float self_x = t_currentPlayer->getX();
     float self_y = t_currentPlayer->getY();
     float self_z = t_currentPlayer->getZ();
 
     m_MIYAGI_position = b2Vec2(self_x, self_y);
-    m_MIYAGI_distance_to_enemy = PhysicsManager::instance()->getDistanceToClosestCharacter(m_MIYAGI_position);
+    m_MIYAGI_distance_to_enemy = m_physicsManager->getDistanceToClosestCharacter(m_MIYAGI_position);
    
     /*************************************************************/
     /*   Check if an enemy is in range for a special attack up   */
@@ -84,7 +87,7 @@ void AIMiyagi::update(){
             continue;
 
         // Get enemy coordinates
-        t_currentPlayer = Arena::getInstance()->getPlayer(i);
+        t_currentPlayer = m_arena->getPlayer(i);
         float target_x = t_currentPlayer->getX();
         float target_y = t_currentPlayer->getY();
         float target_z = t_currentPlayer->getZ();
@@ -95,7 +98,7 @@ void AIMiyagi::update(){
         b2Vec2 t_p2 = b2Vec2(target_x, target_y);
         
         if(abs(target_x-self_x) < t_MIYAGI_special_up_wideness){
-            t_closestBodyFraction = PhysicsManager::instance()->RaycastBetween(t_p1, t_p2);
+            t_closestBodyFraction = m_physicsManager->RaycastBetween(t_p1, t_p2);
 
             // Check wether there is an object between the 2 characters
             if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
@@ -108,7 +111,7 @@ void AIMiyagi::update(){
         /*************************************************************/
         if(abs(target_x-self_x) < t_MIYAGI_special_side_wideness){
             if(abs(target_y-self_y) < t_MIYAGI_special_side_heighth){
-                float t_closestBodyFraction = PhysicsManager::instance()->RaycastBetween(t_p1, t_p2);
+                float t_closestBodyFraction = m_physicsManager->RaycastBetween(t_p1, t_p2);
 
                 // Check wether there is an object between the 2 characters
                 if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
@@ -121,7 +124,7 @@ void AIMiyagi::update(){
     /*************************************************************/
     /*******          Check special basic_attack          ********/
     /*************************************************************/
-    t_currentPlayer = Arena::getInstance()->getPlayer(t_MIYAGI_index);
+    t_currentPlayer = m_arena->getPlayer(t_MIYAGI_index);
         m_MIYAGI_special_check = 0.0;
 
     /*************************************************************/

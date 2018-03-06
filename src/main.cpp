@@ -20,87 +20,15 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "include/main.hpp"
+#include "include/Game.hpp"
+// #include "include/main.hpp"
+// #include <stdio.h>
 #include <iostream>
-#include <stdio.h>
 
-int main(){
-    EngineManager* engineManager = EngineManager::instance();
-    InputManager* inputManager = InputManager::instance();
-    PhysicsManager* physicsManager = PhysicsManager::instance();
-    SoundManager*   soundManager = SoundManager::instance();
-    Client* client = Client::instance();
-    AIManager* aiManager = AIManager::instance();
+int main(){    
+    Game game;
 
-    if (engineManager->createWindow(false)){  
-        float position[3] = {0, 1, 0};
-        float scale[3] = {120, 0.5, 2};
-        Arena* estadio = new Arena(position, scale, 0, false);
-
-        //online stuff
-        char m_online[5];
-        bool m_isOnline = false;
-        std::cout<<"Online mode? (Y)/(N)"<<std::endl;
-        cin >> m_online;
-        if (m_online[0] == 'y' || m_online[0] == 'Y')
-        {
-            m_isOnline = true;
-            client->start();
-            inputManager->onlineMode();
-        }
-        else
-        {
-            estadio->spawnItems();
-            estadio->spawnPlayers();
-        }
-        float cameraPosition[3] = {0, 90, -150};
-        float cameraTarget[3] = {0, 50, 0};
-        engineManager->createCamera(cameraPosition, cameraTarget);
-        engineManager->timeStamp();
-	    
-        // Play music
-        soundManager->createSoundEvent("event:/Music/Music", "music");
-        soundManager->playSound("music");
-
-        //For players loop
-        int i, playerCount = Arena::getInstance()->getPlayerCount();
-        Character* currentPlayer;
-        
-        // UIManager* uiManager = UIManager::instance();
-
-        aiManager->buildTree();
-
-        //Game main loop
-        while (engineManager->running()){
-            soundManager->update(false);
-            engineManager->updateFrameDeltaTime();            
-            aiManager->update();
-            if(m_isOnline)
-            {
-                client->update();
-            }
-            else
-                Arena::getInstance()->update();
-
-            physicsManager->getWorld()->Step(physicsManager->getTimeStep(), physicsManager->getVelocityIterations(), physicsManager->getPositionIterations());
-
-            //Input and update for every character
-            for (i = 0; i < Arena::getInstance()->getPlayerCount(); i++){
-                currentPlayer = Arena::getInstance()->getPlayer(i);
-
-                //if(inputManager->eventHandler()){
-                //    currentPlayer->input();
-                //}
-                currentPlayer->input();
-                currentPlayer->update();
-            }
-
-            engineManager->updateCamera();
-            engineManager->drawScene();
-            // uiManager->render();
-        }
-        engineManager->stop();
-        return 0;
-    }
-    return 1;
+    game.run();
+    
+    return 0;
 }

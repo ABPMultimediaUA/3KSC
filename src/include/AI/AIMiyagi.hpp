@@ -23,13 +23,13 @@
 #ifndef AI_MIYAGI
 #define AI_MIYAGI
 
-#include "../managers/AIManager.hpp"
-#include <Box2D.h>
-#include "AINode.hpp"
+class AINode;
 
-class AIMiyagi : public AIManager{
+#include "AICharacter.hpp"
+#include <Box2D.h>
+
+class AIMiyagi : public AICharacter{
     private:
-        static AIMiyagi* m_instance;
         float m_MIYAGI_distance_to_enemy;       // Fraction that determines if an enemy is close
         float m_MIYAGI_distance_to_item;        // Fraction that determines if an item is close
         float m_MIYAGI_life;                    // Plup's current life
@@ -42,7 +42,7 @@ class AIMiyagi : public AIManager{
         b2Vec2 m_MIYAGI_position;               // Vector containing Plup's position
         AINode* m_MIYAGI_root;                  // Root of Plup's tree
     public:
-        static AIMiyagi* instance();
+        static AIMiyagi& instance();
         AIMiyagi();
         ~AIMiyagi();
         void update();
