@@ -30,6 +30,14 @@
 
 using namespace std;
 
+#define S_KIRA            1
+#define S_LUKA            2
+#define S_MIYAGI          3
+#define S_PLUP            4
+#define S_RAWR            5
+#define S_SPARKY          6
+#define S_FOSFOSSTADIUM   7
+
 struct Vector3 {
 	float x;
 	float y;
@@ -52,13 +60,16 @@ public:
     void update(bool p_paused);
 
     void loadBanks();
+    void loadBank(int bank);
+    //void loadEvents(int bank);
+
     void getEvents();
     void modifyParameter(const char* name, float num, const char* parameter);
 
 private:
     FMOD_RESULT               m_Result;
-    FMOD::Studio::System     *m_system;
-    FMOD::System             *m_lowLevelSystem;
+    FMOD::Studio::System*     m_system;
+    FMOD::System*             m_lowLevelSystem;
     
     FMOD::Studio::Bank*       m_masterBank;
     FMOD::Studio::Bank*       m_stringsBank;

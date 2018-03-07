@@ -23,7 +23,7 @@
 #include "../../include/entities/characters/Rawr.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
-//#include "../../include/managers/SoundManager.hpp"
+#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
 Rawr::Rawr(char* p_name, float p_position[3], bool p_debugMode)
@@ -33,6 +33,15 @@ Rawr::Rawr(char* p_name, float p_position[3], bool p_debugMode)
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
+
+    SoundManager::instance().loadBank(S_RAWR);
+    SoundManager::instance().createSoundEvent("event:/characters/rawr/death"     , "death"       );
+    SoundManager::instance().createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
+    SoundManager::instance().createSoundEvent("event:/characters/rawr/random"    , "random"      );
+    SoundManager::instance().createSoundEvent("event:/characters/rawr/special"   , "special"     );
+    SoundManager::instance().createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
+    SoundManager::instance().createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );
+    //SoundManager::instance().modifyParameter("random", 0.95, "Prob");
 }
 
 Rawr::~Rawr(){}
@@ -45,6 +54,11 @@ bool Rawr::jump(){
 bool Rawr::basicAttack(){
     std::cout << m_name << ": Headbutt!" << std::endl;
     Character* t_currentPlayer;
+    
+    float t_prob = ((float)rand() / (float)RAND_MAX);
+    std::cout << "RANDOM: " << t_prob << std::endl;
+    SoundManager::instance().modifyParameter("random", t_prob, "Prob");
+    SoundManager::instance().playSound("random");
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
@@ -135,10 +149,12 @@ bool Rawr::specialAttackSide(){
     return true;
 }
 
-
 bool Rawr::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
+
+    SoundManager::instance().modifyParameter("ultimate", 0.95, "Prob");
+    SoundManager::instance().playSound("ultimate");
 
     return false;
 }
