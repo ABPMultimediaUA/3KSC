@@ -23,8 +23,9 @@
 #include "../include/Game.hpp"
 
 //Constructor
-LoadState::LoadState(Game* p_game) 
-    : m_game(p_game){}
+LoadState::LoadState(Game* p_game){
+    m_game = p_game;
+}
 
 //Destructor
 LoadState::~LoadState(){}

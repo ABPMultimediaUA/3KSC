@@ -21,13 +21,9 @@
 #ifndef MENU_STATE
 #define MENU_STATE
 
-class Game;
-
 #include "State.hpp"
 
 class MenuState : public State{
-    private:
-        Game*   m_game;
     public:
         MenuState(Game* p_game);
         ~MenuState();

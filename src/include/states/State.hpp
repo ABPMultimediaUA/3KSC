@@ -21,7 +21,12 @@
 #ifndef STATE
 #define STATE
 
-class State{    
+class Game;
+
+class State{
+    protected:
+        Game* m_game;
+
     public:
         virtual void input()        = 0;
         virtual void update()       = 0;

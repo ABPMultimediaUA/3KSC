@@ -43,8 +43,8 @@
 
 
 //Constructor
-InGameState::InGameState(Game* p_game, bool p_onlineMode) 
-    : m_game(p_game){
+InGameState::InGameState(Game* p_game, bool p_onlineMode){
+    m_game              = p_game;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
     // m_UIManager         = &UIManager::instance();

@@ -21,13 +21,9 @@
 #ifndef LOAD_STATE
 #define LOAD_STATE
 
-class Game;
-
 #include "State.hpp"
 
 class LoadState : public State{
-    private:
-        Game*   m_game;
     public:
         LoadState(Game* p_game);
         ~LoadState();

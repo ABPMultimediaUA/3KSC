@@ -23,8 +23,9 @@
 #include "../include/Game.hpp"
 
 //Constructor
-EndGameState::EndGameState(Game* p_game) 
-    : m_game(p_game){}
+EndGameState::EndGameState(Game* p_game){
+    m_game = p_game;
+}
 
 //Destructor
 EndGameState::~EndGameState(){}

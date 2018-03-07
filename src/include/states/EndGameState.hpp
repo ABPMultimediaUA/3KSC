@@ -21,13 +21,9 @@
 #ifndef END_GAME_STATE
 #define END_GAME_STATE
 
-class Game;
-
 #include "State.hpp"
 
 class EndGameState : public State{
-    private:
-        Game*   m_game;
     public:
         EndGameState(Game* p_game);
         ~EndGameState();

@@ -21,7 +21,6 @@
 #ifndef IN_GAME_STATE
 #define IN_GAME_STATE
 
-class Game;
 class EngineManager;
 class InputManager;
 class UIManager;
@@ -35,7 +34,6 @@ class Client;
 
 class InGameState : public State{
     private:
-        Game*           m_game;
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
         UIManager*      m_UIManager;

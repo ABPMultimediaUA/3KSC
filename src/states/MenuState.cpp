@@ -23,8 +23,9 @@
 #include "../include/Game.hpp"
 
 //Constructor
-MenuState::MenuState(Game* p_game) 
-    : m_game(p_game){}
+MenuState::MenuState(Game* p_game){
+    m_game = p_game;
+}
 
 //Destructor
 MenuState::~MenuState(){}
