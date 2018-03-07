@@ -5,7 +5,7 @@
             <value>11</value>
         </property>
         <relationship name="selectables">
-            <destination>{a3f59987-ac27-48e7-9832-d440fcf5e0ea}</destination>
+            <destination>{486f7c59-4d4f-4c45-b340-ac5ae5d2561c}</destination>
         </relationship>
         <relationship name="uiLastParameterSelection">
             <destination>{8ce1a9ec-8035-4caa-87f2-a00461f1b36a}</destination>
@@ -27,12 +27,15 @@
     <object class="GroupTrack" id="{4ac718b4-fbe7-4b31-9755-92368b9b8b78}"/>
     <object class="Timeline" id="{8ce1a9ec-8035-4caa-87f2-a00461f1b36a}">
         <property name="uiLastRulerScaleRatio">
-            <value>0.13993366830915083</value>
+            <value>0.0014613867325183711</value>
+        </property>
+        <property name="uiLastHorizontalScrollBarValue">
+            <value>1517</value>
         </property>
     </object>
     <object class="ParameterProxy" id="{e70da3fe-9b56-48d8-a141-ebef5ad8dc31}">
         <property name="uiLastRulerScaleRatio">
-            <value>0.00082781456953642384</value>
+            <value>0.00054112554112554113</value>
         </property>
     </object>
     <object class="EventMixerMaster" id="{a47d2e6d-21f8-4bca-a86b-c6bf38401f9d}">
@@ -47,7 +50,11 @@
     <object class="MixerBusEffectChain" id="{ff4f87a0-c2bb-422f-9fb9-b618046a55aa}"/>
     <object class="MixerBusPanner" id="{6abed401-c5e1-4722-8356-14309788673f}"/>
     <object class="AutomationTrack" id="{34760be5-e734-4658-ba6d-4266d62faa32}"/>
-    <object class="SingleSound" id="{cb6b08ae-e1ec-4808-92f0-6d9e5a191ee0}"/>
+    <object class="SingleSound" id="{cb6b08ae-e1ec-4808-92f0-6d9e5a191ee0}">
+        <property name="uiTriggerBehaviorDrawerVisible">
+            <value>true</value>
+        </property>
+    </object>
     <object class="EventMixerGroup" id="{0580912d-433b-4f45-866a-f7bb30d5c686}"/>
     <object class="AutomationTrack" id="{45f33776-7a0b-451d-a4f4-7c06c18d6020}"/>
     <object class="SingleSound" id="{bbb9c6f2-73c3-454f-b3f1-e0473f15a860}"/>

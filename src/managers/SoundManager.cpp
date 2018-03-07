@@ -49,7 +49,6 @@ SoundManager::SoundManager(){
     ERRCHECK(m_system->initialize(32, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
 
     loadBanks();
-    //getEvents();
 }
 
 //Destructor
@@ -63,9 +62,101 @@ void SoundManager::loadBanks(){
     ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Master Bank.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_masterBank));
 
     ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Master Bank.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_stringsBank));
-
-    ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Music.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
 }
+
+void SoundManager::loadBank(int bank){
+    switch(bank){
+        case S_KIRA:
+            ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Kira.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+        break;
+        
+        case S_LUKA:
+            ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Luka.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+        break;
+        
+        case S_MIYAGI:
+            ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Miyagi.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+        break;
+        
+        case S_PLUP:
+            ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Plup.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+        break;
+        
+        case S_RAWR:
+            ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Rawr.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+        break;
+        
+        case S_SPARKY:
+            ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Sparky.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+        break;
+
+        case S_FOSFOSSTADIUM:
+            ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/FosFosStadium.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+        break;
+    }
+}
+/*
+void SoundManager::loadEvents(int bank){
+    switch(bank){
+        case S_KIRA:
+            createSoundEvent("event:/characters/kira/death"     , "death"       );
+            createSoundEvent("event:/characters/kira/kill"      , "kill"        );
+            createSoundEvent("event:/characters/kira/random"    , "random"      );
+            createSoundEvent("event:/characters/kira/special"   , "special"     );
+            createSoundEvent("event:/characters/kira/taunt"     , "taunt"       );
+            createSoundEvent("event:/characters/kira/ultimate"  , "ultimate"    );
+        break;
+        
+        case S_LUKA:
+            createSoundEvent("event:/characters/luka/death"     , "death"       );
+            createSoundEvent("event:/characters/luka/kill"      , "kill"        );
+            createSoundEvent("event:/characters/luka/random"    , "random"      );
+            createSoundEvent("event:/characters/luka/special"   , "special"     );
+            createSoundEvent("event:/characters/luka/taunt"     , "taunt"       );
+            createSoundEvent("event:/characters/luka/ultimate"  , "ultimate"    );
+        break;
+        
+        case S_MIYAGI:
+            createSoundEvent("event:/characters/miyagi/death"     , "death"       );
+            createSoundEvent("event:/characters/miyagi/kill"      , "kill"        );
+            createSoundEvent("event:/characters/miyagi/random"    , "random"      );
+            createSoundEvent("event:/characters/miyagi/special"   , "special"     );
+            createSoundEvent("event:/characters/miyagi/taunt"     , "taunt"       );
+            createSoundEvent("event:/characters/miyagi/ultimate"  , "ultimate"    );
+        break;
+        
+        case S_PLUP:
+            createSoundEvent("event:/characters/plup/death"     , "death"       );
+            createSoundEvent("event:/characters/plup/kill"      , "kill"        );
+            createSoundEvent("event:/characters/plup/random"    , "random"      );
+            createSoundEvent("event:/characters/plup/special"   , "special"     );
+            createSoundEvent("event:/characters/plup/taunt"     , "taunt"       );
+            createSoundEvent("event:/characters/plup/ultimate"  , "ultimate"    );
+        break;
+        
+        case S_RAWR:
+            createSoundEvent("event:/characters/rawr/death"     , "death"       );
+            createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
+            createSoundEvent("event:/characters/rawr/random"    , "random"      );
+            createSoundEvent("event:/characters/rawr/special"   , "special"     );
+            createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
+            createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );
+        break;
+        
+        case S_SPARKY:
+            createSoundEvent("event:/characters/sparky/death"     , "death"       );
+            createSoundEvent("event:/characters/sparky/kill"      , "kill"        );
+            createSoundEvent("event:/characters/sparky/random"    , "random"      );
+            createSoundEvent("event:/characters/sparky/special"   , "special"     );
+            createSoundEvent("event:/characters/sparky/taunt"     , "taunt"       );
+            createSoundEvent("event:/characters/sparky/ultimate"  , "ultimate"    );
+        break;
+        case S_FOSFOSSTADIUM:
+            createSoundEvent("event:/music/fosfosStadium"       , "music"    );
+        break;
+    }
+}
+*/
 /*
 void SoundManager::getEvents(){
     ERRCHECK(m_system->getEvent("event:/Music/Music", &m_musicEvent));

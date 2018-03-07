@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{f5e4fb8c-d663-42ff-a061-7eaf5bc54f5a}">
+        <property name="assetPath">
+            <value>sounds/voices/kira/resoplido_9.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>1.0817233560090702</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{1b318cde-adf7-4a3a-b9c5-7daf1f771420}</destination>
+        </relationship>
+    </object>
+</objects>
