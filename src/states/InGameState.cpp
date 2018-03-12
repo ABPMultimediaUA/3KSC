@@ -81,9 +81,10 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_engineManager->createCamera(t_cameraPosition, t_cameraTarget);
     
     // Play music
-    m_soundManager->loadBank(S_FOSFOSSTADIUM);
-    m_soundManager->createSoundEvent("event:/music/fosfosStadium", "music");
-    m_soundManager->playSound("music");
+    m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
+    //m_soundManager->loadEvents(SoundID::S_FOSFOS_STADIUM);
+    m_soundManager->createSoundEvent("event:/music/fosfosStadium", "fos_music");
+    m_soundManager->playSound("fos_music");
     
     //Initialize AI
     int i, t_playerCount = m_arena->getPlayerCount();
