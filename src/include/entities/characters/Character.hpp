@@ -23,6 +23,7 @@
 #ifndef CHARACTER
 #define CHARACTER
 
+class SoundManager;
 class Debug;
 
 #include "../Entity.hpp"
@@ -72,6 +73,7 @@ public:
     void            modeDebug();
     
 protected:
+    SoundManager*   m_soundManager;
     static int      m_playerCount;
     int             m_playerIndex;
 

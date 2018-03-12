@@ -34,14 +34,14 @@ Rawr::Rawr(char* p_name, float p_position[3], bool p_debugMode)
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
 
-    SoundManager::instance().loadBank(S_RAWR);
-    SoundManager::instance().createSoundEvent("event:/characters/rawr/death"     , "death"       );
-    SoundManager::instance().createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
-    SoundManager::instance().createSoundEvent("event:/characters/rawr/random"    , "random"      );
-    SoundManager::instance().createSoundEvent("event:/characters/rawr/special"   , "special"     );
-    SoundManager::instance().createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
-    SoundManager::instance().createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );
-    //SoundManager::instance().modifyParameter("random", 0.95, "Prob");
+    m_soundManager->loadBank(SoundID::S_RAWR);
+    m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "death"       );
+    m_soundManager->createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
+    m_soundManager->createSoundEvent("event:/characters/rawr/random"    , "random"      );
+    m_soundManager->createSoundEvent("event:/characters/rawr/special"   , "special"     );
+    m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
+    m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );
+    //m_soundManager->modifyParameter("random", 0.95, "Prob");
 }
 
 Rawr::~Rawr(){}
@@ -57,8 +57,8 @@ bool Rawr::basicAttack(){
     
     float t_prob = ((float)rand() / (float)RAND_MAX);
     std::cout << "RANDOM: " << t_prob << std::endl;
-    SoundManager::instance().modifyParameter("random", t_prob, "Prob");
-    SoundManager::instance().playSound("random");
+    m_soundManager->modifyParameter("random", t_prob, "Prob");
+    m_soundManager->playSound("random");
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
@@ -153,8 +153,8 @@ bool Rawr::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
-    SoundManager::instance().modifyParameter("ultimate", 0.95, "Prob");
-    SoundManager::instance().playSound("ultimate");
+    m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
+    m_soundManager->playSound("ultimate");
 
     return false;
 }
