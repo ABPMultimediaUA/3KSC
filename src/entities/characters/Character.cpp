@@ -97,9 +97,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
             lookLeft();
             break;
     }
-
     m_debugMode = p_debugMode;
-
 }
 
 Character::~Character(){}
@@ -288,6 +286,7 @@ void Character::update(){
     
     if(!m_respawning){
         updatePosition(m_actions[(int) Action::Jump].enabled);
+        moveSound();
     }
     else{
         updatePosition(true);
@@ -305,10 +304,6 @@ void Character::update(){
         if(m_physicsManager->isTouchingGround()){
             m_maxJumps = 1;
         }
-    }
-
-    else{
-        //std::cout << m_name << " - En el airee" << std::endl;
     }
 }
 
@@ -443,3 +438,5 @@ bool Character::specialAttackDown(){}
 bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
+
+void Character::moveSound(){}

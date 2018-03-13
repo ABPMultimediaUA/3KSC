@@ -66,6 +66,8 @@ public:
     void getEvents();
     void modifyParameter(const char* name, float num, const char* parameter);
 
+    bool isPlaying(const char* p_name);
+
 private:
     FMOD_RESULT               m_Result;
     FMOD::Studio::System*     m_system;
@@ -74,8 +76,6 @@ private:
     FMOD::Studio::Bank*       m_masterBank;
     FMOD::Studio::Bank*       m_stringsBank;
     FMOD::Studio::Bank*       m_musicBank;
-
-    //FMOD::Studio::EventDescription*     m_musicEvent;
 
     std::map<const char*, SoundEvent*> m_soundEvents;
 };
@@ -92,6 +92,7 @@ public:
     bool isPlaying();
 
     void modifyParameter(float num, const char* parameter);
+    bool getPlaybackState();
 
 
 protected:

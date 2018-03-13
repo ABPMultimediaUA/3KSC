@@ -35,16 +35,32 @@ Rawr::Rawr(char* p_name, float p_position[3], bool p_debugMode)
     m_projectiles           = new Projectile*[m_maxProjectiles];
 
     m_soundManager->loadBank(SoundID::S_RAWR);
-    m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "death"       );
-    m_soundManager->createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
-    m_soundManager->createSoundEvent("event:/characters/rawr/random"    , "random"      );
-    m_soundManager->createSoundEvent("event:/characters/rawr/special"   , "special"     );
-    m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
-    m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );
-    //m_soundManager->modifyParameter("random", 0.95, "Prob");
+    m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "r_death"       );
+    m_soundManager->createSoundEvent("event:/characters/rawr/kill"      , "r_kill"        );
+    m_soundManager->createSoundEvent("event:/characters/rawr/random"    , "r_random"      );
+    m_soundManager->createSoundEvent("event:/characters/rawr/special"   , "r_special"     );
+    m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "r_taunt"       );
+    m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "r_ultimate"    );
+
+    m_playingSound = false;
+
 }
 
 Rawr::~Rawr(){}
+
+void Rawr::moveSound(){
+    if(!m_playingSound){
+        float t_prob = ((float)rand() / (float)RAND_MAX);
+        //std::cout << "RANDOM: " << t_prob << std::endl;
+        m_soundManager->modifyParameter("r_random", t_prob, "Prob");
+        if(t_prob >= 0.85){
+            m_soundManager->playSound("r_random");
+            m_playingSound = true;
+        }
+    }else{
+        m_playingSound = m_soundManager->isPlaying("r_random");
+    }
+}
 
 bool Rawr::jump(){
     return Character::jump();
@@ -55,11 +71,6 @@ bool Rawr::basicAttack(){
     std::cout << m_name << ": Headbutt!" << std::endl;
     Character* t_currentPlayer;
     
-    float t_prob = ((float)rand() / (float)RAND_MAX);
-    std::cout << "RANDOM: " << t_prob << std::endl;
-    m_soundManager->modifyParameter("random", t_prob, "Prob");
-    m_soundManager->playSound("random");
-
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
         if (i == m_playerIndex)

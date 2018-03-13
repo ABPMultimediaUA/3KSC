@@ -69,8 +69,10 @@ public:
     virtual bool    specialAttackDown();
     virtual bool    specialAttackSide();
     virtual bool    ultimateAttack();
+    virtual void    moveSound();
 
     void            modeDebug();
+
     
 protected:
     SoundManager*   m_soundManager;

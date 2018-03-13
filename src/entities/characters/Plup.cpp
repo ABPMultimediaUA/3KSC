@@ -24,7 +24,7 @@
 #include "../../include/entities/Snowman.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
-//#include "../../include/managers/SoundManager.hpp"
+#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
@@ -38,9 +38,33 @@ Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
     m_maxSnowmen        = 1;
     m_currentSnowmen    = 0;
     m_snowmen           = new Snowman*[m_maxSnowmen];
+
+    m_soundManager->loadBank(SoundID::S_PLUP);
+    m_soundManager->createSoundEvent("event:/characters/plup/death"     , "p_death"       );
+    m_soundManager->createSoundEvent("event:/characters/plup/kill"      , "p_kill"        );
+    m_soundManager->createSoundEvent("event:/characters/plup/random"    , "p_random"      );
+    m_soundManager->createSoundEvent("event:/characters/plup/special"   , "p_special"     );
+    m_soundManager->createSoundEvent("event:/characters/plup/taunt"     , "p_taunt"       );
+    m_soundManager->createSoundEvent("event:/characters/plup/ultimate"  , "p_ultimate"    );
+
+    m_playingSound = false;
 }
 
 Plup::~Plup(){}
+
+void Plup::moveSound(){
+    if(!m_playingSound){
+        float t_prob = ((float)rand() / (float)RAND_MAX);
+        //std::cout << "RANDOM: " << t_prob << std::endl;
+        //m_soundManager->modifyParameter("p_random", t_prob, "Prob");
+        if(t_prob >= 0.85){
+            m_soundManager->playSound("p_random");
+            m_playingSound = true;
+        }
+    }else{
+        m_playingSound = m_soundManager->isPlaying("p_random");
+    }
+}
 
 bool Plup::jump(){
     return Character::jump();

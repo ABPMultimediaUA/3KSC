@@ -23,6 +23,7 @@
 #include "../../include/entities/characters/MiyagiMurasaki.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
+#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
 MiyagiMurasaki::MiyagiMurasaki(char* p_name, float p_position[3], bool p_debugMode)
@@ -32,9 +33,24 @@ MiyagiMurasaki::MiyagiMurasaki(char* p_name, float p_position[3], bool p_debugMo
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
+
+    m_soundManager->loadBank(SoundID::S_MIYAGI);
+    m_soundManager->createSoundEvent("event:/characters/miyagi/death"     , "m_death"       );
+    m_soundManager->createSoundEvent("event:/characters/miyagi/kill"      , "m_kill"        );
+    m_soundManager->createSoundEvent("event:/characters/miyagi/random"    , "m_random"      );
+    m_soundManager->createSoundEvent("event:/characters/miyagi/special"   , "m_special"     );
+    m_soundManager->createSoundEvent("event:/characters/miyagi/taunt"     , "m_taunt"       );
+    m_soundManager->createSoundEvent("event:/characters/miyagi/ultimate"  , "m_ultimate"    );
 }
 
 MiyagiMurasaki::~MiyagiMurasaki(){}
+
+void MiyagiMurasaki::moveSound(){
+    float t_prob = ((float)rand() / (float)RAND_MAX);
+    //std::cout << "RANDOM: " << t_prob << std::endl;
+    m_soundManager->modifyParameter("m_random", t_prob, "Prob");
+    m_soundManager->playSound("m_random");    
+}
 
 bool MiyagiMurasaki::jump(){
     return Character::jump();

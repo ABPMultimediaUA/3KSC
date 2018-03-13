@@ -23,6 +23,7 @@
 #include "../../include/entities/characters/Luka.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
+#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
 Luka::Luka(char* p_name, float p_position[3], bool p_debugMode)
@@ -32,9 +33,24 @@ Luka::Luka(char* p_name, float p_position[3], bool p_debugMode)
     m_maxProjectiles        = 1;
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
+
+    m_soundManager->loadBank(SoundID::S_LUKA);
+    m_soundManager->createSoundEvent("event:/characters/luka/death"     , "l_death"       );
+    m_soundManager->createSoundEvent("event:/characters/luka/kill"      , "l_kill"        );
+    m_soundManager->createSoundEvent("event:/characters/luka/random"    , "l_random"      );
+    m_soundManager->createSoundEvent("event:/characters/luka/special"   , "l_special"     );
+    m_soundManager->createSoundEvent("event:/characters/luka/taunt"     , "l_taunt"       );
+    m_soundManager->createSoundEvent("event:/characters/luka/ultimate"  , "l_ultimate"    );
 }
 
 Luka::~Luka(){}
+
+void Luka::moveSound(){
+    float t_prob = ((float)rand() / (float)RAND_MAX);
+    //std::cout << "RANDOM: " << t_prob << std::endl;
+    m_soundManager->modifyParameter("l_random", t_prob, "Prob");
+    m_soundManager->playSound("l_random");    
+}
 
 bool Luka::jump(){
     return Character::jump();

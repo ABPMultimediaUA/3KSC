@@ -35,6 +35,7 @@ public:
     bool    specialAttackDown();
     bool    specialAttackSide();
     bool    ultimateAttack();
+    void    moveSound();
 };
 
 #endif
