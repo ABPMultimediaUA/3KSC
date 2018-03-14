@@ -31,7 +31,7 @@ Game::Game(){
     m_engineManager = &EngineManager::instance();
 
     if (m_engineManager->createWindow(false)){
-        m_state = new InGameState(this, false);
+        m_state = new InGameState(this, true);
     }
 }
 

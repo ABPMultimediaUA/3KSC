@@ -99,8 +99,8 @@ void InputManager::onKeyPressed(int p_key){
 //Returns whether key with code p_key is pressed or not
 bool InputManager::isKeyPressed(Key p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[(int) p_key]);
-    if(t_result && m_isOnline)
-        m_client->sendAction((int) p_key);
+    // if(t_result && m_isOnline)
+    //     m_client->sendAction((int) p_key);
     return t_result;
 }
 
@@ -298,7 +298,7 @@ void InputManager::updateActions(int p_player){
         }
 
         if(m_isOnline){
-            setNetPlayer(p_player);
+            //setNetPlayer(p_player);
         }
     }
 }

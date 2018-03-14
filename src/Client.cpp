@@ -55,6 +55,7 @@ Client& Client::instance(){
 Client::Client(){
     m_inputManager  = &InputManager::instance();
     m_arena         = Arena::getInstance();
+	m_arena->setOnline(true);
 }
 
 //Destructor
@@ -71,7 +72,7 @@ void Client::update(){
 	listen();
 	if(m_yourPlayer == 0)
 	{
-		Arena::getInstance()->onlineUpdate();
+		//Arena::getInstance()->onlineUpdate();
 	}
 }
 void Client::listen(){
@@ -217,7 +218,7 @@ void Client::readMessage(std::string p_message){
 	}
 	else if(t_parsed[0] == "joined"){
 		Arena::getInstance()->addPlayer();
-		sendAction(-1);
+		//sendAction(-1);
 		if(m_debug) std::cout<<"Nuevo jugador en la partida"<<std::endl;
 	}
 	else if(t_parsed[0] == "item"){
@@ -230,8 +231,18 @@ void Client::readMessage(std::string p_message){
 			return;
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setY(std::stof(t_parsed[2]));
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setX(std::stof(t_parsed[1]));
-		int mns = std::stoi(t_parsed[3]);
-		m_action = mns;
+		//int mns = std::stoi(t_parsed[3]);
+		bool t_actions[12];
+		for(uint i = 0; i<12; i++)
+		{
+			if(t_parsed[3][i]=='0')
+				t_actions[i] = false;
+			else
+				t_actions[i] = true;
+		}
+		std::cout<< "recibido : "<<t_parsed[3]<<std::endl;
+		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setActions(t_actions);
+		m_action = 0;
 
 		if(m_debug)
 		{
@@ -251,15 +262,24 @@ int Client::getPlayer(){
 	return m_yourPlayer;
 }
 
-void Client::sendAction(int p_action){
-	if(p_action == 0) // 0 es el valor vacio de raknet
-		p_action = 0;
-	//estructura del mensaje
+void Client::sendAction(bool p_actions[12]){
+	// if(p_action == 0) // 0 es el valor vacio de raknet
+	// 	p_action = 0;
+	//estructura del mensaje	// if(p_action == 0) // 0 es el valor vacio de raknet
+	// 	p_action = 0;
 	//ID Player: Posicion X : Posicion Y : Acción
 	int t_xPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getX();
 	int t_yPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getY();
+	std::string t_actions;
+	for(uint i = 0; i < 12; i++)
+	{
+		if(p_actions[i])
+			t_actions = t_actions + "1";
+		else
+			t_actions = t_actions + "0";
+	}
     std::string t_toSend 	= m_yourPlayerString + ":" + std::to_string(t_xPos) + ":" + std::to_string(t_yPos) 
-							+ ":" + std::to_string(p_action);
+							+ ":" + t_actions;
     char const *t_toSendChar = t_toSend.c_str();
 	send(t_toSendChar);
 	if(m_debug)
@@ -267,7 +287,7 @@ void Client::sendAction(int p_action){
 		std::cout<<"-- Enviando al servidor --"<<std::endl;
 		std::cout<<"ID: "<<m_yourPlayerString<<std::endl;
 		std::cout<<"Posicion: ("<<t_xPos<<","<<t_yPos<<")"<<std::endl;
-		std::cout<<"Accion: "<<p_action<<std::endl;
+		std::cout<<"Accion: "<<t_actions<<std::endl;
 		std::cout<<""<<std::endl;
 	}
 }
