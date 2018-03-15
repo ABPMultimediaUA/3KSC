@@ -28,15 +28,15 @@
 #include <string>
 #include <map>
 
-using namespace std;
-
-#define S_KIRA            1
-#define S_LUKA            2
-#define S_MIYAGI          3
-#define S_PLUP            4
-#define S_RAWR            5
-#define S_SPARKY          6
-#define S_FOSFOSSTADIUM   7
+enum class SoundID{
+    S_KIRA = 0,
+    S_LUKA,
+    S_MIYAGI,
+    S_PLUP,
+    S_RAWR,
+    S_SPARKY,
+    S_FOSFOS_STADIUM
+};
 
 struct Vector3 {
 	float x;
@@ -60,8 +60,8 @@ public:
     void update(bool p_paused);
 
     void loadBanks();
-    void loadBank(int bank);
-    //void loadEvents(int bank);
+    void loadBank(SoundID p_bank);
+    void loadEvents(SoundID p_bank);
 
     void getEvents();
     void modifyParameter(const char* name, float num, const char* parameter);
