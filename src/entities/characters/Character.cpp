@@ -89,6 +89,8 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
 
     m_playerIndex = Character::m_playerCount++;
 
+    
+
     switch(m_playerIndex){
         case 0:
             lookRight();
@@ -97,9 +99,8 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
             lookLeft();
             break;
     }
-
+   
     m_debugMode = p_debugMode;
-
 }
 
 Character::~Character(){}
@@ -219,7 +220,6 @@ void Character::doActions(){
             //We call the function, it'll return false when action finishes
             t_iterator->enabled = (this->*(t_iterator->function))();
         }
-
         ++t_iterator;
     }
 }

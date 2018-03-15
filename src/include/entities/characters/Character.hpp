@@ -28,6 +28,7 @@ class Debug;
 
 #include "../Entity.hpp"
 #include "../Projectile.hpp"
+#include <Client.hpp>
 
 struct ActionMapping;
 
@@ -116,6 +117,9 @@ protected:
 
     Debug*          m_playerDebug;
     bool            m_debugMode;
+
+    bool            m_online;
+    Client*         m_client;
 
 private:
     bool            m_waitRelease;

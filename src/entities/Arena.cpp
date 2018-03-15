@@ -252,3 +252,13 @@ void Arena::spawnItemAt(int p_type, int x, int y)
     m_currentItems++;
     m_lastItemType = p_type;
 }
+
+void Arena::setOnline(bool p_state)
+{
+    m_online = p_state;
+}
+
+bool Arena::getOnline()
+{
+    return m_online;
+}

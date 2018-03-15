@@ -21,7 +21,7 @@ class Client{
         int getActions(int p_player);
         void readMessage(std::string p_message);
         int getPlayer();
-        void sendAction(int p_action);
+        void sendAction(bool p_actions[12]);
         const std::vector<std::string> explode(const std::string& s, const char& c);
         void spawnItem(int p_type, int x, int y);
         
