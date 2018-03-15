@@ -110,8 +110,6 @@ void Client::listen(){
 			break;
 		}
 	}
-
-
 }
 
 void Client::start()
@@ -218,7 +216,7 @@ void Client::readMessage(std::string p_message){
 	}
 	else if(t_parsed[0] == "joined"){
 		Arena::getInstance()->addPlayer();
-		//sendAction(-1);
+		m_inputManager -> sendOnlineInput();
 		if(m_debug) std::cout<<"Nuevo jugador en la partida"<<std::endl;
 	}
 	else if(t_parsed[0] == "item"){
@@ -241,7 +239,7 @@ void Client::readMessage(std::string p_message){
 				t_actions[i] = true;
 		}
 		std::cout<< "recibido : "<<t_parsed[3]<<std::endl;
-		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setActions(t_actions);
+		m_inputManager->setNetPlayer(std::stoi(t_parsed[0]), t_actions);
 		m_action = 0;
 
 		if(m_debug)
@@ -255,7 +253,6 @@ void Client::readMessage(std::string p_message){
 			std::cout<<""<<std::endl;
 		}
 	}
-
 }
 
 int Client::getPlayer(){
@@ -263,11 +260,6 @@ int Client::getPlayer(){
 }
 
 void Client::sendAction(bool p_actions[12]){
-	// if(p_action == 0) // 0 es el valor vacio de raknet
-	// 	p_action = 0;
-	//estructura del mensaje	// if(p_action == 0) // 0 es el valor vacio de raknet
-	// 	p_action = 0;
-	//ID Player: Posicion X : Posicion Y : Acción
 	int t_xPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getX();
 	int t_yPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getY();
 	std::string t_actions;

@@ -99,8 +99,6 @@ void InputManager::onKeyPressed(int p_key){
 //Returns whether key with code p_key is pressed or not
 bool InputManager::isKeyPressed(Key p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[(int) p_key]);
-    // if(t_result && m_isOnline)
-    //     m_client->sendAction((int) p_key);
     return t_result;
 }
 
@@ -138,40 +136,26 @@ void InputManager::onlineMode(){
     m_client = &Client::instance();
     m_isOnline = true;
     for (int i = 0; i < sizeof(m_inputDevices) / sizeof(int); ++i)
-        m_inputDevices[i] = -2; //Unassign devices so server assigns one
+        m_inputDevices[i] = -3; //Unassign devices so server assigns one
 }
 
 void InputManager::setOnlineControl(int p_player){
     m_inputDevices[p_player] = -1;
 }
 
-void InputManager::setNetPlayer(int p_player){
-    int t_action = m_client->getActions(p_player);
-    // std::cout << action << std::endl;
-    
-    switch (t_action){
-        case -1:{
-            return;
-            break;
-        }
-        
-        case  0:
-        case 71:{
-            m_actions[p_player][(int) Action::Left] = true;
-            break;
-        }
+void InputManager::setNetPlayer(int p_player, bool p_actions[12]){
 
-        case  3:
-        case 72:{
-            m_actions[p_player][(int) Action::Right] = true;
-            break;
-        }
-
-        case 57:{
-            m_actions[p_player][(int) Action::Jump] = true;
-            break;
-        }
-    }
+        m_actions[p_player][(int) Action::Left]                 = p_actions[0]; 
+        m_actions[p_player][(int) Action::Right]                = p_actions[1];             
+        m_actions[p_player][(int) Action::Jump]                 = p_actions[2];
+        m_actions[p_player][(int) Action::Run]                  = p_actions[3];
+        m_actions[p_player][(int) Action::Block]                = p_actions[4];
+        m_actions[p_player][(int) Action::Pick]                 = p_actions[5];
+        m_actions[p_player][(int) Action::BasicAttack]          = p_actions[6];
+        m_actions[p_player][(int) Action::SpecialAttackUp]      = p_actions[7];
+        m_actions[p_player][(int) Action::SpecialAttackDown]    = p_actions[8];
+        m_actions[p_player][(int) Action::SpecialAttackSide]    = p_actions[9];
+        m_actions[p_player][(int) Action::UltimateAttack]       = p_actions[10];
 }
 
 //Updates joysticks state and booleans for each action
@@ -234,7 +218,7 @@ void InputManager::updateActions(int p_player){
     }
 
     //Joystick input
-    else if (t_inputDevice != -2){
+    else if (t_inputDevice != -3){
         if(!m_engineManager->getDevice()->isWindowActive()) return;
         //Update joysticks state first
         updateJoysticks();
@@ -290,17 +274,19 @@ void InputManager::updateActions(int p_player){
             getAxisPosition(t_inputDevice, Axis::Z) >= 0 &&
                 getAxisPosition(t_inputDevice, Axis::R) >= 0;
     }
-
-    //NPC NET?
+    else if (t_inputDevice == -3)
+    {
+        //online player
+    }
+    //NPC
     else{
         for (int i = 0; i < (int) Action::Count; i++){
             m_actions[p_player][i] = false;
         }
-
-        if(m_isOnline){
-            //setNetPlayer(p_player);
-        }
     }
+
+    if(m_isOnline && p_player == m_client->getPlayer())
+        updateOnlineInput(p_player);
 }
 
 //Returns true if the asked action's input is enabled
@@ -311,4 +297,29 @@ bool InputManager::checkAction(Action p_action, int p_player){
 //Returns the input device for the specified player
 int InputManager::getInputDevice(int p_player){
     return m_inputDevices[p_player];
+}
+
+void InputManager::updateOnlineInput(int p_player){
+    bool t_actions[12];
+    bool t_flag = false;
+    uint i;
+    for(i = 0; i < 12; i++)
+    {
+        if(m_actions[p_player][i])
+            t_actions[i] = true;
+        else
+            t_actions[i] = false;
+
+        if(t_actions[i] != m_lastActions[i])
+        {
+            m_lastActions[i] = t_actions[i];
+            t_flag = true;
+        }
+    }
+    if(t_flag)
+        sendOnlineInput();
+}
+
+void InputManager::sendOnlineInput(){
+    m_client->sendAction(m_lastActions);
 }

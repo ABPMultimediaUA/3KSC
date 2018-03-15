@@ -99,15 +99,8 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
             lookLeft();
             break;
     }
-
    
     m_debugMode = p_debugMode;
-    m_online = m_arena->getOnline();
-    if(m_online)
-    {
-        m_client = &Client::instance();
-    }
-
 }
 
 Character::~Character(){}
@@ -231,52 +224,6 @@ void Character::doActions(){
     }
 }
 
-void Character::sendActions(){
-    ActionMapping* t_iterator = m_actions;
-    bool t_actions[12];
-    uint i = 0;
-    while(t_iterator->function){
-        if(t_iterator->enabled)
-            t_actions[i] = true;
-        else
-            t_actions[i] = false;
-        ++t_iterator;
-        ++i;
-    }
-
-    bool t_flag = true;
-    for(uint j = 0; j<12; j++)
-    {
-        if(t_actions[j] != m_lastActions[j])
-        {
-            t_flag = false;
-            m_lastActions[j] = t_actions[j];
-        }
-    }
-
-    if(!t_flag)
-    {
-        m_client->sendAction(t_actions);
-    }
-}
-
-void Character::setActions(bool p_actions[12]){
-
-    //recibo un array con las 2 acciones con trues y falses, intento activarlas pero :/
-    ActionMapping* t_iterator = m_actions;
-    uint i = 0;
-    while(t_iterator->function){
-        if(p_actions[i])
-        {
-            t_iterator->enabled = true;
-        }
-         else
-             t_iterator->enabled = false;
-        ++t_iterator;
-        ++i;
-    }
-}
-
 void Character::input(){
     m_inputManager->updateActions(m_playerIndex);
     
@@ -337,8 +284,6 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
-    if(m_online && m_client->getPlayer() == m_playerIndex)
-        sendActions();
     doActions();
     
     if(!m_respawning){

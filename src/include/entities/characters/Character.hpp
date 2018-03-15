@@ -72,7 +72,6 @@ public:
     virtual bool    ultimateAttack();
 
     void            modeDebug();
-    void            setActions(bool p_actions[12]);
     
 protected:
     SoundManager*   m_soundManager;
@@ -120,15 +119,12 @@ protected:
     bool            m_debugMode;
 
     bool            m_online;
-    bool            m_lastActions[12] = {false};
     Client*         m_client;
 
 private:
     bool            m_waitRelease;
     bool            m_keepWaiting;
     void            doActions();
-    void            sendActions();
- 
 };
 
 #endif
