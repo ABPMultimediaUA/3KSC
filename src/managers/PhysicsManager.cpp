@@ -319,6 +319,7 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
     return(t_closestPlayer);
 }
 
+// Returns the distance to the closest character
 float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
     Character* t_closestPlayer = getClosestCharacter(p_p1);
     float t_target_x = t_closestPlayer->getX();
@@ -332,6 +333,14 @@ float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
     float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
 
     return(t_module);
+}
+
+// Returns the distance between 2 points
+float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
+    float t_total_x = abs(p_p2.x - p_p1.x);
+    float t_total_y = abs(p_p2.y - p_p1.y);
+    float t_distance = abs(sqrt(pow(t_total_x,2) + pow(t_total_y, 2)));
+    return t_distance;
 }
 
 bool PhysicsManager::isTouchingGround(){

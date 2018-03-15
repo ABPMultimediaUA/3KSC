@@ -66,6 +66,7 @@ class PhysicsManager{
     float RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
     Character* getClosestCharacter(b2Vec2 p_p1);
     float getDistanceToClosestCharacter(b2Vec2 p_p1);
+    float getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2);
 
     b2World*        getWorld();
     b2PolygonShape* getShape(int p_id);
