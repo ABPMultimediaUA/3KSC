@@ -216,9 +216,12 @@ void InputManager::updateActions(int p_player){
         m_actions[p_player][(int) Action::UltimateAttack] =
             isKeyPressed(Key::Z);
     }
-
+    else if (t_inputDevice == -3)
+    {
+        //online player
+    }
     //Joystick input
-    else if (t_inputDevice != -3){
+    else if (t_inputDevice != -2){
         if(!m_engineManager->getDevice()->isWindowActive()) return;
         //Update joysticks state first
         updateJoysticks();
@@ -273,10 +276,6 @@ void InputManager::updateActions(int p_player){
         m_actions[p_player][(int) Action::UltimateAttack] =
             getAxisPosition(t_inputDevice, Axis::Z) >= 0 &&
                 getAxisPosition(t_inputDevice, Axis::R) >= 0;
-    }
-    else if (t_inputDevice == -3)
-    {
-        //online player
     }
     //NPC
     else{

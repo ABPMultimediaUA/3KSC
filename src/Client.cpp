@@ -238,7 +238,6 @@ void Client::readMessage(std::string p_message){
 			else
 				t_actions[i] = true;
 		}
-		std::cout<< "recibido : "<<t_parsed[3]<<std::endl;
 		m_inputManager->setNetPlayer(std::stoi(t_parsed[0]), t_actions);
 		m_action = 0;
 

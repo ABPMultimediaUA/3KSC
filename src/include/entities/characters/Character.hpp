@@ -118,9 +118,6 @@ protected:
     Debug*          m_playerDebug;
     bool            m_debugMode;
 
-    bool            m_online;
-    Client*         m_client;
-
 private:
     bool            m_waitRelease;
     bool            m_keepWaiting;
