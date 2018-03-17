@@ -37,7 +37,6 @@ PhysicsManager& PhysicsManager::instance(){
 PhysicsManager::PhysicsManager(){
     m_engineManager = &EngineManager::instance();
 
-    //b2Vec2 gravity(0.0f, 0.0f);
     b2Vec2 gravity(0.0f, -10.0f);
 
     m_world = new b2World(gravity);
@@ -47,7 +46,6 @@ PhysicsManager::PhysicsManager(){
     m_positionIterations = 2;
 
     m_contactManager = new ContactManager();
-
     m_world->SetContactListener(m_contactManager);
 }
 //Destructor

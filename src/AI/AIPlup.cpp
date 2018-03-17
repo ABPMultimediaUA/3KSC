@@ -172,6 +172,10 @@ void AIPlup::update(){
 void AIPlup::buildTree(){
     // Enemy close
     m_PLUP_root = new AINode(0, 400, &m_PLUP_distance_to_enemy);
+    //auto& ch1 = m_PLUP_root.addChildren(0, 80.0, &m_PLUP_life);
+    //auto& ch2 = m_PLUP_root.addChildren(0, 80.0, &m_PLUP_life);
+    //ch1.addChildren();
+    //ch2.addChildren();
         // Life > 80%
         m_PLUP_root->m_true_children[0] = new AINode(0, 80.0, &m_PLUP_life);
             //Mana > 35%

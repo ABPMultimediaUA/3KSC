@@ -89,8 +89,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
 
     m_playerIndex = Character::m_playerCount++;
 
-    
-
     switch(m_playerIndex){
         case 0:
             lookRight();
@@ -101,6 +99,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     }
    
     m_debugMode = p_debugMode;
+    m_knockback = false;
 }
 
 Character::~Character(){}
@@ -285,14 +284,18 @@ void Character::input(){
 //Update state of player
 void Character::update(){
     doActions();
+
+        if(m_clock.getElapsedTime().asSeconds() > 1.0)
+            m_knockback = false;
+
+        if(!m_respawning){
+            updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback);
+        }
+        else{
+            updatePosition(true, m_knockback);
+            m_respawning = false;
+        }
     
-    if(!m_respawning){
-        updatePosition(m_actions[(int) Action::Jump].enabled);
-    }
-    else{
-        updatePosition(true);
-        m_respawning = false;
-    }
     if(m_debugMode)
         m_playerDebug->update();
 
@@ -305,10 +308,6 @@ void Character::update(){
         if(m_physicsManager->isTouchingGround()){
             m_maxJumps = 1;
         }
-    }
-
-    else{
-        //std::cout << m_name << " - En el airee" << std::endl;
     }
 }
 
@@ -347,9 +346,13 @@ int Character::getMP(){
     return m_MP;
 }
 
+bool Character::getOrientation(){
+    return m_orientation;
+}
+
 void Character::modeDebug(){
     if(m_debugMode){
-        // m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
+        m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
     }
 }
 
@@ -391,7 +394,6 @@ bool Character::right(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
     m_runningFactor = 1.0f;
-
     return false;
 }
 
@@ -443,3 +445,17 @@ bool Character::specialAttackDown(){}
 bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
+
+void Character::knockback(bool p_orientation){
+    if(!m_knockback){
+        int t_side = 1;
+        //True => Right
+        if(!p_orientation)
+            t_side = -1;
+
+        m_clock.restart();
+        m_knockback = true;
+        m_physicsManager->getBody(getId())->SetLinearDamping(0.1);
+        m_physicsManager->getBody(getId())->ApplyLinearImpulse(b2Vec2(1000,500), b2Vec2((getX()*t_side), (getY()*t_side)), false);
+    }
+}
