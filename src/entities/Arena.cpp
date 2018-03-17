@@ -89,7 +89,7 @@ void Arena::spawnPlayers(){
     new Portal(positionPortal);
 
     m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
-    //m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
