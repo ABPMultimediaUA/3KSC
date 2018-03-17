@@ -73,7 +73,6 @@ void Debug::render(){
     driver->setMaterial(m_Material);
     driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
     driver->drawVertexPrimitiveList(&m_Vertices[0], 4, &indices[0], 4, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
-    
 }
 
 const core::aabbox3d<f32>& Debug::getBoundingBox() const{

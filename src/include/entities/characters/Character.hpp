@@ -26,6 +26,8 @@
 class SoundManager;
 class Debug;
 
+#include <SFML/System.hpp>
+
 #include "../Entity.hpp"
 #include "../Projectile.hpp"
 #include <Client.hpp>
@@ -56,6 +58,7 @@ public:
     char*           getName();
     int             getHP();
     int             getMP();
+    bool            getOrientation();
     bool            isJumping();
     
     //Actions
@@ -72,6 +75,7 @@ public:
     virtual bool    ultimateAttack();
 
     void            modeDebug();
+    void            knockback(bool p_orientation);
     
 protected:
     SoundManager*   m_soundManager;
@@ -117,6 +121,9 @@ protected:
 
     Debug*          m_playerDebug;
     bool            m_debugMode;
+
+    sf::Clock       m_clock;
+    bool            m_knockback;
 
 private:
     bool            m_waitRelease;
