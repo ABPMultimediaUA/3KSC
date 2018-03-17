@@ -259,8 +259,9 @@ int Client::getPlayer(){
 }
 
 void Client::sendAction(bool p_actions[12]){
-	int t_xPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getX();
-	int t_yPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getY();
+	float t_xPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getX();
+	float t_yPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getY();
+	
 	std::string t_actions;
 	for(uint i = 0; i < 12; i++)
 	{
