@@ -57,6 +57,8 @@ public:
     int             getHP();
     int             getMP();
     bool            isJumping();
+    void            onTouchGround();
+    void            onLeaveGround();
     
     //Actions
     bool            left();

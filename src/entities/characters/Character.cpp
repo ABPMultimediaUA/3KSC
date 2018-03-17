@@ -67,7 +67,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
 
     m_runningFactor         = 1.0f;
 
-    m_maxJumps              = 1;
+    m_maxJumps              = 2;
     m_jumping               = false;
     m_jumpCurrentTime       = 0;
     m_jumpMaxTime           = 10;
@@ -101,6 +101,9 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     }
    
     m_debugMode = p_debugMode;
+    // Character* idas = m_arena->getPlayer(m_playerIndex);
+    // int hola = getId();
+    m_physicsManager->setPlayerSensor(getId(), this);
 }
 
 Character::~Character(){}
@@ -300,16 +303,6 @@ void Character::update(){
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
     }
-
-    if(m_maxJumps < 1){
-        if(m_physicsManager->isTouchingGround()){
-            m_maxJumps = 1;
-        }
-    }
-
-    else{
-        //std::cout << m_name << " - En el airee" << std::endl;
-    }
 }
 
 //Returns the type of the player
@@ -369,6 +362,12 @@ void Character::respawn(float p_position[3]){
     //m_UIManafer->setMP(m_playerIndex, m_MP);
 }
 
+void Character::onTouchGround(){
+    m_maxJumps = 2;
+}
+
+void Character::onLeaveGround(){
+}
 
 
 

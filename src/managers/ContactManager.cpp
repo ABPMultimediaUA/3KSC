@@ -20,35 +20,54 @@
 
 #include "../include/managers/ContactManager.hpp"
 #include <iostream>
+#include "../include/entities/characters/Character.hpp"
 
 
 void ContactManager::BeginContact(b2Contact* p_contact){
-	//check if fixture A was the foot sensor
-	void* fixtureUserData = p_contact->GetFixtureA()->GetUserData();
-	if(fixtureUserData == (void*)999){
-		m_numFootContacts++;
-		//std::cout << "Tocando suelo!" << m_numFootContacts << std::endl;
+	void* dataA = p_contact->GetFixtureA()->GetUserData();
+	void* dataB = p_contact->GetFixtureB()->GetUserData();
+	
+	if ( dataA ){
+		if(dataA == (void*)888){
+			if(static_cast<Character*>( dataB ))
+			{
+				std::cout<<"Entrando al portal"<<std::endl;
+			}
+		}
+		else{
+			static_cast<Character*>( dataA )->onTouchGround();
+		}
 	}
-	//check if fixture B was the foot sensor
-	fixtureUserData = p_contact->GetFixtureB()->GetUserData();
-	if(fixtureUserData == (void*)999){
-		m_numFootContacts++;
-		//std::cout << "Tocando suelo!" << m_numFootContacts << std::endl;
+
+	if ( dataB ){
+		if(dataB == (void*)888){
+			if(static_cast<Character*>( dataA ))
+			{
+				std::cout<<"Entrando al portal"<<std::endl;
+			}
+		}
+		else{
+			static_cast<Character*>( dataB)->onTouchGround();
+		}
 	}
 }
 
 void ContactManager::EndContact(b2Contact* p_contact){
-	//check if fixture A was the foot sensor
-	void* fixtureUserData = p_contact->GetFixtureA()->GetUserData();
-	if(fixtureUserData == (void*)999){
-		m_numFootContacts--;
-		//std::cout << "En el aireee!" << m_numFootContacts << std::endl;
+	void* dataA = p_contact->GetFixtureA()->GetUserData();
+	void* dataB = p_contact->GetFixtureB()->GetUserData();
+	
+	if ( dataA ){
+		if(dataA == (void*)888){
+			if(static_cast<Character*>( dataB ))
+				std::cout<<"Saliendo portal"<<std::endl;
+		}
 	}
-	//check if fixture B was the foot sensor
-	fixtureUserData = p_contact->GetFixtureB()->GetUserData();
-	if(fixtureUserData == (void*)999){
-		m_numFootContacts--;
-		//std::cout << "En el aireee!" << m_numFootContacts << std::endl;
+
+	if ( dataB ){
+		if(dataB == (void*)888){
+			if(static_cast<Character*>( dataA ))
+			std::cout<<"Saliendo portal"<<std::endl;
+		}
 	}
 }
 

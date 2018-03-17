@@ -77,10 +77,39 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
     int *t_id = static_cast<int*>(m_body->GetUserData());
 
     //add foot sensor fixture
-    m_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
+   /*  m_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
     m_fixtureDef->isSensor = true;
     b2Fixture* footSensorFixture = m_body->CreateFixture(m_fixtureDef);
-    footSensorFixture->SetUserData( (void*)999 );
+    footSensorFixture->SetUserData((void*)999 ); */
+}
+
+void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
+    
+    b2Body* t_body = getBody(p_id);
+    float t_tam = 10;
+    m_polygonShape = new b2PolygonShape();
+    m_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
+    //m_polygonShape->SetAsBox(t_tam, t_tam/4);
+    
+    m_fixtureDef = new b2FixtureDef();
+    m_fixtureDef->shape = m_polygonShape;
+    m_fixtureDef->density = 1.0f;
+    m_fixtureDef->friction = 0.3f;
+    m_fixtureDef->isSensor = true;
+    //Attach the shape to the body
+    t_body->CreateFixture(m_fixtureDef);
+    //t_body->SetUserData(&p_character);
+
+    b2Fixture* footSensorFixture = t_body->CreateFixture(m_fixtureDef);
+    footSensorFixture->SetUserData(p_character); 
+
+     // //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
+    // int *t_id = static_cast<int*>(t_body->GetUserData());
+     //add foot sensor fixture
+
+    //  m_fixtureDef->isSensor = true;
+    //  b2Fixture* footSensorFixture = t_body->CreateFixture(m_fixtureDef);
+    //  footSensorFixture->SetUserData(&p_character); 
 }
 
 void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY){
@@ -186,6 +215,39 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
         m_body->CreateFixture(m_polygonShape, 0.0f);
     }
     */
+}
+
+void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY){
+
+    float size = 10;
+    m_bodyDef = new b2BodyDef();
+    m_bodyDef->type = b2_dynamicBody;
+    m_bodyDef->position.Set(p_position[0]-size/2 , p_position[1]);
+    m_body = m_world->CreateBody(m_bodyDef);
+    
+
+     //Create a shape for the body
+    m_polygonShape = new b2PolygonShape();
+    m_polygonShape->SetAsBox(size,size/4);
+    
+    m_fixtureDef = new b2FixtureDef();
+    m_fixtureDef->shape = m_polygonShape;
+    m_fixtureDef->density = 1.0f;
+    m_fixtureDef->friction = 0.3f;
+
+    //Attach the shape to the body
+    b2Fixture* portalSensor = m_body->CreateFixture(m_fixtureDef);
+    portalSensor ->SetUserData((void*)888);
+   // m_body->SetUserData(p_id); 
+
+    //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
+    int *t_id = static_cast<int*>(m_body->GetUserData());
+
+    //add foot sensor fixture
+    //m_polygonShape->SetAsBox(6, 6, b2Vec2(-3,0), 0);
+    //m_fixtureDef->isSensor = true;
+    // b2Fixture* footSensorFixture = m_body->CreateFixture(m_fixtureDef);
+    // footSensorFixture->SetUserData( (void*)888 );
 }
 
 b2World* PhysicsManager::getWorld(){
