@@ -304,15 +304,6 @@ void Character::update(){
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
     }
-<<<<<<< HEAD
-
-    if(m_maxJumps < 1){
-        if(m_physicsManager->isTouchingGround()){
-            m_maxJumps = 1;
-        }
-    }
-=======
->>>>>>> portal_ulti
 }
 
 //Returns the type of the player
