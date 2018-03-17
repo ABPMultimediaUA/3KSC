@@ -144,18 +144,17 @@ void InputManager::setOnlineControl(int p_player){
 }
 
 void InputManager::setNetPlayer(int p_player, bool p_actions[12]){
-
-        m_actions[p_player][(int) Action::Left]                 = p_actions[0]; 
-        m_actions[p_player][(int) Action::Right]                = p_actions[1];             
-        m_actions[p_player][(int) Action::Jump]                 = p_actions[2];
-        m_actions[p_player][(int) Action::Run]                  = p_actions[3];
-        m_actions[p_player][(int) Action::Block]                = p_actions[4];
-        m_actions[p_player][(int) Action::Pick]                 = p_actions[5];
-        m_actions[p_player][(int) Action::BasicAttack]          = p_actions[6];
-        m_actions[p_player][(int) Action::SpecialAttackUp]      = p_actions[7];
-        m_actions[p_player][(int) Action::SpecialAttackDown]    = p_actions[8];
-        m_actions[p_player][(int) Action::SpecialAttackSide]    = p_actions[9];
-        m_actions[p_player][(int) Action::UltimateAttack]       = p_actions[10];
+    m_actions[p_player][(int) Action::Left]                 = p_actions[0]; 
+    m_actions[p_player][(int) Action::Right]                = p_actions[1];             
+    m_actions[p_player][(int) Action::Jump]                 = p_actions[2];
+    m_actions[p_player][(int) Action::Run]                  = p_actions[3];
+    m_actions[p_player][(int) Action::Block]                = p_actions[4];
+    m_actions[p_player][(int) Action::Pick]                 = p_actions[5];
+    m_actions[p_player][(int) Action::BasicAttack]          = p_actions[6];
+    m_actions[p_player][(int) Action::SpecialAttackUp]      = p_actions[7];
+    m_actions[p_player][(int) Action::SpecialAttackDown]    = p_actions[8];
+    m_actions[p_player][(int) Action::SpecialAttackSide]    = p_actions[9];
+    m_actions[p_player][(int) Action::UltimateAttack]       = p_actions[10];
 }
 
 //Updates joysticks state and booleans for each action

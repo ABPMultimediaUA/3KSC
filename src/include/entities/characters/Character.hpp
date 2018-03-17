@@ -60,6 +60,8 @@ public:
     int             getMP();
     bool            getOrientation();
     bool            isJumping();
+    void            onTouchGround();
+    void            onLeaveGround();
     
     //Actions
     bool            left();

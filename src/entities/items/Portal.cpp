@@ -27,19 +27,19 @@
 
 //Constructor
 Portal::Portal(float p_position[3])
-    : Item(p_position, "assets/models/items/life_tank.obj"){
-    m_physicsManager    = &PhysicsManager::instance();
-    m_arena             = Arena::getInstance();
+    : Entity(p_position, 4.f, "assets/models/items/portal.obj", 3){
+    // m_physicsManager    = &PhysicsManager::instance();
+    // m_arena             = Arena::getInstance();
 }
 
 //Destructor
 Portal::~Portal(){
-    delete m_physicsManager;
-    delete m_arena;
+    // delete m_physicsManager;
+    // delete m_arena;
 }
 
 //Increases owner's ultimate bar
-void Portal::use(){
+/* void Portal::use(){
     std::cout << m_arena->getPlayer(m_owner)->getName() <<" filled ultimate bar." << std::endl
     << std::endl;
 }
@@ -47,4 +47,4 @@ void Portal::use(){
 //Sets the owner of the item
 void Portal::setOwner(int p_owner){
     m_owner = p_owner;
-}
+} */
