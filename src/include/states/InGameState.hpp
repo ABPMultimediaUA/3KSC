@@ -29,6 +29,7 @@ class PhysicsManager;
 class AICharacter;
 class Arena;
 class Client;
+class Pathfinding;
 
 #include "State.hpp"
 
@@ -42,6 +43,7 @@ class InGameState : public State{
         AICharacter**   m_AIPlayers;
         Arena*          m_arena;
         Client*         m_client;
+        Pathfinding*    m_pathfinding;
 
         bool            m_onlineMode;
     public:

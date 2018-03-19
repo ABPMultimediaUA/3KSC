@@ -174,6 +174,11 @@ void InputManager::setNetPlayer(int p_player){
     }
 }
 
+// Enables an action for AI
+void InputManager::setAction(Action p_action, int p_player, bool p_bool){
+    m_actions[p_player][(int)p_action] = p_bool;
+}
+
 //Updates joysticks state and booleans for each action
 void InputManager::updateActions(int p_player){
     int t_inputDevice = m_inputDevices[p_player];
@@ -294,7 +299,7 @@ void InputManager::updateActions(int p_player){
     //NPC NET?
     else{
         for (int i = 0; i < (int) Action::Count; i++){
-            m_actions[p_player][i] = false;
+            //m_actions[p_player][i] = false;
         }
 
         if(m_isOnline){

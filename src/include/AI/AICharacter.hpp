@@ -24,11 +24,15 @@
 #define AI_CHARACTER
 
 class PhysicsManager;
+class Pathfinding;
 class Arena;
+class InputManager;
 
 class AICharacter{
     protected:
         PhysicsManager* m_physicsManager;
+        Pathfinding*    m_pathfinding;
+        InputManager*   m_inputManager;
         Arena*          m_arena;
 
     public:
