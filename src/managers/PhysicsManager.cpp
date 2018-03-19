@@ -295,11 +295,9 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
         float t_target_y = t_currentPlayer->getY();
         float t_target_z = t_currentPlayer->getZ();
 
-        b2Vec2 t_p2 = b2Vec2(t_target_x, t_target_y); 
-
         b2Vec2 t_p2p1 = b2Vec2(t_target_x - p_p1.x, t_target_y - p_p1.y);
 
-        float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
+        float t_module = abs(sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2)));
 
         //We consider this as if the character is itself
         if(t_module <= 0.5)
@@ -307,6 +305,7 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
 
         if(t_shortestModule==0){
             t_shortestModule = t_module;
+            t_closestPlayer = t_currentPlayer;
         }
         else{
             if(t_module < t_shortestModule){
@@ -337,8 +336,8 @@ float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
 
 // Returns the distance between 2 points
 float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
-    float t_total_x = abs(p_p2.x - p_p1.x);
-    float t_total_y = abs(p_p2.y - p_p1.y);
+    float t_total_x = p_p2.x - p_p1.x;
+    float t_total_y = p_p2.y - p_p1.y;
     float t_distance = abs(sqrt(pow(t_total_x,2) + pow(t_total_y, 2)));
     return t_distance;
 }

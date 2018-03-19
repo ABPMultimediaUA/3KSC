@@ -23,20 +23,23 @@
 #define PATHFINDING
 
 #include <vector>
-#include "Waypoint.hpp"
 #include <Box2D.h>
+
+class Waypoint;
 
 class Pathfinding{
     private:                                       
-        
     public:
         std::vector<Waypoint*>  m_waypoints;
+
+        static Pathfinding& instance();
 
                   Pathfinding();
                   ~Pathfinding();
         void      init(std::vector<Waypoint*> p_waypoints);
         b2Vec2    findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint);
-        b2Vec2 getClosestWaypoint(b2Vec2 p_position, bool p_direction);
+        b2Vec2    getClosestWaypoint(b2Vec2 p_position, bool p_direction);
+        void      testWaypoints();
 };
 
 #endif

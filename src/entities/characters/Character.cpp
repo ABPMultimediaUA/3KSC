@@ -40,11 +40,11 @@ struct ActionMapping{
     bool    enabled;                    //Enabled or not
 };
 
+InputManager* m_inputManager = &InputManager::instance();
+
 //Static members
 int Character::m_playerCount = 0;
 
-//Pointers
-InputManager*   m_inputManager      = &InputManager::instance();
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
@@ -273,7 +273,7 @@ void Character::input(){
             else{
                 t_iterator->enabled = m_inputManager->checkAction(t_iterator->action, m_playerIndex);
             }
-
+            m_inputManager->setAction(t_iterator->action, m_playerIndex, false);
             ++t_iterator;
         }
 
@@ -379,6 +379,25 @@ void Character::respawn(float p_position[3]){
 
 
 //ACTIONS
+bool Character::moveToPath(float p_position[2]){
+    m_flagAIJump = !m_flagAIJump;
+    // Move
+    if(p_position[0] > this->getX()){
+        this->right();
+    }
+    else{
+        this->left();
+    }
+
+    // Jump if enemy is above
+    if(p_position[1] > (this->getY() + 15.0f)){
+        if(m_flagAIJump)
+        m_inputManager->setAction(Action::Jump, m_playerIndex);
+    }
+
+    return false;
+}
+
 bool Character::left(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     lookLeft();
@@ -443,3 +462,5 @@ bool Character::specialAttackDown(){}
 bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
+
+int  Character::getCurrentSnowmen(){}

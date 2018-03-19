@@ -26,47 +26,31 @@ Waypoint::Waypoint(int p_id, float p_position_x, float p_position_y){
     m_id = p_id;
     m_position[0] = p_position_x;
     m_position[1] = p_position_y;
-    m_connected_waypoints[0] = 0; // Open 1 slot
 }
 
 Waypoint::~Waypoint(){}
 
 // Connects waypoint 1 with waypoint 2, and waypoint 2 with waypoint 1
-void Waypoint::connect(Waypoint *w1, Waypoint *w2){
-    // Iterate through the list of connected waypoints of w1 to find an empty slot
-    for(int i=0; i<w1->m_connected_waypoints.size(); i++)
-    {
-        if(w1->m_connected_waypoints[i] == 0){ // Slot is empty
-            w1->m_connected_waypoints[i] = w2; // Assign connected waypoint
-            w1->m_connected_waypoints[i+1] = 0;// Ready next slot
-        }
-    }
-
-    // Iterate through the list of connected waypoints of w2 to find an empty slot
-    for(int i=0; i<w2->m_connected_waypoints.size(); i++)
-    {
-        if(w2->m_connected_waypoints[i] == 0){ // Slot is empty
-            w2->m_connected_waypoints[i] = w1; // Assign connected waypoint
-            w2->m_connected_waypoints[i+1] = 0;// Ready next slot
-        }
-    }
+void Waypoint::connect(Waypoint *w2){
+    this->m_connected_waypoints.push_back(w2); // Assign connected waypoint to this waypoint
+    w2->m_connected_waypoints.push_back(this); // Assign connected waypoint to waypoint number 2
 }
 
 // Disconnects waypoint 1 from waypoint 2, and viceversa
-void Waypoint::disconnect(Waypoint *w1, Waypoint *w2){
+void Waypoint::disconnect(Waypoint *w2){
     // Iterate through the list of connected waypoints of w1 to find an empty slot
-    for(int i=0; i<w1->m_connected_waypoints.size(); i++)
+    for(int i=0; i<this->m_connected_waypoints.size(); i++)
     {
-        if(w1->m_connected_waypoints[i] == w2){ // Slot is empty
-            w1->m_connected_waypoints[i] = 0; // Assign connected waypoint
+        if(this->m_connected_waypoints.at(i)->m_id == w2->m_id){ // Slot is empty
+            this->m_connected_waypoints.erase(this->m_connected_waypoints.begin()+i); // Assign connected waypoint
         }
     }
 
     // Iterate through the list of connected waypoints of w2 to find an empty slot
     for(int i=0; i<w2->m_connected_waypoints.size(); i++)
     {
-        if(w2->m_connected_waypoints[i] == w1){ // Slot is empty
-            w2->m_connected_waypoints[i] = 0; // Assign connected waypoint
+        if(w2->m_connected_waypoints.at(i)->m_id == this->m_id){ // Slot is empty
+            w2->m_connected_waypoints.erase(this->m_connected_waypoints.begin()+i); // Assign connected waypoint
         }
     }
 }
@@ -74,7 +58,7 @@ void Waypoint::disconnect(Waypoint *w1, Waypoint *w2){
 // Returns true if waypoint 1 is connected to waypoint 2
 bool Waypoint::isConnected(Waypoint *w2){
     for(int i=0; i<this->m_connected_waypoints.size(); i++){
-        if(this->m_connected_waypoints[i]==w2){
+        if(this->m_connected_waypoints.at(i)->m_id==w2->m_id){
             return true;
         }
     }

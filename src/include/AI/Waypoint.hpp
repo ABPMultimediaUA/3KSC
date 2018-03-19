@@ -34,8 +34,8 @@ class Waypoint{
 
                 Waypoint(int p_id, float p_position_x, float p_position_y);
                 ~Waypoint();
-        void    connect(Waypoint *w1, Waypoint *w2);
-        void    disconnect(Waypoint *w1, Waypoint *w2);
+        void    connect(Waypoint *w2);
+        void    disconnect(Waypoint *w2);
         bool    isConnected(Waypoint *w2);
 };
 
