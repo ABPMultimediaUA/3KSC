@@ -59,6 +59,7 @@ public:
     int             getHP();
     int             getMP();
     bool            getOrientation();
+    void            setStunned();
     bool            isJumping();
     void            onTouchGround();
     void            onLeaveGround();
@@ -124,8 +125,13 @@ protected:
     Debug*          m_playerDebug;
     bool            m_debugMode;
 
-    sf::Clock       m_clock;
+    sf::Clock       m_knockbackClock;
+    sf::Clock       m_dashClock;
+    sf::Clock       m_stunClock;
+
     bool            m_knockback;
+    bool            m_dashing;
+    float           m_stunnedTime;
 
 private:
     bool            m_waitRelease;

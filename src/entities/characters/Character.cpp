@@ -64,6 +64,9 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_winged                = false;    
     m_alive                 = true;
     m_respawning            = false;
+    m_knockback             = false;
+    m_dashing               = false;
+    m_stunnedTime           = 1.0;
 
     m_runningFactor         = 1.0f;
 
@@ -99,7 +102,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     }
    
     m_debugMode = p_debugMode;
-    m_knockback = false;
     m_physicsManager->setPlayerSensor(getId(), this);
 }
 
@@ -284,18 +286,33 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
-    doActions();
+    if(m_stunned && m_stunClock.getElapsedTime().asSeconds() > m_stunnedTime){
+        m_stunned     = false;
+        m_stunnedTime = 1.0;
+    }else{
+        doActions();
+    }
 
-        if(m_clock.getElapsedTime().asSeconds() > 1.0)
-            m_knockback = false;
+    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() > 0.5){
+        m_knockback = false;
+    }
 
-        if(!m_respawning){
-            updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback);
+    if(m_dashing){
+        //If time is over or collision, finish atack
+        //The second param of collision is true because all dash atacks cause stun
+        if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->collision(m_physicsManager->getBody(getId()), true)){
+            m_physicsManager->getBody(getId())->SetLinearDamping(0);
+            m_dashing = false;
         }
-        else{
-            updatePosition(true, m_knockback);
-            m_respawning = false;
-        }
+    }
+
+    if(!m_respawning){
+        updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
+    }
+    else{
+        updatePosition(true, m_knockback, m_dashing);
+        m_respawning = false;
+    }
     
     if(m_debugMode)
         m_playerDebug->update();
@@ -343,6 +360,12 @@ int Character::getMP(){
 
 bool Character::getOrientation(){
     return m_orientation;
+}
+
+void Character::setStunned(){
+    m_stunned = true;
+    m_stunClock.restart();
+    m_stunnedTime = m_stunnedTime/2;
 }
 
 void Character::modeDebug(){
@@ -454,9 +477,9 @@ void Character::knockback(bool p_orientation){
         if(!p_orientation)
             t_side = -1;
 
-        m_clock.restart();
+        m_knockbackClock.restart();
         m_knockback = true;
-        m_physicsManager->getBody(getId())->SetLinearDamping(0.1);
+        m_physicsManager->getBody(getId())->SetLinearDamping(1);
         m_physicsManager->getBody(getId())->ApplyLinearImpulse(b2Vec2(1000,500), b2Vec2((getX()*t_side), (getY()*t_side)), false);
     }
 }
