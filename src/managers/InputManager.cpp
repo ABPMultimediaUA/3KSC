@@ -50,8 +50,8 @@ InputManager::InputManager(){
     std::memcpy(m_axis, t_axis, 8 * sizeof(sf::Joystick::Axis));
 
     //Devices initialization
-    m_inputDevices[0]   = -1;
-    m_inputDevices[1]   = 0;
+    m_inputDevices[0]   = -2;
+    m_inputDevices[1]   = -1;
     m_inputDevices[2]   = -2;
     m_inputDevices[3]   = -2;
 

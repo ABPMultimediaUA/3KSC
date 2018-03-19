@@ -30,58 +30,59 @@ class EngineManager;
 #include <Box2D.h>
 
 class PhysicsManager{
-    private:
-    static EngineManager* m_engineManager;
-    //Entity** m_physicBodies;
-    std::vector<b2Body*> m_physicBodies;
+private:
+    static EngineManager*   m_engineManager;
+    std::vector<b2Body*>    m_playersBody;
 
-    b2Vec2*     m_gravity;
-    b2World*     m_world;
+    b2Vec2*                 m_gravity;
+    b2World*                m_world;
     
-    b2BodyDef*      m_bodyDef;
-    b2Body*         m_body;
-    b2PolygonShape* m_polygonShape;
-    b2FixtureDef*   m_fixtureDef;
+    //b2BodyDef*              m_bodyDef;
+    //b2Body*                 m_body;
+    //b2PolygonShape*         m_polygonShape;
+    //b2FixtureDef*           m_fixtureDef;
 
-    int32   m_velocityIterations;
-    int32   m_positionIterations;
-    float32 m_timeStep;
-    //int*    m_id;
+    int32                   m_velocityIterations;
+    int32                   m_positionIterations;
+    float32                 m_timeStep;
 
-    ContactManager* m_contactManager;
+    ContactManager*         m_contactManager;
 
-    public:
+public:
     static PhysicsManager& instance();
     PhysicsManager();
     ~PhysicsManager();
     
-    void createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
-    void setPlayerSensor(int p_id, Character* p_character);
-    void createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
-    void createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex);
-    void createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void                    setPlayerSensor(int p_id, Character* p_character);
+    void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void                    createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex);
+    void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
 
-    void addForce();
-    void removeForce();
-    void updateGravity();
+    void                    addForce();
+    void                    removeForce();
+    void                    updateGravity();
 
-    float RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
-    Character* getClosestCharacter(b2Vec2 p_p1);
-    float getDistanceToClosestCharacter(b2Vec2 p_p1);
-    float getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2);
+    float                   RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
+    Character*              getClosestCharacter(b2Vec2 p_p1);
+    float                   getDistanceToClosestCharacter(b2Vec2 p_p1);
+    float                   getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2);
 
-    b2World*        getWorld();
-    b2PolygonShape* getShape(int p_id);
-    b2Body*         getBody(int p_id);
-    void            destroyBody(int p_id);
-    int32           getVelocityIterations();
-    int32           getPositionIterations();
-    float32         getTimeStep();
+    b2World*                getWorld();
+    b2PolygonShape*         getShape(int p_id);
+    b2Body*                 getBody(int p_id);
+    void                    destroyBody(int p_id);
+    int32                   getVelocityIterations();
+    int32                   getPositionIterations();
+    float32                 getTimeStep();
 
-    bool            isTouchingGround();
+    bool                    isTouchingGround();
 
-    ContactManager* getContactManager();
+    ContactManager*         getContactManager();
 
+    bool                    collision(b2Body* p_body, bool p_stun);
+
+    bool                    fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB);
 };
 
 #endif

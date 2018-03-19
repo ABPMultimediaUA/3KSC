@@ -144,8 +144,8 @@ Entity::~Entity(){
     m_physicsManager->destroyBody(m_id);
 }
 
-void Entity::updatePosition(bool p_jumping, bool p_knockback){
-    if(p_knockback){
+void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
+    if(p_knockback || p_dashing){
         m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
         m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
         m_engineManager->moveEntity(this);
