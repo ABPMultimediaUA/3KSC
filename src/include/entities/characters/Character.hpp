@@ -26,8 +26,11 @@
 class SoundManager;
 class Debug;
 
+#include <SFML/System.hpp>
+
 #include "../Entity.hpp"
 #include "../Projectile.hpp"
+#include <Client.hpp>
 
 struct ActionMapping;
 
@@ -55,7 +58,11 @@ public:
     char*           getName();
     int             getHP();
     int             getMP();
+    bool            getOrientation();
+    void            setStunned();
     bool            isJumping();
+    void            onTouchGround();
+    void            onLeaveGround();
     
     //Actions
     bool            left();
@@ -73,6 +80,7 @@ public:
     bool            moveToPath(float p_position[2]);
 
     void            modeDebug();
+    void            knockback(bool p_orientation);
     
 protected:
     SoundManager*   m_soundManager;
@@ -118,6 +126,14 @@ protected:
 
     Debug*          m_playerDebug;
     bool            m_debugMode;
+
+    sf::Clock       m_knockbackClock;
+    sf::Clock       m_dashClock;
+    sf::Clock       m_stunClock;
+
+    bool            m_knockback;
+    bool            m_dashing;
+    float           m_stunnedTime;
 
 private:
     bool            m_waitRelease;

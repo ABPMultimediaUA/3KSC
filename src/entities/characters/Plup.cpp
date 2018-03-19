@@ -24,7 +24,7 @@
 #include "../../include/entities/Snowman.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
-
+#include "../../include/managers/PhysicsManager.hpp"
 //#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
@@ -65,6 +65,7 @@ bool Plup::basicAttack(){
             //Rival close enough
             if (checkCloseness(t_currentPlayer->getPosition(), 15)){
                 t_currentPlayer->receiveAttack(m_damage/2, true);
+                t_currentPlayer->knockback(getOrientation());
             }
         }
     }
@@ -135,13 +136,27 @@ bool Plup::specialAttackDown(){
     return true;
 }
 
+//Dash
 bool Plup::specialAttackSide(){
-    //PENDING IMPLEMENTATION
     std::cout << m_name << ": Special Attack Side" << std::endl;
+    Character* t_currentPlayer;
+
+    int t_side = 1;
+    //True => Right
+    if(!m_orientation)
+        t_side = -1;
+
+    m_physicsManager->getBody(getId())->SetLinearDamping(-0.5);
+    m_physicsManager->getBody(getId())->SetLinearVelocity(b2Vec2(10*t_side,0));
+
+    //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
+    m_dashing = true;
+    m_dashClock.restart();
+    
+    m_physicsManager->collision(m_physicsManager->getBody(getId()), true);
 
     return false;
 }
-
 
 bool Plup::ultimateAttack(){
     //PENDING IMPLEMENTATION

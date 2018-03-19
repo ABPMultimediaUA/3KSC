@@ -89,6 +89,23 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             m_physicsManager->createPhysicBoxObject(&m_id, p_position, t_dimX, t_dimY);
             break;
         }
+
+        //Portal
+        case 3:{
+            std::cout<<"portal"<<std::endl;
+            for(int i = 0; i < 3; i++){
+                m_position[i] = p_position[i];
+                m_lastPosition[i] = p_position[i];
+            }
+
+            m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
+            moveTo(p_position);
+
+            float t_dimX = 5.0;
+            float t_dimY = 5.0;
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, t_dimX, t_dimY);
+            break;
+        }
     }
 }
 
@@ -127,19 +144,28 @@ Entity::~Entity(){
     m_physicsManager->destroyBody(m_id);
 }
 
-void Entity::updatePosition(bool p_jumping){
+void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
+    if(p_knockback || p_dashing){
+        m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
+        m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
+        m_engineManager->moveEntity(this);
+        return;
+    }
     if(p_jumping){
+        //If we are jumping sleeps the body, so gravity dont affect it
         m_physicsManager->getBody(m_id)->SetAwake(false);
     }
     else{
+        //We are falling or in the ground, so we put in the Y coord the value of the body
         m_physicsManager->getBody(m_id)->SetAwake(true);
         m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
     }
-
+    //Add to the body the actual position of the model
     b2Vec2 t_vec(m_position[0], m_position[1]);
     m_physicsManager->getBody(m_id)->SetTransform(t_vec, 0);
 
     m_engineManager->moveEntity(this);
+
 }
 
 void Entity::moveTo(float p_position[3]){

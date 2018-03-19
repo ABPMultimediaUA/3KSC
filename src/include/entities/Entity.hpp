@@ -49,7 +49,7 @@ class Entity {
         void setX(float p_position);
         void setY(float p_position);
         void rotate(float degrees);
-        void updatePosition(bool p_jumping);
+        void updatePosition(bool p_jumping, bool p_knockback, bool p_dashing);
         static int getEntityCount();
 
     protected:

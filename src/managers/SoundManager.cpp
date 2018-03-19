@@ -158,7 +158,7 @@ void SoundManager::createSoundEvent(const char* eventPath, const char* name){
     ERRCHECK(m_system->getEvent(eventPath, &t_eventDescription));
 
     SoundEvent* t_soundEvent = new SoundEvent(t_eventDescription);
-    std::cout << name << std::endl;
+    //std::cout << name << std::endl;
 
     m_soundEvents.insert(std::pair<const char*, SoundEvent*>(name, t_soundEvent));
 }

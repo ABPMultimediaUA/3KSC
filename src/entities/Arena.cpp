@@ -72,6 +72,7 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_usedItems     = 0;
     setSpawnPositions();
     setSkybox(p_arenaIndex);
+    
 
 }
 
@@ -84,9 +85,11 @@ Arena* Arena::getInstance(){
 void Arena::spawnPlayers(){
     float positionRawr[3] = {-120, 20, 0};
     float positionPlup[3] = {120, 20, 0};
+    float positionPortal[3] = {-70, 5, 0};
+    new Portal(positionPortal);
 
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
-    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, m_debugMode);
+    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, false);
+    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, false);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
@@ -237,7 +240,7 @@ void Arena::onlineUpdate(){
         }
     }
     if(m_debugMode)
-    m_debugBattlefield->update();
+        m_debugBattlefield->update();
 }
 
 void Arena::spawnItemAt(int p_type, int x, int y)
@@ -251,4 +254,14 @@ void Arena::spawnItemAt(int p_type, int x, int y)
 
     m_currentItems++;
     m_lastItemType = p_type;
+}
+
+void Arena::setOnline(bool p_state)
+{
+    m_online = p_state;
+}
+
+bool Arena::getOnline()
+{
+    return m_online;
 }

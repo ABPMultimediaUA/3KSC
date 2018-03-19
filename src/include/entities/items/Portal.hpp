@@ -23,14 +23,14 @@
 #ifndef PORTAL
 #define PORTAL
 
-#include "Item.hpp"
+#include "../Entity.hpp"
 
-class Portal: public Item {
+class Portal: public Entity {
     public:
         Portal(float p_position[3]);
         ~Portal();
-        void    setOwner(int p_owner) override;
-        void    use() override;
+        // void    setOwner(int p_owner) override;
+        // void    use() override;
 };
 
 #endif

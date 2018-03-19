@@ -48,11 +48,13 @@ class InputManager{
         void    assignDevice(int p_device, int p_player);
         void    onlineMode();
         void    setOnlineControl(int p_player);
-        void    setNetPlayer(int p_player);       
         void    setAction(Action p_action, int p_player, bool p_bool = true); 
+        void    setNetPlayer(int p_player, bool p_actions[12]);        
         void    updateActions(int p_player);
         bool    checkAction(Action p_action, int p_player);
         int     getInputDevice(int p_player);
+        void    updateOnlineInput(int p_player);
+        void    sendOnlineInput();
     
     private:
         EngineManager*          m_engineManager;
@@ -60,11 +62,12 @@ class InputManager{
         sf::Keyboard::Key       m_keys[101];
         sf::Joystick::Axis      m_axis[8];
         Client*                 m_client;
+        int                     m_onlinePlayer;
+        bool                    m_lastActions[12] = {false};
+        bool                    m_isOnline = false;
         //Event handling
         sf::Window*             m_window;             
         sf::Event*              m_event;
-
-        bool m_isOnline = false;
         //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
         int     m_inputDevices[4];
 

@@ -64,10 +64,13 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_winged                = false;    
     m_alive                 = true;
     m_respawning            = false;
+    m_knockback             = false;
+    m_dashing               = false;
+    m_stunnedTime           = 1.0;
 
     m_runningFactor         = 1.0f;
 
-    m_maxJumps              = 1;
+    m_maxJumps              = 2;
     m_jumping               = false;
     m_jumpCurrentTime       = 0;
     m_jumpMaxTime           = 10;
@@ -97,9 +100,9 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
             lookLeft();
             break;
     }
-
+   
     m_debugMode = p_debugMode;
-
+    m_physicsManager->setPlayerSensor(getId(), this);
 }
 
 Character::~Character(){}
@@ -219,7 +222,6 @@ void Character::doActions(){
             //We call the function, it'll return false when action finishes
             t_iterator->enabled = (this->*(t_iterator->function))();
         }
-
         ++t_iterator;
     }
 }
@@ -284,31 +286,40 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
-    doActions();
-    
+    if(m_stunned && m_stunClock.getElapsedTime().asSeconds() > m_stunnedTime){
+        m_stunned     = false;
+        m_stunnedTime = 1.0;
+    }else{
+        doActions();
+    }
+
+    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() > 0.5){
+        m_knockback = false;
+    }
+
+    if(m_dashing){
+        //If time is over or collision, finish atack
+        //The second param of collision is true because all dash atacks cause stun
+        if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->collision(m_physicsManager->getBody(getId()), true)){
+            m_physicsManager->getBody(getId())->SetLinearDamping(0);
+            m_dashing = false;
+        }
+    }
+
     if(!m_respawning){
-        updatePosition(m_actions[(int) Action::Jump].enabled);
+        updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
     }
     else{
-        updatePosition(true);
+        updatePosition(true, m_knockback, m_dashing);
         m_respawning = false;
     }
+    
     if(m_debugMode)
         m_playerDebug->update();
 
     //Increase magic every second and with attacks
     if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
         die();
-    }
-
-    if(m_maxJumps < 1){
-        if(m_physicsManager->isTouchingGround()){
-            m_maxJumps = 1;
-        }
-    }
-
-    else{
-        //std::cout << m_name << " - En el airee" << std::endl;
     }
 }
 
@@ -347,9 +358,19 @@ int Character::getMP(){
     return m_MP;
 }
 
+bool Character::getOrientation(){
+    return m_orientation;
+}
+
+void Character::setStunned(){
+    m_stunned = true;
+    m_stunClock.restart();
+    m_stunnedTime = m_stunnedTime/2;
+}
+
 void Character::modeDebug(){
     if(m_debugMode){
-        // m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
+        m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
     }
 }
 
@@ -369,6 +390,12 @@ void Character::respawn(float p_position[3]){
     //m_UIManafer->setMP(m_playerIndex, m_MP);
 }
 
+void Character::onTouchGround(){
+    m_maxJumps = 2;
+}
+
+void Character::onLeaveGround(){
+}
 
 
 
@@ -410,7 +437,6 @@ bool Character::right(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
     m_runningFactor = 1.0f;
-
     return false;
 }
 
@@ -462,5 +488,19 @@ bool Character::specialAttackDown(){}
 bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
+
+void Character::knockback(bool p_orientation){
+    if(!m_knockback){
+        int t_side = 1;
+        //True => Right
+        if(!p_orientation)
+            t_side = -1;
+
+        m_knockbackClock.restart();
+        m_knockback = true;
+        m_physicsManager->getBody(getId())->SetLinearDamping(1);
+        m_physicsManager->getBody(getId())->ApplyLinearImpulse(b2Vec2(1000,500), b2Vec2((getX()*t_side), (getY()*t_side)), false);
+    }
+}
 
 int  Character::getCurrentSnowmen(){}

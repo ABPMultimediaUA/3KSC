@@ -61,6 +61,8 @@ public:
     void            modeDebug();
     void            onlineUpdate();
     void            spawnItemAt(int p_type, int x, int y);
+    void            setOnline(bool p_state);
+    bool            getOnline();
 
 private: 
     static Arena*           m_instance;
@@ -89,6 +91,8 @@ private:
     bool        m_debugMode;
 
     float       m_spawnPositions[4][3];
+
+    bool        m_online = false;
 
     sf::Clock*  m_clock;
 
