@@ -24,11 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 
-#include "../include/entities/characters/Kira.hpp"
-#include "../include/entities/characters/Luka.hpp"
-#include "../include/entities/characters/MiyagiMurasaki.hpp"
 #include "../include/entities/characters/Plup.hpp"
-#include "../include/entities/characters/Rawr.hpp"
 #include "../include/entities/characters/Sparky.hpp"
 
 #include "../include/entities/items/Item.hpp"
@@ -83,12 +79,12 @@ Arena* Arena::getInstance(){
 }
 
 void Arena::spawnPlayers(){
-    float positionRawr[3] = {-120, 20, 0};
-    float positionPlup[3] = {120, 20, 0};
+    float positionSparky[3] = {-120, 20, 0};
+    float positionPlup[3]   = {120, 20, 0};
     float positionPortal[3] = {-70, 5, 0};
     new Portal(positionPortal);
 
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, false);
+    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, false);
     m_players[m_playerCount++] = new Plup("Player 2", positionPlup, false);
 
     if(m_debugMode){
@@ -100,8 +96,8 @@ void Arena::spawnPlayers(){
 }
 
 void Arena::addPlayer(){
-    float positionRawr[3] = {0, 100, 0};
-    m_players[m_playerCount++] = new Rawr("Player 1", positionRawr, m_debugMode);
+    float positionSparky[3] = {0, 100, 0};
+    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, m_debugMode);
 }
 
 //Returns number of players

@@ -187,6 +187,8 @@ void Character::wings(){
 void Character::die(){
     m_lives--;
     //m_alive = false;
+    m_knockback = false;
+    m_stunned   = false;
     m_arena->respawnPlayer(m_playerIndex);
     
     //HUD Stuff

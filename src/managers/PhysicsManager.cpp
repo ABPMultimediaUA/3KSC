@@ -47,6 +47,10 @@ PhysicsManager::PhysicsManager(){
 
     m_contactManager = new ContactManager();
     m_world->SetContactListener(m_contactManager);
+
+    CATEGORY_PLAYER = 0x0001;
+    CATEGORY_ITEM   = 0x0002;
+    CATEGORY_GROUND = 0x0003;
 }
 //Destructor
 PhysicsManager::~PhysicsManager(){}
@@ -66,13 +70,16 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->density = 1.0f;
     t_fixtureDef->friction = 0.3f;
+    t_fixtureDef->filter.categoryBits = CATEGORY_PLAYER;
+    t_fixtureDef->filter.maskBits     = CATEGORY_ITEM | CATEGORY_GROUND;
+    t_fixtureDef->filter.groupIndex   = -1;
 
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
     t_body->SetUserData(p_id);
 
     //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
-    int *t_id = static_cast<int*>(t_body->GetUserData());
+    //int *t_id = static_cast<int*>(t_body->GetUserData());
 
     m_playersBody.push_back(t_body);
 }
@@ -95,8 +102,6 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
 
     b2Fixture* footSensorFixture = t_body->CreateFixture(t_fixtureDef);
     footSensorFixture->SetUserData(p_character);
-
-    std::cout << "Sensor: " << footSensorFixture << std::endl;
 }
 
 void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY){
@@ -114,6 +119,9 @@ void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->density = 1.0f;
     t_fixtureDef->friction = 0.3f;
+    t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
+    t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
+    t_fixtureDef->filter.groupIndex   = -1;
 
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
@@ -158,9 +166,6 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
         else
             t_dimY = (abs(t_minY) + t_maxY) * t_factor;
 
-        //std::cout << t_dimX << std::endl;
-        //std::cout << t_dimY << std::endl;
-
         if(t_minX < 0 && t_maxX > 0)
             t_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_minX + t_maxX) ,(t_minY*11)), 0);
         else if(t_minX >= 0)
@@ -168,7 +173,12 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
         else
             t_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_maxX*26.3) ,(t_minY*11)), 0);
         
-        t_body->CreateFixture(t_polygonShape, 0.0f);
+        b2FixtureDef* t_fixtureDef = new b2FixtureDef();
+        t_fixtureDef->shape = t_polygonShape;
+        t_fixtureDef->filter.categoryBits = CATEGORY_GROUND;
+        t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_ITEM;
+
+        t_body->CreateFixture(t_fixtureDef);
     }
 
     /*
@@ -205,7 +215,6 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
 }
 
 void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY){
-
     float size = 10;
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
@@ -221,6 +230,9 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->density = 1.0f;
     t_fixtureDef->friction = 0.3f;
+    t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
+    t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
+    t_fixtureDef->filter.groupIndex   = -1;
 
     //Attach the shape to the body
     b2Fixture* portalSensor = t_body->CreateFixture(t_fixtureDef);
@@ -408,11 +420,20 @@ bool PhysicsManager::collision(b2Body* p_body, bool p_stun){
         //Not the same body we pass to the function
         b2Body* t_body = m_playersBody.at(i);
         if(t_body != p_body){
-            //When we call FixtureList we obtaine first the last body attached(the sensor), but we really want the body, not the sensor, so we call GetNext().
             //We need to save the FixtureSensor because it stores the data of the Character.
-            b2Fixture* fixtureA = p_body->GetFixtureList()->GetNext();
-            b2Fixture* fixtureBsensor = t_body->GetFixtureList();
-            b2Fixture* fixtureB = fixtureBsensor->GetNext();
+            b2Fixture* fixtureA = p_body->GetFixtureList();
+            if(fixtureA->IsSensor())
+                fixtureA = fixtureA->GetNext();
+
+            b2Fixture* fixtureB = t_body->GetFixtureList();
+            b2Fixture* fixtureBsensor;
+            if(fixtureB->IsSensor()){
+                fixtureBsensor = fixtureB;
+                fixtureB = fixtureB->GetNext();
+            }else{
+                fixtureBsensor = fixtureB->GetNext();
+            }
+
             if(fixtureCollide(*fixtureA, *fixtureB)){
                 //The fictures collide
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
