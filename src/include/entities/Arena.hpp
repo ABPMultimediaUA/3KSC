@@ -40,7 +40,7 @@ class Debug;
 
 class Arena : public Entity {
 public:
-    Arena(float p_position[3], float p_scale[3], const char* p_modelURL, bool p_debugMode = false);
+    Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode = false);
     ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
@@ -56,7 +56,6 @@ public:
     void            respawnPlayer(int p_player);
     void            update();
     bool            spawnRandomItem();
-    void            setSkybox(int p_arenaIndex);
     void            modeDebug();
     void            onlineUpdate();
     void            spawnItemAt(int p_type, int x, int y);

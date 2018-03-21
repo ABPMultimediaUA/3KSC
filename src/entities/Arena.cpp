@@ -38,14 +38,6 @@
 #include "Client.hpp"
 #include <iostream>
 
-//Static members
-const char* Arena::m_modelURLs[3] = {"assets/models/arenas/fusfus_stadium.obj", "assets/models/arenas/Lago_sakura.obj", "assets/models/arenas/fabrica_kawaiisaki.obj"};
-const char* Arena::m_skyboxURLs[3][6] = {
-    {"assets/skyboxes/fusfus_skybox/cloudtop_up.tga", "assets/skyboxes/fusfus_skybox/cloudtop_dn.tga", "assets/skyboxes/fusfus_skybox/cloudtop_lt.tga", "assets/skyboxes/fusfus_skybox/cloudtop_rf.tga", "assets/skyboxes/fusfus_skybox/cloudtop_ft.tga", "assets/skyboxes/fusfus_skybox/cloudtop_bk.tga"},
-    {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"},
-    {"assets/skyboxes/sakura_skybox/sep_up.tga", "assets/skyboxes/sakura_skybox/sep_dn.tga", "assets/skyboxes/sakura_skybox/sep_lt.tga", "assets/skyboxes/sakura_skybox/sep_rf.tga", "assets/skyboxes/sakura_skybox/sep_ft.tga", "assets/skyboxes/sakura_skybox/sep_bk.tga"}
-    };
-
 EngineManager*  Arena::m_engineManager     = &EngineManager::instance();
 PhysicsManager* Arena::m_physicsManager    = &PhysicsManager::instance();
 
@@ -53,7 +45,7 @@ PhysicsManager* Arena::m_physicsManager    = &PhysicsManager::instance();
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale[3], const char* p_modelURL, bool p_debugMode):Entity(p_position, p_scale, p_modelURL, 1, 1){
+Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode):Entity(p_position, p_scale, p_modelURL, 1){
 
     m_currentItems  = 0;
     m_items         = new Item*[m_maxItemsOnScreen];
@@ -66,7 +58,7 @@ Arena::Arena(float p_position[3], float p_scale[3], const char* p_modelURL, bool
     m_spawnedItems  = 0;
     m_usedItems     = 0;
     //setSpawnPositions();
-    setSkybox(p_arenaIndex);
+
     
 
 }
@@ -218,10 +210,6 @@ bool Arena::spawnRandomItem(){
 
     spawnItemAt(rand()%3, randx, m_spawnItemRange[2]);
     return true;
-}
-
-void Arena::setSkybox(int p_arenaIndex){
-    m_engineManager->loadSkybox(m_skyboxURLs[p_arenaIndex]);
 }
 
 void Arena::onlineUpdate(){

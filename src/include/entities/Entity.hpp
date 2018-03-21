@@ -33,7 +33,6 @@ class PhysicsManager;
 class Entity {
     public:
         Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
-        Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_arenaIndex);
         ~Entity();
         void moveTo(float p_position[3]);
         void moveX(float p_variation);

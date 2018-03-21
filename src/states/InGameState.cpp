@@ -41,6 +41,9 @@
 #include "../include/Client.hpp"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 
 //Constructor
@@ -53,10 +56,16 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
 
+    readFileMapCgm("assets/Fusfus_Stadium.cgm");
+
+    //Static members
+    const char* m_skyboxURLs[6] = {"assets/skyboxes/fusfus_skybox/cloudtop_up.tga", "assets/skyboxes/fusfus_skybox/cloudtop_dn.tga", "assets/skyboxes/fusfus_skybox/cloudtop_lt.tga", "assets/skyboxes/fusfus_skybox/cloudtop_rf.tga", "assets/skyboxes/fusfus_skybox/cloudtop_ft.tga", "assets/skyboxes/fusfus_skybox/cloudtop_bk.tga"};
+    
     //Create arena
-    float t_position[3] = {0, 1, 0};
-    float t_scale[3] = {120, 0.5, 2};
-    m_arena = new Arena(t_position, t_scale, "assets/models/arenas/fusfus_stadium.obj", false);
+    float t_position[3] = {0, -2, 10};
+    //float t_scale[3] = {120, 0.5, 2};
+    m_arena = new Arena(t_position, 10, "assets/models/arenas/fusfus_stadium.obj", false);
+    m_engineManager->loadSkybox(m_skyboxURLs);
 
     //Online stuff
     m_onlineMode = p_onlineMode;
@@ -87,6 +96,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     //m_soundManager->loadEvents(SoundID::S_FOSFOS_STADIUM);
     m_soundManager->createSoundEvent("event:/music/fosfosStadium", "fos_music");
     m_soundManager->playSound("fos_music");
+
     
     //Initialize AI
     int i, t_playerCount = m_arena->getPlayerCount();
@@ -182,4 +192,48 @@ void InGameState::render(){
 //Change to next state
 void InGameState::nextState(){
     m_game->setState(new EndGameState(m_game));
+}
+
+void InGameState::readFileMapCgm(const char* p_fileCgm){
+
+    std::ifstream t_file(p_fileCgm);
+    std::string t_line;
+    std::string t_name;
+    while(std::getline(t_file, t_line)){
+        if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
+            continue;
+
+        std::istringstream t_lineStream(t_line);
+        t_lineStream >> t_name;
+
+        if(t_name == "m"){
+            std::cout << "m" <<std::endl;
+        }
+        else if(t_name == "c"){
+            std::cout << "c" <<std::endl;     
+        }
+        else if(t_name == "mu"){
+            std::cout << "mu" <<std::endl;          
+        }
+    }
+
+        /*if(t_name == "o"){
+            if(m_totalVertex != 0){
+                pushVertex(t_minX, t_maxX, t_minY, t_maxY, t_minZ, t_maxZ);
+
+                t_maxX = -999.0, t_maxY = -999.0, t_maxZ = -999.0;
+                t_minX =  999.0, t_minY =  999.0, t_minZ =  999.0;
+            }
+            m_totalVertex++;
+        }
+
+        if(t_name == "v"){// Vertex
+            sscanf(t_line.c_str(), "%*s %f %f %f", &t_X, &t_Y, &t_Z);
+
+            compareMaxAndMin(t_X, t_maxX, t_minX);
+            compareMaxAndMin(t_Y, t_maxY, t_minY);
+            compareMaxAndMin(t_Z, t_maxZ, t_minZ);
+        }
+    }
+    pushVertex(t_minX, t_maxX, t_minY, t_maxY, t_minZ, t_maxZ);*/
 }

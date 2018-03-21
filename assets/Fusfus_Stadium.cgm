@@ -1,0 +1,40 @@
+# Fichero para el mapa FusFus_Stadium del juego 3KSC
+
+# m se utiliza para marcar los modelos para los mapas, su escala y su posicion: ruta_modelo escala_modelo posx posy posz
+m assets/models/arenas/fusfus_stadium.obj 10 0 -2 10
+
+# c se utiliza para la camara: posx posy posz(de la camara) posx posy posz(del target)
+c 0 90 -150 0 50 0
+
+# mu se utiliza para el sonido: Id para cargar un banco de musica
+mu SoundID::S_FOSFOS_STADIUM
+
+# w se usa para los waypoints: id posx posy
+w 0 -136 10
+w 1 -60 10
+w 2 60 10
+w 3 136 10
+w 4 -40 60
+w 5 40 60
+
+# wp se usa para unir los waypoints: id de ambos waypoints
+wp 0 1
+wp 1 4
+wp 2 3
+wp 4 5
+wp 5 2
+
+# sp se usa para delimitar las posiciones de spawn de cada uno de los 4 jugadores: posx posy posz
+sp -120 20 0
+sp 120 20 0
+sp -20 70 0
+sp 20 70 0
+
+# rp se usa para marcar la posicion de respawn de los jugadores cuando mueren: posx posy posz
+rp 0 170 0
+
+# si se usa para marcar el rango donde pueden aparecer los objetos y su altura: posxMin posxMax posy
+si -120 120 170
+
+# sk se utiliza para marcar las imagenes usadas en el skybox: lista de urls de las imagenes
+sk assets/skyboxes/fusfus_skybox/cloudtop_up.tga assets/skyboxes/fusfus_skybox/cloudtop_dn.tga assets/skyboxes/fusfus_skybox/cloudtop_lt.tga assets/skyboxes/fusfus_skybox/cloudtop_rf.tga assets/skyboxes/fusfus_skybox/cloudtop_ft.tga assets/skyboxes/fusfus_skybox/cloudtop_bk.tga

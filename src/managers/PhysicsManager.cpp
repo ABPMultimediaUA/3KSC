@@ -130,7 +130,7 @@ void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float
     t_body->SetUserData(p_id);
 }
 
-void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex){
+void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->position.Set(0.0f, 0.0f);
     
