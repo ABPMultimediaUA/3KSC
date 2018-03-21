@@ -49,7 +49,7 @@ private:
 
     int         m_maxSnowmen;
     int         m_currentSnowmen;
-    Snowman**   m_snowmen;
+    Snowman*    m_snowman;
 
     sf::Clock   m_turretTime;
 };

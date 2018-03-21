@@ -44,10 +44,6 @@ Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
 
-    m_maxSnowmen        = 1;
-    m_currentSnowmen    = 0;
-    m_snowmen           = new Snowman*[m_maxSnowmen];
-
     m_snowmanPlaced = false;
 }
 
@@ -123,7 +119,7 @@ bool Plup::specialAttackDown(){
             m_attackPosition[2] = m_position[2];
 
             //Create snowman and increase snowmen count
-            m_snowmen[m_currentSnowmen++] = new Snowman(m_attackPosition, m_playerIndex);
+            m_snowman = new Snowman(m_attackPosition, m_playerIndex);
             std::cout << m_name << ": Snowman" << std::endl;
         }
     }
@@ -133,13 +129,10 @@ bool Plup::specialAttackDown(){
 
 void Plup::updateSnowman(){
     //Snowmen AI
-    for(int i = 0; i < m_currentSnowmen; i++){
-        if(!m_snowmen[i]->lockNLoad() || m_turretTime.getElapsedTime().asSeconds() > 20.0){
-            m_snowmanPlaced = false;
-            //delete m_snowmen[i]->getBullet();
-            delete m_snowmen[i];
-            m_currentSnowmen--;
-        }
+    if(!m_snowman->lockNLoad() || m_turretTime.getElapsedTime().asSeconds() > 20.0){
+        m_snowmanPlaced = false;
+        //delete m_snowman->getBullet();
+        delete m_snowman;
     }
 }
 
@@ -180,7 +173,7 @@ int Plup::getCurrentSnowmen(){
 }
 
 void Plup::updatePlayer(){
-    std::cout << "PLUP MP: " << m_MP << std::endl;
+    //std::cout << "PLUP MP: " << m_MP << std::endl;
     if(m_dashing){
         //If time is over or collision, finish atack
         //The second param of collision is true because all dash atacks cause stun
