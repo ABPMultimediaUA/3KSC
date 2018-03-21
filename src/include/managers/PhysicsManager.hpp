@@ -43,6 +43,10 @@ private:
 
     ContactManager*         m_contactManager;
 
+    short                   CATEGORY_PLAYER;
+    short                   CATEGORY_ITEM;
+    short                   CATEGORY_GROUND;
+
 public:
     static PhysicsManager& instance();
     PhysicsManager();

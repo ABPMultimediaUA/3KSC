@@ -48,6 +48,7 @@ class InputManager{
         void    assignDevice(int p_device, int p_player);
         void    onlineMode();
         void    setOnlineControl(int p_player);
+        void    setAction(Action p_action, int p_player, bool p_bool = true); 
         void    setNetPlayer(int p_player, bool p_actions[12]);        
         void    updateActions(int p_player);
         bool    checkAction(Action p_action, int p_player);

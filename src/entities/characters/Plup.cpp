@@ -106,28 +106,32 @@ bool Plup::specialAttackUp(){
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if(m_onGround && m_currentSnowmen < m_maxSnowmen && m_MP >= 35){
-        changeMP(-35);
-        m_turretTime.restart();
-        //Looking right
-        if (m_orientation){
-            // Place snowman 10 units to the right
-            m_attackPosition[0] = m_position[0] + 10;
-            m_attackPosition[1] = m_position[1];
-            m_attackPosition[2] = m_position[2];
-        }
+    if (m_currentSnowmen < m_maxSnowmen){
+        if(m_MP>=35){
+            changeMP(-35);
+            //Looking right
+            if (m_orientation){
+                // Place snowman 10 units to the right
+                m_attackPosition[0] = m_position[0] + 10;
+                m_attackPosition[1] = m_position[1];
+                m_attackPosition[2] = m_position[2];
+            }
 
-        //Looking left 
-        else{
-            // Place snowman 10 units to the left
-            m_attackPosition[0] = m_position[0] - 10;
-            m_attackPosition[1] = m_position[1];
-            m_attackPosition[2] = m_position[2];
-        }
+            //Looking left 
+            else{
+                // Place snowman 10 units to the left
+                m_attackPosition[0] = m_position[0] - 10;
+                m_attackPosition[1] = m_position[1];
+                m_attackPosition[2] = m_position[2];
+            }
 
-        //Create snowman and increase snowmen count
-        m_snowmen[m_currentSnowmen++] = new Snowman(m_attackPosition, m_playerIndex);
-        std::cout << m_name << ": Snowman" << std::endl;
+            //Create snowman and increase snowmen count
+            m_snowmen[m_currentSnowmen++] = new Snowman(m_attackPosition, m_playerIndex);
+            std::cout << m_name << ": Snowman" << std::endl;
+        }
+    }
+    else if(m_currentSnowmen==0){
+        return false;
     }
 
     //Snowmen AI

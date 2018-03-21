@@ -76,6 +76,8 @@ public:
     virtual bool    specialAttackDown();
     virtual bool    specialAttackSide();
     virtual bool    ultimateAttack();
+    virtual int     getCurrentSnowmen();
+    bool            moveToPath(float p_position[2]);
 
     void            modeDebug();
     void            knockback(bool p_orientation);
@@ -138,6 +140,7 @@ private:
     bool            m_waitRelease;
     bool            m_keepWaiting;
     void            doActions();
+    bool            m_flagAIJump = false;
 };
 
 #endif

@@ -36,6 +36,7 @@
 #include "../include/AI/AIPlup.hpp"
 #include "../include/AI/AIRawr.hpp"
 #include "../include/AI/AISparky.hpp"
+#include "../include/AI/Pathfinding.hpp"
 
 #include "../include/Client.hpp"
 
@@ -50,6 +51,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     // m_UIManager         = &UIManager::instance();
     m_soundManager      = &SoundManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
+    m_pathfinding       = &Pathfinding::instance();
 
     //Create arena
     float t_position[3] = {0, 1, 0};
@@ -90,6 +92,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     int i, t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
     m_AIPlayers = new AICharacter*[t_playerCount];
+    m_pathfinding->testWaypoints();
 
     //Create AI instances for needed players and build trees
     for (i = 0; i < t_playerCount; i++){
@@ -107,6 +110,9 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
             }
             
             m_AIPlayers[i]->buildTree();
+        }
+        else{
+            m_AIPlayers[i] = 0;
         }
     }
 
@@ -138,8 +144,8 @@ void InGameState::update(){
 
     //Update AIs
     for (i = 0; i < t_playerCount; i++){
-        if (m_AIPlayers[i] != nullptr){
-            // m_AIPlayers[i]->update();
+        if (m_AIPlayers[i] != 0){
+            m_AIPlayers[i]->update();
         }
     }
 
