@@ -1,3 +1,4 @@
+
 /********************************************************************************
 *********************************************************************************
 	3KSC: A fighting game
@@ -35,7 +36,9 @@ class Snowman: public Entity {
     public:
         Snowman(float p_position[3], int p_owner);
         ~Snowman();
-        bool lockNLoad();
+        bool        lockNLoad();
+
+        Projectile* getBullet();
     
     private:
         // EngineManager*  m_engineManager;
@@ -43,12 +46,12 @@ class Snowman: public Entity {
         Arena*          m_arena;
 
         int             m_lifetime;
-        Projectile**    m_snowballs;
-        int             m_maxSnowballs;
-        int             m_currentSnowballs;
+        Projectile*     m_snowball;
         int             m_ammo;
         int             m_owner;
         float           m_target[3];            //Position of the target
+
+        bool            m_bulletLaunched;
 };
 
 #endif

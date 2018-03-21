@@ -51,8 +51,8 @@ public:
     void            input();
     void            update();
     
-    int             getType();
     bool            isNPC();
+    int             getType();
     int             getDamage();
     int             getIndex();
     char*           getName();
@@ -81,6 +81,8 @@ public:
 
     void            modeDebug();
     void            knockback(bool p_orientation);
+
+    virtual void    updatePlayer() = 0;
     
 protected:
     SoundManager*   m_soundManager;
@@ -105,6 +107,7 @@ protected:
     bool            m_winged;
     bool            m_alive;
     bool            m_respawning;
+    bool            m_onGround;
     float           m_frameDeltaTime;       //For movement
     float           m_runningFactor;
 

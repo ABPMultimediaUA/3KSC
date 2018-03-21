@@ -32,114 +32,47 @@ int Entity::m_entityCount = 0;
 EngineManager*  Entity::m_engineManager     = &EngineManager::instance();
 PhysicsManager* Entity::m_physicsManager    = &PhysicsManager::instance();
 
-//Create a new Entity for a player
-Entity::Entity(float p_position[3]){
-    m_id = m_entityCount++;
-    for(int i = 0; i < 3; i++){
-        m_lastPosition[i] = m_position[i];
-        m_position[i] = p_position[i];
-    }
-    m_engineManager->createEntity(m_id, p_position);
-    moveTo(p_position);
-
-    float t_dimX = 5.0;
-    float t_dimY = 5.0;
-    m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
-}
-
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
     m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
-    switch (p_type){
-        //Players and items
-        case 0:{
-            for(int i = 0; i < 3; i++){
-                m_position[i] = p_position[i];
-                m_lastPosition[i] = p_position[i];
-            }
-            m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
-            moveTo(p_position);
 
-            float t_dimX = 5.0;
-            float t_dimY = 5.0;
-            m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
+    for(int i = 0; i < 3; i++){
+        m_position[i] = p_position[i];
+        m_lastPosition[i] = p_position[i];
+    }
+    m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
+    moveTo(p_position);
+
+    switch(p_type){
+        case 0:
+            m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, 5.0, 5.0);
             break;
-        }
 
-        //Arenas
-        case 1:{
-            m_engineManager->parseOBJ(p_modelURL);
-            m_engineManager->loadArena(p_modelURL, 10);
-           // m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
-            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, t_scale, 0);
+        case 2:
+            m_physicsManager->createPhysicBoxObject(&m_id, p_position, 5.0, 5.0);
             break;
-        }
 
-        //Items
-        case 2:{
-            for(int i = 0; i < 3; i++){
-                m_position[i] = p_position[i];
-                m_lastPosition[i] = p_position[i];
-            }
-
-            m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
-            moveTo(p_position);
-
-            float t_dimX = 5.0;
-            float t_dimY = 5.0;
-            m_physicsManager->createPhysicBoxObject(&m_id, p_position, t_dimX, t_dimY);
+        case 3:
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 5.0, 5.0);
             break;
-        }
 
-        //Portal
-        case 3:{
-            std::cout<<"portal"<<std::endl;
-            for(int i = 0; i < 3; i++){
-                m_position[i] = p_position[i];
-                m_lastPosition[i] = p_position[i];
-            }
-
-            m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
-            moveTo(p_position);
-
-            float t_dimX = 5.0;
-            float t_dimY = 5.0;
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, t_dimX, t_dimY);
+        case 4:
+            m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, 5.0, 5.0);
             break;
-        }
     }
 }
 
 //Create entity with model (free scale)
-/*Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_type, int p_arenaIndex){
+Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_arenaIndex){
     m_id = m_entityCount++;
 
-    switch (p_type){
-        //Players and items
-        case 0:{
-            for(int i = 0; i < 3; i++){
-                m_position[i] = p_position[i];
-                m_lastPosition[i] = p_position[i];
-            }
-            m_engineManager->load3DModel(m_id, p_position, p_scale, p_modelURL);
-            moveTo(p_position);
+    //Create the arena
+    m_engineManager->parseOBJ(p_modelURL);
+    m_engineManager->loadArena(p_modelURL);
+    m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, p_scale, p_arenaIndex);
 
-            float t_dimX = 5.0;
-            float t_dimY = 5.0;
-            m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, t_dimX, t_dimY);
-            break;
-        }
-
-        //Arenas
-        case 1:{
-            m_engineManager->parseOBJ(p_modelURL);
-            m_engineManager->loadArena(p_modelURL, 10);
-            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, p_scale, p_arenaIndex);
-            break;
-        }
-    }
-}*/
+}
 
 Entity::~Entity(){
     m_engineManager->deleteEntity(m_id);
