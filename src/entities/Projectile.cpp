@@ -29,12 +29,13 @@
 //#include <iostream>
 
 //Static members
-const char* Projectile::m_modelURLs[2] = {"assets/models/characters/rawr/fireball.obj", "assets/models/characters/plup/snowball.obj"};
+const char* Projectile::m_modelURLs[2] = {"assets/models/characters/sparky/sparky_punch.obj", "assets/models/characters/plup/snowball.obj"};
 
 Projectile::Projectile(float p_position[3], float p_target[3], int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type]){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
 
+    std::cout<<"projectile"<<std::endl;
     //Base damage (from its owner)
     int t_damage = Arena::getInstance()->getPlayer(m_owner)->getDamage();
 
@@ -42,7 +43,7 @@ Projectile::Projectile(float p_position[3], float p_target[3], int p_owner, int 
         //Rawr's fireball
         case 0:{
             m_damage = t_damage * 1.333;
-            m_velocity = 2.5;
+            m_velocity = 4.5;
             m_distanceLeft = 120;
             break;
         }
@@ -99,7 +100,6 @@ bool Projectile::hit(){
         //Rival close enough
         if (checkCloseness(t_currentPlayer->getPosition(), 10)){
             t_currentPlayer->receiveAttack(m_damage, false);
-
             return true;
         }
     }

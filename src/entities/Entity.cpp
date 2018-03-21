@@ -92,7 +92,6 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 
         //Portal
         case 3:{
-            std::cout<<"portal"<<std::endl;
             for(int i = 0; i < 3; i++){
                 m_position[i] = p_position[i];
                 m_lastPosition[i] = p_position[i];

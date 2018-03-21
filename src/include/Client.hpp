@@ -8,6 +8,9 @@ class Arena;
 #include "RakNetStatistics.h"
 #include <iostream>
 #include <vector>
+#include <string>
+#include <stdio.h>
+#include <cstring>
 
 class Client{
     public:
@@ -24,7 +27,7 @@ class Client{
         void sendAction(bool p_actions[12]);
         const std::vector<std::string> explode(const std::string& s, const char& c);
         void spawnItem(int p_type, int x, int y);
-        
+        void printActions(std::string p_actions);
     private:
         InputManager*   m_inputManager;
         Arena*          m_arena;

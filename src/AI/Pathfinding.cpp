@@ -171,11 +171,11 @@ void Pathfinding::testWaypoints(){
     m_waypoints.at(5)->connect(m_waypoints.at(2));
 
     // Check connections and positions (in console)
-    for(int i=0; i<m_waypoints.size(); i++){
+   /*  for(int i=0; i<m_waypoints.size(); i++){
         std::cout<<"Waypoint "<<i<<" is in position "<<m_waypoints.at(i)->m_position[0]<<","<<m_waypoints.at(i)->m_position[1]<<" and is connected to waypoints ";
         for(int j=0; j<m_waypoints.at(i)->m_connected_waypoints.size(); j++){
             std::cout<<m_waypoints.at(i)->m_connected_waypoints.at(j)->m_id<<" ";
         }
         std::cout<<std::endl;
-    }
+    } */
 }

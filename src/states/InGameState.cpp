@@ -142,12 +142,12 @@ void InGameState::update(){
     int t_playerCount = m_arena->getPlayerCount();
     int i;        
 
-    //Update AIs
-    for (i = 0; i < t_playerCount; i++){
-        if (m_AIPlayers[i] != 0){
-            m_AIPlayers[i]->update();
-        }
-    }
+    // //Update AIs
+    // for (i = 0; i < t_playerCount; i++){
+    //     if (m_AIPlayers[i] != 0){
+    //         m_AIPlayers[i]->update();
+    //     }
+    // }
 
     if(m_onlineMode){
         m_client->update();

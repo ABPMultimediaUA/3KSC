@@ -77,13 +77,13 @@ int main(void)
 
 	// Holds user data
 	char portstring[30];
-
+/* 
 	printf("This is a sample implementation of a text based chat server.\n");
 	printf("Connect to the project 'Chat Example Client'.\n");
-	printf("Difficulty: Beginner\n\n");
+	printf("Difficulty: Beginner\n\n"); */
 
 	// A server
-	puts("Enter the server port to listen on");
+	// puts("Enter the server port to listen on");
 	Gets(portstring,sizeof(portstring));
 	if (portstring[0]==0)
 		strcpy(portstring, "1234");

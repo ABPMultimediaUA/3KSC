@@ -164,7 +164,7 @@ void SoundManager::createSoundEvent(const char* eventPath, const char* name){
 }
 
 void SoundManager::playSound(const char* name){
-    std::cout << name << std::endl;
+    //std::cout << name << std::endl;
     m_soundEvents.at(name)->start();
 }
 
