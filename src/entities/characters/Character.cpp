@@ -66,6 +66,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_respawning            = false;
     m_knockback             = false;
     m_dashing               = false;
+    m_onGround              = false;
     m_stunnedTime           = 1.0;
 
     m_runningFactor         = 1.0f;
@@ -234,26 +235,6 @@ void Character::input(){
     //For movement
     m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
-//    //Change to keyboard (RETURN KEY)
-//    if (m_inputManager->isKeyPressed(58)){
-//        m_inputManager->assignDevice(-1, m_playerIndex);
-//    }
-//    
-//    //Change to joystick (START BUTTON)
-//    m_inputManager->updateJoysticks();
-//    if (m_inputManager->isButtonPressed(0, 7)){
-//        m_inputManager->assignDevice(0, m_playerIndex);
-//    }
-//
-//    //Exit
-//    if(m_inputManager->isKeyPressed(Key_Escape))
-//        m_engineManager->stop();
-//
-//    if(m_inputManager->isKeyPressed(15)){
-//        m_engineManager->resetCamera();
-//    }
-
-
     //Block
     m_actions[(int) Action::Block].enabled = m_inputManager->checkAction(Action::Block, m_playerIndex);
 
@@ -288,6 +269,9 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
+    //Specific update for each character
+    updatePlayer();
+    
     if(m_stunned && m_stunClock.getElapsedTime().asSeconds() > m_stunnedTime){
         m_stunned     = false;
         m_stunnedTime = 1.0;
@@ -297,15 +281,6 @@ void Character::update(){
 
     if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() > 0.5){
         m_knockback = false;
-    }
-
-    if(m_dashing){
-        //If time is over or collision, finish atack
-        //The second param of collision is true because all dash atacks cause stun
-        if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->collision(m_physicsManager->getBody(getId()), true)){
-            m_physicsManager->getBody(getId())->SetLinearDamping(0);
-            m_dashing = false;
-        }
     }
 
     if(!m_respawning){
@@ -393,10 +368,12 @@ void Character::respawn(float p_position[3]){
 }
 
 void Character::onTouchGround(){
+    m_onGround = true;
     m_maxJumps = 2;
 }
 
 void Character::onLeaveGround(){
+    m_onGround = false;
 }
 
 

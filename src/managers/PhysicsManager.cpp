@@ -55,6 +55,10 @@ PhysicsManager::PhysicsManager(){
 //Destructor
 PhysicsManager::~PhysicsManager(){}
 
+void PhysicsManager::update(){
+    m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
+}
+
 void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY){
     //Create a new body and positioning it in the coords of the Entity
     b2BodyDef* t_bodyDef = new b2BodyDef();
@@ -93,12 +97,10 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
-    t_fixtureDef->density = 1.0f;
-    t_fixtureDef->friction = 0.3f;
     t_fixtureDef->isSensor = true;
+
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
-    //t_body->SetUserData(&p_character);
 
     b2Fixture* footSensorFixture = t_body->CreateFixture(t_fixtureDef);
     footSensorFixture->SetUserData(p_character);
@@ -126,9 +128,6 @@ void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
     t_body->SetUserData(p_id);
-
-    //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
-    int *t_id = static_cast<int*>(t_body->GetUserData());
 }
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex){
@@ -136,10 +135,8 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
     t_bodyDef->position.Set(0.0f, 0.0f);
     
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
-    //t_body->SetUserData(p_id);
 
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    //if(p_arenaIndex == 0){ 
     float t_minX, t_maxX;
     float t_minY, t_maxY;
     float t_dimX, t_dimY;
@@ -180,38 +177,6 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], flo
 
         t_body->CreateFixture(t_fixtureDef);
     }
-
-    /*
-    }else if(p_arenaIndex == 1){
-        //Nenufar izquierda
-        t_polygonShape->SetAsBox(20, 1, b2Vec2(-25,0), 0);
-        t_body->CreateFixture(t_polygonShape, 0.0f);
-        
-        //Nenufar derecha
-        t_polygonShape->SetAsBox(20, 1, b2Vec2(200,0), 0);
-        t_body->CreateFixture(t_polygonShape, 0.0f);
-
-        //Plataforma central
-        t_polygonShape->SetAsBox(80, 1, b2Vec2(90,0), 0);
-        t_body->CreateFixture(t_polygonShape, 0.0f);
-        
-        //Arbol izquierda rama grande
-        t_polygonShape->SetAsBox(32, 1, b2Vec2(-9,40), 0);
-        t_body->CreateFixture(t_polygonShape, 0.0f);
-        
-        //Arbol izquierda rama pequeña
-        t_polygonShape->SetAsBox(16, 1, b2Vec2(-9,60), 0);
-        t_body->CreateFixture(t_polygonShape, 0.0f);
-
-        //Arbol derecha rama grande
-        t_polygonShape->SetAsBox(32, 1, b2Vec2(182,40), 0);
-        t_body->CreateFixture(t_polygonShape, 0.0f);
-        
-        //Arbol derecha rama pequeña
-        t_polygonShape->SetAsBox(8, 1, b2Vec2(172,65), 0);
-        t_body->CreateFixture(t_polygonShape, 0.0f);
-    }
-    */
 }
 
 void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY){
@@ -221,8 +186,7 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     t_bodyDef->position.Set(p_position[0]-size/2 , p_position[1]);
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
     
-
-     //Create a shape for the body
+    //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
     t_polygonShape->SetAsBox(size,size/4);
     
@@ -237,16 +201,6 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     //Attach the shape to the body
     b2Fixture* portalSensor = t_body->CreateFixture(t_fixtureDef);
     portalSensor ->SetUserData((void*)888);
-   // t_body->SetUserData(p_id); 
-
-    //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
-    int *t_id = static_cast<int*>(t_body->GetUserData());
-
-    //add foot sensor fixture
-    //t_polygonShape->SetAsBox(6, 6, b2Vec2(-3,0), 0);
-    //t_fixtureDef->isSensor = true;
-    // b2Fixture* footSensorFixture = t_body->CreateFixture(t_fixtureDef);
-    // footSensorFixture->SetUserData( (void*)888 );
 }
 
 b2World* PhysicsManager::getWorld(){
@@ -403,19 +357,12 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     return t_distance;
 }
 
-bool PhysicsManager::isTouchingGround(){
-    if(getContactManager()->getJump() > 1)
-        return true;
-    else
-        return false;
-}
-
 ContactManager* PhysicsManager::getContactManager(){
     return m_contactManager;
 }
 
 //The p_body is the body that realize the action/atak
-bool PhysicsManager::collision(b2Body* p_body, bool p_stun){
+bool PhysicsManager::checkCollision(b2Body* p_body, bool p_stun){
     for(int i = 0; i < m_playersBody.size(); i++){
         //Not the same body we pass to the function
         b2Body* t_body = m_playersBody.at(i);

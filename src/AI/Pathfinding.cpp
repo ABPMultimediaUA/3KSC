@@ -164,9 +164,8 @@ void Pathfinding::testWaypoints(){
 
     // Connect waypoints
     m_waypoints.at(0)->connect(m_waypoints.at(1));
-    m_waypoints.at(1)->connect(m_waypoints.at(2));
+    m_waypoints.at(1)->connect(m_waypoints.at(4));
     m_waypoints.at(2)->connect(m_waypoints.at(3));
-    m_waypoints.at(3)->connect(m_waypoints.at(4));
     m_waypoints.at(4)->connect(m_waypoints.at(5));
     m_waypoints.at(5)->connect(m_waypoints.at(2));
 
