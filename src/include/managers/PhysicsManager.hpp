@@ -36,11 +36,6 @@ private:
 
     b2Vec2*                 m_gravity;
     b2World*                m_world;
-    
-    //b2BodyDef*              m_bodyDef;
-    //b2Body*                 m_body;
-    //b2PolygonShape*         m_polygonShape;
-    //b2FixtureDef*           m_fixtureDef;
 
     int32                   m_velocityIterations;
     int32                   m_positionIterations;
@@ -56,6 +51,8 @@ public:
     static PhysicsManager& instance();
     PhysicsManager();
     ~PhysicsManager();
+    
+    void                    update();
     
     void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    setPlayerSensor(int p_id, Character* p_character);
@@ -80,11 +77,9 @@ public:
     int32                   getPositionIterations();
     float32                 getTimeStep();
 
-    bool                    isTouchingGround();
-
     ContactManager*         getContactManager();
 
-    bool                    collision(b2Body* p_body, bool p_stun);
+    bool                    checkCollision(b2Body* p_body, bool p_stun);
 
     bool                    fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB);
 };

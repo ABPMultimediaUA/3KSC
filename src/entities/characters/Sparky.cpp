@@ -159,3 +159,5 @@ bool Sparky::ultimateAttack(){
 
     return false;
 }
+
+void Sparky::updatePlayer(){}

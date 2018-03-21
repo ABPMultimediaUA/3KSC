@@ -27,28 +27,22 @@ void ContactManager::BeginContact(b2Contact* p_contact){
 	void* dataA = p_contact->GetFixtureA()->GetUserData();
 	void* dataB = p_contact->GetFixtureB()->GetUserData();
 	
-	if ( dataA ){
+	if(dataA){
 		if(dataA == (void*)888){
-			if(static_cast<Character*>( dataB ))
-			{
+			if(static_cast<Character*>(dataB))
 				std::cout<<"Entrando al portal"<<std::endl;
-			}
 		}
-		else{
+		else
 			static_cast<Character*>( dataA )->onTouchGround();
-		}
 	}
 
-	if ( dataB ){
+	if(dataB){
 		if(dataB == (void*)888){
-			if(static_cast<Character*>( dataA ))
-			{
+			if(static_cast<Character*>(dataA))
 				std::cout<<"Entrando al portal"<<std::endl;
-			}
 		}
-		else{
-			static_cast<Character*>( dataB)->onTouchGround();
-		}
+		else
+			static_cast<Character*>(dataB)->onTouchGround();
 	}
 }
 
@@ -56,21 +50,21 @@ void ContactManager::EndContact(b2Contact* p_contact){
 	void* dataA = p_contact->GetFixtureA()->GetUserData();
 	void* dataB = p_contact->GetFixtureB()->GetUserData();
 	
-	if ( dataA ){
+	if(dataA){
 		if(dataA == (void*)888){
-			if(static_cast<Character*>( dataB ))
-				std::cout<<"Saliendo portal"<<std::endl;
+			if(static_cast<Character*>(dataB))
+				std::cout<<"Saliendo al portal"<<std::endl;
 		}
+		else
+			static_cast<Character*>( dataA )->onLeaveGround();
 	}
 
-	if ( dataB ){
+	if(dataB){
 		if(dataB == (void*)888){
-			if(static_cast<Character*>( dataA ))
-			std::cout<<"Saliendo portal"<<std::endl;
+			if(static_cast<Character*>(dataA))
+				std::cout<<"Saliendo al portal"<<std::endl;
 		}
+		else
+			static_cast<Character*>( dataB)->onLeaveGround();
 	}
-}
-
-int ContactManager::getJump(){
-	return m_numFootContacts;
 }
