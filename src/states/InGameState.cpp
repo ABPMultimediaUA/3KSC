@@ -56,7 +56,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     //Create arena
     float t_position[3] = {0, 1, 0};
     float t_scale[3] = {120, 0.5, 2};
-    m_arena = new Arena(t_position, t_scale, 0, false);
+    m_arena = new Arena(t_position, t_scale, "assets/models/arenas/fusfus_stadium.obj", false);
 
     //Online stuff
     m_onlineMode = p_onlineMode;
@@ -73,7 +73,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     }
 
     else{
-        m_arena->spawnItems();
+       // m_arena->spawnItems();
         m_arena->spawnPlayers();
     }
 

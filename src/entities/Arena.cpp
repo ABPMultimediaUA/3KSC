@@ -53,11 +53,10 @@ PhysicsManager* Arena::m_physicsManager    = &PhysicsManager::instance();
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1, p_arenaIndex){
+Arena::Arena(float p_position[3], float p_scale[3], const char* p_modelURL, bool p_debugMode):Entity(p_position, p_scale, p_modelURL, 1, 1){
 
-    m_maxItems      = 500; //cambiar esto
     m_currentItems  = 0;
-    m_items         = new Item*[m_maxItems];
+    m_items         = new Item*[m_maxItemsOnScreen];
     m_instance      = this;
     m_debugMode     = p_debugMode;
     m_spawningTime  = 10;
@@ -66,7 +65,7 @@ Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_deb
     m_players       = new Character*[4];
     m_spawnedItems  = 0;
     m_usedItems     = 0;
-    setSpawnPositions();
+    //setSpawnPositions();
     setSkybox(p_arenaIndex);
     
 
@@ -79,13 +78,42 @@ Arena* Arena::getInstance(){
 }
 
 void Arena::spawnPlayers(){
-    float positionSparky[3] = {-120, 20, 0};
-    float positionPlup[3]   = {120, 20, 0};
-    float positionPortal[3] = {-70, 5, 0};
-    new Portal(positionPortal);
 
-    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, false);
-    m_players[m_playerCount++] = new Plup("Player 2", positionPlup, false);
+    float coso_spawnPositions[4][3];
+    coso_spawnPositions[0][0] = -120;
+    coso_spawnPositions[0][1] = 20;
+    coso_spawnPositions[0][2] = 0;
+
+    coso_spawnPositions[1][0] = 120;
+    coso_spawnPositions[1][1] = 20;
+    coso_spawnPositions[1][2] = 0;
+
+    coso_spawnPositions[2][0] = 120;
+    coso_spawnPositions[2][1] = 20;
+    coso_spawnPositions[2][2] = 0;
+
+    coso_spawnPositions[3][0] = 120;
+    coso_spawnPositions[3][1] = 20;
+    coso_spawnPositions[3][2] = 0;
+
+    setSpawnPositions(coso_spawnPositions);
+
+    float coso_respawnPosition[3];
+
+    coso_respawnPosition[0] = 0;
+    coso_respawnPosition[1] = 170;
+    coso_respawnPosition[2] = 0;
+
+    setRespawnPositions(coso_respawnPosition);
+
+    float itemRange[3] = {-120, 120, 80};
+    setItemRange(itemRange);
+
+    /*float positionPortal[3] = {-70, 5, 0};
+    new Portal(positionPortal);*/
+
+    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
+    m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1], false);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
@@ -108,28 +136,6 @@ int Arena::getPlayerCount(){
 //Returns the player with the given index
 Character* Arena::getPlayer(int p_index){
     return m_players[p_index];
-}
-
-
-void Arena::spawnItems(){
-   /* float positionItem[3] = {-100, 10, 0};
-    
-    m_items[m_currentItems++] = new Item(0, positionItem);
-    positionItem[0] = -80;
-    m_items[m_currentItems++] = new Item(0, positionItem);
-    positionItem[0] = 80;
-    m_items[m_currentItems++] = new Item(0, positionItem);
-    positionItem[0] = 100;
-    m_items[m_currentItems++] = new Item(0, positionItem);
-    positionItem[0] = -60;
-    m_items[m_currentItems++] = new Item(1, positionItem);
-    positionItem[0] = 60;
-    m_items[m_currentItems++] = new Item(1, positionItem);
-    positionItem[0] = -30;
-    m_items[m_currentItems++] = new Item(2, positionItem);
-    positionItem[0] = 30;
-    m_items[m_currentItems++] = new Item(2, positionItem);*/
-    
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it and uses it
@@ -177,17 +183,17 @@ void Arena::modeDebug(){
         m_debugBattlefield = new Debug(666, m_physicsManager->getBody(getId()));
 }
 
-void Arena::setSpawnPositions(){
-   //m_spawnPosition[1] = {10, 100, 0};
-   //m_spawnPosition[2] = {-50, 100, 0};
-   //m_spawnPosition[0] = [-10, 100, 0};
-   //m_spawnPosition[3] = {50, 100, 0};
+void Arena::setSpawnPositions(float p_spawnPositions[4][3]){
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 3; j++){
+            m_spawnPositions[i][j] = p_spawnPositions[i][j];
+        }
+    }
 }
 
 void Arena::respawnPlayer(int p_player){
-    //int randNum = rand()%(m_spawnPosition.length());
-    float t_center[3] = {0, 170, 0};
-    m_players[p_player]->respawn(t_center);
+    m_players[p_player]->respawn(m_respawnPosition);
 }
 
 void Arena::update(){
@@ -206,19 +212,11 @@ bool Arena::spawnRandomItem(){
     if(m_spawnedItems - m_usedItems >= m_maxItemsOnScreen)
         return false;
     ++m_spawnedItems;
-    float positionItem[3] = {-100, 10, 0};
-    positionItem[0] = rand()%(120);
-    if(positionItem[0]< 60)
-        positionItem[1] = 54;
-    else
-        positionItem[1] = 10;
 
-    if(rand()%2 == 0)
-        positionItem[0] = positionItem[0] * (-1);
+    int range = m_spawnItemRange[1] - m_spawnItemRange[0] + 1;
+    int randx = m_spawnItemRange[0] + (rand() % range);
 
-    //Type
-    int t_type = rand()%3;
-    spawnItemAt(rand()%3, positionItem[0], positionItem[1]);
+    spawnItemAt(rand()%3, randx, m_spawnItemRange[2]);
     return true;
 }
 

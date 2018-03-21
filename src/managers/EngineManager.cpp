@@ -210,7 +210,7 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
     }
 }
 
-void EngineManager::loadArena(const char* p_arenaModelURL){
+void EngineManager::loadArena(const char* p_arenaModelURL, float p_scale){
     scene::IAnimatedMesh* t_map = m_scene->getMesh(p_arenaModelURL);
     scene::ISceneNode* t_node = 0;
 
@@ -218,7 +218,7 @@ void EngineManager::loadArena(const char* p_arenaModelURL){
         t_node = m_scene->addOctreeSceneNode(t_map->getMesh(0), 0, -1, 1024);
         t_node->setPosition(core::vector3df(0,0,10));
         t_node->setMaterialFlag(video::EMF_LIGHTING, false);
-        t_node->setScale(core::vector3df(10,10,10));
+        t_node->setScale(core::vector3df(p_scale, p_scale, p_scale));
 
         //Add node to class node vector 
         m_entityNodes.push_back(t_node);
