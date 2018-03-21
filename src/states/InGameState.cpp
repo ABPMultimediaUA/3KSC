@@ -155,7 +155,8 @@ void InGameState::update(){
     else
         m_arena->update();
 
-    m_physicsManager->getWorld()->Step(m_physicsManager->getTimeStep(), m_physicsManager->getVelocityIterations(), m_physicsManager->getPositionIterations());
+    //Update the physics one step more(need to be done first of all)
+    m_physicsManager->update();
     
     Character* t_currentPlayer;
 

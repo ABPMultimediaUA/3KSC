@@ -35,6 +35,8 @@ public:
     bool    specialAttackDown();
     bool    specialAttackSide();
     bool    ultimateAttack(); 
+    void    updatePlayer();
+
 };
 
 #endif

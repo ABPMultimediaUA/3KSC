@@ -30,9 +30,8 @@ public:
     void BeginContact(b2Contact* p_contact);
     void EndContact(b2Contact* p_contact);
 
-    int getJump();
 private:
-    int m_numFootContacts = 0;
+
 };
 
 #endif
