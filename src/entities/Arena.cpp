@@ -57,7 +57,7 @@ PhysicsManager* Arena::m_physicsManager    = &PhysicsManager::instance();
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], 1, p_arenaIndex){
+Arena::Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode):Entity(p_position, p_scale, m_modelURLs[p_arenaIndex], p_arenaIndex){
 
     m_maxItems      = 500; //cambiar esto
     m_currentItems  = 0;

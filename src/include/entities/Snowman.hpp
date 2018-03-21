@@ -35,7 +35,9 @@ class Snowman: public Entity {
     public:
         Snowman(float p_position[3], int p_owner);
         ~Snowman();
-        bool lockNLoad();
+        bool        lockNLoad();
+
+        Projectile* getBullet();
     
     private:
         // EngineManager*  m_engineManager;

@@ -51,8 +51,8 @@ public:
     void            input();
     void            update();
     
-    int             getType();
     bool            isNPC();
+    int             getType();
     int             getDamage();
     int             getIndex();
     char*           getName();
@@ -103,6 +103,7 @@ protected:
     bool            m_winged;
     bool            m_alive;
     bool            m_respawning;
+    bool            m_onGround;
     float           m_frameDeltaTime;       //For movement
     float           m_runningFactor;
 

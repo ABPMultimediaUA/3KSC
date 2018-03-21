@@ -28,6 +28,14 @@
 //#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
+/*
+    COSAS POR HACER:
+        LA TORRETA TIENE UN TIEMPO DE VIDA (10 SEGUNDOS)
+
+        ATAQUE HACIA ARRIBA (IMPLEMENTAR)
+
+*/
+
 Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
     : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode){
     m_type                  = 3;
@@ -63,9 +71,9 @@ bool Plup::basicAttack(){
         if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
         (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
-            if (checkCloseness(t_currentPlayer->getPosition(), 15)){
-                t_currentPlayer->receiveAttack(m_damage/2, true);
+            if(checkCloseness(t_currentPlayer->getPosition(), 15)){                t_currentPlayer->receiveAttack(m_damage/2, true);
                 t_currentPlayer->knockback(getOrientation());
+                this->changeMP(5);
             }
         }
     }
@@ -75,28 +83,32 @@ bool Plup::basicAttack(){
 
 //Range attack
 bool Plup::specialAttackUp(){
-    std::cout << m_name << ": Range attack" << std::endl;
-    Character* t_currentPlayer;
+    if(m_MP >= 30){
+        changeMP(-30);
+        std::cout << m_name << ": Range attack" << std::endl;
+        Character* t_currentPlayer;
 
-    for (int i = 0; i < m_playerCount; i++){
-        //Ignore myself
-        if (i == m_playerIndex)
-            continue;
+        for (int i = 0; i < m_playerCount; i++){
+            //Ignore myself
+            if (i == m_playerIndex)
+                continue;
 
-        t_currentPlayer = Arena::getInstance()->getPlayer(i);
+            t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
-        //Rival close enough
-        if (checkCloseness(t_currentPlayer->getPosition(), 35)){
-            t_currentPlayer->receiveAttack(m_damage, true);
+            //Rival close enough
+            if (checkCloseness(t_currentPlayer->getPosition(), 35)){
+                t_currentPlayer->receiveAttack(m_damage, true);
+            }
         }
     }
-
     return false;
 }
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if (m_currentSnowmen < m_maxSnowmen){
+    if(m_onGround && m_currentSnowmen < m_maxSnowmen && m_MP >= 35){
+        changeMP(-35);
+        m_turretTime.restart();
         //Looking right
         if (m_orientation){
             // Place snowman 10 units to the right
@@ -119,35 +131,38 @@ bool Plup::specialAttackDown(){
     }
 
     //Snowmen AI
-    for (int i = 0; i < m_currentSnowmen; i++){
-        if (!m_snowmen[i]->lockNLoad()){
+    for(int i = 0; i < m_currentSnowmen; i++){
+        if(!m_snowmen[i]->lockNLoad() || m_turretTime.getElapsedTime().asSeconds() > 2.0){
+            //delete m_snowmen[i]->getBullet();
             delete m_snowmen[i];
             m_currentSnowmen--;
             return false;
         }
     }
-
     return true;
 }
 
 //Dash
 bool Plup::specialAttackSide(){
-    std::cout << m_name << ": Special Attack Side" << std::endl;
-    Character* t_currentPlayer;
+    if(m_onGround && m_MP >= 25){
+        changeMP(-25);
+        std::cout << m_name << ": Special Attack Side" << std::endl;
+        Character* t_currentPlayer;
 
-    int t_side = 1;
-    //True => Right
-    if(!m_orientation)
-        t_side = -1;
+        int t_side = 1;
+        //True => Right
+        if(!m_orientation)
+            t_side = -1;
 
-    m_physicsManager->getBody(getId())->SetLinearDamping(-0.5);
-    m_physicsManager->getBody(getId())->SetLinearVelocity(b2Vec2(10*t_side,0));
+        m_physicsManager->getBody(getId())->SetLinearDamping(-0.5);
+        m_physicsManager->getBody(getId())->SetLinearVelocity(b2Vec2(10*t_side,0));
 
-    //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
-    m_dashing = true;
-    m_dashClock.restart();
-    
-    m_physicsManager->collision(m_physicsManager->getBody(getId()), true);
+        //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
+        m_dashing = true;
+        m_dashClock.restart();
+
+        m_physicsManager->checkCollision(m_physicsManager->getBody(getId()), true);
+    }
 
     return false;
 }

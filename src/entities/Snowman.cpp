@@ -48,7 +48,7 @@ Snowman::~Snowman(){}
 
 //Looks for player and fires after finding
 bool Snowman::lockNLoad(){
-    if (m_ammo > 0){
+    if(m_ammo > 0){
         if (m_currentSnowballs < m_maxSnowballs){
             int t_playerCount = m_arena->getPlayerCount();
             Character* t_currentPlayer;
@@ -70,22 +70,20 @@ bool Snowman::lockNLoad(){
 
                 //Attack ONLY if in range and in sight
                 if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
-                    {
-                        //Create snowball (if any left)
-                        if (m_ammo-- > 0){        
-                            m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, m_owner, 1);
-                            m_currentSnowballs++;
-                            std::cout << "Snowman: Take this!" << std::endl;
-                        }
+                    //Create snowball (if any left)
+                    if(m_ammo-- > 0){
+                        m_snowballs[m_currentSnowballs] = new Projectile(m_position, m_target, m_owner, 1);
+                        m_currentSnowballs++;
+                        std::cout << "Snowman: Take this!" << std::endl;
                     }
                 }
-                
-                
             }
         }
     }
 
     //Update position and delete snowballs
+    updatePosition(false, false, false);
+
     for (int i = 0; i < m_currentSnowballs; i++){
         if (!m_snowballs[i]->update()){
             delete m_snowballs[i];
@@ -102,4 +100,8 @@ bool Snowman::lockNLoad(){
     }
 
     return true;
+}
+
+Projectile* Snowman::getBullet(){
+    return m_snowballs[m_currentSnowballs-1];
 }
