@@ -81,6 +81,8 @@ public:
 
     void            modeDebug();
     void            knockback(bool p_orientation);
+
+    virtual void    updatePlayer() = 0;
     
 protected:
     SoundManager*   m_soundManager;

@@ -47,6 +47,8 @@ Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
     m_maxSnowmen        = 1;
     m_currentSnowmen    = 0;
     m_snowmen           = new Snowman*[m_maxSnowmen];
+
+    m_snowmanPlaced = false;
 }
 
 Plup::~Plup(){}
@@ -71,7 +73,8 @@ bool Plup::basicAttack(){
         if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
         (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
-            if(checkCloseness(t_currentPlayer->getPosition(), 15)){                t_currentPlayer->receiveAttack(m_damage/2, true);
+            if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
+                t_currentPlayer->receiveAttack(m_damage/2, true);
                 t_currentPlayer->knockback(getOrientation());
                 this->changeMP(5);
             }
@@ -106,44 +109,38 @@ bool Plup::specialAttackUp(){
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if (m_currentSnowmen < m_maxSnowmen){
+    if(!m_snowmanPlaced){
         if(m_MP>=35){
+            m_snowmanPlaced = true;
             changeMP(-35);
             //Looking right
-            if (m_orientation){
-                // Place snowman 10 units to the right
-                m_attackPosition[0] = m_position[0] + 10;
-                m_attackPosition[1] = m_position[1];
-                m_attackPosition[2] = m_position[2];
-            }
-
-            //Looking left 
-            else{
-                // Place snowman 10 units to the left
-                m_attackPosition[0] = m_position[0] - 10;
-                m_attackPosition[1] = m_position[1];
-                m_attackPosition[2] = m_position[2];
-            }
+            if (m_orientation)
+                m_attackPosition[0] = m_position[0] + 10;   // Place snowman 10 units to the right
+            else
+                m_attackPosition[0] = m_position[0] - 10;   // Place snowman 10 units to the left
+            
+            m_attackPosition[1] = m_position[1];
+            m_attackPosition[2] = m_position[2];
 
             //Create snowman and increase snowmen count
             m_snowmen[m_currentSnowmen++] = new Snowman(m_attackPosition, m_playerIndex);
             std::cout << m_name << ": Snowman" << std::endl;
         }
     }
-    else if(m_currentSnowmen==0){
-        return false;
-    }
 
+    return true;
+}
+
+void Plup::updateSnowman(){
     //Snowmen AI
     for(int i = 0; i < m_currentSnowmen; i++){
-        if(!m_snowmen[i]->lockNLoad() || m_turretTime.getElapsedTime().asSeconds() > 2.0){
+        if(!m_snowmen[i]->lockNLoad() || m_turretTime.getElapsedTime().asSeconds() > 20.0){
+            m_snowmanPlaced = false;
             //delete m_snowmen[i]->getBullet();
             delete m_snowmen[i];
             m_currentSnowmen--;
-            return false;
         }
     }
-    return true;
 }
 
 //Dash
@@ -180,4 +177,19 @@ bool Plup::ultimateAttack(){
 
 int Plup::getCurrentSnowmen(){
     return m_currentSnowmen;
+}
+
+void Plup::updatePlayer(){
+    std::cout << "PLUP MP: " << m_MP << std::endl;
+    if(m_dashing){
+        //If time is over or collision, finish atack
+        //The second param of collision is true because all dash atacks cause stun
+        if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->checkCollision(m_physicsManager->getBody(getId()), true)){
+            m_physicsManager->getBody(getId())->SetLinearDamping(0);
+            m_dashing = false;
+        }
+    }
+
+    if(m_snowmanPlaced)
+        updateSnowman();
 }
