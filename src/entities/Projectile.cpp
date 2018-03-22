@@ -110,22 +110,19 @@ bool Projectile::hit(){
 //Moves projectile right or left. Returns false at end of way.
 bool Projectile::update(){
     //Go on
-    if (m_distanceLeft > 0){
+    if(m_distanceLeft > 0){
         moveX(m_step[0]);
         moveY(m_step[1]);
         moveZ(m_step[2]);
 
-        if (hit()){
+        if(hit())
             return false;
-        }
 
         m_distanceLeft -= m_velocity;
     }
-
     //End of the way, my friend
-    else{
+    else
         return false;
-    }
 
     return true;
 }

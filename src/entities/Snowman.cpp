@@ -34,10 +34,10 @@ Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "as
     m_physicsManager = &PhysicsManager::instance();
     m_arena          = Arena::getInstance();
     
-    m_ammo           = 6;
+    m_ammo           = 3;
     m_owner          = p_owner;
     
-    m_bulletLaunched = false;;
+    m_bulletLaunched = false;
 }
 
 //Destructor
@@ -46,8 +46,7 @@ Snowman::~Snowman(){}
 
 //Looks for player and fires after finding
 bool Snowman::lockNLoad(){
-    if(m_ammo > 0 && !m_bulletLaunched){
-        m_bulletLaunched = true;
+    if(!m_bulletLaunched && m_ammo > 0 && (m_launchClock.getElapsedTime().asSeconds() >= 1.5 || m_ammo == 3)){
         int t_playerCount = m_arena->getPlayerCount();
         Character* t_currentPlayer;
 
@@ -67,35 +66,44 @@ bool Snowman::lockNLoad(){
             float t_closestBodyFraction = m_physicsManager->RaycastBetween(t_p1, t_p2);
 
             //Attack ONLY if in range and in sight
-            if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
+            if(t_closestBodyFraction >= 0.2f){ //If there is not an intersection to the raycast
                 //Create snowball (if any left)
                 if(m_ammo-- > 0){
                     m_snowball = new Projectile(m_position, m_target, m_owner, 1);
                     std::cout << "Snowman: Take this!" << std::endl;
+                    m_bulletLaunched = true;
+                    m_launchClock.restart();
                 }
             }
         }
     }
 
-    //Update position and delete snowballs
+    //Update position of the turret (gravity)
     updatePosition(false, false, false);
 
-    if (!m_snowball->update()){
-        m_bulletLaunched = false;
-        delete m_snowball;
-        
-        if (m_ammo == 0)
-            m_ammo--;
-    }
-
     //Delete turret when last bullet is gone
-    if (m_ammo == -1){
+    if (m_ammo == -1)
         return false;
-    }
 
     return true;
 }
 
+void Snowman::updateBullet(){
+    updatePosition(false, false, false);
+
+    if(!m_snowball->update()){
+        m_bulletLaunched = false;
+        delete m_snowball;
+        
+        if(m_ammo == 0)
+            m_ammo--;
+    }
+}
+
 Projectile* Snowman::getBullet(){
     return m_snowball;
+}
+
+bool Snowman::getBulletLaunched(){
+    return m_bulletLaunched;
 }
