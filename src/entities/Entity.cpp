@@ -49,6 +49,12 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, 5.0, 5.0);
             break;
 
+        case 1: {
+            m_engineManager->parseOBJ(p_modelURL);
+            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position);
+            break;
+        }
+
         case 2:
             m_physicsManager->createPhysicBoxObject(&m_id, p_position, 5.0, 5.0);
             break;
@@ -61,17 +67,6 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, 5.0, 5.0);
             break;
     }
-}
-
-//Create entity with model (free scale)
-Entity::Entity(float p_position[3], float p_scale[3], const char* p_modelURL, int p_arenaIndex){
-    m_id = m_entityCount++;
-
-    //Create the arena
-    m_engineManager->parseOBJ(p_modelURL);
-    m_engineManager->loadArena(p_modelURL);
-    m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, p_scale, p_arenaIndex);
-
 }
 
 Entity::~Entity(){

@@ -41,6 +41,9 @@
 #include "../include/Client.hpp"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 
 //Constructor
@@ -53,18 +56,11 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
 
-    //Create arena
-    float t_position[3] = {0, 1, 0};
-    float t_scale[3] = {120, 0.5, 2};
-    m_arena = new Arena(t_position, t_scale, 0, false);
+    readFileMapCgm("assets/Fusfus_Stadium.cgm");
 
     //Online stuff
     m_onlineMode = p_onlineMode;
-    // char t_onlinePrompt[5];
-    // std::cout<<"Online mode? (Y)/(N)"<<std::endl;
-    // std::cin >> t_onlinePrompt;
 
-    // if (t_onlinePrompt[0] == 'y' || t_onlinePrompt[0] == 'Y'){
     if (m_onlineMode){
         m_client = &Client::instance();
         m_client->start();
@@ -73,26 +69,15 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     }
 
     else{
-        m_arena->spawnItems();
+       // m_arena->spawnItems();
         m_arena->spawnPlayers();
     }
-
-    //Create camera
-    float t_cameraPosition[3] = {0, 90, -150};
-    float t_cameraTarget[3] = {0, 50, 0};
-    m_engineManager->createCamera(t_cameraPosition, t_cameraTarget);
-    
-    // Play music
-    m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
-    //m_soundManager->loadEvents(SoundID::S_FOSFOS_STADIUM);
-    m_soundManager->createSoundEvent("event:/music/fosfosStadium", "fos_music");
-    m_soundManager->playSound("fos_music");
     
     //Initialize AI
     int i, t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
     m_AIPlayers = new AICharacter*[t_playerCount];
-    m_pathfinding->testWaypoints();
+    //m_pathfinding->testWaypoints();
 
     //Create AI instances for needed players and build trees
     for (i = 0; i < t_playerCount; i++){
@@ -182,4 +167,168 @@ void InGameState::render(){
 //Change to next state
 void InGameState::nextState(){
     m_game->setState(new EndGameState(m_game));
+}
+
+void InGameState::readFileMapCgm(const char* p_fileCgm){
+
+    std::ifstream t_file(p_fileCgm);
+    std::string t_line;
+    std::string t_name;
+
+    std::cout << "-----------------------------------------------------------------------" << std::endl;
+    std::cout << " " << std::endl;
+    std::cout << "Creamos un mapa mediante el uso del fichero: " << p_fileCgm << std::endl;
+    while(std::getline(t_file, t_line)){
+        if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
+            continue;
+
+        std::istringstream t_lineStream(t_line);
+        t_lineStream >> t_name;
+
+        std::istringstream t_tokens(t_line);
+        std::vector<std::string> t_elements(std::istream_iterator<std::string>{t_tokens}, std::istream_iterator<std::string>());
+
+        //models, scale and position
+        if(t_name == "m"){
+
+            float t_scale = strtof((t_elements[2]).c_str(), 0);
+            float t_position[3];
+            t_position[0] = strtof((t_elements[3]).c_str(), 0);
+            t_position[1] = strtof((t_elements[4]).c_str(), 0);
+            t_position[2] = strtof((t_elements[5]).c_str(), 0);
+
+            const char* t_path = t_elements[1].c_str();
+            //load Arena
+            m_arena = new Arena(t_position, t_scale, t_path, false);
+            std::cout << " " << std::endl;
+            std::cout << "Creamos la arena cuyo modelo es: " << t_path << std::endl;
+            std::cout << "Se posiciona en: " << t_position[0] << ", " << t_position[1] << ", " << t_position[2] << std::endl;
+
+        }
+         //Create camera
+        else if(t_name == "c"){
+
+            float t_position[3];
+            t_position[0] = strtof((t_elements[1]).c_str(), 0);
+            t_position[1] = strtof((t_elements[2]).c_str(), 0);
+            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+
+            float t_target[3];
+            t_target[0] = strtof((t_elements[4]).c_str(), 0);
+            t_target[1] = strtof((t_elements[5]).c_str(), 0);
+            t_target[2] = strtof((t_elements[6]).c_str(), 0);
+
+            m_engineManager->createCamera(t_position, t_target);
+            std::cout << " " << std::endl;
+            std::cout << "Creamos una camara" << std::endl;
+            std::cout << "Se posiciona en: " << t_position[0] << ", " << t_position[1] << ", " << t_position[2] << std::endl;
+            std::cout << "Su target se  posiciona en: " << t_target[0] << ", " << t_target[1] << ", " << t_target[2] << std::endl;
+
+        }
+        //music
+        else if(t_name == "mu"){
+            
+            // Play music
+            m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
+            m_soundManager->createSoundEvent("event:/music/fosfosStadium", "fos_music");
+            m_soundManager->playSound("fos_music");
+            std::cout << " " << std::endl;
+            std::cout << "Se carga el fichero de sonido: FosfosStadium.mp3" << std::endl;
+
+            std::cout << " " << std::endl;
+            std::cout << "Se crean los waypoints para la IA y se conectan entre si" << std::endl;
+
+        }
+        //create waypoints
+        else if(t_name == "w"){
+    
+            float t_position[3];
+            t_position[0] = strtof((t_elements[1]).c_str(), 0);
+            t_position[1] = strtof((t_elements[2]).c_str(), 0);
+            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+
+            m_pathfinding->addWaypoint(t_position);
+            std::cout<< "Waypoint " << t_position[0] <<" esta en la posicion: "<< t_position[1] << ", " << t_position[2] << std::endl;
+        }
+        //connets the waypoints
+        else if(t_name == "wp"){
+
+            float t_id1 = strtof((t_elements[1]).c_str(), 0);
+            float t_id2 = strtof((t_elements[2]).c_str(), 0);
+
+            m_pathfinding->connectWaypoints(t_id1, t_id2);
+
+            std::cout<< "Waypoint " << t_id1 <<" conectado a waypoint "<< t_id2 << std::endl;
+                      
+        }
+        //spawn positions from players
+        else if(t_name == "sp"){
+       
+            float t_spawnPositions[4][3];
+            t_spawnPositions[0][0] = strtof((t_elements[1]).c_str(), 0);
+            t_spawnPositions[0][1] = strtof((t_elements[2]).c_str(), 0);
+            t_spawnPositions[0][2] = strtof((t_elements[3]).c_str(), 0);
+
+            t_spawnPositions[1][0] = strtof((t_elements[4]).c_str(), 0);
+            t_spawnPositions[1][1] = strtof((t_elements[5]).c_str(), 0);
+            t_spawnPositions[1][2] = strtof((t_elements[6]).c_str(), 0);
+
+            t_spawnPositions[2][0] = strtof((t_elements[7]).c_str(), 0);
+            t_spawnPositions[2][1] = strtof((t_elements[8]).c_str(), 0);
+            t_spawnPositions[2][2] = strtof((t_elements[9]).c_str(), 0);
+
+            t_spawnPositions[3][0] = strtof((t_elements[10]).c_str(), 0);
+            t_spawnPositions[3][1] = strtof((t_elements[11]).c_str(), 0);
+            t_spawnPositions[3][2] = strtof((t_elements[12]).c_str(), 0);
+
+            m_arena->setSpawnPositions(t_spawnPositions);
+
+            std::cout << " " << std::endl;
+            std::cout << "Se leen las posiciones de spawn para cada jugador" << std::endl;
+            std::cout << "Jugador 1 en: " << t_spawnPositions[0][0] << ", " << t_spawnPositions[0][1] << ", " << t_spawnPositions[0][2] << std::endl;
+            std::cout << "Jugador 2 en: " << t_spawnPositions[1][0] << ", " << t_spawnPositions[1][1] << ", " << t_spawnPositions[1][2] << std::endl;
+            std::cout << "Jugador 3 en: " << t_spawnPositions[2][0] << ", " << t_spawnPositions[2][1] << ", " << t_spawnPositions[2][2] << std::endl;
+            std::cout << "Jugador 4 en: " << t_spawnPositions[3][0] << ", " << t_spawnPositions[3][1] << ", " << t_spawnPositions[3][2] << std::endl;
+        }
+        else if(t_name == "rp"){
+
+            float t_respawnPosition[3];
+            t_respawnPosition[0] = strtof((t_elements[1]).c_str(), 0);
+            t_respawnPosition[1] = strtof((t_elements[2]).c_str(), 0);
+            t_respawnPosition[2] = strtof((t_elements[3]).c_str(), 0);
+
+            m_arena->setRespawnPositions(t_respawnPosition);
+
+            std::cout << " " << std::endl;
+            std::cout << "Se elige el lugar donde los jugadores apareceran tras morir: " << t_respawnPosition[0] << ", " << t_respawnPosition[1] << ", " << t_respawnPosition[3] << std::endl;
+                     
+        }
+        else if(t_name == "si"){
+
+            float t_itemRange[3];
+            t_itemRange[0] = strtof((t_elements[1]).c_str(), 0);
+            t_itemRange[1] = strtof((t_elements[2]).c_str(), 0);
+            t_itemRange[2] = strtof((t_elements[3]).c_str(), 0);
+
+            m_arena->setItemRange(t_itemRange);
+
+            std::cout << " " << std::endl;
+            std::cout << "Se delimita el rango donde pueden aparecer items" << std::endl;
+        }
+        else if(t_name == "sk"){
+
+            const char* t_skyPath[6]; 
+            t_skyPath[0] = t_elements[1].c_str(); 
+            t_skyPath[1] = t_elements[2].c_str(); 
+            t_skyPath[2] = t_elements[3].c_str(); 
+            t_skyPath[3] = t_elements[4].c_str(); 
+            t_skyPath[4] = t_elements[5].c_str(); 
+            t_skyPath[5] = t_elements[6].c_str();     
+
+            m_engineManager->loadSkybox(t_skyPath);
+
+            std::cout << " " << std::endl;
+            std::cout << "Se leen las imagenes y se coloca el skybox" << std::endl;
+        }
+    }
 }
