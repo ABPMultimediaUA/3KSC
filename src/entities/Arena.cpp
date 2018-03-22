@@ -71,41 +71,11 @@ Arena* Arena::getInstance(){
 
 void Arena::spawnPlayers(){
 
-    float coso_spawnPositions[4][3];
-    coso_spawnPositions[0][0] = -120;
-    coso_spawnPositions[0][1] = 20;
-    coso_spawnPositions[0][2] = 0;
-
-    coso_spawnPositions[1][0] = 120;
-    coso_spawnPositions[1][1] = 20;
-    coso_spawnPositions[1][2] = 0;
-
-    coso_spawnPositions[2][0] = 120;
-    coso_spawnPositions[2][1] = 20;
-    coso_spawnPositions[2][2] = 0;
-
-    coso_spawnPositions[3][0] = 120;
-    coso_spawnPositions[3][1] = 20;
-    coso_spawnPositions[3][2] = 0;
-
-    setSpawnPositions(coso_spawnPositions);
-
-    float coso_respawnPosition[3];
-
-    coso_respawnPosition[0] = 0;
-    coso_respawnPosition[1] = 170;
-    coso_respawnPosition[2] = 0;
-
-    setRespawnPositions(coso_respawnPosition);
-
-    float itemRange[3] = {-120, 120, 80};
-    setItemRange(itemRange);
-
     /*float positionPortal[3] = {-70, 5, 0};
     new Portal(positionPortal);*/
 
-    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
-    m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1], false);
+    //m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
+    //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1], false);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){

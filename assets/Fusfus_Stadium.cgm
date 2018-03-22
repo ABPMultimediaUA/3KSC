@@ -25,16 +25,13 @@ wp 4 5
 wp 5 2
 
 # sp se usa para delimitar las posiciones de spawn de cada uno de los 4 jugadores: posx posy posz
-sp -120 20 0
-sp 120 20 0
-sp -20 70 0
-sp 20 70 0
+sp -120 20 0 120 20 0 -20 70 0 20 70 0
 
 # rp se usa para marcar la posicion de respawn de los jugadores cuando mueren: posx posy posz
 rp 0 170 0
 
 # si se usa para marcar el rango donde pueden aparecer los objetos y su altura: posxMin posxMax posy
-si -120 120 170
+si -120 120 80
 
 # sk se utiliza para marcar las imagenes usadas en el skybox: lista de urls de las imagenes
 sk assets/skyboxes/fusfus_skybox/cloudtop_up.tga assets/skyboxes/fusfus_skybox/cloudtop_dn.tga assets/skyboxes/fusfus_skybox/cloudtop_lt.tga assets/skyboxes/fusfus_skybox/cloudtop_rf.tga assets/skyboxes/fusfus_skybox/cloudtop_ft.tga assets/skyboxes/fusfus_skybox/cloudtop_bk.tga
