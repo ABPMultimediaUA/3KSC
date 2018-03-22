@@ -154,12 +154,15 @@ void EngineManager::updateCamera(){
 
 //Returns whether the device is running or not
 bool EngineManager::running(){
-    return m_device->run();
+    return  m_device != 0 && m_device->run();
 }
 
 //Drops the device
 void EngineManager::stop(){
-    m_device->drop();
+    if(m_device != 0){
+        m_device->drop();
+        m_device = 0;
+    }
 }
 
 //Irrlicht events

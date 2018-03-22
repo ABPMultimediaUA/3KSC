@@ -73,13 +73,15 @@ private:
 	static const char*  m_skyboxURLs[3][6];
     //Texture*    m_background;
     float       m_time;
-    Item**      m_items;
+    //Item**      m_items;
     int         m_spawningTime;
     int         m_spawnedItems;
     int         m_usedItems;
     int         m_maxItemsOnScreen = 5;
     int         m_currentItems;
     int         m_lastItemType = 0;
+
+    std::vector<Item*>  m_items;
 
     int         m_playerCount;
     Character** m_players;

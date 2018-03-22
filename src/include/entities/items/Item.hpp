@@ -27,22 +27,26 @@ class PhysicsManager;
 class Arena;
 
 #include "../Entity.hpp"
+#include <SFML/System/Clock.hpp>
 
 class Item: public Entity {
-    public:
-        Item(float p_position[3], const char* p_modelURL);
-        ~Item();
-        virtual void    setOwner(int p_owner);
-        virtual void    use();
-        
-    protected:
-        PhysicsManager*     m_physicsManager;
-        Arena*              m_arena;
+public:
+    Item(float p_position[3], const char* p_modelURL);
+    ~Item();
+    virtual void    setOwner(int p_owner);
+    virtual void    use();
+    bool            update();
+    
+protected:
+    PhysicsManager*     m_physicsManager;
+    Arena*              m_arena;
 
-        int                 m_owner;
-        float               m_duration;
-        float               m_durationGround;
-        static const char*  m_modelURLs[4];
+    int                 m_owner;
+    float               m_duration;
+    float               m_durationGround;
+    static const char*  m_modelURLs[4];
+
+    sf::Clock           m_clock;
 };
 
 #endif
