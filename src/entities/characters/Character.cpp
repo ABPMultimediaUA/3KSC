@@ -130,8 +130,7 @@ void Character::mapActions(){
 //Receives an attack from other player
 //Parameters: damage, can you block it?
 void Character::receiveAttack(int p_damage, bool p_block){
-    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded)
-    {
+    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
         std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }else{
@@ -149,7 +148,7 @@ void Character::changeHP(int p_variation){
         die();
     }
     
-    else if (m_HP > m_maxHP){
+    else if(m_HP > m_maxHP){
         m_HP = m_maxHP;
     }
 
@@ -276,7 +275,7 @@ void Character::update(){
         doActions();
     }
 
-    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() > 0.5){
+    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() >= 0.25){
         m_knockback = false;
     }
 
@@ -490,8 +489,7 @@ void Character::knockback(bool p_orientation){
 
         m_knockbackClock.restart();
         m_knockback = true;
-        m_physicsManager->getBody(getId())->SetLinearDamping(1);
-        m_physicsManager->getBody(getId())->ApplyLinearImpulse(b2Vec2(1000,500), b2Vec2((getX()*t_side), (getY()*t_side)), false);
+        m_physicsManager->applyImpulse(getId(), t_side);
     }
 }
 

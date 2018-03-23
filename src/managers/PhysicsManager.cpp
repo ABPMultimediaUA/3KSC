@@ -377,6 +377,12 @@ ContactManager* PhysicsManager::getContactManager(){
     return m_contactManager;
 }
 
+void PhysicsManager::applyImpulse(int p_idBody, int t_side){
+    b2Body* t_body = getBody(p_idBody);
+    t_body->SetLinearDamping(1);
+    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side, 500), b2Vec2(t_body->GetWorldCenter()), false);
+}
+
 //The p_body is the body that realize the action/atak
 bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
     for(int i = 0; i < m_playersBody.size(); i++){
@@ -399,9 +405,9 @@ bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
             if(fixtureCollide(*fixtureA, *fixtureB)){
                 //The fictures collide
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
-                t_player->receiveAttack(15, false);
                 if(p_stun)
                     t_player->setStunned();
+                t_player->receiveAttack(15, false);
                 return true;
             }
         }
@@ -427,10 +433,9 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
             }else
                 fixtureBsensor = fixtureB->GetNext();
 
+            //The fictures collide
             if(fixtureCollide(*fixtureA, *fixtureB)){
-                //The fictures collide
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
-                t_player->receiveAttack(15, false);
                 //Calculate the side of the knocback
                 float t_mainBodyX    = p_ignoreBody->GetPosition().x;
                 float t_contactBodyX = t_body->GetPosition().x;
@@ -439,7 +444,8 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                     t_side = -1;
                 t_player->setKnockback();
                 t_body->SetLinearDamping(1);
-                t_body->ApplyLinearImpulse(b2Vec2(1000,500), b2Vec2((t_mainBodyX*t_side), (p_ignoreBody->GetPosition().y*t_side)), false);
+                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), false);
+                t_player->receiveAttack(15, false);
             }
         }
     }

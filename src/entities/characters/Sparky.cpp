@@ -81,8 +81,8 @@ bool Sparky::basicAttack(){
         if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
             if(checkCloseness(t_currentPlayer->getPosition(), 15)){
-                t_currentPlayer->receiveAttack(m_damage/2, true);
                 t_currentPlayer->knockback(getOrientation());
+                t_currentPlayer->receiveAttack(m_damage/2, true);
                 this->addMP(5);
             }
         }
@@ -93,21 +93,7 @@ bool Sparky::basicAttack(){
 
 //Range attack
 bool Sparky::specialAttackUp(){
-    std::cout << "Range attack" << std::endl;
-    Character* t_currentPlayer;
-
-    for (int i = 0; i < m_playerCount; i++){
-        //Ignore myself
-        if (i == m_playerIndex)
-            continue;
-
-        t_currentPlayer = Arena::getInstance()->getPlayer(i);
-
-        //Rival close enough
-        if(checkCloseness(t_currentPlayer->getPosition(), 35)){
-            t_currentPlayer->receiveAttack(m_damage, true);
-        }
-    }
+    std::cout << m_name << ": Special Attack Up" << std::endl;
 
     return false;
 }

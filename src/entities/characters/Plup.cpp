@@ -66,8 +66,8 @@ bool Plup::basicAttack(){
         if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
             if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
-                t_currentPlayer->receiveAttack(m_damage/2, true);
                 t_currentPlayer->knockback(getOrientation());
+                t_currentPlayer->receiveAttack(m_damage/2, true);
                 this->addMP(5);
             }
         }
