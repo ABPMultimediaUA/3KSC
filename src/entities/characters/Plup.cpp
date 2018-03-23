@@ -30,10 +30,8 @@
 
 /*
     COSAS POR HACER:
-        LA TORRETA TIENE UN TIEMPO DE VIDA (10 SEGUNDOS)
-
         ATAQUE HACIA ARRIBA (IMPLEMENTAR)
-
+        SI LA TORRETA SE SUICIDA, QUE MUERAN LAS BALAS CON ELLA
 */
 
 Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
@@ -66,8 +64,7 @@ bool Plup::basicAttack(){
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Looking at the rival
-        if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
-        (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
+        if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
             if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
                 t_currentPlayer->receiveAttack(m_damage/2, true);

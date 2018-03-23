@@ -49,7 +49,7 @@ AIPlup::~AIPlup(){
 
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
-    std::cout<<std::endl; // SIN ESTO NO FUNCIONA WTFFFF
+    //std::cout<<std::endl; // SIN ESTO NO FUNCIONA WTFFFF
     
     int t_PLUP_index = 1;
     m_PLUP_special_up_range = 0.0;
@@ -156,11 +156,9 @@ void AIPlup::update(){
     if (t_action == "move"){
         b2Vec2 t_destination;
         if(m_PLUP_position.x > t_closestPlayer->getX()){
-            std::cout<<"holi"<<std::endl;
             t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 0); // Find waypoint to the left
         }
         else{
-            std::cout<<"hola"<<std::endl;
             t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 1); // Find waypoint to the right
         }
 
@@ -186,7 +184,7 @@ void AIPlup::update(){
         m_inputManager->setAction(Action::Block, t_PLUP_index);
     }
     else{
-       // std::cout<<"NOTHING?"<<std::endl;
+       //std::cout<<"NOTHING?"<<std::endl;
     }
 }
 

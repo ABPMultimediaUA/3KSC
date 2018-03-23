@@ -221,10 +221,10 @@ void Character::doActions(){
     ActionMapping* t_iterator = m_actions;
 
     while(t_iterator->function){
-        if(t_iterator->enabled){
-            //We call the function, it'll return false when action finishes
+        //We call the function, it'll return false when action finishes
+        if(t_iterator->enabled)
             t_iterator->enabled = (this->*(t_iterator->function))();
-        }
+        
         ++t_iterator;
     }
 }
@@ -374,6 +374,8 @@ void Character::onTouchGround(){
 
 void Character::onLeaveGround(){
     m_onGround = false;
+    m_maxJumps = 1;
+
 }
 
 

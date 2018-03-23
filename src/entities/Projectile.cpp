@@ -29,11 +29,17 @@
 //#include <iostream>
 
 //Static members
-const char* Projectile::m_modelURLs[2] = {"assets/models/characters/rawr/fireball.obj", "assets/models/characters/plup/snowball.obj"};
+const char* Projectile::m_modelURLs[2] = {
+    "assets/models/characters/sparky/sparky_punch.obj", 
+    "assets/models/characters/plup/snowball.obj"
+};
 
-Projectile::Projectile(float p_position[3], float p_target[3], int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type]){
+Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type]){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
+
+    if(p_rotation)
+        rotate(180);
 
     //Base damage (from its owner)
     int t_damage = Arena::getInstance()->getPlayer(m_owner)->getDamage();
