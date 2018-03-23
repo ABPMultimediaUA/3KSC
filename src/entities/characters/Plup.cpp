@@ -32,15 +32,14 @@
     COSAS POR HACER:
         ATAQUE HACIA ARRIBA (IMPLEMENTAR)
         SI LA TORRETA SE SUICIDA, QUE MUERAN LAS BALAS CON ELLA
+
+    BUGS PARA ARREGLAR:
+        SI HACES EL DASH Y CHOCAS CON LA TURRET PETA, MIRAR COMO SOLUCIONARLO
 */
 
 Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
     : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode){
     m_type                  = 3;
-    
-    m_maxProjectiles        = 1;
-    m_currentProjectiles    = 0;
-    m_projectiles           = new Projectile*[m_maxProjectiles];
 
     m_snowmanPlaced = false;
 }
@@ -69,7 +68,7 @@ bool Plup::basicAttack(){
             if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
                 t_currentPlayer->receiveAttack(m_damage/2, true);
                 t_currentPlayer->knockback(getOrientation());
-                this->changeMP(5);
+                this->addMP(5);
             }
         }
     }
@@ -79,8 +78,7 @@ bool Plup::basicAttack(){
 
 //Range attack
 bool Plup::specialAttackUp(){
-    if(m_MP >= 30){
-        changeMP(-30);
+    if(enoughMP(-30)){
         std::cout << m_name << ": Range attack" << std::endl;
         Character* t_currentPlayer;
 
@@ -102,8 +100,7 @@ bool Plup::specialAttackUp(){
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if(!m_snowmanPlaced && m_MP >= 35){
-        changeMP(-35);
+    if(!m_snowmanPlaced && enoughMP(-35)){
         //Looking right
         if(m_orientation)
             m_attackPosition[0] = m_position[0] + 10;   // Place snowman 10 units to the right
@@ -119,7 +116,6 @@ bool Plup::specialAttackDown(){
         m_snowmanPlaced = true;
         m_turretClock.restart();
     }
-
     return false;
 }
 
@@ -146,8 +142,7 @@ void Plup::deleteSnowman(){
 
 //Dash
 bool Plup::specialAttackSide(){
-    if(m_onGround && m_MP >= 25){
-        changeMP(-25);
+    if(m_onGround && enoughMP(-25)){
         std::cout << m_name << ": Special Attack Side" << std::endl;
         Character* t_currentPlayer;
 
@@ -163,7 +158,7 @@ bool Plup::specialAttackSide(){
         m_dashing = true;
         m_dashClock.restart();
 
-        m_physicsManager->checkCollision(m_physicsManager->getBody(getId()), true);
+        m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true);
     }
 
     return false;
@@ -176,16 +171,12 @@ bool Plup::ultimateAttack(){
     return false;
 }
 
-int Plup::getCurrentSnowmen(){
-    return m_currentSnowmen;
-}
-
 void Plup::updatePlayer(){
     //std::cout << "PLUP MP: " << m_MP << std::endl;
     if(m_dashing){
         //If time is over or collision, finish atack
         //The second param of collision is true because all dash atacks cause stun
-        if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->checkCollision(m_physicsManager->getBody(getId()), true)){
+        if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true)){
             m_physicsManager->getBody(getId())->SetLinearDamping(0);
             m_dashing = false;
         }

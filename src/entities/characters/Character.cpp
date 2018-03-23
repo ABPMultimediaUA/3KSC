@@ -158,13 +158,10 @@ void Character::changeHP(int p_variation){
 }
 
 //Increases or decreases magic
-void Character::changeMP(int p_variation){
+void Character::addMP(int p_variation){
     m_MP += p_variation;
 
-    if (m_MP < 0)
-        m_MP = 0;
-    
-    else if (m_MP > m_maxMP)
+    if(m_MP > m_maxMP)
         m_MP = m_maxMP;
 
     //HUD Stuff
@@ -375,9 +372,18 @@ void Character::onTouchGround(){
 void Character::onLeaveGround(){
     m_onGround = false;
     m_maxJumps = 1;
-
 }
 
+//Check if we can do an action. If we can, substract the MP and return true, if not, return false.
+bool Character::enoughMP(int p_MP){
+    //We have enough MP for doing the action
+    if(m_MP >= p_MP){
+        m_MP += p_MP;
+        return true;
+    }
+
+    return false;
+}
 
 
 
@@ -469,6 +475,11 @@ bool Character::specialAttackDown(){}
 bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
+
+void Character::setKnockback(){
+    m_knockbackClock.restart();
+    m_knockback = true;
+}
 
 void Character::knockback(bool p_orientation){
     if(!m_knockback){

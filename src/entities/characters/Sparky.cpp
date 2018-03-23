@@ -24,6 +24,7 @@
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
 #include "../../include/managers/SoundManager.hpp"
+#include "../../include/managers/PhysicsManager.hpp"
 #include <iostream>
 
 /*
@@ -41,9 +42,7 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode)
     : Character(p_name, p_position, 100, 100, 15, 70.f, "assets/models/characters/sparky/sparky.obj", p_debugMode){
     m_type                  = 4;
     
-    m_maxProjectiles        = 1;
-    m_currentProjectiles    = 0;
-    m_projectiles           = new Projectile*[m_maxProjectiles];
+    m_punchLaunched = false;
 
     /*m_soundManager->loadBank(SoundID::S_SPARKY);
     m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "death"       );
@@ -71,20 +70,20 @@ bool Sparky::basicAttack(){
     m_soundManager->modifyParameter("random", t_prob, "Prob");
     m_soundManager->playSound("random");*/
 
-    for (int i = 0; i < m_playerCount; i++){
+    for(int i = 0; i < m_playerCount; i++){
         //Ignore myself
-        if (i == m_playerIndex)
+        if(i == m_playerIndex)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Looking at the rival
-        if ((m_orientation && t_currentPlayer->getX() >= m_position[0]) ||
-        (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
+        if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
             //Rival close enough
-            if (checkCloseness(t_currentPlayer->getPosition(), 15)){
+            if(checkCloseness(t_currentPlayer->getPosition(), 15)){
                 t_currentPlayer->receiveAttack(m_damage/2, true);
                 t_currentPlayer->knockback(getOrientation());
+                this->addMP(5);
             }
         }
     }
@@ -105,7 +104,7 @@ bool Sparky::specialAttackUp(){
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Rival close enough
-        if (checkCloseness(t_currentPlayer->getPosition(), 35)){
+        if(checkCloseness(t_currentPlayer->getPosition(), 35)){
             t_currentPlayer->receiveAttack(m_damage, true);
         }
     }
@@ -114,15 +113,16 @@ bool Sparky::specialAttackUp(){
 }
 
 bool Sparky::specialAttackDown(){
-    //PENDING IMPLEMENTATION
-    std::cout << m_name << ": Special Attack Down" << std::endl;
-    
+    if(enoughMP(-35)){    
+        std::cout << m_name << ": Special Attack Down" << std::endl;
+        m_physicsManager->shockwaveBox(m_physicsManager->getBody(getId()));
+    }
     return false;
 }
 
 //Fireball
 bool Sparky::specialAttackSide(){
-    if (m_currentProjectiles < m_maxProjectiles){
+    if(!m_punchLaunched && enoughMP(-25)){
         if(m_orientation){      //Looking right
             // Attack 5 units to the right
             m_attackPosition[0] = m_position[0] + 5;
@@ -139,20 +139,20 @@ bool Sparky::specialAttackSide(){
         m_attackTarget[2] = m_position[2];
 
         //Create attack and increase projectile count
-        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0);
+        m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0);
+        m_punchLaunched = true;
         std::cout << m_name << ": Punch" << std::endl;
     }
 
-    //Move projectiles, and delete them
-    for (int i = 0; i < m_currentProjectiles; i++){
-        if (!m_projectiles[i]->update()){
-            delete m_projectiles[i];
-            m_currentProjectiles--;
-            return false;
-        }
-    }
+    return false;
+}
 
-    return true;
+void Sparky::updatePunch(){
+    //Move projectiles, and delete them
+    if(!m_punch->update()){
+        delete m_punch;
+        m_punchLaunched = false;
+    }
 }
 
 bool Sparky::ultimateAttack(){
@@ -166,5 +166,6 @@ bool Sparky::ultimateAttack(){
 }
 
 void Sparky::updatePlayer(){
-
+    if(m_punchLaunched)
+        updatePunch();
 }

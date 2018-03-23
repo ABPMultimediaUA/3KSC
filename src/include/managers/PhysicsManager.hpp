@@ -59,6 +59,7 @@ public:
     void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    createPhysicBoxPlatform(int* p_id, float p_position[3]);
     void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void                    createPhysicBox(int* p_id, float p_position[3], float p_dimX, float p_dimY);
 
     void                    addForce();
     void                    removeForce();
@@ -79,9 +80,13 @@ public:
 
     ContactManager*         getContactManager();
 
-    bool                    checkCollision(b2Body* p_body, bool p_stun);
+    bool                    checkCollisionSimple(b2Body* p_body, bool p_stun);
+    void                    checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody);
 
     bool                    fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB);
+
+    void                    shockwaveBox(b2Body* p_body);
+
 };
 
 #endif

@@ -41,7 +41,7 @@ public:
 	
     void            receiveAttack(int p_damage, bool p_block);
     virtual void    changeHP(int p_variation);
-    void            changeMP(int p_variation);
+    void            addMP(int p_variation);
     void            die();
     void            respawn(float p_position[3]);
     void            shield();
@@ -63,6 +63,7 @@ public:
     bool            isJumping();
     void            onTouchGround();
     void            onLeaveGround();
+    bool            enoughMP(int p_MP);
     
     //Actions
     bool            left();
@@ -80,6 +81,7 @@ public:
     bool            moveToPath(float p_position[2]);
 
     void            modeDebug();
+    void            setKnockback();
     void            knockback(bool p_orientation);
 
     virtual void    updatePlayer() = 0;
@@ -122,10 +124,6 @@ protected:
 
     ActionMapping*  m_actions;
     void            mapActions();
-    
-    Projectile**    m_projectiles;
-    int             m_maxProjectiles;
-    int             m_currentProjectiles;
 
     Debug*          m_playerDebug;
     bool            m_debugMode;

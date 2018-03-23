@@ -42,15 +42,12 @@ public:
     void        updateSnowman();
     void        deleteSnowman();
 
-    int         getCurrentSnowmen();
-
     void        updatePlayer();
 
 private:
     bool        m_snowmanPlaced;
 
     int         m_maxSnowmen;
-    int         m_currentSnowmen;
     Snowman*    m_snowman;
 
     sf::Clock   m_turretClock;
