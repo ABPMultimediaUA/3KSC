@@ -15,7 +15,7 @@ BINARY 	:= 3KSC
 CC		:= g++
 LDFLAGS := -Wl,-rpath=$(LIBDIR)
 
-INCLUDE := -I$(HDRDIR) -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)assimp -I$(INCDIR)box2D -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod
+INCLUDE := -I$(HDRDIR) -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod
 LIBS	:= -L$(LIBDIR) -lIrrlicht -lGL -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL
 FAST	:= -j4
 

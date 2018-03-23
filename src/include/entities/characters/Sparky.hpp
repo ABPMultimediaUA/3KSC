@@ -36,6 +36,11 @@ public:
     bool    specialAttackSide();
     bool    ultimateAttack(); 
     void    updatePlayer();
+    void    updatePunch();
+
+private:
+    bool            m_punchLaunched;
+    Projectile*     m_punch;
 
 };
 

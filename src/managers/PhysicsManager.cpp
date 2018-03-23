@@ -82,9 +82,6 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
     t_body->CreateFixture(t_fixtureDef);
     t_body->SetUserData(p_id);
 
-    //NO ENTIENDO PORQUE PERO SI QUITAS ESTO PETA
-    //int *t_id = static_cast<int*>(t_body->GetUserData());
-
     m_playersBody.push_back(t_body);
 }
 
@@ -201,6 +198,25 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     //Attach the shape to the body
     b2Fixture* portalSensor = t_body->CreateFixture(t_fixtureDef);
     portalSensor ->SetUserData((void*)888);
+}
+
+void PhysicsManager::createPhysicBox(int* p_id, float p_position[3], float p_dimX, float p_dimY){
+    //Create a new body and positioning it in the coords of the Entity
+    b2BodyDef* t_bodyDef = new b2BodyDef();
+    t_bodyDef->type = b2_dynamicBody;
+    t_bodyDef->position.Set(p_position[0], p_position[1]);
+    b2Body* t_body = m_world->CreateBody(t_bodyDef);
+
+    //Create a shape for the body
+    b2PolygonShape* t_polygonShape = new b2PolygonShape();
+    t_polygonShape->SetAsBox(p_dimX, p_dimY);
+    
+    b2FixtureDef* t_fixtureDef = new b2FixtureDef();
+    t_fixtureDef->shape = t_polygonShape;
+
+    //Attach the shape to the body
+    t_body->CreateFixture(t_fixtureDef);
+    t_body->SetUserData(p_id);
 }
 
 b2World* PhysicsManager::getWorld(){
@@ -361,8 +377,14 @@ ContactManager* PhysicsManager::getContactManager(){
     return m_contactManager;
 }
 
+void PhysicsManager::applyImpulse(int p_idBody, int t_side){
+    b2Body* t_body = getBody(p_idBody);
+    t_body->SetLinearDamping(1);
+    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side, 500), b2Vec2(t_body->GetWorldCenter()), false);
+}
+
 //The p_body is the body that realize the action/atak
-bool PhysicsManager::checkCollision(b2Body* p_body, bool p_stun){
+bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
     for(int i = 0; i < m_playersBody.size(); i++){
         //Not the same body we pass to the function
         b2Body* t_body = m_playersBody.at(i);
@@ -377,21 +399,56 @@ bool PhysicsManager::checkCollision(b2Body* p_body, bool p_stun){
             if(fixtureB->IsSensor()){
                 fixtureBsensor = fixtureB;
                 fixtureB = fixtureB->GetNext();
-            }else{
+            }else
                 fixtureBsensor = fixtureB->GetNext();
-            }
 
             if(fixtureCollide(*fixtureA, *fixtureB)){
                 //The fictures collide
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
-                t_player->receiveAttack(15, false);
                 if(p_stun)
                     t_player->setStunned();
+                t_player->receiveAttack(15, false);
                 return true;
             }
         }
     }
     return false;
+}
+
+void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody){
+    for(int i = 0; i < m_playersBody.size(); i++){
+        //Not the same body we pass to the function
+        b2Body* t_body = m_playersBody.at(i);
+        if(t_body != p_ignoreBody){
+            //We need to save the FixtureSensor because it stores the data of the Character.
+            b2Fixture* fixtureA = p_body->GetFixtureList();
+            if(fixtureA->IsSensor())
+                fixtureA = fixtureA->GetNext();
+
+            b2Fixture* fixtureB = t_body->GetFixtureList();
+            b2Fixture* fixtureBsensor;
+            if(fixtureB->IsSensor()){
+                fixtureBsensor = fixtureB;
+                fixtureB = fixtureB->GetNext();
+            }else
+                fixtureBsensor = fixtureB->GetNext();
+
+            //The fictures collide
+            if(fixtureCollide(*fixtureA, *fixtureB)){
+                Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
+                //Calculate the side of the knocback
+                float t_mainBodyX    = p_ignoreBody->GetPosition().x;
+                float t_contactBodyX = t_body->GetPosition().x;
+                int t_side = 1;
+                if(t_mainBodyX > t_contactBodyX)
+                    t_side = -1;
+                t_player->setKnockback();
+                t_body->SetLinearDamping(1);
+                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), false);
+                t_player->receiveAttack(15, false);
+            }
+        }
+    }
 }
 
 bool PhysicsManager::fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB){
@@ -407,4 +464,27 @@ bool PhysicsManager::fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB){
         return t_bool;
     }
     return false;
+}
+
+void PhysicsManager::shockwaveBox(b2Body* p_body){
+    //Create a new body and positioning it in the coords of the Entity
+    b2BodyDef* t_bodyDef = new b2BodyDef();
+    t_bodyDef->type = b2_dynamicBody;
+    t_bodyDef->position.Set(p_body->GetPosition().x, p_body->GetPosition().y);
+    b2Body* t_body = m_world->CreateBody(t_bodyDef);
+
+    //Create a shape for the body
+    b2PolygonShape* t_polygonShape = new b2PolygonShape();
+    t_polygonShape->SetAsBox(20.0, 20.0);
+    
+    b2FixtureDef* t_fixtureDef = new b2FixtureDef();
+    t_fixtureDef->shape = t_polygonShape;
+
+    //Attach the shape to the body
+    t_body->CreateFixture(t_fixtureDef);
+
+    //Check collision with the other players
+    checkCollisionMultiple(t_body, p_body);
+    
+    m_world->DestroyBody(t_body);
 }

@@ -34,7 +34,7 @@ const char* Projectile::m_modelURLs[2] = {
     "assets/models/characters/plup/snowball.obj"
 };
 
-Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type]){
+Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type], 5){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
 
@@ -65,7 +65,9 @@ Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, 
     calculateSteps();
 }
 
-Projectile::~Projectile(){}
+Projectile::~Projectile(){
+
+}
 
 //Precalculates step for each axis
 void Projectile::calculateSteps(){
