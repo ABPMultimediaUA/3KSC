@@ -152,22 +152,16 @@ b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
     return t_return;
 }
 
+void Pathfinding::addWaypoint(float p_wayData[3]){
+    m_waypoints.push_back(new Waypoint(p_wayData[0], p_wayData[1], p_wayData[2]));
+}
+
+void Pathfinding::connectWaypoints(float p_id1, float p_id2){
+    m_waypoints.at(p_id1)->connect(m_waypoints.at(p_id2));
+}
+
 // Tests if waypoints system works properly (Spoiler: yes it does! Super Pluuuuup!)
 void Pathfinding::testWaypoints(){
-    // Create waypoints
-    m_waypoints.push_back(new Waypoint(0, -136, 10));
-    m_waypoints.push_back(new Waypoint(1, -60, 10));
-    m_waypoints.push_back(new Waypoint(2, 60, 10));
-    m_waypoints.push_back(new Waypoint(3, 136, 10));
-    m_waypoints.push_back(new Waypoint(4, -40, 60));
-    m_waypoints.push_back(new Waypoint(5, 40, 60));
-
-    // Connect waypoints
-    m_waypoints.at(0)->connect(m_waypoints.at(1));
-    m_waypoints.at(1)->connect(m_waypoints.at(4));
-    m_waypoints.at(2)->connect(m_waypoints.at(3));
-    m_waypoints.at(4)->connect(m_waypoints.at(5));
-    m_waypoints.at(5)->connect(m_waypoints.at(2));
 
     // Check connections and positions (in console)
     for(int i=0; i<m_waypoints.size(); i++){

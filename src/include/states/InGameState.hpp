@@ -53,6 +53,7 @@ class InGameState : public State{
         void    update();
         void    render();
         void    nextState();
+        void    readFileMapCgm(const char* p_fileCgm);
 };
 
 #endif

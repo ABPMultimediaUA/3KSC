@@ -30,6 +30,7 @@ class PhysicsManager;
 class Arena;
 
 #include "Entity.hpp"
+#include <SFML/System/Clock.hpp>
 
 
 class Snowman: public Entity {
@@ -38,20 +39,24 @@ class Snowman: public Entity {
         ~Snowman();
         bool        lockNLoad();
 
+        void        updateBullet();
+
         Projectile* getBullet();
+        bool        getBulletLaunched();
     
     private:
         // EngineManager*  m_engineManager;
         PhysicsManager* m_physicsManager;
         Arena*          m_arena;
 
-        int             m_lifetime;
         Projectile*     m_snowball;
         int             m_ammo;
         int             m_owner;
         float           m_target[3];            //Position of the target
 
         bool            m_bulletLaunched;
+
+        sf::Clock       m_launchClock;
 };
 
 #endif

@@ -40,6 +40,8 @@ public:
     bool        ultimateAttack();
 
     void        updateSnowman();
+    void        deleteSnowman();
+
     int         getCurrentSnowmen();
 
     void        updatePlayer();
@@ -51,7 +53,7 @@ private:
     int         m_currentSnowmen;
     Snowman*    m_snowman;
 
-    sf::Clock   m_turretTime;
+    sf::Clock   m_turretClock;
 };
 
 #endif

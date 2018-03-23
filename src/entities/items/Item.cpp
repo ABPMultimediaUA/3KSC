@@ -38,3 +38,14 @@ void Item::use(){}
 
 //Sets the owner of the item
 void Item::setOwner(int p_owner){}
+
+bool Item::update(){
+    if(m_clock.getElapsedTime().asSeconds() > 15.0){
+        delete this;
+        return true;
+    }
+
+    updatePosition(false, false, false);
+
+    return false;
+}

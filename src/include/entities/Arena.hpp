@@ -40,29 +40,29 @@ class Debug;
 
 class Arena : public Entity {
 public:
-    Arena(float p_position[3], float p_scale[3], int p_arenaIndex, bool p_debugMode = false);
+    Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode = false);
     ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
     void            addPlayer();
     int             getPlayerCount();
     Character*      getPlayer(int p_index);
-	void            spawnItems();
     void            catchItem(int p_owner, float p_where[3]);
 	void            finishRound();
     void            movePlatforms();
     void            animateBackground();
     void            restart();
-    void            setSpawnPositions();
+    void            setSpawnPositions(float p_spawnPositions[4][3]); 
     void            respawnPlayer(int p_player);
     void            update();
     bool            spawnRandomItem();
-    void            setSkybox(int p_arenaIndex);
     void            modeDebug();
     void            onlineUpdate();
     void            spawnItemAt(int p_type, int x, int y);
     void            setOnline(bool p_state);
     bool            getOnline();
+    void            setRespawnPositions(float p_respawnPosition[3]){ for(int i = 0; i < 3; i++) m_respawnPosition[i] = p_respawnPosition[i]; }
+    void            setItemRange(float p_itemRange[3]) { for(int i = 0; i < 3; i++) m_spawnItemRange[i] = p_itemRange[i]; }
 
 private: 
     static Arena*           m_instance;
@@ -73,16 +73,15 @@ private:
 	static const char*  m_skyboxURLs[3][6];
     //Texture*    m_background;
     float       m_time;
-    float       m_spawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
-    
-    Item**      m_items;
+    //Item**      m_items;
     int         m_spawningTime;
     int         m_spawnedItems;
     int         m_usedItems;
     int         m_maxItemsOnScreen = 5;
-    int         m_maxItems;
     int         m_currentItems;
     int         m_lastItemType = 0;
+
+    std::vector<Item*>  m_items;
 
     int         m_playerCount;
     Character** m_players;
@@ -91,6 +90,8 @@ private:
     bool        m_debugMode;
 
     float       m_spawnPositions[4][3];
+    float       m_respawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
+    float       m_spawnItemRange[3];
 
     bool        m_online = false;
 

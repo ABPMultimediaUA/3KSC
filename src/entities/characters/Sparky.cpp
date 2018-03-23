@@ -26,6 +26,17 @@
 #include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
+/*
+    ATAQUE UP:
+        CAIDA EN PICADO
+
+    ATAQUE DOWN:
+        CHISPAZO (HACER UN KCNOCKBACK A LO BESTIA HACIA TODOS LOS LADOS)
+        NO PUEDE MOVERSE
+
+    EN MODO ULTI SOLO PUEDE SALTAR Y MOVERSE, NO PUEDE ATACAR
+*/
+
 Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode)
     : Character(p_name, p_position, 100, 100, 15, 70.f, "assets/models/characters/sparky/sparky.obj", p_debugMode){
     m_type                  = 4;
@@ -34,13 +45,13 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode)
     m_currentProjectiles    = 0;
     m_projectiles           = new Projectile*[m_maxProjectiles];
 
-    m_soundManager->loadBank(SoundID::S_RAWR);
+    /*m_soundManager->loadBank(SoundID::S_SPARKY);
     m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "death"       );
     m_soundManager->createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
     m_soundManager->createSoundEvent("event:/characters/rawr/random"    , "random"      );
     m_soundManager->createSoundEvent("event:/characters/rawr/special"   , "special"     );
     m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
-    m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );
+    m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );*/
     //m_soundManager->modifyParameter("random", 0.95, "Prob");
 }
 
@@ -55,10 +66,10 @@ bool Sparky::basicAttack(){
     std::cout << m_name << ": Headbutt!" << std::endl;
     Character* t_currentPlayer;
     
-    float t_prob = ((float)rand() / (float)RAND_MAX);
+    /*float t_prob = ((float)rand() / (float)RAND_MAX);
     std::cout << "RANDOM: " << t_prob << std::endl;
     m_soundManager->modifyParameter("random", t_prob, "Prob");
-    m_soundManager->playSound("random");
+    m_soundManager->playSound("random");*/
 
     for (int i = 0; i < m_playerCount; i++){
         //Ignore myself
@@ -112,30 +123,24 @@ bool Sparky::specialAttackDown(){
 //Fireball
 bool Sparky::specialAttackSide(){
     if (m_currentProjectiles < m_maxProjectiles){
-        if(m_orientation){   // Looking right
+        if(m_orientation){      //Looking right
             // Attack 5 units to the right
             m_attackPosition[0] = m_position[0] + 5;
-            m_attackPosition[1] = m_position[1];
-            m_attackPosition[2] = m_position[2];
-
             m_attackTarget[0] = m_position[0] + 100;
-            m_attackTarget[1] = m_position[1];
-            m_attackTarget[2] = m_position[2];
-        }
-        else{   // Looking left
+        }else{                  //Looking left
             // Attack 5 units to the right
             m_attackPosition[0] = m_position[0] - 5;
-            m_attackPosition[1] = m_position[1];
-            m_attackPosition[2] = m_position[2];
-
             m_attackTarget[0] = m_position[0] - 100;
-            m_attackTarget[1] = m_position[1];
-            m_attackTarget[2] = m_position[2];
         }
+        m_attackPosition[1] = m_position[1];
+        m_attackPosition[2] = m_position[2];
+     
+        m_attackTarget[1] = m_position[1];
+        m_attackTarget[2] = m_position[2];
 
         //Create attack and increase projectile count
-        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_playerIndex, 0);
-        std::cout << m_name << ": Fireball" << std::endl;
+        m_projectiles[m_currentProjectiles++] = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0);
+        std::cout << m_name << ": Punch" << std::endl;
     }
 
     //Move projectiles, and delete them
@@ -154,10 +159,12 @@ bool Sparky::ultimateAttack(){
     //PENDING IMPLEMENTATION
     std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
-    m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
-    m_soundManager->playSound("ultimate");
+    //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
+    //m_soundManager->playSound("ultimate");
 
     return false;
 }
 
-void Sparky::updatePlayer(){}
+void Sparky::updatePlayer(){
+
+}

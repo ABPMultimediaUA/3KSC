@@ -57,7 +57,7 @@ public:
     void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    setPlayerSensor(int p_id, Character* p_character);
     void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
-    void                    createPhysicBoxPlatform(int* p_id, float p_position[3], float p_scale[3], int p_arenaIndex);
+    void                    createPhysicBoxPlatform(int* p_id, float p_position[3]);
     void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
 
     void                    addForce();
