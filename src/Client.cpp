@@ -23,7 +23,6 @@
 #include "PacketLogger.h"
 #include <assert.h>
 #include <cstdio>
-#include <cstring>
 #include <stdlib.h>
 #include "RakNetTypes.h"
 #ifdef _WIN32
@@ -37,8 +36,7 @@
 #include "include/Client.hpp"
 #include "include/entities/Arena.hpp"
 #include "include/managers/InputManager.hpp"
-#include <string>
-#include <stdio.h>
+
 
 #if LIBCAT_SECURITY==1
 #include "SecureHandshake.h" // Include header for secure handshake
@@ -96,8 +94,8 @@ void Client::listen(){
 
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 			// This tells the client they have connected
-			printf("ID_CONNECTION_REQUEST_ACCEPTED to %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
-			printf("My external address is %s\n", client->GetExternalID(p->systemAddress).ToString(true));
+			// printf("ID_CONNECTION_REQUEST_ACCEPTED to %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
+			// printf("My external address is %s\n", client->GetExternalID(p->systemAddress).ToString(true));
 			t_first = "player";
 			send(t_first);
 			break;
@@ -124,7 +122,7 @@ void Client::start()
 		m_debug = true;
 
 	RakNet::SystemAddress clientID=RakNet::UNASSIGNED_SYSTEM_ADDRESS;
-	puts("Enter the client port to listen on");
+	//puts("Enter the client port to listen on");
 	Gets(clientPort,sizeof(clientPort));
 	if (clientPort[0]==0)
 		strcpy(clientPort, "0");
@@ -164,7 +162,7 @@ void Client::start()
 		RakAssert(car==RakNet::CONNECTION_ATTEMPT_STARTED);
 	#endif
 
-	printf("\nMy IP addresses:\n");
+/* 	printf("\nMy IP addresses:\n");
 	unsigned int i;
 	for (i=0; i < client->GetNumberOfAddresses(); i++)
 	{
@@ -173,7 +171,7 @@ void Client::start()
 
 	printf("My GUID is %s\n", client->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS).ToString());
 	puts("'quit' to quit. 'stat' to show stats. 'ping' to ping.\n'disconnect' to disconnect. 'connect' to reconnnect. Type to talk.");
-
+ */
 	// Loop for input
 
 		// This sleep keeps RakNet responsive
@@ -246,8 +244,7 @@ void Client::readMessage(std::string p_message){
 			std::cout<<"-- Recibiendo del servidor --"<<std::endl;
 			std::cout<<"Jugador: "<<t_parsed[0]<<std::endl;
 			std::cout<<"Posicion: ("<<t_parsed[1]<<","<<t_parsed[2]<<")"<<std::endl;
-			std::cout<<"Accion: "<<t_parsed[3]<<std::endl;
-			std::cout<<"Ping: "<<client->GetLastPing(client->GetSystemAddressFromIndex(0))<<std::endl;
+			printActions(t_parsed[3]);
 			//printf("Ping: %i\n", client->GetLastPing(client->GetSystemAddressFromIndex(0)));
 			std::cout<<""<<std::endl;
 		}
@@ -279,7 +276,7 @@ void Client::sendAction(bool p_actions[12]){
 		std::cout<<"-- Enviando al servidor --"<<std::endl;
 		std::cout<<"ID: "<<m_yourPlayerString<<std::endl;
 		std::cout<<"Posicion: ("<<t_xPos<<","<<t_yPos<<")"<<std::endl;
-		std::cout<<"Accion: "<<t_actions<<std::endl;
+		printActions(t_actions);
 		std::cout<<""<<std::endl;
 	}
 }
@@ -306,4 +303,34 @@ void Client::spawnItem(int p_type, int x, int y)
     char const *t_toSendChar = t_toSend.c_str();
 	std::cout<<t_toSendChar<<std::endl;
 	send(t_toSendChar);
+}
+
+void Client::printActions(std::string p_actions){
+	std::cout<<"Acciones: "<<std::endl;
+	if(p_actions[0]=='1')
+		std::cout<<"     -Left"<<std::endl;
+	if(p_actions[1]=='1')
+		std::cout<<"     -Right"<<std::endl;
+	if(p_actions[2]=='1')
+		std::cout<<"     -Jump"<<std::endl;
+	if(p_actions[3]=='1')
+		std::cout<<"     -Run"<<std::endl;	
+	if(p_actions[4]=='1')
+		std::cout<<"     -Block"<<std::endl;
+	if(p_actions[5]=='1')
+		std::cout<<"     -Pick"<<std::endl;
+	if(p_actions[6]=='1')
+		std::cout<<"     -BasicAttack"<<std::endl;
+	if(p_actions[7]=='1')
+		std::cout<<"     -SpecialAttackUp"<<std::endl;	
+	if(p_actions[8]=='1')
+		std::cout<<"     -SpecialAttackDown"<<std::endl;
+	if(p_actions[9]=='1')
+		std::cout<<"     -SpecialAttackSide"<<std::endl;
+	if(p_actions[10]=='1')
+		std::cout<<"     -UltimateAttack"<<std::endl;
+	if(p_actions[11]=='1')
+		std::cout<<"     -Count"<<std::endl;	
+	
+	std::cout<<"Ping: "<<client->GetLastPing(client->GetSystemAddressFromIndex(0))<<std::endl;
 }
