@@ -87,8 +87,10 @@ public:
 
     bool                    fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB);
 
-    void                    shockwaveBox(b2Body* p_body);
-
+    void                    shockwaveBox(int p_idBody);
+    void                    sparkyJump(int p_idBody);
+    void                    fastGravity(int p_idBody);
+    void                    machineGun(int p_idBody, bool p_orientation);
 };
 
 #endif

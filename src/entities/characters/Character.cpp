@@ -67,6 +67,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_knockback             = false;
     m_dashing               = false;
     m_onGround              = false;
+    m_ultimateCharged       = false;
     m_stunnedTime           = 1.0;
 
     m_runningFactor         = 1.0f;
@@ -271,17 +272,14 @@ void Character::update(){
     if(m_stunned && m_stunClock.getElapsedTime().asSeconds() > m_stunnedTime){
         m_stunned     = false;
         m_stunnedTime = 1.0;
-    }else{
+    }else
         doActions();
-    }
 
-    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() >= 0.25){
+    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() >= 0.25)
         m_knockback = false;
-    }
 
-    if(!m_respawning){
+    if(!m_respawning)
         updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
-    }
     else{
         updatePosition(true, m_knockback, m_dashing);
         m_respawning = false;
@@ -291,9 +289,8 @@ void Character::update(){
         m_playerDebug->update();
 
     //Increase magic every second and with attacks
-    if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230){
+    if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230)
         die();
-    }
 }
 
 //Returns the type of the player
@@ -335,15 +332,19 @@ bool Character::getOrientation(){
     return m_orientation;
 }
 
-void Character::setStunned(){
+void Character::setStunned(float p_time){
+    if(p_time != 0)
+        m_stunnedTime = p_time;
+    else
+        m_stunnedTime = m_stunnedTime/2;
+    
     m_stunned = true;
     m_stunClock.restart();
-    m_stunnedTime = m_stunnedTime/2;
 }
 
 void Character::modeDebug(){
     if(m_debugMode){
-        m_playerDebug = new Debug(666, m_physicsManager->getBody(m_arena->getPlayer(m_playerIndex)->getId()));
+        m_playerDebug = new Debug(666, m_physicsManager->getBody(getId()));
     }
 }
 
@@ -384,10 +385,9 @@ bool Character::enoughMP(int p_MP){
     return false;
 }
 
-
-
-
-
+void Character::setUltimateCharged(){
+    m_ultimateCharged = true;
+}
 
 
 
