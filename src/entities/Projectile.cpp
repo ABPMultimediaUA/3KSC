@@ -45,10 +45,10 @@ Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, 
     int t_damage = Arena::getInstance()->getPlayer(m_owner)->getDamage();
 
     switch (p_type){
-        //Rawr's fireball
+        //Sparky's punches
         case 0:{
             m_damage = t_damage * 1.333;
-            m_velocity = 2.5;
+            m_velocity = 5;
             m_distanceLeft = 120;
             break;
         }
@@ -123,8 +123,6 @@ bool Projectile::update(){
         moveY(m_step[1]);
         moveZ(m_step[2]);
 
-        if(hit())
-            return false;
 
         m_distanceLeft -= m_velocity;
     }

@@ -59,11 +59,12 @@ public:
     int             getHP();
     int             getMP();
     bool            getOrientation();
-    void            setStunned();
+    void            setStunned(float p_time = 0);
     bool            isJumping();
     void            onTouchGround();
     void            onLeaveGround();
     bool            enoughMP(int p_MP);
+    void            setUltimateCharged();
     
     //Actions
     bool            left();
@@ -110,6 +111,7 @@ protected:
     bool            m_alive;
     bool            m_respawning;
     bool            m_onGround;
+    bool            m_ultimateCharged;
     float           m_frameDeltaTime;       //For movement
     float           m_runningFactor;
 

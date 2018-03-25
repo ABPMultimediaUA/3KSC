@@ -32,15 +32,23 @@ public:
     bool    jump();
     bool    basicAttack();
     bool    specialAttackUp();
+    void    updateJump();
     bool    specialAttackDown();
     bool    specialAttackSide();
-    bool    ultimateAttack(); 
+    bool    ultimateAttack();
+    void    updateUltimate();
     void    updatePlayer();
     void    updatePunch();
 
 private:
+    bool            m_sparkyJumping;
     bool            m_punchLaunched;
+    bool            m_ultimateMode;
+    bool            m_ultiBulletLaunched;
     Projectile*     m_punch;
+    Projectile*     m_ultimateBullet;
+
+    int             m_ultimateAmmo;
 
 };
 

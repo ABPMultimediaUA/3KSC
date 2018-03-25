@@ -165,8 +165,21 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
-    //PENDING IMPLEMENTATION
-    std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
+    if(m_ultimateCharged){
+        std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
+        Character* t_currentPlayer;
+
+        for(int i = 0; i < m_playerCount; i++){
+            //Ignore myself
+            if (i == m_playerIndex)
+                continue;
+
+            t_currentPlayer = Arena::getInstance()->getPlayer(i);
+
+            //t_currentPlayer->setStunned(5.0);
+        }
+        m_ultimateCharged = false;
+    }
 
     return false;
 }

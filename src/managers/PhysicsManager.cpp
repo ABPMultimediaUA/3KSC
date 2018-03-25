@@ -466,7 +466,9 @@ bool PhysicsManager::fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB){
     return false;
 }
 
-void PhysicsManager::shockwaveBox(b2Body* p_body){
+void PhysicsManager::shockwaveBox(int p_idBody){
+    b2Body* p_body = getBody(p_idBody);
+
     //Create a new body and positioning it in the coords of the Entity
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
@@ -476,6 +478,47 @@ void PhysicsManager::shockwaveBox(b2Body* p_body){
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
     t_polygonShape->SetAsBox(20.0, 20.0);
+    
+    b2FixtureDef* t_fixtureDef = new b2FixtureDef();
+    t_fixtureDef->shape = t_polygonShape;
+
+    //Attach the shape to the body
+    t_body->CreateFixture(t_fixtureDef);
+
+    //Check collision with the other players
+    checkCollisionMultiple(t_body, p_body);
+    
+    m_world->DestroyBody(t_body);
+}
+
+void PhysicsManager::sparkyJump(int p_idBody){
+    b2Body* p_body = getBody(p_idBody);
+
+    p_body->SetLinearDamping(-1);
+    //p_body->SetTransform(b2Vec2(0,50), 0);
+}
+
+void PhysicsManager::fastGravity(int p_idBody){
+    b2Body* p_body = getBody(p_idBody);
+
+    p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), false);   
+}
+
+void PhysicsManager::machineGun(int p_idBody, bool p_orientation){
+    b2Body* p_body = getBody(p_idBody);
+
+    //Create a new body and positioning it in the coords of the Entity
+    b2BodyDef* t_bodyDef = new b2BodyDef();
+    t_bodyDef->type = b2_dynamicBody;
+    t_bodyDef->position.Set(p_body->GetPosition().x, p_body->GetPosition().y);
+    b2Body* t_body = m_world->CreateBody(t_bodyDef);
+
+    //Create a shape for the body
+    b2PolygonShape* t_polygonShape = new b2PolygonShape();
+    if(p_orientation)
+        t_polygonShape->SetAsBox(50.0, 5.0, b2Vec2(30,0), 0);
+    else
+        t_polygonShape->SetAsBox(50.0, 5.0, b2Vec2(-30,0), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
