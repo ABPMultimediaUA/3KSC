@@ -41,6 +41,7 @@ public:
 
     void        updateSnowman();
     void        deleteSnowman();
+    int         getCurrentSnowmen();
 
     void        updatePlayer();
 
