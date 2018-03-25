@@ -29,7 +29,10 @@ class ContactManager : public b2ContactListener{
 public:
     void BeginContact(b2Contact* p_contact);
     void EndContact(b2Contact* p_contact);
-
+    void onCollide(void* p_data1, void* p_data2);
+    void checkCollision(void* p_data1, void* p_data2);
+    void onLeave(void* p_data1, void* p_data2);
+    void checkLeave(void* p_data1, void* p_data2);
 private:
 
 };

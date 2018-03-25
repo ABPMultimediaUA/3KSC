@@ -64,6 +64,8 @@ public:
     void            onTouchGround();
     void            onLeaveGround();
     bool            enoughMP(int p_MP);
+    void            onPortal();
+    void            leavePortal();
     
     //Actions
     bool            left();

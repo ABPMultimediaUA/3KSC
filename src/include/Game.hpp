@@ -37,7 +37,7 @@ class Game{
         void setState(State* p_state);
         void nextState();
         void run();
-        void fixedUpdate();
+        void fixedUpdate(long long p_delta);
         
 };
 

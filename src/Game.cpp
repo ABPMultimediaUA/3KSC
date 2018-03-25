@@ -34,7 +34,7 @@ Game::Game(){
     const int FPS = 40;
     m_nanoFrames = 1000000000/FPS;
     if(m_engineManager->createWindow(false)){
-        m_state = new InGameState(this, true);
+        m_state = new InGameState(this, false);
     }
 }
 
@@ -66,14 +66,15 @@ void Game::run(){
         m_elapsedTotal += std::chrono::duration_cast<std::chrono::nanoseconds>(t_elapsed).count();
         while (m_elapsedTotal  > m_nanoFrames)
         {
-            fixedUpdate();
+            fixedUpdate(m_elapsedTotal);
             m_elapsedTotal  -= m_nanoFrames;
         }
         t_now = std::chrono::high_resolution_clock::now();
     }
 }
 
-void Game::fixedUpdate(){
+void Game::fixedUpdate(long long p_delta){
+    m_state->setDeltaTime(p_delta);
     m_state->input();
     m_state->update();
     m_state->render();

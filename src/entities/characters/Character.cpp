@@ -494,3 +494,10 @@ void Character::knockback(bool p_orientation){
 }
 
 int  Character::getCurrentSnowmen(){}
+
+void Character::onPortal(){
+
+}
+
+void Character::leavePortal(){
+}
