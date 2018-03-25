@@ -159,7 +159,7 @@ void InputManager::setNetPlayer(int p_player, bool p_actions[12]){
 
 // Enables an action for AI
 void InputManager::setAction(Action p_action, int p_player, bool p_bool){
-    m_actions[p_player][(int)p_action] = p_bool;
+//    m_actions[p_player][(int)p_action] = p_bool;
 }
 
 //Updates joysticks state and booleans for each action

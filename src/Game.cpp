@@ -25,13 +25,16 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <sys/time.h>
+#include <chrono>
 
 //Constructor
 Game::Game(){
     m_engineManager = &EngineManager::instance();
-
+    const int FPS = 40;
+    m_nanoFrames = 1000000000/FPS;
     if(m_engineManager->createWindow(false)){
-        m_state = new InGameState(this, false);
+        m_state = new InGameState(this, true);
     }
 }
 
@@ -54,13 +57,24 @@ void Game::nextState(){
 
 //Main loop of the game
 void Game::run(){
+    auto t_now = std::chrono::high_resolution_clock::now();
+    auto t_elapsed  = std::chrono::high_resolution_clock::now() - t_now;
     while(true){
-        if(m_engineManager->running()){
-            m_state->input();
-            m_state->update();
-            m_state->render();
-        }
-        else
+        if(!m_engineManager->running())
             break;
+        t_elapsed = std::chrono::high_resolution_clock::now() - t_now;
+        m_elapsedTotal += std::chrono::duration_cast<std::chrono::nanoseconds>(t_elapsed).count();
+        while (m_elapsedTotal  > m_nanoFrames)
+        {
+            fixedUpdate();
+            m_elapsedTotal  -= m_nanoFrames;
+        }
+        t_now = std::chrono::high_resolution_clock::now();
     }
+}
+
+void Game::fixedUpdate(){
+    m_state->input();
+    m_state->update();
+    m_state->render();
 }

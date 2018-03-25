@@ -75,11 +75,11 @@ void Client::update(){
 }
 void Client::listen(){
 	m_action = -1;
-	#ifdef _WIN32
-		Sleep(30);
-	#else
-		usleep(30 * 1000);
-	#endif
+	// #ifdef _WIN32
+	// 	Sleep(30);
+	// #else
+	// 	usleep(30 * 1000);
+	// #endif
 	char const * t_first = "";
 
 	for (p=client->Receive(); p; client->DeallocatePacket(p), p=client->Receive())

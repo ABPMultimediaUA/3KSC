@@ -256,6 +256,9 @@ void EngineManager::drawScene(){
     m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
     m_scene->drawAll();
     m_vDriver->endScene();
+
+    //    int fps =  m_vDriver->getFPS();
+    //   std::cout<<fps<<std::endl;
 }
 
 //Returns game window
