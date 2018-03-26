@@ -46,7 +46,7 @@ Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, 
         //Sparky's punches
         case 0:{
             m_damage = p_damage;
-            m_velocity = 5;
+            m_velocity = 4;
             m_distanceLeft = 120;
             break;
         }
@@ -62,8 +62,8 @@ Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, 
         //Sparky bullets
         case 2:{
             m_damage = p_damage;
-            m_velocity = 5;
-            m_distanceLeft = 60;
+            m_velocity = 4;
+            m_distanceLeft = 45;
             break;
         }
     }
