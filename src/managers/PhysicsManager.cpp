@@ -192,15 +192,14 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
-    t_fixtureDef->density = 1.0f;
-    t_fixtureDef->friction = 0.3f;
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
-    t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
-    t_fixtureDef->filter.groupIndex   = -1;
 
     //Attach the shape to the body
-    b2Fixture* portalSensor = t_body->CreateFixture(t_fixtureDef);
-    portalSensor ->SetUserData((void*)888);
+    m_portalFixture = t_body->CreateFixture(t_fixtureDef);
+}
+
+void PhysicsManager::addDataToPortal(Portal* p_portal){
+    m_portalFixture->SetUserData(p_portal);
 }
 
 void PhysicsManager::createPhysicBox(int* p_id, float p_position[3], float p_dimX, float p_dimY){

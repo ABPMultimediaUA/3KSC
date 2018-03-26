@@ -23,6 +23,7 @@
 #include "../../include/entities/items/Portal.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/entities/Arena.hpp"
+#include "../../include/entities/characters/Character.hpp"
 #include <iostream>
 
 //Constructor
@@ -30,7 +31,11 @@ Portal::Portal(float p_position[3])
     : Entity(p_position, 4.f, "assets/models/items/portal.obj", 3){
     m_arena     = Arena::getInstance();
     m_using     = false;
-    m_charge    = 1.0f;
+    m_charge    = 0.0f;
+    m_charactersInPortal = 0;
+    m_owner     = 0;
+
+    m_physicsManager->addDataToPortal(this);
 }
 
 //Destructor
@@ -39,35 +44,42 @@ Portal::~Portal(){
     delete m_arena;
 }
 
-void Portal::onEnter(){
-    std::cout<<"entro portal"<<std::endl;
+void Portal::onEnter(Character* p_character){
+    std::cout<<"entro portal con character"<<std::endl;
+    m_charactersInPortal++;
+    if(m_charactersInPortal < 2)
+        m_owner = p_character;
     m_using = true;
 }
 
+void Portal::onEnter(){
+    std::cout<<"entro portal"<<std::endl;
+    m_charactersInPortal++;
+    m_using = true;
+}
+
+
 void Portal::onLeave(){
     std::cout<<"salgo portal"<<std::endl;
+    m_charactersInPortal--;
+    m_owner = 0;
     m_using = false;
 }
 
 void Portal::update(float p_delta){
-    if(m_using){
+    if(m_using && m_charactersInPortal == 1){
         m_charge += p_delta;
-        //std::cout<<p_delta<<std::endl;
+        std::cout << m_charge << std::endl;
     }
     
-    std::cout<<m_charge<<std::endl;
-    if(m_charge > 10){
-        //m_arena->get
+    if(m_charge >= 2){
+        //use();
         m_charge = 0;
     }
 }
 //Increases owner's ultimate bar
-/* void Portal::use(){
-    std::cout << m_arena->getPlayer(m_owner)->getName() <<" filled ultimate bar." << std::endl
+void Portal::use(){
+    std::cout << m_owner->getName() <<" filled ultimate bar." << std::endl
     << std::endl;
+    m_owner->setUltimateCharged();
 }
-
-//Sets the owner of the item
-void Portal::setOwner(int p_owner){
-    m_owner = p_owner;
-} */

@@ -48,21 +48,19 @@ void ContactManager::checkLeave(void* p_data1, void* p_data2){
 
 void ContactManager::onCollide(void* p_data1, void* p_data2){
 	if(p_data1){
-		if(p_data1 == (void*)888){
-			if(static_cast<Portal*>(p_data2))
-				static_cast<Portal*>(p_data2)->onEnter();
+		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
+			//static_cast<Portal*>(p_data2)->onEnter(static_cast<Character*>(p_data1));
+			static_cast<Portal*>(p_data2)->onEnter();
 		}
 		else
-			static_cast<Character*>( p_data1 )->onTouchGround();
+			static_cast<Character*>(p_data1)->onTouchGround();
 	}
 }
 
 void ContactManager::onLeave(void* p_data1, void* p_data2){
 	if(p_data1){
-		if(p_data1 == (void*)888){
-			if(static_cast<Portal*>(p_data2))
-				static_cast<Portal*>(p_data2)->onLeave();
-		}
+		if(static_cast<Portal*>(p_data2))
+			static_cast<Portal*>(p_data2)->onLeave();
 		else
 			static_cast<Character*>(p_data1)->onLeaveGround();
 	}

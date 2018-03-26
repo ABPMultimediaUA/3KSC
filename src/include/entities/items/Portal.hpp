@@ -24,22 +24,27 @@
 #define PORTAL
 
 #include "../Entity.hpp"
+
 class Arena;
+class Character;
 
 class Portal: public Entity {
-    public:
-        Portal(float p_position[3]);
-        ~Portal();
-        void onEnter();
-        void onLeave();
-        void update(float p_delta);
-        // void    setOwner(int p_owner) override;
-        // void    use() override;
-    private:
-        Arena* m_arena;
-        float m_charge;
-        bool m_using;
-        int p;
+public:
+    Portal(float p_position[3]);
+    ~Portal();
+    void    onEnter(Character* p_character);
+    void    onEnter();
+    void    onLeave();
+    void    update(float p_delta);
+    void    use();
+private:
+    Arena*  m_arena;
+    float   m_charge;
+    bool    m_using;
+    int     m_charactersInPortal;
+    int     p;
+
+    Character*  m_owner;
 };
 
 #endif
