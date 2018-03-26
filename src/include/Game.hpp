@@ -28,6 +28,8 @@ class Game{
     private:
         State*          m_state;
         EngineManager*  m_engineManager;
+        long long m_elapsedTotal;
+        long long m_nanoFrames;
 
     public:
         Game();
@@ -35,6 +37,8 @@ class Game{
         void setState(State* p_state);
         void nextState();
         void run();
+        void fixedUpdate(long long p_delta);
+        
 };
 
 #endif

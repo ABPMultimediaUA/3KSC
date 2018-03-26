@@ -30,6 +30,7 @@ class Debug;
 
 #include "characters/Character.hpp"
 #include <SFML/System/Clock.hpp>
+#include "../include/entities/items/Portal.hpp"
 //#include "Skybox.hpp"
 //#include "Texture.hpp"
 //#include "WaterLily.hpp"
@@ -54,7 +55,7 @@ public:
     void            restart();
     void            setSpawnPositions(float p_spawnPositions[4][3]); 
     void            respawnPlayer(int p_player);
-    void            update();
+    void            update(float p_delta);
     bool            spawnRandomItem();
     void            modeDebug();
     void            onlineUpdate();
@@ -80,6 +81,7 @@ private:
     int         m_maxItemsOnScreen = 5;
     int         m_currentItems;
     int         m_lastItemType = 0;
+    Portal*     m_portal;
 
     std::vector<Item*>  m_items;
 

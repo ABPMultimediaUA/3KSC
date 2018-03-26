@@ -65,6 +65,8 @@ public:
     void            onLeaveGround();
     bool            enoughMP(int p_MP);
     void            setUltimateCharged();
+    void            onPortal();
+    void            leavePortal();
     
     //Actions
     bool            left();

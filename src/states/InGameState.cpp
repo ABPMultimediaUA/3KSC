@@ -55,6 +55,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_soundManager      = &SoundManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
+    m_deltaTime         = 0;
 
     readFileMapCgm("assets/Fusfus_Stadium.cgm");
 
@@ -127,22 +128,24 @@ void InGameState::update(){
     int t_playerCount = m_arena->getPlayerCount();
     int i;        
 
-    //Update AIs
-    for (i = 0; i < t_playerCount; i++){
-        if (m_AIPlayers[i] != 0){
-            m_AIPlayers[i]->update();
-        }
-    }
+
 
     if(m_onlineMode){
         m_client->update();
     }
-    else
-        m_arena->update();
+    else{
+        m_arena->update((float)m_deltaTime);
+        //Update AIs
+        for (i = 0; i < t_playerCount; i++){
+            if (m_AIPlayers[i] != 0){
+                m_AIPlayers[i]->update();
+            }
+        }
+    }
+
 
     //Update the physics one step more(need to be done first of all)
     m_physicsManager->update();
-    
     Character* t_currentPlayer;
 
     //Input and update for every character

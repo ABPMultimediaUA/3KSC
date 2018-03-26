@@ -24,6 +24,7 @@ class Client{
         void sendAction(bool p_actions[12]);
         const std::vector<std::string> explode(const std::string& s, const char& c);
         void spawnItem(int p_type, int x, int y);
+        void printActions(std::string p_actions);
         
     private:
         InputManager*   m_inputManager;
@@ -40,7 +41,6 @@ class Client{
         int m_yourPlayer;
         bool m_debug = false;
         std::string m_yourPlayerString;
-        
 };
 
 #endif

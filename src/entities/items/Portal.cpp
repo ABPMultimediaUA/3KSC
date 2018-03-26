@@ -28,16 +28,39 @@
 //Constructor
 Portal::Portal(float p_position[3])
     : Entity(p_position, 4.f, "assets/models/items/portal.obj", 3){
-    // m_physicsManager    = &PhysicsManager::instance();
-    // m_arena             = Arena::getInstance();
+    m_arena     = Arena::getInstance();
+    m_using     = false;
+    m_charge    = 1.0f;
 }
 
 //Destructor
 Portal::~Portal(){
     // delete m_physicsManager;
-    // delete m_arena;
+    delete m_arena;
 }
 
+void Portal::onEnter(){
+    std::cout<<"entro portal"<<std::endl;
+    m_using = true;
+}
+
+void Portal::onLeave(){
+    std::cout<<"salgo portal"<<std::endl;
+    m_using = false;
+}
+
+void Portal::update(float p_delta){
+    if(m_using){
+        m_charge += p_delta;
+        //std::cout<<p_delta<<std::endl;
+    }
+    
+    std::cout<<m_charge<<std::endl;
+    if(m_charge > 10){
+        //m_arena->get
+        m_charge = 0;
+    }
+}
 //Increases owner's ultimate bar
 /* void Portal::use(){
     std::cout << m_arena->getPlayer(m_owner)->getName() <<" filled ultimate bar." << std::endl
