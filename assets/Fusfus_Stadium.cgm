@@ -2,6 +2,7 @@
 
 # m se utiliza para marcar los modelos para los mapas, su escala y su posicion: ruta_modelo escala_modelo posx posy posz
 m assets/models/arenas/Fusfus_stadium/Plataforma_Fusfus.obj 10 0 -2 10
+m assets/models/arenas/Fusfus_stadium/Fondo_Fusfus.obj 10 0 0 0
 
 # c se utiliza para la camara: posx posy posz(de la camara) posx posy posz(del target)
 c 0 90 -150 0 50 0
