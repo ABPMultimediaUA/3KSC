@@ -130,8 +130,7 @@ void Character::mapActions(){
 //Receives an attack from other player
 //Parameters: damage, can you block it?
 void Character::receiveAttack(int p_damage, bool p_block){
-    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded)
-    {
+    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
         std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }else{
@@ -149,7 +148,7 @@ void Character::changeHP(int p_variation){
         die();
     }
     
-    else if (m_HP > m_maxHP){
+    else if(m_HP > m_maxHP){
         m_HP = m_maxHP;
     }
 
@@ -158,13 +157,10 @@ void Character::changeHP(int p_variation){
 }
 
 //Increases or decreases magic
-void Character::changeMP(int p_variation){
+void Character::addMP(int p_variation){
     m_MP += p_variation;
 
-    if (m_MP < 0)
-        m_MP = 0;
-    
-    else if (m_MP > m_maxMP)
+    if(m_MP > m_maxMP)
         m_MP = m_maxMP;
 
     //HUD Stuff
@@ -221,10 +217,10 @@ void Character::doActions(){
     ActionMapping* t_iterator = m_actions;
 
     while(t_iterator->function){
-        if(t_iterator->enabled){
-            //We call the function, it'll return false when action finishes
+        //We call the function, it'll return false when action finishes
+        if(t_iterator->enabled)
             t_iterator->enabled = (this->*(t_iterator->function))();
-        }
+        
         ++t_iterator;
     }
 }
@@ -279,7 +275,7 @@ void Character::update(){
         doActions();
     }
 
-    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() > 0.5){
+    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() >= 0.25){
         m_knockback = false;
     }
 
@@ -374,8 +370,19 @@ void Character::onTouchGround(){
 
 void Character::onLeaveGround(){
     m_onGround = false;
+    m_maxJumps = 1;
 }
 
+//Check if we can do an action. If we can, substract the MP and return true, if not, return false.
+bool Character::enoughMP(int p_MP){
+    //We have enough MP for doing the action
+    if(m_MP >= p_MP){
+        m_MP += p_MP;
+        return true;
+    }
+
+    return false;
+}
 
 
 
@@ -468,6 +475,11 @@ bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
 
+void Character::setKnockback(){
+    m_knockbackClock.restart();
+    m_knockback = true;
+}
+
 void Character::knockback(bool p_orientation){
     if(!m_knockback){
         int t_side = 1;
@@ -477,8 +489,7 @@ void Character::knockback(bool p_orientation){
 
         m_knockbackClock.restart();
         m_knockback = true;
-        m_physicsManager->getBody(getId())->SetLinearDamping(1);
-        m_physicsManager->getBody(getId())->ApplyLinearImpulse(b2Vec2(1000,500), b2Vec2((getX()*t_side), (getY()*t_side)), false);
+        m_physicsManager->applyImpulse(getId(), t_side);
     }
 }
 

@@ -30,7 +30,7 @@
 Game::Game(){
     m_engineManager = &EngineManager::instance();
 
-    if (m_engineManager->createWindow(false)){
+    if(m_engineManager->createWindow(false)){
         m_state = new InGameState(this, false);
     }
 }
@@ -54,11 +54,13 @@ void Game::nextState(){
 
 //Main loop of the game
 void Game::run(){
-    while (m_engineManager->running()){
-        m_state->input();
-        m_state->update();
-        m_state->render();
+    while(true){
+        if(m_engineManager->running()){
+            m_state->input();
+            m_state->update();
+            m_state->render();
+        }
+        else
+            break;
     }
-
-    m_engineManager->stop();
 }

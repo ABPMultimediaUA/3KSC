@@ -66,6 +66,11 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
         case 4:
             m_physicsManager->createPhysicBoxPlayer(&m_id, p_position, 5.0, 5.0);
             break;
+
+        case 5:
+            m_physicsManager->createPhysicBox(&m_id, p_position, 5.0, 5.0);
+            break;
+
     }
 }
 

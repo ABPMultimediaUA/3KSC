@@ -48,14 +48,13 @@ Arena* Arena::m_instance = 0;
 Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode):Entity(p_position, p_scale, p_modelURL, 1){
 
     m_currentItems  = 0;
-    m_items         = new Item*[m_maxItemsOnScreen];
+    //m_items         = new Item*[m_maxItemsOnScreen];
     m_instance      = this;
     m_debugMode     = p_debugMode;
     m_spawningTime  = 10;
     m_clock         = new sf::Clock();
     m_playerCount   = 0;
     m_players       = new Character*[4];
-    m_spawnedItems  = 0;
     m_usedItems     = 0;
 }
 
@@ -66,12 +65,12 @@ Arena* Arena::getInstance(){
 }
 
 void Arena::spawnPlayers(){
-
     float positionPortal[3] = {-70, 5, 0};
-    new Portal(positionPortal);
+    //new Portal(positionPortal);
 
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
-    m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1], false);
+    m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
+    //m_players[m_playerCount++] = new Sparky("Player 3", m_spawnPositions[2], false);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){
@@ -99,42 +98,32 @@ Character* Arena::getPlayer(int p_index){
 //Checks if any of the items in the screen is where the player wants to pick it and uses it
 void Arena::catchItem(int p_owner, float p_where[3]){    
     //Check if there's an item here and use it
-    for (int i = 0; i < m_currentItems; i++){
-        //Check not null
-        if (m_items[i]){
-            //X axis
-            if(p_where[0] >= m_items[i]->getX() - 5 && p_where[0] <= m_items[i]->getX() + 5){
-                //Y axis
-                if(p_where[1] >= m_items[i]->getY() - 10 && p_where[1] <= m_items[i]->getY() + 10){
-                    //Use the item
-                    m_items[i]->setOwner(p_owner);
-                    m_items[i]->use();
+    for (int i = 0; i < m_items.size(); i++){
+        //X axis
+        if(p_where[0] >= m_items.at(i)->getX() - 5 && p_where[0] <= m_items.at(i)->getX() + 5){
+            //Y axis
+            if(p_where[1] >= m_items.at(i)->getY() - 10 && p_where[1] <= m_items.at(i)->getY() + 10){
+                //Use the item
+                m_items.at(i)->setOwner(p_owner);
+                m_items.at(i)->use();
 
-                    delete m_items[i];
-                    m_items[i] = 0;
-                    ++m_usedItems;
-                    break;
-                }
+                delete m_items.at(i);
+                m_items.at(i) = 0;
+                m_items.erase(m_items.begin()+i);
+                ++m_usedItems;
+                break;
             }
         }
     }
 }
 
-void Arena::finishRound(){
+void Arena::finishRound(){}
 
-}
+void Arena::movePlatforms(){}
 
-void Arena::movePlatforms(){
+void Arena::animateBackground(){}
 
-}
-
-void Arena::animateBackground(){
-
-}
-
-void Arena::restart(){
-    
-}
+void Arena::restart(){}
 
 void Arena::modeDebug(){
     if(m_debugMode)
@@ -142,7 +131,6 @@ void Arena::modeDebug(){
 }
 
 void Arena::setSpawnPositions(float p_spawnPositions[4][3]){
-
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 3; j++){
             m_spawnPositions[i][j] = p_spawnPositions[i][j];
@@ -157,19 +145,23 @@ void Arena::respawnPlayer(int p_player){
 void Arena::update(){
     float t_time = m_clock->getElapsedTime().asSeconds();
     
-    if(t_time > m_spawningTime)
-    {
+    if(t_time > m_spawningTime){
         m_clock->restart();
         spawnRandomItem();
     }
+
+    for(int i = 0; i < m_items.size(); i++){
+        if(m_items.at(i)->update())
+            m_items.erase(m_items.begin()+i);
+    }
+
     if(m_debugMode)
         m_debugBattlefield->update();
 }
 
 bool Arena::spawnRandomItem(){
-    if(m_spawnedItems - m_usedItems >= m_maxItemsOnScreen)
+    if(m_items.size() >= m_maxItemsOnScreen)
         return false;
-    ++m_spawnedItems;
 
     int range = m_spawnItemRange[1] - m_spawnItemRange[0] + 1;
     int randx = m_spawnItemRange[0] + (rand() % range);
@@ -180,27 +172,27 @@ bool Arena::spawnRandomItem(){
 
 void Arena::onlineUpdate(){
     float t_time = m_clock->getElapsedTime().asSeconds();
-    if(t_time > m_spawningTime)
-    {
+    
+    if(t_time > m_spawningTime){
         m_clock->restart();
         if(spawnRandomItem()){
-            Client::instance().spawnItem(m_lastItemType, m_items[m_currentItems]->getX(), m_items[m_currentItems]->getY());
+            Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems)->getX(), m_items.at(m_currentItems)->getY());
         }
     }
     if(m_debugMode)
         m_debugBattlefield->update();
 }
 
-void Arena::spawnItemAt(int p_type, int x, int y)
-{
+void Arena::spawnItemAt(int p_type, int x, int y){
     float t_position[3] = {x, y, 0};
+
     switch (p_type){
-        case 0:     { m_items[m_currentItems] = new LifeTank(t_position);   }   break;
-        case 1:     { m_items[m_currentItems] = new Shield(t_position);     }   break;
-        case 2:     { m_items[m_currentItems] = new Wings(t_position);      }   break;
+        case 0:     { m_items.push_back(new LifeTank(t_position));   }   break;
+        case 1:     { m_items.push_back(new Shield(t_position));     }   break;
+        case 2:     { m_items.push_back(new Wings(t_position));      }   break;
     }
 
-    m_currentItems++;
+    m_currentItems = m_items.size();
     m_lastItemType = p_type;
 }
 

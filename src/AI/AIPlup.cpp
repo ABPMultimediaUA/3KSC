@@ -49,8 +49,6 @@ AIPlup::~AIPlup(){
 
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
-    std::cout<<std::endl; // SIN ESTO NO FUNCIONA WTFFFF
-    
     int t_PLUP_index = 1;
     m_PLUP_special_up_range = 0.0;
     m_PLUP_special_side_range = 0.0;
@@ -58,6 +56,7 @@ void AIPlup::update(){
     /****************      Get Plup's life        ****************/
     /*************************************************************/
     m_PLUP_life = (float)m_arena->getPlayer(t_PLUP_index)->getHP();
+
 
     /*************************************************************/
     /****************      Get Plup's mana        ****************/
@@ -69,16 +68,16 @@ void AIPlup::update(){
     /*************************************************************/
     int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
-
+    
     // Get Plup's coordinates
     t_currentPlayer = m_arena->getPlayer(t_PLUP_index);
-    float self_x = t_currentPlayer->getX();
-    float self_y = t_currentPlayer->getY();
-    float self_z = t_currentPlayer->getZ();
-
+    float self_x, self_y, self_z;
+    self_x = t_currentPlayer->getX();
+    self_y = t_currentPlayer->getY();
+    self_z = t_currentPlayer->getZ();
     m_PLUP_position = b2Vec2(self_x, self_y);
     m_PLUP_distance_to_enemy = m_physicsManager->getDistanceToClosestCharacter(m_PLUP_position);
-   
+
     /*************************************************************/
     /*   Check if an enemy is in range for a special attack up   */
     /*************************************************************/
@@ -94,9 +93,12 @@ void AIPlup::update(){
 
         // Get enemy coordinates
         t_currentPlayer = m_arena->getPlayer(i);
-        float target_x = t_currentPlayer->getX();
-        float target_y = t_currentPlayer->getY();
-        float target_z = t_currentPlayer->getZ();
+        float target_x, target_y, target_z = 0;
+        if(t_currentPlayer!=0){
+            target_x = t_currentPlayer->getX();
+            target_y = t_currentPlayer->getY();
+            target_z = t_currentPlayer->getZ();
+        }
 
         float t_closestBodyFraction;
 
@@ -133,10 +135,12 @@ void AIPlup::update(){
     /*******  Check if there is already a snowman placed  ********/
     /*************************************************************/
     t_currentPlayer = m_arena->getPlayer(t_PLUP_index);
-    if(t_currentPlayer->getCurrentSnowmen() > 0)
-        m_PLUP_snowman_placed = 1.0;
-    else
-        m_PLUP_snowman_placed = 0.0;
+    if(t_currentPlayer!=0){
+        if(t_currentPlayer->getCurrentSnowmen() > 0)
+            m_PLUP_snowman_placed = 1.0;
+        else
+            m_PLUP_snowman_placed = 0.0;
+    }
 
     /*************************************************************/
     /*******        Check if there is an item close       ********/
@@ -155,20 +159,20 @@ void AIPlup::update(){
     
     if (t_action == "move"){
         b2Vec2 t_destination;
-        if(m_PLUP_position.x > t_closestPlayer->getX()){
-            std::cout<<"holi"<<std::endl;
-            t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 0); // Find waypoint to the left
-        }
-        else{
-            std::cout<<"hola"<<std::endl;
-            t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 1); // Find waypoint to the right
-        }
+        if(t_closestPlayer!=0){
+            if(m_PLUP_position.x > t_closestPlayer->getX()){
+                t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 0); // Find waypoint to the left
+            }
+            else{
+                t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 1); // Find waypoint to the right
+            }
 
-        float t_destination_float[2];
-        t_destination_float[0] = t_destination.x;
-        t_destination_float[1] = t_destination.y;
+            float t_destination_float[2];
+            t_destination_float[0] = t_destination.x;
+            t_destination_float[1] = t_destination.y;
 
-        t_currentPlayer->moveToPath(t_destination_float);
+            t_currentPlayer->moveToPath(t_destination_float);
+        }
     }
     else if (t_action == "basic_attack"){
         t_currentPlayer->basicAttack();
@@ -177,7 +181,7 @@ void AIPlup::update(){
         m_inputManager->setAction(Action::SpecialAttackUp, t_PLUP_index);
     }
     else if (t_action == "special_attack_side"){
-        m_inputManager->setAction(Action::SpecialAttackSide, t_PLUP_index);
+        //m_inputManager->setAction(Action::SpecialAttackSide, t_PLUP_index);
     }
     else if (t_action == "special_attack_down"){
         m_inputManager->setAction(Action::SpecialAttackDown, t_PLUP_index);
@@ -186,7 +190,7 @@ void AIPlup::update(){
         m_inputManager->setAction(Action::Block, t_PLUP_index);
     }
     else{
-       // std::cout<<"NOTHING?"<<std::endl;
+       //std::cout<<"NOTHING?"<<std::endl;
     }
 }
 
