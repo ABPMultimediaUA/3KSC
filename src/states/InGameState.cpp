@@ -179,15 +179,13 @@ void InGameState::readFileMapCgm(const char* p_fileCgm){
         if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
             continue;
 
-        std::istringstream t_lineStream(t_line);
-        t_lineStream >> t_name;
-
         std::istringstream t_tokens(t_line);
         std::vector<std::string> t_elements(std::istream_iterator<std::string>{t_tokens}, std::istream_iterator<std::string>());
+        t_name = t_elements[0].c_str();
 
         //models, scale and position
         if(t_name == "m"){
-
+//TODO hacer que se puedan cargar varios modelos en la arena
             float t_scale = strtof((t_elements[2]).c_str(), 0);
             float t_position[3];
             t_position[0] = strtof((t_elements[3]).c_str(), 0);

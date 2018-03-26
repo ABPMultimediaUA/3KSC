@@ -1,11 +1,11 @@
 # Fichero para el mapa FusFus_Stadium del juego 3KSC
 
 # m se utiliza para marcar los modelos para los mapas, su escala y su posicion: ruta_modelo escala_modelo posx posy posz
-m assets/models/arenas/Fusfus_stadium/Plataforma_Fusfus.obj 10 0 -2 10
-m assets/models/arenas/Fusfus_stadium/Fondo_Fusfus.obj 10 0 0 0
+m assets/models/arenas/Fusfus_stadium/Estadio_Fusfus.obj 10 0 0 0
 
 # c se utiliza para la camara: posx posy posz(de la camara) posx posy posz(del target)
-c 0 90 -150 0 50 0
+# c 0 90 -150 0 50 0
+c 0 100 -220 0 50 0
 
 # mu se utiliza para el sonido: Id para cargar un banco de musica, ruta de la musica, nombre para el sonido
 mu SoundID::S_FOSFOS_STADIUM event:/music/fosfosStadium fos_music
@@ -35,4 +35,4 @@ rp 0 170 0
 si -120 120 120
 
 # sk se utiliza para marcar las imagenes usadas en el skybox: lista de urls de las imagenes
-sk assets/skyboxes/fusfus_skybox/cloudtop_up.tga assets/skyboxes/fusfus_skybox/cloudtop_dn.tga assets/skyboxes/fusfus_skybox/cloudtop_lt.tga assets/skyboxes/fusfus_skybox/cloudtop_rf.tga assets/skyboxes/fusfus_skybox/cloudtop_ft.tga assets/skyboxes/fusfus_skybox/cloudtop_bk.tga
+# sk assets/skyboxes/fusfus_skybox/cloudtop_up.tga assets/skyboxes/fusfus_skybox/cloudtop_dn.tga assets/skyboxes/fusfus_skybox/cloudtop_lt.tga assets/skyboxes/fusfus_skybox/cloudtop_rf.tga assets/skyboxes/fusfus_skybox/cloudtop_ft.tga assets/skyboxes/fusfus_skybox/cloudtop_bk.tga
