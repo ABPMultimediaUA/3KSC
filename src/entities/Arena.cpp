@@ -56,7 +56,6 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_
     m_playerCount   = 0;
     m_players       = new Character*[4];
     m_usedItems     = 0;
-    //setSpawnPositions();
 }
 
 Arena::~Arena(){}
