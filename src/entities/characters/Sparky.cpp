@@ -186,7 +186,7 @@ void Sparky::updateUltimate(){
      
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
-        m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0, 0);
+        m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0, 2);
         m_physicsManager->machineGun(getId(), m_orientation);
         m_ultiBulletLaunched = true;
         m_ultimateAmmo--;

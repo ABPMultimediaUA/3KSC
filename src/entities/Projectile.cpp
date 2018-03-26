@@ -29,9 +29,10 @@
 //#include <iostream>
 
 //Static members
-const char* Projectile::m_modelURLs[2] = {
+const char* Projectile::m_modelURLs[3] = {
     "assets/models/characters/sparky/sparky_punch.obj", 
-    "assets/models/characters/plup/snowball.obj"
+    "assets/models/characters/plup/snowball.obj",
+    "assets/models/characters/sparky/balas.obj"
 };
 
 Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, int p_owner, int p_damage, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type], 5){
@@ -55,6 +56,13 @@ Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, 
             m_damage = p_damage;
             m_velocity = 3;
             m_distanceLeft = 150;
+            break;
+        }
+
+        case 2:{
+            m_damage = p_damage;
+            m_velocity = 5;
+            m_distanceLeft = 60;
             break;
         }
     }

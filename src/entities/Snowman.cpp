@@ -73,6 +73,7 @@ bool Snowman::lockNLoad(){
                     std::cout << "Snowman: Take this!" << std::endl;
                     m_bulletLaunched = true;
                     m_launchClock.restart();
+                    break;
                 }
             }
         }

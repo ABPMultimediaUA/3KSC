@@ -38,7 +38,7 @@ private:
     int     m_damage;
     float   m_velocity;
     float   m_distanceLeft;
-    static const char*  m_modelURLs[2];
+    static const char*  m_modelURLs[3];
 
     float   m_step[3];
     void    calculateSteps();
