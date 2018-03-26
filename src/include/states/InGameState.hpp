@@ -46,6 +46,8 @@ class InGameState : public State{
         Pathfinding*    m_pathfinding;
 
         bool            m_onlineMode;
+        bool            m_waitRelease;
+        bool            m_AIactivate;
     public:
         InGameState(Game* p_game, bool p_onlineMode = false);
         ~InGameState();

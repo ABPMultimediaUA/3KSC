@@ -102,6 +102,9 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     }
 
     m_engineManager->timeStamp();
+
+    m_waitRelease = false;
+    m_AIactivate = false;
 }
 
 //Destructor
@@ -128,9 +131,20 @@ void InGameState::update(){
     int i;        
 
     //Update AIs
-    for (i = 0; i < t_playerCount; i++){
-        if (m_AIPlayers[i] != 0){
-            m_AIPlayers[i]->update();
+    if(m_inputManager->isKeyPressed(Key::O)){ 
+        if(!m_waitRelease){ 
+            m_AIactivate = !m_AIactivate; 
+            m_waitRelease = true; 
+        } 
+    }else 
+    m_waitRelease = false; 
+ 
+ 
+    if(m_AIactivate){ 
+        for (i = 0; i < t_playerCount; i++){ 
+            if(m_AIPlayers[i] != 0){ 
+                m_AIPlayers[i]->update(); 
+            } 
         }
     }
 

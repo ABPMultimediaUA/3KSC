@@ -169,6 +169,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
         t_fixtureDef->shape = t_polygonShape;
         t_fixtureDef->filter.categoryBits = CATEGORY_GROUND;
         t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_ITEM;
+        t_fixtureDef->filter.groupIndex   = 1;
 
         t_body->CreateFixture(t_fixtureDef);
     }
