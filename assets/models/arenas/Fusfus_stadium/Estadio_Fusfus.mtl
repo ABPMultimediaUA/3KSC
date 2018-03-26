@@ -30,17 +30,6 @@ Ke 0.080000 0.080000 0.080000
 Ni 1.000000
 d 1.000000
 illum 1
-map_Kd /home/manuel/Documentos/Mapas/Estadio_Fusfus/tex_grada.png
-
-newmtl grada_tex_grada
-Ns 96.078431
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.080000 0.080000 0.080000
-Ni 1.000000
-d 1.000000
-illum 1
 map_Kd tex_grada.png
 
 newmtl grada_tex_grada.001
@@ -88,6 +77,17 @@ illum 1
 map_Kd /home/manuel/Documentos/Mapas/Estadio_Fusfus/tex_grada.png
 
 newmtl grada_tex_grada.006
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.080000 0.080000 0.080000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd /home/manuel/Documentos/Mapas/Estadio_Fusfus/tex_grada.png
+
+newmtl grada_tex_grada.009
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000

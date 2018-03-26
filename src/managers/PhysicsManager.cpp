@@ -137,7 +137,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     float t_minX, t_maxX;
     float t_minY, t_maxY;
     float t_dimX, t_dimY;
-    float t_factor = 4.5;
+    float t_factor = 6;
 
     for(int i = 0; i < m_engineManager->getTotalVertex(); i++){
         t_minX = m_engineManager->getTotalVertexX().at(i*2);

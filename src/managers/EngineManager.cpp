@@ -338,9 +338,6 @@ void EngineManager::parseOBJ(const char* p_filename){
         if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
             continue;
 
-        /*std::istringstream t_lineStream(t_line);
-        t_lineStream >> t_name;*/
-
         std::istringstream t_tokens(t_line);
         std::vector<std::string> t_elements(std::istream_iterator<std::string>{t_tokens}, std::istream_iterator<std::string>());
 
@@ -348,7 +345,6 @@ void EngineManager::parseOBJ(const char* p_filename){
             if(t_elements[1].compare("pisa") == 0){
                 pisa = true;
                 if(m_totalVertex != 0){
-                std::cout << t_elements[1] << t_elements[2] <<std::endl;
                     pushVertex(t_minX, t_maxX, t_minY, t_maxY, t_minZ, t_maxZ);
 
                     t_maxX = -999.0, t_maxY = -999.0, t_maxZ = -999.0;
