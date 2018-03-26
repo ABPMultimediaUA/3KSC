@@ -318,6 +318,7 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
     int t_playerCount = Arena::getInstance()->getPlayerCount();
     Character* t_currentPlayer;
     Character* t_closestPlayer;
+    t_closestPlayer = 0;
     float t_shortestModule = 0;
 
     for (int i = 0; i < t_playerCount; i++){
@@ -352,17 +353,23 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
 // Returns the distance to the closest character
 float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
     Character* t_closestPlayer = getClosestCharacter(p_p1);
-    float t_target_x = t_closestPlayer->getX();
-    float t_target_y = t_closestPlayer->getY();
-    float t_target_z = t_closestPlayer->getZ();
+    float t_target_x, t_target_y, t_target_z;
+    if(t_closestPlayer!=0){
+        t_target_x = t_closestPlayer->getX();
+        t_target_y = t_closestPlayer->getY();
+        t_target_z = t_closestPlayer->getZ();
+    
 
-    b2Vec2 t_p2 = b2Vec2(t_target_x, t_target_y); 
+        b2Vec2 t_p2 = b2Vec2(t_target_x, t_target_y); 
 
-    b2Vec2 t_p2p1 = b2Vec2(t_target_x - p_p1.x, t_target_y - p_p1.y);
+        b2Vec2 t_p2p1 = b2Vec2(t_target_x - p_p1.x, t_target_y - p_p1.y);
 
-    float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
+        float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
 
-    return(t_module);
+        return(t_module);
+    }
+
+    return 0;
 }
 
 // Returns the distance between 2 points

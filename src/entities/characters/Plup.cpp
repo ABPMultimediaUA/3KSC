@@ -86,12 +86,14 @@ bool Plup::specialAttackUp(){
             //Ignore myself
             if (i == m_playerIndex)
                 continue;
-
+            
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
-
-            //Rival close enough
-            if (checkCloseness(t_currentPlayer->getPosition(), 35)){
-                t_currentPlayer->receiveAttack(m_damage, true);
+            
+            if(t_currentPlayer!=0){
+                //Rival close enough
+                if (checkCloseness(t_currentPlayer->getPosition(), 35)){
+                    t_currentPlayer->receiveAttack(m_damage, true);
+                }
             }
         }
     }
@@ -144,7 +146,6 @@ void Plup::deleteSnowman(){
 bool Plup::specialAttackSide(){
     if(m_onGround && enoughMP(-25)){
         std::cout << m_name << ": Special Attack Side" << std::endl;
-        Character* t_currentPlayer;
 
         int t_side = 1;
         //True => Right
@@ -197,4 +198,8 @@ void Plup::updatePlayer(){
 
     if(m_snowmanPlaced)
         updateSnowman();
+}
+
+int Plup::getCurrentSnowmen(){
+    return m_snowmanPlaced;
 }

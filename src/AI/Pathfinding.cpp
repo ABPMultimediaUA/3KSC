@@ -102,7 +102,7 @@ b2Vec2  Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint
 b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
     PhysicsManager physicsManager = PhysicsManager::instance();
     float t_closestDistance = 0.0f;
-    Waypoint *t_closestWaypoint;
+    Waypoint *t_closestWaypoint = 0;
     b2Vec2 t_return;
 
     if(p_direction == 0){   // Direction is left
@@ -113,7 +113,7 @@ b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
                 float t_distanceToWaypoint = physicsManager.getDistanceBetween(p_position, t_p2);
 
                 // Find closest waypoint
-                if(t_closestDistance == 0){ // No waypoint is chosen. Choose this one
+                if(t_closestDistance == 0.0f){ // No waypoint is chosen. Choose this one
                     t_closestWaypoint = m_waypoints.at(i);
                     t_closestDistance = t_distanceToWaypoint;
                 }
@@ -127,12 +127,12 @@ b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
     else{                   // Direction is right
          for(int i=0; i<m_waypoints.size(); i++){
             
-            if(m_waypoints.at(i)->m_position[0] > p_position.x){ // If waypoint is to the right
+            if(m_waypoints.at(i)->m_position[0] >= p_position.x){ // If waypoint is to the right
                 b2Vec2 t_p2 = b2Vec2(m_waypoints.at(i)->m_position[0], m_waypoints.at(i)->m_position[1]);
                 float t_distanceToWaypoint = physicsManager.getDistanceBetween(p_position, t_p2);
 
                 // Find closest waypoint
-                if(t_closestDistance == 0){ // No waypoint is chosen. Choose this one
+                if(t_closestDistance == 0.0f){ // No waypoint is chosen. Choose this one
                     t_closestWaypoint = m_waypoints.at(i);
                     t_closestDistance = t_distanceToWaypoint;
                 }
@@ -143,12 +143,13 @@ b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
             }
         }
     }
-    if(p_direction == 0){   // Direction is left
-        t_return = b2Vec2(t_closestWaypoint->m_position[0]+0, t_closestWaypoint->m_position[1]);
+    if(t_closestWaypoint!=0){
+        t_return = b2Vec2(t_closestWaypoint->m_position[0], t_closestWaypoint->m_position[1]);
     }
-    if(p_direction == 0){   // Direction is left
-        t_return = b2Vec2(t_closestWaypoint->m_position[0]-0, t_closestWaypoint->m_position[1]);
+    else{
+        t_return = b2Vec2(0,0);
     }
+    
     return t_return;
 }
 
