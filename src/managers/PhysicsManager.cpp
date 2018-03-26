@@ -93,6 +93,9 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     //t_polygonShape->SetAsBox(t_tam, t_tam/4);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
+    t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
+    t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
+    t_fixtureDef->filter.groupIndex   = -1;
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->isSensor = true;
 
@@ -213,6 +216,9 @@ void PhysicsManager::createPhysicBox(int* p_id, float p_position[3], float p_dim
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
+    t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
+    t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
+    t_fixtureDef->filter.groupIndex   = -1;
 
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);

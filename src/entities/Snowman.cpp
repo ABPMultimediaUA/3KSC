@@ -69,7 +69,7 @@ bool Snowman::lockNLoad(){
             if(t_closestBodyFraction >= 0.2f){ //If there is not an intersection to the raycast
                 //Create snowball (if any left)
                 if(m_ammo-- > 0){
-                    m_snowball = new Projectile(m_position, m_target, true, m_owner, 1);
+                    m_snowball = new Projectile(m_position, m_target, true, m_owner, 7, 1);
                     std::cout << "Snowman: Take this!" << std::endl;
                     m_bulletLaunched = true;
                     m_launchClock.restart();
@@ -91,7 +91,7 @@ bool Snowman::lockNLoad(){
 void Snowman::updateBullet(){
     updatePosition(false, false, false);
 
-    if(!m_snowball->update()){
+    if(!m_snowball->update(true)){
         m_bulletLaunched = false;
         delete m_snowball;
         

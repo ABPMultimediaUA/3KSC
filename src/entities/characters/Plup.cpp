@@ -52,26 +52,31 @@ bool Plup::jump(){
 
 //Slap
 bool Plup::basicAttack(){
-    std::cout << m_name << ": Slap!" << std::endl;
-    Character* t_currentPlayer;
+    if(m_basicClock.getElapsedTime().asSeconds() >= 0.5){
+        std::cout << m_name << ": Slap!" << std::endl;
+        Character* t_currentPlayer;
 
-    for (int i = 0; i < m_playerCount; i++){
-        //Ignore myself
-        if (i == m_playerIndex)
-            continue;
+        for (int i = 0; i < m_playerCount; i++){
+            //Ignore myself
+            if (i == m_playerIndex)
+                continue;
 
-        t_currentPlayer = Arena::getInstance()->getPlayer(i);
+            t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
-        //Looking at the rival
-        if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
-            //Rival close enough
-            if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
-                t_currentPlayer->knockback(getOrientation());
-                t_currentPlayer->receiveAttack(m_damage/2, true);
-                this->addMP(5);
+            //Looking at the rival
+            if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
+                //Rival close enough
+                if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
+                    t_currentPlayer->knockback(getOrientation());
+                    t_currentPlayer->receiveAttack(m_damage/2, true);
+                    this->addMP(5);
+                }
             }
         }
+        m_basicClock.restart();
     }
+    //std::cout << "PLUP MP: " << m_MP << std::endl;
+
     
     return false;
 }
@@ -159,6 +164,8 @@ bool Plup::specialAttackSide(){
         m_dashing = true;
         m_dashClock.restart();
 
+        m_stunned = true;
+
         m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true);
     }
 
@@ -177,7 +184,7 @@ bool Plup::ultimateAttack(){
 
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
-            //t_currentPlayer->setStunned(5.0);
+            t_currentPlayer->setStunned(5.0);
         }
         m_ultimateCharged = false;
     }
@@ -193,6 +200,8 @@ void Plup::updatePlayer(){
         if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true)){
             m_physicsManager->getBody(getId())->SetLinearDamping(0);
             m_dashing = false;
+            m_stunned = false;
+
         }
     }
 

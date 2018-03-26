@@ -52,6 +52,7 @@ private:
     Snowman*    m_snowman;
 
     sf::Clock   m_turretClock;
+    sf::Clock   m_basicClock;
 };
 
 #endif

@@ -395,12 +395,10 @@ void Character::setUltimateCharged(){
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
     // Move
-    if(p_position[0] > this->getX()){
+    if(p_position[0] > this->getX())
         this->right();
-    }
-    else{
+    else
         this->left();
-    }
 
     // Jump if enemy is above
     if(p_position[1] > (this->getY() + 15.0f)){

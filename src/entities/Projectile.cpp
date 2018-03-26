@@ -34,20 +34,17 @@ const char* Projectile::m_modelURLs[2] = {
     "assets/models/characters/plup/snowball.obj"
 };
 
-Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type], 5){
+Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, int p_owner, int p_damage, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type], 5){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
 
     if(p_rotation)
         rotate(180);
 
-    //Base damage (from its owner)
-    int t_damage = Arena::getInstance()->getPlayer(m_owner)->getDamage();
-
     switch (p_type){
         //Sparky's punches
         case 0:{
-            m_damage = t_damage * 1.333;
+            m_damage = p_damage;
             m_velocity = 5;
             m_distanceLeft = 120;
             break;
@@ -55,7 +52,7 @@ Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, 
 
         //Plup's snowmen's snowball
         case 1:{
-            m_damage = t_damage/3;
+            m_damage = p_damage;
             m_velocity = 3;
             m_distanceLeft = 150;
             break;
@@ -116,13 +113,17 @@ bool Projectile::hit(){
 }
 
 //Moves projectile right or left. Returns false at end of way.
-bool Projectile::update(){
+bool Projectile::update(bool p_shouldHit){
     //Go on
     if(m_distanceLeft > 0){
         moveX(m_step[0]);
         moveY(m_step[1]);
         moveZ(m_step[2]);
 
+        if(p_shouldHit){
+            if(hit())
+                return false;
+        }
 
         m_distanceLeft -= m_velocity;
     }

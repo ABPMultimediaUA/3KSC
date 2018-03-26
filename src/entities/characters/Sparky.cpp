@@ -139,7 +139,7 @@ bool Sparky::specialAttackSide(){
         m_attackTarget[2] = m_position[2];
 
         //Create attack and increase projectile count
-        m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0);
+        m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 15, 0);
         m_punchLaunched = true;
         std::cout << m_name << ": Punch" << std::endl;
     }
@@ -149,7 +149,7 @@ bool Sparky::specialAttackSide(){
 
 void Sparky::updatePunch(){
     //Move projectiles, and delete them
-    if(!m_punch->update()){
+    if(!m_punch->update(true)){
         delete m_punch;
         m_punchLaunched = false;
     }
@@ -158,6 +158,7 @@ void Sparky::updatePunch(){
 bool Sparky::ultimateAttack(){
     //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
     //m_soundManager->playSound("ultimate");
+    m_ultimateCharged = true;
     if(m_ultimateCharged){
         std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
@@ -185,12 +186,12 @@ void Sparky::updateUltimate(){
      
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
-        m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0);
+        m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0, 0);
         m_physicsManager->machineGun(getId(), m_orientation);
         m_ultiBulletLaunched = true;
         m_ultimateAmmo--;
     }else if(m_ultiBulletLaunched){
-        if(!m_ultimateBullet->update()){
+        if(!m_ultimateBullet->update(false)){
             delete m_ultimateBullet;
             m_ultiBulletLaunched = false;
         }
