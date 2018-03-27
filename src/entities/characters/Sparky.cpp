@@ -67,11 +67,11 @@ bool Sparky::jump(){
 //Headbutt
 bool Sparky::basicAttack(){
     if(!m_ultimateMode){
-        std::cout << m_name << ": Headbutt!" << std::endl;
+        //std::cout << m_name << ": Headbutt!" << std::endl;
         Character* t_currentPlayer;
         
         /*float t_prob = ((float)rand() / (float)RAND_MAX);
-        std::cout << "RANDOM: " << t_prob << std::endl;
+        //std::cout << "RANDOM: " << t_prob << std::endl;
         m_soundManager->modifyParameter("random", t_prob, "Prob");
         m_soundManager->playSound("random");*/
 
@@ -98,7 +98,7 @@ bool Sparky::basicAttack(){
 
 //Range attack
 bool Sparky::specialAttackUp(){
-    std::cout << m_name << ": Special Attack Up" << std::endl;
+    //std::cout << m_name << ": Special Attack Up" << std::endl;
 
     /*m_physicsManager->sparkyJump(getId());
     m_sparkyJumping = true;
@@ -114,7 +114,7 @@ void Sparky::updateJump(){
 
 bool Sparky::specialAttackDown(){
     if(enoughMP(-35) && !m_ultimateMode){    
-        std::cout << m_name << ": Special Attack Down" << std::endl;
+        //std::cout << m_name << ": Special Attack Down" << std::endl;
         m_physicsManager->shockwaveBox(getId());
     }
     return false;
@@ -141,7 +141,7 @@ bool Sparky::specialAttackSide(){
         //Create attack and increase projectile count
         m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 15, 0);
         m_punchLaunched = true;
-        std::cout << m_name << ": Punch" << std::endl;
+        //std::cout << m_name << ": Punch" << std::endl;
     }
 
     return false;
@@ -160,7 +160,7 @@ bool Sparky::ultimateAttack(){
     //m_soundManager->playSound("ultimate");
     m_ultimateCharged = true;
     if(m_ultimateCharged){
-        std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
+        //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 
         m_ultimateMode = true;
         m_ultimateAmmo = 10;

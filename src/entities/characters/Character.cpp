@@ -133,10 +133,10 @@ void Character::mapActions(){
 void Character::receiveAttack(int p_damage, bool p_block){
     if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
-        std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
+        //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }else{
         changeHP(-p_damage);
-        std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
+        //std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }
 }
 

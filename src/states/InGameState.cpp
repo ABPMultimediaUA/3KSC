@@ -30,11 +30,11 @@
 #include "../include/entities/Arena.hpp"
 
 #include "../include/AI/AICharacter.hpp"
-#include "../include/AI/AIKira.hpp"
-#include "../include/AI/AILuka.hpp"
-#include "../include/AI/AIMiyagi.hpp"
+//#include "../include/AI/AIKira.hpp"
+//#include "../include/AI/AILuka.hpp"
+//#include "../include/AI/AIMiyagi.hpp"
 #include "../include/AI/AIPlup.hpp"
-#include "../include/AI/AIRawr.hpp"
+//#include "../include/AI/AIRawr.hpp"
 #include "../include/AI/AISparky.hpp"
 #include "../include/AI/Pathfinding.hpp"
 
@@ -86,11 +86,11 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
         if(t_currentPlayer->isNPC()){
             //Create AI of specific type
             switch (t_currentPlayer->getType()){
-                case 0:     m_AIPlayers[i] = new AIKira();      break;
-                case 1:     m_AIPlayers[i] = new AILuka();      break;
-                case 2:     m_AIPlayers[i] = new AIMiyagi();    break;
+                //case 0:     m_AIPlayers[i] = new AIKira();      break;
+                //case 1:     m_AIPlayers[i] = new AILuka();      break;
+                //case 2:     m_AIPlayers[i] = new AIMiyagi();    break;
                 case 3:     m_AIPlayers[i] = new AIPlup();      break;
-                case 4:     m_AIPlayers[i] = new AIRawr();      break;
+                //case 4:     m_AIPlayers[i] = new AIRawr();      break;
                 case 5:     m_AIPlayers[i] = new AISparky();    break;
             }
             

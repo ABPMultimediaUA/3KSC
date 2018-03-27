@@ -53,7 +53,7 @@ bool Plup::jump(){
 //Slap
 bool Plup::basicAttack(){
     if(m_basicClock.getElapsedTime().asSeconds() >= 0.5){
-        std::cout << m_name << ": Slap!" << std::endl;
+        //std::cout << m_name << ": Slap!" << std::endl;
         Character* t_currentPlayer;
 
         for (int i = 0; i < m_playerCount; i++){
@@ -75,7 +75,7 @@ bool Plup::basicAttack(){
         }
         m_basicClock.restart();
     }
-    //std::cout << "PLUP MP: " << m_MP << std::endl;
+    ////std::cout << "PLUP MP: " << m_MP << std::endl;
 
     
     return false;
@@ -84,7 +84,7 @@ bool Plup::basicAttack(){
 //Range attack
 bool Plup::specialAttackUp(){
     if(enoughMP(-30)){
-        std::cout << m_name << ": Range attack" << std::endl;
+        //std::cout << m_name << ": Range attack" << std::endl;
         Character* t_currentPlayer;
 
         for (int i = 0; i < m_playerCount; i++){
@@ -119,7 +119,7 @@ bool Plup::specialAttackDown(){
 
         //Create snowman and increase snowmen count
         m_snowman = new Snowman(m_attackPosition, m_playerIndex);
-        std::cout << m_name << ": Snowman" << std::endl;
+        //std::cout << m_name << ": Snowman" << std::endl;
         m_snowmanPlaced = true;
         m_turretClock.restart();
     }
@@ -150,7 +150,7 @@ void Plup::deleteSnowman(){
 //Dash
 bool Plup::specialAttackSide(){
     if(m_onGround && enoughMP(-25)){
-        std::cout << m_name << ": Special Attack Side" << std::endl;
+        //std::cout << m_name << ": Special Attack Side" << std::endl;
 
         int t_side = 1;
         //True => Right
@@ -174,7 +174,7 @@ bool Plup::specialAttackSide(){
 
 bool Plup::ultimateAttack(){
     if(m_ultimateCharged){
-        std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
+        //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
         Character* t_currentPlayer;
 
         for(int i = 0; i < m_playerCount; i++){
@@ -193,7 +193,7 @@ bool Plup::ultimateAttack(){
 }
 
 void Plup::updatePlayer(){
-    //std::cout << "PLUP MP: " << m_MP << std::endl;
+    ////std::cout << "PLUP MP: " << m_MP << std::endl;
     if(m_dashing){
         //If time is over or collision, finish atack
         //The second param of collision is true because all dash atacks cause stun
