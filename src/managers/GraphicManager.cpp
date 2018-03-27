@@ -18,18 +18,13 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/GraphicManager.hpp"
-#include "../headers/managers/EngineManager.hpp"
-
-//Instance initialization
-GraphicManager* GraphicManager::m_instance = 0;
+#include "../include/managers/GraphicManager.hpp"
+#include "../include/managers/EngineManager.hpp"
 
 //Returns the only instance of this class
-GraphicManager* GraphicManager::instance(){
-    if (!m_instance)
-        m_instance = new GraphicManager();
-
-    return m_instance;
+GraphicManager& GraphicManager::instance(){
+    static GraphicManager instance;
+    return instance;
 }
 
 

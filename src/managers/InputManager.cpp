@@ -18,29 +18,23 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/InputManager.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/extra/Keycodes.hpp"
-#include "../headers/extra/Axis.hpp"
-#include "../headers/extra/Buttons.hpp"
-#include "../headers/extra/Actions.hpp"
+#include "../include/managers/InputManager.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/extra/Inputs.hpp"
+#include "../include/extra/Actions.hpp"
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
-//Instance initialization
-InputManager* InputManager::m_instance = 0;
-
 //Returns the only instance of this class
-InputManager* InputManager::instance(){
-    if (!m_instance)
-        m_instance = new InputManager();
-
-    return m_instance;
+InputManager& InputManager::instance(){
+    static InputManager instance;
+    return instance;
 }
-
 
 //Constructor
 InputManager::InputManager(){
+    m_engineManager = &EngineManager::instance();
+
     m_bindings = 0;
 
     //Event handling
@@ -57,28 +51,15 @@ InputManager::InputManager(){
 
     //Devices initialization
     m_inputDevices[0]   = -1;
-    m_inputDevices[1]   =  0;
-    m_inputDevices[2]   = -2;
+    m_inputDevices[1]   = -2;
+    m_inputDevices[2]   =  0;
     m_inputDevices[3]   = -2;
 
-    //Conditions initializations
+    //Initialize action booleans
     for (int i = 0; i < 4; i++){
-        m_upInput[i]                = false;
-        m_downInput[i]              = false;
-        m_leftInput[i]              = false;
-        m_rightInput[i]             = false;
-        
-        m_jumpInput[i]              = false;
-        m_runInput[i]               = false;
-        m_blockInput[i]             = false;
-        m_pickInput[i]              = false;
-        
-        m_basicAttackInput[i]       = false;
-        m_specialAttackUpInput[i]   = false;
-        m_specialAttackDownInput[i] = false;
-        m_specialAttackSideInput[i] = false;
-        m_ultimateAttackInput[i]    = false;
-        m_waitRelease[i]            = false;
+        for (int j = 0; j < (int) Action::Count; j++){
+            m_actions[i][j] = false;
+        }
     }
 }
 
@@ -91,24 +72,6 @@ bool InputManager::eventHandler(){
 
     while (m_window->pollEvent(*m_event)){
         switch (m_event->type){
-            //Keyboard key pressed
-            case sf::Event::KeyPressed:{
-                std::cout << "Check" << std::endl;
-                updateKeyInputs(m_event->key.code, true);
-
-                t_eventReceived = true;
-                break;
-            }
-
-            //Keyboard key released
-            case sf::Event::KeyReleased:{         
-                updateKeyInputs(m_event->key.code, false);
-                
-                t_eventReceived = true;
-                break;
-            }
-
-
             //New Joystick connected
             case sf::Event::JoystickConnected:{
 
@@ -118,20 +81,6 @@ bool InputManager::eventHandler(){
 
             //Lost Joystick connection
             case sf::Event::JoystickDisconnected:{
-
-                t_eventReceived = true;
-                break;
-            }
-
-            //Joystick button pressed
-            case sf::Event::JoystickButtonPressed:{
-
-                t_eventReceived = true;
-                break;
-            }
-
-            //Joystick axis changed
-            case sf::Event::JoystickMoved:{
 
                 t_eventReceived = true;
                 break;
@@ -148,8 +97,9 @@ void InputManager::onKeyPressed(int p_key){
 }
 
 //Returns whether key with code p_key is pressed or not
-bool InputManager::isKeyPressed(int p_key){
-    return sf::Keyboard::isKeyPressed(m_keys[p_key]);
+bool InputManager::isKeyPressed(Key p_key){
+    bool t_result = sf::Keyboard::isKeyPressed(m_keys[(int) p_key]);
+    return t_result;
 }
 
 //Checks if controller with index p_index is connected
@@ -158,13 +108,13 @@ bool InputManager::isConnected(int p_joystick){
 }
 
 //Returns wether p_button in p_joystic is pressed or not
-bool InputManager::isButtonPressed(int p_joystick, int p_button){
-    return sf::Joystick::isButtonPressed(p_joystick, p_button);
+bool InputManager::isButtonPressed(int p_joystick, Button p_button){
+    return sf::Joystick::isButtonPressed(p_joystick, (int) p_button);
 }
 
 //Returns the position of the given Axis, in range [-100, 100]
-float InputManager::getAxisPosition(int p_joystick, int p_axis){
-    return sf::Joystick::getAxisPosition(p_joystick, m_axis[p_axis]);
+float InputManager::getAxisPosition(int p_joystick, Axis p_axis){
+    return sf::Joystick::getAxisPosition(p_joystick, m_axis[(int) p_axis]);
 }
 
 //Updates the state of all joysticks
@@ -175,19 +125,50 @@ void InputManager::updateJoysticks(){
 //Assing input device to player
 void InputManager::assignDevice(int p_device, int p_player){
     //Only change device of player 2 for now
-    if (p_player == 1){
-        m_inputDevices[p_player] = p_device;
-        //std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
-    }
+    // if (p_player == 1){
+    //     m_inputDevices[p_player] = p_device;
+    //     std::cout << "Player " << p_player << ": Device " << m_inputDevices[p_player] << std::endl;
+    // }
+    //COMENTADO PARA EL ONLINE
+}
+
+void InputManager::onlineMode(){
+    m_client = &Client::instance();
+    m_isOnline = true;
+    for (int i = 0; i < sizeof(m_inputDevices) / sizeof(int); ++i)
+        m_inputDevices[i] = -3; //Unassign devices so server assigns one
+}
+
+void InputManager::setOnlineControl(int p_player){
+    m_inputDevices[p_player] = -1;
+}
+
+void InputManager::setNetPlayer(int p_player, bool p_actions[12]){
+    m_actions[p_player][(int) Action::Left]                 = p_actions[0]; 
+    m_actions[p_player][(int) Action::Right]                = p_actions[1];             
+    m_actions[p_player][(int) Action::Jump]                 = p_actions[2];
+    m_actions[p_player][(int) Action::Run]                  = p_actions[3];
+    m_actions[p_player][(int) Action::Block]                = p_actions[4];
+    m_actions[p_player][(int) Action::Pick]                 = p_actions[5];
+    m_actions[p_player][(int) Action::BasicAttack]          = p_actions[6];
+    m_actions[p_player][(int) Action::SpecialAttackUp]      = p_actions[7];
+    m_actions[p_player][(int) Action::SpecialAttackDown]    = p_actions[8];
+    m_actions[p_player][(int) Action::SpecialAttackSide]    = p_actions[9];
+    m_actions[p_player][(int) Action::UltimateAttack]       = p_actions[10];
+}
+
+// Enables an action for AI
+void InputManager::setAction(Action p_action, int p_player, bool p_bool){
+    m_actions[p_player][(int)p_action] = p_bool;
 }
 
 //Updates joysticks state and booleans for each action
-void InputManager::updateInputs(int p_player){
+void InputManager::updateActions(int p_player){
     int t_inputDevice = m_inputDevices[p_player];
-
+    bool t_up, t_down; //They're not actions, but needed for some conditions
     //Keyboard input
     if (t_inputDevice == -1){
-    
+        if(!m_engineManager->getDevice()->isWindowActive()) return;
         /* Controls:
             *   Left/Right or A/D           Movement
             *   Space                       Jump
@@ -201,25 +182,51 @@ void InputManager::updateInputs(int p_player){
             *   Z                           Ultimate Attack
         */
 
-        m_upInput[p_player] = isKeyPressed(Key_W) || isKeyPressed(Key_Up);
-        m_downInput[p_player] = isKeyPressed(Key_S) || isKeyPressed(Key_Down);
-        m_leftInput[p_player] = isKeyPressed(Key_A) || isKeyPressed(Key_Left);
-        m_rightInput[p_player] = isKeyPressed(Key_D) || isKeyPressed(Key_Right);
-        
-        m_jumpInput[p_player] = isKeyPressed(Key_Space);
-        m_runInput[p_player] = isKeyPressed(Key_LShift) || isKeyPressed(Key_RShift);
-        m_blockInput[p_player] = isKeyPressed(Key_B);
-        m_pickInput[p_player] = isKeyPressed(Key_Q);
-        
-        m_basicAttackInput[p_player] = isKeyPressed(Key_E);
-        m_specialAttackUpInput[p_player] = isKeyPressed(Key_X) && m_upInput[p_player];
-        m_specialAttackDownInput[p_player] = isKeyPressed(Key_X) && m_downInput[p_player];
-        m_specialAttackSideInput[p_player] = isKeyPressed(Key_X) && (m_leftInput[p_player] || m_rightInput[p_player]);
-        m_ultimateAttackInput[p_player] = isKeyPressed(Key_Z);
-    }
+        t_up = 
+            isKeyPressed(Key::W) ||
+            isKeyPressed(Key::Up);
+        t_down =
+            isKeyPressed(Key::S) ||
+            isKeyPressed(Key::Down);
+        m_actions[p_player][(int) Action::Left] =
+            isKeyPressed(Key::A) ||
+            isKeyPressed(Key::Left);
+        m_actions[p_player][(int) Action::Right] =
+            isKeyPressed(Key::D) ||
+            isKeyPressed(Key::Right);
 
+        m_actions[p_player][(int) Action::Jump] =
+            isKeyPressed(Key::Space);
+        m_actions[p_player][(int) Action::Run] =
+            isKeyPressed(Key::LShift) ||
+            isKeyPressed(Key::RShift);
+        m_actions[p_player][(int) Action::Block] =
+            isKeyPressed(Key::B);
+        m_actions[p_player][(int) Action::Pick] =
+            isKeyPressed(Key::Q);      
+
+        m_actions[p_player][(int) Action::BasicAttack] =
+            isKeyPressed(Key::E);
+        m_actions[p_player][(int) Action::SpecialAttackUp] =
+            isKeyPressed(Key::X) &&
+                t_up;
+        m_actions[p_player][(int) Action::SpecialAttackDown] =
+            isKeyPressed(Key::X) &&
+                t_down;
+        m_actions[p_player][(int) Action::SpecialAttackSide] =
+            isKeyPressed(Key::X) &&
+                (m_actions[p_player][(int) Action::Left] ||
+                m_actions[p_player][(int) Action::Right]);
+        m_actions[p_player][(int) Action::UltimateAttack] =
+            isKeyPressed(Key::Z);
+    }
+    else if (t_inputDevice == -3)
+    {
+        //online player
+    }
     //Joystick input
     else if (t_inputDevice != -2){
+        if(!m_engineManager->getDevice()->isWindowActive()) return;
         //Update joysticks state first
         updateJoysticks();
 
@@ -236,217 +243,86 @@ void InputManager::updateInputs(int p_player){
             *   LT + RT         Ultimate Attack
         */
 
-        m_upInput[p_player] = getAxisPosition(t_inputDevice, Axis_Y) <= -75 || getAxisPosition(t_inputDevice, Axis_PovY) == -100;
-        m_downInput[p_player] = getAxisPosition(t_inputDevice, Axis_Y) >= 75 || getAxisPosition(t_inputDevice, Axis_PovY) == 100;
-        m_leftInput[p_player] = getAxisPosition(t_inputDevice, Axis_X) <= -75 || getAxisPosition(t_inputDevice, Axis_PovX) == -100;
-        m_rightInput[p_player] = getAxisPosition(t_inputDevice, Axis_X) >= 75 || getAxisPosition(t_inputDevice, Axis_PovX) == 100;
+        t_up =
+            getAxisPosition(t_inputDevice, Axis::Y) <= -75 ||
+            getAxisPosition(t_inputDevice, Axis::PovY) == -100;
+        t_down =
+            getAxisPosition(t_inputDevice, Axis::Y) >= 75 ||
+            getAxisPosition(t_inputDevice, Axis::PovY) == 100;
+        m_actions[p_player][(int) Action::Left] =
+            getAxisPosition(t_inputDevice, Axis::X) <= -75 ||
+            getAxisPosition(t_inputDevice, Axis::PovX) == -100;
+        m_actions[p_player][(int) Action::Right] =
+            getAxisPosition(t_inputDevice, Axis::X) >= 75 ||
+            getAxisPosition(t_inputDevice, Axis::PovX) == 100;
 
-        m_jumpInput[p_player] = isButtonPressed(t_inputDevice, Button_A);
-        m_runInput[p_player] = isButtonPressed(t_inputDevice, Button_RB);
-        m_blockInput[p_player] = isButtonPressed(t_inputDevice, Button_LB);
-        m_pickInput[p_player] = isButtonPressed(t_inputDevice, Button_Y);
+        m_actions[p_player][(int) Action::Jump] =
+            isButtonPressed(t_inputDevice, Button::A);
+        m_actions[p_player][(int) Action::Run] =
+            isButtonPressed(t_inputDevice, Button::RB);
+        m_actions[p_player][(int) Action::Block] =
+            isButtonPressed(t_inputDevice, Button::LB);
+        m_actions[p_player][(int) Action::Pick] =
+            isButtonPressed(t_inputDevice, Button::Y);
 
-        m_basicAttackInput[p_player] = isButtonPressed(t_inputDevice, Button_X);
-        m_specialAttackUpInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && m_upInput[p_player];
-        m_specialAttackDownInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && m_downInput[p_player];
-        m_specialAttackSideInput[p_player] = isButtonPressed(t_inputDevice, Button_B) && (m_leftInput[p_player] || m_rightInput[p_player]);
-        m_ultimateAttackInput[p_player] = getAxisPosition(t_inputDevice, Axis_Z) >= 0 && getAxisPosition(t_inputDevice, Axis_R) >= 0;
+        m_actions[p_player][(int) Action::BasicAttack] =
+            isButtonPressed(t_inputDevice, Button::X);
+        m_actions[p_player][(int) Action::SpecialAttackUp] =
+            isButtonPressed(t_inputDevice, Button::B) &&
+                t_up;
+        m_actions[p_player][(int) Action::SpecialAttackDown] =
+            isButtonPressed(t_inputDevice, Button::B) &&
+                t_down;
+        m_actions[p_player][(int) Action::SpecialAttackSide] =
+            isButtonPressed(t_inputDevice, Button::B) &&
+                (m_actions[p_player][(int) Action::Left] ||
+                m_actions[p_player][(int) Action::Right]);
+        m_actions[p_player][(int) Action::UltimateAttack] =
+            getAxisPosition(t_inputDevice, Axis::Z) >= 0 &&
+                getAxisPosition(t_inputDevice, Axis::R) >= 0;
     }
-
     //NPC
     else{
-        m_upInput[p_player] = false;
-        m_downInput[p_player] = false;
-        m_leftInput[p_player] = false;
-        m_rightInput[p_player] = false;
-        
-        m_jumpInput[p_player] = false;
-        m_runInput[p_player] = false;
-        m_blockInput[p_player] = false;
-        m_pickInput[p_player] = false;
-        
-        m_basicAttackInput[p_player] = false;
-        m_specialAttackUpInput[p_player] = false;
-        m_specialAttackDownInput[p_player] = false;
-        m_specialAttackSideInput[p_player] = false;
-        m_ultimateAttackInput[p_player] = false;
-    }
-}
-
-//Enables or disables inputs when key is pressed or released
-void InputManager::updateKeyInputs(int p_key, bool p_enableMode){
-    int t_keyboardPlayer = getKeyboardPlayer();
-    std::cout << t_keyboardPlayer << std::endl;
-
-    if (t_keyboardPlayer != -1){
-        switch (p_key){
-            /*********************************** COMMON INPUTS ***********************************/
-            //Up input
-            case Key_Up:
-            case Key_W:{
-                m_upInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-
-            //Down input
-            case Key_Down:
-            case Key_S:{
-                m_downInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-
-            //Left input
-            case Key_Left:
-            case Key_A:{
-                m_leftInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-
-            //Right input
-            case Key_Right:
-            case Key_D:{
-                m_rightInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-            /*********************************** MENU ACTIONS ***********************************/
-
-
-            /*********************************** PLAYER ACTIONS ***********************************/
-            //Jump input
-            case Key_Space:{
-                m_jumpInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-
-            //Run input
-            case Key_LShift:
-            case Key_RShift:{
-                m_runInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-
-            //Block input
-            case Key_B:{
-                m_blockInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-
-            //Pick input
-            case Key_Q:{
-                m_pickInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-
-            /*********************************** ATTACKS ***********************************/
-            //Basic Attack
-            case Key_E:{
-                m_basicAttackInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
-            
-            //Special Attacks
-            case Key_X:{
-                //Special Attack up
-                if (m_upInput[t_keyboardPlayer]){
-                    m_specialAttackUpInput[t_keyboardPlayer] = p_enableMode;
-                }
-                
-                //Special Attack Down
-                else if (m_downInput[t_keyboardPlayer]){
-                    m_specialAttackDownInput[t_keyboardPlayer] = p_enableMode;
-                }
-                
-                //Special Attack Side
-                else if (m_leftInput[t_keyboardPlayer] || m_rightInput[t_keyboardPlayer]){
-                    m_specialAttackSideInput[t_keyboardPlayer] = p_enableMode;
-                }
-                break;
-            }
-
-            //Ultimate Attack
-            case Key_Z:{
-                m_ultimateAttackInput[t_keyboardPlayer] = p_enableMode;
-                break;
-            }
+        for (int i = 0; i < (int) Action::Count; i++){
+            //m_actions[p_player][i] = false;
         }
     }
+
+    if(m_isOnline && p_player == m_client->getPlayer())
+        updateOnlineInput(p_player);
 }
-
-//Enables or disables inputs when button is pressed
-void InputManager::updateButtonInputs(int p_player, int p_button, bool p_enableMode){
-
-}
-
-//Enables or disables inputs when axis is moved
-void InputManager::updateAxisInputs(int p_player, int p_axis, bool p_enableMode){
-
-}
-
 
 //Returns true if the asked action's input is enabled
-bool InputManager::checkAction(int p_action, int p_player){
-    switch (p_action){
-        case Action_Up:{
-            return m_upInput[p_player];
-        }
-
-        case Action_Down:{
-            return m_downInput[p_player];
-        }
-
-        case Action_Left:{
-            return m_leftInput[p_player];
-        }
-
-        case Action_Right:{
-            return m_rightInput[p_player];
-        }
-
-        case Action_Jump:{
-            return m_jumpInput[p_player];
-        }
-
-        case Action_Run:{
-            return m_runInput[p_player];
-        }
-
-        case Action_Block:{
-            return m_blockInput[p_player];
-        }
-
-        case Action_Pick:{
-            return m_pickInput[p_player];
-        }
-
-        case Action_BasicAttack :{
-            return m_basicAttackInput[p_player];
-        }
-
-        case Action_SpecialAttackUp:{
-            return m_specialAttackUpInput[p_player];
-        }
-
-        case Action_SpecialAttackDown:{
-            return m_specialAttackDownInput[p_player];
-        }
-
-        case Action_SpecialAttackSide:{
-            return m_specialAttackSideInput[p_player];
-        }
-
-        case Action_UltimateAttack:{
-            return m_ultimateAttackInput[p_player];
-        }
-    }
+bool InputManager::checkAction(Action p_action, int p_player){
+    return m_actions[p_player][(int) p_action];
 }
 
-//Returns the index of the player playing with keyboard, or -1 if nobody is using it
-int InputManager::getKeyboardPlayer(){
-    for(int i = 0; i < 4; i++){
-        if(m_inputDevices[i] == -1){
-            return i;
+//Returns the input device for the specified player
+int InputManager::getInputDevice(int p_player){
+    return m_inputDevices[p_player];
+}
+
+void InputManager::updateOnlineInput(int p_player){
+    bool t_actions[12];
+    bool t_flag = false;
+    uint i;
+    for(i = 0; i < 12; i++)
+    {
+        if(m_actions[p_player][i])
+            t_actions[i] = true;
+        else
+            t_actions[i] = false;
+
+        if(t_actions[i] != m_lastActions[i])
+        {
+            m_lastActions[i] = t_actions[i];
+            t_flag = true;
         }
     }
+    if(t_flag)
+        sendOnlineInput();
+}
 
-    return -1;
+void InputManager::sendOnlineInput(){
+    m_client->sendAction(m_lastActions);
 }

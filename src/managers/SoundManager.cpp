@@ -18,24 +18,30 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../headers/managers/SoundManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 #include <iostream>
 
-//Instance initialization
-SoundManager* SoundManager::m_instance = 0;
+const char* m_dataBank[] = {
+    "assets/fmod/Build/Desktop/Kira.bank",
+    "assets/fmod/Build/Desktop/Luka.bank",
+    "assets/fmod/Build/Desktop/Miyagi.bank",
+    "assets/fmod/Build/Desktop/Plup.bank",
+    "assets/fmod/Build/Desktop/Rawr.bank",
+    "assets/fmod/Build/Desktop/Sparky.bank",
+    "assets/fmod/Build/Desktop/FosFosStadium.bank"
+};
 
 //Returns the only instance of this class
-SoundManager* SoundManager::instance(){
-    if(!m_instance)
-        m_instance = new SoundManager();
-
-    return m_instance;
+SoundManager& SoundManager::instance(){
+    static SoundManager instance;
+    return instance;
 }
 
 void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line)
 {
-    if (result != FMOD_OK)
-    {
+    if(result == 70){
+        return;
+    }else if (result != FMOD_OK){
         std::cerr << file << "(" << line << "): FMOD error " << result << " - " << FMOD_ErrorString(result) << std::endl;
         exit(-1);
     }
@@ -54,7 +60,6 @@ SoundManager::SoundManager(){
     ERRCHECK(m_system->initialize(32, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
 
     loadBanks();
-    //getEvents();
 }
 
 //Destructor
@@ -68,9 +73,75 @@ void SoundManager::loadBanks(){
     ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Master Bank.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_masterBank));
 
     ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Master Bank.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_stringsBank));
-
-    ERRCHECK(m_system->loadBankFile("assets/fmod/Build/Desktop/Music.bank", FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
 }
+
+void SoundManager::loadBank(SoundID p_bank){
+    ERRCHECK(m_system->loadBankFile(m_dataBank[(int)p_bank], FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
+}
+
+void SoundManager::loadEvents(SoundID p_bank){
+    switch(p_bank){
+        case SoundID::S_KIRA:
+            createSoundEvent("event:/characters/kira/death"     , "k_death"       );
+            createSoundEvent("event:/characters/kira/kill"      , "k_kill"        );
+            createSoundEvent("event:/characters/kira/random"    , "k_random"      );
+            createSoundEvent("event:/characters/kira/special"   , "k_special"     );
+            createSoundEvent("event:/characters/kira/taunt"     , "k_taunt"       );
+            createSoundEvent("event:/characters/kira/ultimate"  , "k_ultimate"    );
+            break;
+        
+        case SoundID::S_LUKA:
+            createSoundEvent("event:/characters/luka/death"     , "l_death"       );
+            createSoundEvent("event:/characters/luka/kill"      , "l_kill"        );
+            createSoundEvent("event:/characters/luka/random"    , "l_random"      );
+            createSoundEvent("event:/characters/luka/special"   , "l_special"     );
+            createSoundEvent("event:/characters/luka/taunt"     , "l_taunt"       );
+            createSoundEvent("event:/characters/luka/ultimate"  , "l_ultimate"    );
+            break;
+        
+        case SoundID::S_MIYAGI:
+            createSoundEvent("event:/characters/miyagi/death"     , "m_death"       );
+            createSoundEvent("event:/characters/miyagi/kill"      , "m_kill"        );
+            createSoundEvent("event:/characters/miyagi/random"    , "m_random"      );
+            createSoundEvent("event:/characters/miyagi/special"   , "m_special"     );
+            createSoundEvent("event:/characters/miyagi/taunt"     , "m_taunt"       );
+            createSoundEvent("event:/characters/miyagi/ultimate"  , "m_ultimate"    );
+            break;
+        
+        case SoundID::S_PLUP:
+            createSoundEvent("event:/characters/plup/death"     , "p_death"       );
+            createSoundEvent("event:/characters/plup/kill"      , "p_kill"        );
+            createSoundEvent("event:/characters/plup/random"    , "p_random"      );
+            createSoundEvent("event:/characters/plup/special"   , "p_special"     );
+            createSoundEvent("event:/characters/plup/taunt"     , "p_taunt"       );
+            createSoundEvent("event:/characters/plup/ultimate"  , "p_ultimate"    );
+            break;
+        
+        case SoundID::S_RAWR:
+            createSoundEvent("event:/characters/rawr/death"     , "r_death"       );
+            createSoundEvent("event:/characters/rawr/kill"      , "r_kill"        );
+            createSoundEvent("event:/characters/rawr/random"    , "r_random"      );
+            createSoundEvent("event:/characters/rawr/special"   , "r_special"     );
+            createSoundEvent("event:/characters/rawr/taunt"     , "r_taunt"       );
+            createSoundEvent("event:/characters/rawr/ultimate"  , "r_ultimate"    );
+            break;
+        
+        case SoundID::S_SPARKY:
+            createSoundEvent("event:/characters/sparky/death"     , "s_death"       );
+            createSoundEvent("event:/characters/sparky/kill"      , "s_kill"        );
+            createSoundEvent("event:/characters/sparky/random"    , "s_random"      );
+            createSoundEvent("event:/characters/sparky/special"   , "s_special"     );
+            createSoundEvent("event:/characters/sparky/taunt"     , "s_taunt"       );
+            createSoundEvent("event:/characters/sparky/ultimate"  , "s_ultimate"    );
+            break;
+
+        case SoundID::S_FOSFOS_STADIUM:
+            std::cout << "HOLAAAAA\n";
+            this->createSoundEvent("event:/music/fosfosStadium"    , "fos_music"    );
+            break;
+    }
+}
+
 /*
 void SoundManager::getEvents(){
     ERRCHECK(m_system->getEvent("event:/Music/Music", &m_musicEvent));
@@ -87,11 +158,13 @@ void SoundManager::createSoundEvent(const char* eventPath, const char* name){
     ERRCHECK(m_system->getEvent(eventPath, &t_eventDescription));
 
     SoundEvent* t_soundEvent = new SoundEvent(t_eventDescription);
+    //std::cout << name << std::endl;
 
     m_soundEvents.insert(std::pair<const char*, SoundEvent*>(name, t_soundEvent));
 }
 
 void SoundManager::playSound(const char* name){
+    //std::cout << name << std::endl;
     m_soundEvents.at(name)->start();
 }
 

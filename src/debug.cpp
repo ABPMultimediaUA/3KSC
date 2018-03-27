@@ -20,11 +20,12 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "headers/debug.hpp"
-#include "headers/managers/EngineManager.hpp"
+#include "include/debug.hpp"
+#include "include/managers/EngineManager.hpp"
 #include <iostream>
 
-Debug::Debug(s32 p_id, b2Body* p_body): scene::ISceneNode(EngineManager::instance()->getSceneManager()->getRootSceneNode(), EngineManager::instance()->getSceneManager(), p_id) {
+Debug::Debug(s32 p_id, b2Body* p_body) 
+    : scene::ISceneNode(EngineManager::instance().getSceneManager()->getRootSceneNode(), EngineManager::instance().getSceneManager(), p_id) {
     m_Material.Wireframe = false;
     m_Material.Lighting = false;
 
@@ -72,7 +73,6 @@ void Debug::render(){
     driver->setMaterial(m_Material);
     driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
     driver->drawVertexPrimitiveList(&m_Vertices[0], 4, &indices[0], 4, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
-    
 }
 
 const core::aabbox3d<f32>& Debug::getBoundingBox() const{

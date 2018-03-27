@@ -20,38 +20,50 @@
 *********************************************************************************
 *********************************************************************************/
 
-#include "../headers/entities/Projectile.hpp"
-#include "../headers/entities/Arena.hpp"
-#include "../headers/managers/EngineManager.hpp"
-#include "../headers/managers/PhysicsManager.hpp"
+#include "../include/entities/Projectile.hpp"
+#include "../include/entities/Arena.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
 #include <cmath> //For std::sqrt()
 //#include <iostream>
 
 //Static members
-const char* Projectile::m_modelURLs[2] = {"assets/models/characters/rawr/fireball.obj", "assets/models/characters/plup/snowball.obj"};
+const char* Projectile::m_modelURLs[3] = {
+    "assets/models/characters/sparky/sparky_punch.obj", 
+    "assets/models/characters/plup/snowball.obj",
+    "assets/models/characters/sparky/balas.obj"
+};
 
-Projectile::Projectile(float p_position[3], float p_target[3], int p_owner, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type]){
+Projectile::Projectile(float p_position[3], float p_target[3], bool p_rotation, int p_owner, int p_damage, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type], 5){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
 
-    //Base damage (from its owner)
-    int t_damage = Arena::getInstance()->getPlayer(m_owner)->getDamage();
+    if(p_rotation)
+        rotate(180);
 
     switch (p_type){
-        //Rawr's fireball
+        //Sparky's punches
         case 0:{
-            m_damage = t_damage * 1.333;
-            m_velocity = 2.5;
+            m_damage = p_damage;
+            m_velocity = 4;
             m_distanceLeft = 120;
             break;
         }
 
         //Plup's snowmen's snowball
         case 1:{
-            m_damage = t_damage/3;
+            m_damage = p_damage;
             m_velocity = 3;
             m_distanceLeft = 150;
+            break;
+        }
+
+        //Sparky bullets
+        case 2:{
+            m_damage = p_damage;
+            m_velocity = 4;
+            m_distanceLeft = 45;
             break;
         }
     }
@@ -59,7 +71,9 @@ Projectile::Projectile(float p_position[3], float p_target[3], int p_owner, int 
     calculateSteps();
 }
 
-Projectile::~Projectile(){}
+Projectile::~Projectile(){
+
+}
 
 //Precalculates step for each axis
 void Projectile::calculateSteps(){
@@ -108,24 +122,23 @@ bool Projectile::hit(){
 }
 
 //Moves projectile right or left. Returns false at end of way.
-bool Projectile::update(){
+bool Projectile::update(bool p_shouldHit){
     //Go on
-    if (m_distanceLeft > 0){
+    if(m_distanceLeft > 0){
         moveX(m_step[0]);
         moveY(m_step[1]);
         moveZ(m_step[2]);
 
-        if (hit()){
-            return false;
+        if(p_shouldHit){
+            if(hit())
+                return false;
         }
 
         m_distanceLeft -= m_velocity;
     }
-
     //End of the way, my friend
-    else{
+    else
         return false;
-    }
 
     return true;
 }
