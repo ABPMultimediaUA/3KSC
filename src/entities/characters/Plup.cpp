@@ -173,6 +173,7 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
+    m_ultimateCharged = true;
     if(m_ultimateCharged){
         //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
         Character* t_currentPlayer;
@@ -184,7 +185,7 @@ bool Plup::ultimateAttack(){
 
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
-            t_currentPlayer->setStunned(5.0);
+            t_currentPlayer->setStunned(2.5);
         }
         m_ultimateCharged = false;
     }
