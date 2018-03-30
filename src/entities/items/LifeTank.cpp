@@ -42,9 +42,7 @@ LifeTank::~LifeTank(){
 void LifeTank::use(){
     m_arena->getPlayer(m_owner)->changeHP(30);
 
-    std::cout << m_arena->getPlayer(m_owner)->getName() <<" got a Life Tank." << std::endl
-    << m_arena->getPlayer(m_owner)->getName() << " now has " << m_arena->getPlayer(m_owner)->getHP() << " HPs." << std::endl
-    << std::endl;
+    //std::cout << m_arena->getPlayer(m_owner)->getName() << " got a Life Tank.\n" << m_arena->getPlayer(m_owner)->getName() << " now has " << m_arena->getPlayer(m_owner)->getHP() << " HPs." << std::endl;
 }
 
 //Sets the owner of the item

@@ -54,7 +54,7 @@ bool EngineManager::createWindow(bool p_fullscreen){
     }
  
     else{
-        t_windowSize = core::dimension2d<u32>(640, 480);
+        t_windowSize = core::dimension2d<u32>(1024, 768);
     }
  
     //Use the desktop resolution to create a real device
@@ -336,24 +336,31 @@ void EngineManager::parseOBJ(const char* p_filename){
     std::ifstream t_file(p_filename);
     std::string t_line;
     std::string t_name;
+    bool pisa = false;
     while(std::getline(t_file, t_line)){
         if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
             continue;
 
-        std::istringstream t_lineStream(t_line);
-        t_lineStream >> t_name;
+        std::istringstream t_tokens(t_line);
+        std::vector<std::string> t_elements(std::istream_iterator<std::string>{t_tokens}, std::istream_iterator<std::string>());
 
-        if(t_name == "o"){
-            if(m_totalVertex != 0){
-                pushVertex(t_minX, t_maxX, t_minY, t_maxY, t_minZ, t_maxZ);
+        if(t_elements[0].compare("o") == 0){
+            if(t_elements[1].compare("pisa") == 0){
+                pisa = true;
+                if(m_totalVertex != 0){
+                    pushVertex(t_minX, t_maxX, t_minY, t_maxY, t_minZ, t_maxZ);
 
-                t_maxX = -999.0, t_maxY = -999.0, t_maxZ = -999.0;
-                t_minX =  999.0, t_minY =  999.0, t_minZ =  999.0;
+                    t_maxX = -999.0, t_maxY = -999.0, t_maxZ = -999.0;
+                    t_minX =  999.0, t_minY =  999.0, t_minZ =  999.0;
+                }
+                m_totalVertex++;
             }
-            m_totalVertex++;
+            else if(t_elements[1].compare("no") == 0){
+                pisa = false;
+            }
         }
 
-        if(t_name == "v"){// Vertex
+        if(t_elements[0].compare("v") == 0 && pisa){// Vertex
             sscanf(t_line.c_str(), "%*s %f %f %f", &t_X, &t_Y, &t_Z);
 
             compareMaxAndMin(t_X, t_maxX, t_minX);

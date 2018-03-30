@@ -42,9 +42,7 @@ Shield::~Shield(){
 void Shield::use(){
     m_arena->getPlayer(m_owner)->shield();
 
-    std::cout << m_arena->getPlayer(m_owner)->getName() <<" got a Shield." << std::endl
-    << m_arena->getPlayer(m_owner)->getName() << "'s now protected against attacks." << std::endl
-    << std::endl;
+    //std::cout << m_arena->getPlayer(m_owner)->getName() <<" got a Shield.\n" << m_arena->getPlayer(m_owner)->getName() << "'s now protected against attacks." << std::endl;
 }
 
 //Sets the owner of the item

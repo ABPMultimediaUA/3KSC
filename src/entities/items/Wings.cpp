@@ -42,9 +42,7 @@ Wings::~Wings(){
 void Wings::use(){
     m_arena->getPlayer(m_owner)->wings();
 
-    std::cout << m_arena->getPlayer(m_owner)->getName() <<" got Wings." << std::endl
-    << m_arena->getPlayer(m_owner)->getName() << "'s speed increased." << std::endl
-    << std::endl;
+    //std::cout << m_arena->getPlayer(m_owner)->getName() <<" got Wings.\n" << m_arena->getPlayer(m_owner)->getName() << "'s speed increased." << std::endl;
 }
 
 //Sets the owner of the item

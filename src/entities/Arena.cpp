@@ -55,7 +55,6 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_
     m_playerCount   = 0;
     m_players       = new Character*[4];
     m_usedItems     = 0;
-    //setSpawnPositions();
 }
 
 Arena::~Arena(){}
@@ -69,8 +68,8 @@ void Arena::spawnPlayers(){
     std::cout<<"spawn portal"<<std::endl;
 
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
-    //m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
-    //m_players[m_playerCount++] = new Sparky("Player 3", m_spawnPositions[2], false);
+    m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
+    m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
 
     if(m_debugMode){
         for(int i = 0; i < m_playerCount; i++){

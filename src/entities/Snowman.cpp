@@ -70,9 +70,10 @@ bool Snowman::lockNLoad(){
                 //Create snowball (if any left)
                 if(m_ammo-- > 0){
                     m_snowball = new Projectile(m_position, m_target, true, m_owner, 7, 1);
-                    std::cout << "Snowman: Take this!" << std::endl;
+                    //std::cout << "Snowman: Take this!" << std::endl;
                     m_bulletLaunched = true;
                     m_launchClock.restart();
+                    break;
                 }
             }
         }

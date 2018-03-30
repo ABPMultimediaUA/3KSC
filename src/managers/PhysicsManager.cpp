@@ -140,9 +140,9 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     float t_minX, t_maxX;
     float t_minY, t_maxY;
     float t_dimX, t_dimY;
-    float t_factor = 4.5;
+    float t_factor = 10;
 
-    for(int i = 0; i < m_engineManager->getTotalVertex()-2; i++){
+    for(int i = 0; i < m_engineManager->getTotalVertex(); i++){
         t_minX = m_engineManager->getTotalVertexX().at(i*2);
         t_maxX = m_engineManager->getTotalVertexX().at((i*2)+1);
 
@@ -163,17 +163,13 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
         else
             t_dimY = (abs(t_minY) + t_maxY) * t_factor;
 
-        if(t_minX < 0 && t_maxX > 0)
-            t_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_minX + t_maxX) ,(t_minY*11)), 0);
-        else if(t_minX >= 0)
-            t_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_minX*26.3) ,(t_minY*11)), 0);
-        else
-            t_polygonShape->SetAsBox(t_dimX, t_dimY, b2Vec2((t_maxX*26.3) ,(t_minY*11)), 0);
+        t_polygonShape->SetAsBox(t_dimX / 2, t_dimY / 2, b2Vec2((t_minX * t_factor) + t_dimX / 2, (t_minY * t_factor) + t_dimY / 2), 0);
         
         b2FixtureDef* t_fixtureDef = new b2FixtureDef();
         t_fixtureDef->shape = t_polygonShape;
         t_fixtureDef->filter.categoryBits = CATEGORY_GROUND;
         t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_ITEM;
+        t_fixtureDef->filter.groupIndex   = 1;
 
         t_body->CreateFixture(t_fixtureDef);
     }
