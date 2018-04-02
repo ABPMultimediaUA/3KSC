@@ -50,12 +50,14 @@ private:
     short                   CATEGORY_ITEM;
     short                   CATEGORY_GROUND;
 
+    float                   m_deltaTime;
+
 public:
     static PhysicsManager& instance();
     PhysicsManager();
     ~PhysicsManager();
     
-    void                    update();
+    void                    update(float p_delta);
     
     void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    setPlayerSensor(int p_id, Character* p_character);

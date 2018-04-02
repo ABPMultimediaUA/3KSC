@@ -65,7 +65,6 @@ Arena* Arena::getInstance(){
 void Arena::spawnPlayers(){
     float positionPortal[3] = {-70, 5, 0};
     m_portal = new Portal(positionPortal);
-    std::cout<<"spawn portal"<<std::endl;
 
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
     m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
@@ -152,8 +151,9 @@ void Arena::update(float p_delta){
         if(m_items.at(i)->update())
             m_items.erase(m_items.begin()+i);
     }
-
-    m_portal->update(p_delta);
+    
+    // if(m_portal)
+    // m_portal->update(p_delta);
 
     if(m_debugMode)
         m_debugBattlefield->update();
@@ -168,6 +168,7 @@ bool Arena::spawnRandomItem(){
 
     spawnItemAt(rand()%3, randx, m_spawnItemRange[2]);
     return true;
+
 }
 
 void Arena::onlineUpdate(){

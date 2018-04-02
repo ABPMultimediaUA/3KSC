@@ -88,6 +88,8 @@ public:
     void            knockback(bool p_orientation);
 
     virtual void    updatePlayer() = 0;
+
+    int             getValidation();
     
 protected:
     SoundManager*   m_soundManager;
@@ -139,12 +141,14 @@ protected:
     bool            m_knockback;
     bool            m_dashing;
     float           m_stunnedTime;
+    int             m_validation;
 
 private:
     bool            m_waitRelease;
     bool            m_keepWaiting;
     void            doActions();
     bool            m_flagAIJump = false;
+
 };
 
 #endif

@@ -105,6 +105,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
    
     m_debugMode = p_debugMode;
     m_physicsManager->setPlayerSensor(getId(), this);
+    m_validation = 123;
 }
 
 Character::~Character(){}
@@ -498,4 +499,8 @@ void Character::onPortal(){
 }
 
 void Character::leavePortal(){
+}
+
+int Character::getValidation(){
+    return m_validation;
 }

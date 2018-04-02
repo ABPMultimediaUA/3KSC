@@ -23,7 +23,6 @@
 #include "../../include/entities/items/Portal.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/entities/Arena.hpp"
-#include "../../include/entities/characters/Character.hpp"
 #include <iostream>
 
 //Constructor
@@ -33,53 +32,49 @@ Portal::Portal(float p_position[3])
     m_using     = false;
     m_charge    = 0.0f;
     m_charactersInPortal = 0;
-    m_owner     = 0;
-
     m_physicsManager->addDataToPortal(this);
 }
 
 //Destructor
 Portal::~Portal(){
-    // delete m_physicsManager;
+    delete m_physicsManager;
     delete m_arena;
 }
 
 void Portal::onEnter(Character* p_character){
-    std::cout<<"entro portal con character"<<std::endl;
+    std::cout<<"entro portal con character "<< p_character->getIndex()<<std::endl;
     m_charactersInPortal++;
-    if(m_charactersInPortal < 2)
-        m_owner = p_character;
-    m_using = true;
-}
-
-void Portal::onEnter(){
-    std::cout<<"entro portal"<<std::endl;
-    m_charactersInPortal++;
+    m_players[p_character->getIndex()] = p_character;
     m_using = true;
 }
 
 
-void Portal::onLeave(){
+void Portal::onLeave(Character* p_character){
     std::cout<<"salgo portal"<<std::endl;
+    m_players[p_character->getIndex()] = NULL;
     m_charactersInPortal--;
-    m_owner = 0;
     m_using = false;
 }
 
 void Portal::update(float p_delta){
     if(m_using && m_charactersInPortal == 1){
         m_charge += p_delta;
-        std::cout << m_charge << std::endl;
-    }
-    
-    if(m_charge >= 2){
-        //use();
-        m_charge = 0;
+        if(m_charge >= 2){
+            use();
+            m_charge = 0;
+        }
     }
 }
 //Increases owner's ultimate bar
 void Portal::use(){
-    std::cout << m_owner->getName() <<" filled ultimate bar." << std::endl
-    << std::endl;
-    m_owner->setUltimateCharged();
+    uint i;
+    for(i = 0; i < 4; i++)
+    {
+        if(m_players[i]!= NULL)
+        {
+            m_players[i]->setUltimateCharged();
+            break;
+        }
+    }
+    std::cout << m_players[i]->getIndex() <<" filled ultimate bar." << std::endl;
 }

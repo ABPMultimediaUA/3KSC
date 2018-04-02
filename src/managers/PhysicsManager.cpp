@@ -51,11 +51,14 @@ PhysicsManager::PhysicsManager(){
     CATEGORY_PLAYER = 0x0001;
     CATEGORY_ITEM   = 0x0002;
     CATEGORY_GROUND = 0x0003;
+
+    m_deltaTime     = 1.0;
 }
 //Destructor
 PhysicsManager::~PhysicsManager(){}
 
-void PhysicsManager::update(){
+void PhysicsManager::update(float p_delta){
+    m_timeStep = p_delta * 10;
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
 }
 

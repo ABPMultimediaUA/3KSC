@@ -47,10 +47,11 @@ void ContactManager::checkLeave(void* p_data1, void* p_data2){
 }
 
 void ContactManager::onCollide(void* p_data1, void* p_data2){
+
 	if(p_data1){
 		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
-			//static_cast<Portal*>(p_data2)->onEnter(static_cast<Character*>(p_data1));
-			static_cast<Portal*>(p_data2)->onEnter();
+			if(static_cast<Character*>(p_data1)->getValidation() != 123) return;//comprobamos que el character exista de verdad
+			static_cast<Portal*>(p_data2)->onEnter(static_cast<Character*>(p_data1));
 		}
 		else
 			static_cast<Character*>(p_data1)->onTouchGround();
@@ -59,9 +60,12 @@ void ContactManager::onCollide(void* p_data1, void* p_data2){
 
 void ContactManager::onLeave(void* p_data1, void* p_data2){
 	if(p_data1){
-		if(static_cast<Portal*>(p_data2))
-			static_cast<Portal*>(p_data2)->onLeave();
+		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
+		if(static_cast<Character*>(p_data1)->getValidation() != 123) return;//comprobamos que el character exista de verdad
+			static_cast<Portal*>(p_data2)->onLeave(static_cast<Character*>(p_data1));
+		}
 		else
 			static_cast<Character*>(p_data1)->onLeaveGround();
+		
 	}
 }

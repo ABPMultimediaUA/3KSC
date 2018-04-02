@@ -174,10 +174,8 @@ void EngineManager::timeStamp(){
 }
 
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
-float EngineManager::updateFrameDeltaTime(){
-    m_nowTime = getDevice()->getTimer()->getTime();
-    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
-    m_prevTime = m_nowTime;
+float EngineManager::updateFrameDeltaTime(float p_delta){
+    m_frameDeltaTime = p_delta;
 }
 
 //Creates a new node
