@@ -29,6 +29,14 @@ class EngineManager;
 #include <vector>
 #include <Box2D.h>
 
+enum class Box{
+    Player = 0,
+    Platform,
+    Item,
+    Portal,
+    Other
+};
+
 class PhysicsManager{
 private:
     static EngineManager*   m_engineManager;
@@ -54,12 +62,14 @@ public:
     
     void                    update();
     
-    void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void                    createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY);
+
+    //void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    setPlayerSensor(int p_id, Character* p_character);
-    void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    //void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    createPhysicBoxPlatform(int* p_id, float p_position[3]);
     void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
-    void                    createPhysicBox(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    //void                    createPhysicBox(int* p_id, float p_position[3], float p_dimX, float p_dimY);
 
     void                    addForce();
     void                    removeForce();

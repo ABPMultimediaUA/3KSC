@@ -59,7 +59,7 @@ void PhysicsManager::update(){
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
 }
 
-void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY){
+void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY){
     //Create a new body and positioning it in the coords of the Entity
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
@@ -74,15 +74,32 @@ void PhysicsManager::createPhysicBoxPlayer(int* p_id, float p_position[3], float
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->density = 1.0f;
     t_fixtureDef->friction = 0.3f;
-    t_fixtureDef->filter.categoryBits = CATEGORY_PLAYER;
-    t_fixtureDef->filter.maskBits     = CATEGORY_ITEM | CATEGORY_GROUND;
+
+    switch(p_type){
+        case Box::Player:
+            t_fixtureDef->filter.categoryBits = CATEGORY_PLAYER;
+            t_fixtureDef->filter.maskBits     = CATEGORY_ITEM | CATEGORY_GROUND;
+            break;
+
+        case Box::Item:
+            t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
+            t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
+            break;
+
+        case Box::Other:
+            t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
+            t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
+            break;
+    }
+    //Only change when is a Platform, but we create platforms in a diferent way
     t_fixtureDef->filter.groupIndex   = -1;
 
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
     t_body->SetUserData(p_id);
 
-    m_playersBody.push_back(t_body);
+    if(p_type == Box::Player)
+        m_playersBody.push_back(t_body);
 }
 
 void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
@@ -104,30 +121,6 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
 
     b2Fixture* footSensorFixture = t_body->CreateFixture(t_fixtureDef);
     footSensorFixture->SetUserData(p_character);
-}
-
-void PhysicsManager::createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY){
-    //Create a new body and positioning it in the coords of the Entity
-    b2BodyDef* t_bodyDef = new b2BodyDef();
-    t_bodyDef->type = b2_dynamicBody;
-    t_bodyDef->position.Set(p_position[0], p_position[1]);
-    b2Body* t_body = m_world->CreateBody(t_bodyDef);
-
-    //Create a shape for the body
-    b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(p_dimX, p_dimY);
-    
-    b2FixtureDef* t_fixtureDef = new b2FixtureDef();
-    t_fixtureDef->shape = t_polygonShape;
-    t_fixtureDef->density = 1.0f;
-    t_fixtureDef->friction = 0.3f;
-    t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
-    t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
-    t_fixtureDef->filter.groupIndex   = -1;
-
-    //Attach the shape to the body
-    t_body->CreateFixture(t_fixtureDef);
-    t_body->SetUserData(p_id);
 }
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
@@ -196,30 +189,9 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
 
     //Attach the shape to the body
     b2Fixture* portalSensor = t_body->CreateFixture(t_fixtureDef);
-    portalSensor ->SetUserData((void*)888);
+    portalSensor->SetUserData((void*)888);
 }
 
-void PhysicsManager::createPhysicBox(int* p_id, float p_position[3], float p_dimX, float p_dimY){
-    //Create a new body and positioning it in the coords of the Entity
-    b2BodyDef* t_bodyDef = new b2BodyDef();
-    t_bodyDef->type = b2_dynamicBody;
-    t_bodyDef->position.Set(p_position[0], p_position[1]);
-    b2Body* t_body = m_world->CreateBody(t_bodyDef);
-
-    //Create a shape for the body
-    b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(p_dimX, p_dimY);
-    
-    b2FixtureDef* t_fixtureDef = new b2FixtureDef();
-    t_fixtureDef->shape = t_polygonShape;
-    t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
-    t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
-    t_fixtureDef->filter.groupIndex   = -1;
-
-    //Attach the shape to the body
-    t_body->CreateFixture(t_fixtureDef);
-    t_body->SetUserData(p_id);
-}
 
 b2World* PhysicsManager::getWorld(){
     return m_world;

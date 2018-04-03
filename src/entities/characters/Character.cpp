@@ -171,13 +171,22 @@ void Character::addMP(int p_variation){
 //Activates shield
 void Character::shield(){
     m_shielded = true;
+    m_shieldClock.restart();
 }
 
 //Activates wings, if not already active
 void Character::wings(){
-    if (!m_winged){
+    if(!m_winged){
         m_velocity *= 1.5f;
         m_winged = true;
+    }
+    m_wingsClock.restart();
+}
+
+void Character::removeWings(){
+    if(m_winged){
+        m_velocity /= 1.5f;
+        m_winged = false;
     }
 }
 
@@ -268,6 +277,12 @@ void Character::input(){
 void Character::update(){
     //Specific update for each character
     updatePlayer();
+
+    if(m_winged && m_wingsClock.getElapsedTime().asSeconds() >= 5.0)
+        removeWings();
+
+    if(m_shielded && m_shieldClock.getElapsedTime().asSeconds() >= 2.0)
+        m_shielded = false;
     
     if(m_stunned && m_stunClock.getElapsedTime().asSeconds() > m_stunnedTime){
         m_stunned     = false;
@@ -355,10 +370,7 @@ void Character::respawn(float p_position[3]){
     m_MP = m_maxMP;
     m_shielded = false;
 
-    if(m_winged){
-        m_velocity /= 1.5f;
-        m_winged = false;
-    }
+    removeWings();
 
     //m_UIManager->setHP(m_playerIndex, m_HP);
     //m_UIManafer->setMP(m_playerIndex, m_MP);
