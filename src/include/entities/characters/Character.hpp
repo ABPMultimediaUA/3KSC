@@ -46,6 +46,7 @@ public:
     void            respawn(float p_position[3]);
     void            shield();
     void            wings();
+    void            removeWings();
     void            lookLeft();
     void            lookRight();
     void            input();
@@ -133,6 +134,8 @@ protected:
     sf::Clock       m_knockbackClock;
     sf::Clock       m_dashClock;
     sf::Clock       m_stunClock;
+    sf::Clock       m_wingsClock;
+    sf::Clock       m_shieldClock;
 
     bool            m_knockback;
     bool            m_dashing;
