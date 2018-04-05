@@ -68,18 +68,15 @@ private:
     int                     m_onlinePlayer;
     bool                    m_lastActions[12] = {false};
     bool                    m_isOnline = false;
+    sf::Clock               m_masterClock;
+
     //Event handling
     sf::Window*             m_window;             
     sf::Event*              m_event;
+
     //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
     int     m_inputDevices[4];
-
-    //Conditions for each Input (they change depending on keyboard/joystick control)
-    //Input booleans
-    bool m_actions[4][(int) Action::Count];
-
-    sf::Clock               m_masterClock;
-
+    void    autoassignDevices();
 };
 
 #endif
