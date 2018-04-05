@@ -48,8 +48,7 @@ int Character::m_playerCount = 0;
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode)
-    : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
     m_name                  = p_name;
@@ -196,10 +195,16 @@ void Character::die(){
     //m_alive = false;
     m_knockback = false;
     m_stunned   = false;
-    m_arena->respawnPlayer(m_playerIndex);
+
+    m_shielded = false;
+
+    removeWings();
+    
+
+    //if(m_lives >= 0)
+        m_arena->respawnPlayer(m_playerIndex);
     
     //HUD Stuff
-
     //Delete when m_lives == 0
 }
 
@@ -365,13 +370,10 @@ void Character::modeDebug(){
 
 void Character::respawn(float p_position[3]){
     m_respawning = true;
-    moveTo(p_position);
     m_HP = m_maxHP;
     m_MP = m_maxMP;
-    m_shielded = false;
 
-    removeWings();
-
+    moveTo(p_position);
     //m_UIManager->setHP(m_playerIndex, m_HP);
     //m_UIManafer->setMP(m_playerIndex, m_MP);
 }
