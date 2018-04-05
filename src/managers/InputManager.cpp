@@ -50,10 +50,12 @@ InputManager::InputManager(){
     std::memcpy(m_axis, t_axis, 8 * sizeof(sf::Joystick::Axis));
 
     //Devices initialization
-    m_inputDevices[0]   = -1;
-    m_inputDevices[1]   = -2;
-    m_inputDevices[2]   =  0;
-    m_inputDevices[3]   = -2;
+    autoassignDevices();
+
+    // m_inputDevices[0]   = -1;
+    // m_inputDevices[1]   = -2;
+    // m_inputDevices[2]   =  0;
+    // m_inputDevices[3]   = -2;
 
     //Initialize action booleans
     for (int i = 0; i < 4; i++){
@@ -91,6 +93,29 @@ bool InputManager::eventHandler(){
     return t_eventReceived;
 }
 
+//Checks which devices are connected and assigns devices for everyone
+void InputManager::autoassignDevices(){
+    bool t_keyboardAssigned = false;
+    updateJoysticks();
+
+    for (int i = 0; i < 4; i++){
+        if (isConnected(i)){
+            m_inputDevices[i] = i;
+        }
+
+        else{
+            if (!t_keyboardAssigned){
+                m_inputDevices[i] = -1;
+                t_keyboardAssigned = true;
+            }
+
+            else{
+                m_inputDevices[i] = -2;
+            }
+        }
+    }
+}
+
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
@@ -124,6 +149,7 @@ void InputManager::updateJoysticks(){
 
 //Assing input device to player
 void InputManager::assignDevice(int p_device, int p_player){
+    m_inputDevices[p_player] = p_device;
     //Only change device of player 2 for now
     // if (p_player == 1){
     //     m_inputDevices[p_player] = p_device;
