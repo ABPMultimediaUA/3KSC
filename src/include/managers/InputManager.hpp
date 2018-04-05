@@ -77,6 +77,9 @@ private:
     //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
     int     m_inputDevices[4];
     void    autoassignDevices();
+
+    //Player actions
+    bool m_actions[4][(int) Action::Count]; 
 };
 
 #endif
