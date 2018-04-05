@@ -50,11 +50,14 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_
     //m_items         = new Item*[m_maxItemsOnScreen];
     m_instance      = this;
     m_debugMode     = p_debugMode;
-    m_spawningTime  = 10;
-    m_clock         = new sf::Clock();
+    m_spawningItemTime  = 10;
+    m_spawningPortalTime  = 30;
+    m_itemClock     = new sf::Clock();
+    m_portalClock     = new sf::Clock();
     m_playerCount   = 0;
     m_players       = new Character*[4];
     m_usedItems     = 0;
+    m_portalState   = false;
 }
 
 Arena::~Arena(){}
@@ -63,9 +66,10 @@ Arena* Arena::getInstance(){
 }
 
 void Arena::spawnPlayers(){
-    float positionPortal[3] = {-70, 5, 0};
+    float positionPortal[3] = {0, 5, 0};
     m_portal = new Portal(positionPortal);
-
+    float positionPortal2[3] = {-300, 5, 0};
+    m_portal -> moveTo(positionPortal2);
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
     m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
     m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
@@ -141,22 +145,31 @@ void Arena::respawnPlayer(int p_player){
 }
 
 void Arena::update(float p_delta){
-    float t_time = m_clock->getElapsedTime().asSeconds();
-    if(t_time > m_spawningTime){
-        m_clock->restart();
-        spawnRandomItem();
-    }
-
-    for(int i = 0; i < m_items.size(); i++){
-        if(m_items.at(i)->update())
-            m_items.erase(m_items.begin()+i);
-    }
-    
-    // if(m_portal)
-    // m_portal->update(p_delta);
+    itemSpawner();
+    portalSpawner();
+    if(m_portalState)
+        m_portal->update(p_delta);
 
     if(m_debugMode)
         m_debugBattlefield->update();
+}
+
+void Arena::itemSpawner(){
+   float t_time = m_itemClock->getElapsedTime().asSeconds();
+    if(t_time > m_spawningItemTime){
+        m_itemClock->restart();
+        spawnRandomItem();
+    }
+}
+
+void Arena::portalSpawner(){
+    if(m_portalState)
+        m_portalClock->restart();
+    float t_time = m_portalClock->getElapsedTime().asSeconds();
+    if(t_time > m_spawningPortalTime){
+        m_portalClock->restart();
+        spawnPortal();
+    }
 }
 
 bool Arena::spawnRandomItem(){
@@ -168,14 +181,25 @@ bool Arena::spawnRandomItem(){
 
     spawnItemAt(rand()%3, randx, m_spawnItemRange[2]);
     return true;
+}
 
+void Arena::spawnPortal(){
+    float positionPortal[3] = {0, 5, 0};
+    m_portal -> moveTo(positionPortal);
+    m_portalState = true;
+}
+
+void Arena::hidePortal(){
+    float positionPortal[3] = {-370, 5, 0};
+    m_portal -> moveTo(positionPortal);
+    m_portalState = false;
 }
 
 void Arena::onlineUpdate(){
-    float t_time = m_clock->getElapsedTime().asSeconds();
+    float t_time = m_itemClock->getElapsedTime().asSeconds();
     
-    if(t_time > m_spawningTime){
-        m_clock->restart();
+    if(t_time > m_spawningItemTime){
+        m_itemClock->restart();
         if(spawnRandomItem()){
             Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems)->getX(), m_items.at(m_currentItems)->getY());
         }
@@ -186,7 +210,6 @@ void Arena::onlineUpdate(){
 
 void Arena::spawnItemAt(int p_type, int x, int y){
     float t_position[3] = {x, y, 0};
-
     switch (p_type){
         case 0:     { m_items.push_back(new LifeTank(t_position));   }   break;
         case 1:     { m_items.push_back(new Shield(t_position));     }   break;

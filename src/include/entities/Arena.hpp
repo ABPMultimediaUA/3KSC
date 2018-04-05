@@ -56,6 +56,10 @@ public:
     void            setSpawnPositions(float p_spawnPositions[4][3]); 
     void            respawnPlayer(int p_player);
     void            update(float p_delta);
+    void            itemSpawner();
+    void            portalSpawner();
+    void            spawnPortal();
+    void            hidePortal();
     bool            spawnRandomItem();
     void            modeDebug();
     void            onlineUpdate();
@@ -75,7 +79,8 @@ private:
     //Texture*    m_background;
     float       m_time;
     //Item**      m_items;
-    int         m_spawningTime;
+    int         m_spawningItemTime;
+    int         m_spawningPortalTime;
     int         m_spawnedItems;
     int         m_usedItems;
     int         m_maxItemsOnScreen = 5;
@@ -97,7 +102,10 @@ private:
 
     bool        m_online = false;
 
-    sf::Clock*  m_clock;
+    sf::Clock*  m_itemClock;
+    sf::Clock*  m_portalClock;
+
+    bool        m_portalState;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

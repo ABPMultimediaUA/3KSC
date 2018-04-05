@@ -173,7 +173,6 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
-    m_ultimateCharged = true;
     if(m_ultimateCharged){
         //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
         Character* t_currentPlayer;

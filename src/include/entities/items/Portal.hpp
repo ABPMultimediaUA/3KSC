@@ -23,11 +23,11 @@
 #ifndef PORTAL
 #define PORTAL
 
+class PhysicsManager;
+class Arena;
+
 #include "../Entity.hpp"
 #include "../characters/Character.hpp"
-
-class Arena;
-class Character;
 
 class Portal: public Entity {
 public:
@@ -39,6 +39,7 @@ public:
     void        use();
 private:
     Arena*      m_arena;
+    PhysicsManager* m_physicsManager;
     float       m_charge;
     bool        m_using;
     int         m_charactersInPortal;

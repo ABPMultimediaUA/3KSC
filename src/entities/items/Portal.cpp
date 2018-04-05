@@ -28,21 +28,23 @@
 //Constructor
 Portal::Portal(float p_position[3])
     : Entity(p_position, 4.f, "assets/models/items/portal.obj", 3){
-    m_arena     = Arena::getInstance();
-    m_using     = false;
-    m_charge    = 0.0f;
+    m_arena             = Arena::getInstance();
+    m_physicsManager    = &PhysicsManager::instance();
+    m_using             = false;
+    m_charge            = 0.0f;
     m_charactersInPortal = 0;
     m_physicsManager->addDataToPortal(this);
 }
 
 //Destructor
 Portal::~Portal(){
-    delete m_physicsManager;
-    delete m_arena;
+    std::cout << "1.5" << std::endl;
+    //delete m_physicsManager;
+   // delete m_arena;
+    std::cout << "2" << std::endl;
 }
 
 void Portal::onEnter(Character* p_character){
-    std::cout<<"entro portal con character "<< p_character->getIndex()<<std::endl;
     m_charactersInPortal++;
     m_players[p_character->getIndex()] = p_character;
     m_using = true;
@@ -50,7 +52,6 @@ void Portal::onEnter(Character* p_character){
 
 
 void Portal::onLeave(Character* p_character){
-    std::cout<<"salgo portal"<<std::endl;
     m_players[p_character->getIndex()] = NULL;
     m_charactersInPortal--;
     m_using = false;
@@ -59,7 +60,8 @@ void Portal::onLeave(Character* p_character){
 void Portal::update(float p_delta){
     if(m_using && m_charactersInPortal == 1){
         m_charge += p_delta;
-        if(m_charge >= 2){
+        if(m_charge >= 4){
+    
             use();
             m_charge = 0;
         }
@@ -77,4 +79,10 @@ void Portal::use(){
         }
     }
     std::cout << m_players[i]->getIndex() <<" filled ultimate bar." << std::endl;
+
+    m_arena->hidePortal();
+    m_using             = false;
+    m_charge            = 0.0f;
+    m_charactersInPortal = 1;
+    
 }

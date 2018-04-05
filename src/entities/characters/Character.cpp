@@ -391,7 +391,6 @@ void Character::setUltimateCharged(){
 }
 
 
-
 //ACTIONS
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
