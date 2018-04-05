@@ -78,7 +78,7 @@ bool Sparky::basicAttack(){
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
             //Looking at the rival
-            if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
+            if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
                 if(checkCloseness(t_currentPlayer->getPosition(), 15)){
                     t_currentPlayer->knockback(getOrientation());
@@ -118,18 +118,13 @@ bool Sparky::specialAttackDown(){
 //Fireball
 bool Sparky::specialAttackSide(){
     if(!m_punchLaunched && enoughMP(-25) && !m_ultimateMode){
-        if(m_orientation){      //Looking right
-            // Attack 5 units to the right
-            m_attackPosition[0] = m_position[0] + 5;
-            m_attackTarget[0] = m_position[0] + 100;
-        }else{                  //Looking left
-            // Attack 5 units to the right
-            m_attackPosition[0] = m_position[0] - 5;
-            m_attackTarget[0] = m_position[0] - 100;
-        }
+        //Orientation ==  1 == Right
+        //Orientation == -1 == Left
+        m_attackPosition[0] = m_position[0] + 5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
      
+        m_attackTarget[0] = m_position[0] + 100*m_orientation;
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
 
@@ -167,18 +162,13 @@ bool Sparky::ultimateAttack(){
 
 void Sparky::updateUltimate(){
     if(!m_ultiBulletLaunched && m_ultimateAmmo > 0){
-        if(m_orientation){      //Looking right
-            // Attack 5 units to the right
-            m_attackPosition[0] = m_position[0] + 5;
-            m_attackTarget[0] = m_position[0] + 10;
-        }else{                  //Looking left
-            // Attack 5 units to the right
-            m_attackPosition[0] = m_position[0] - 5;
-            m_attackTarget[0] = m_position[0] - 10;
-        }
+                //Orientation ==  1 == Right
+        //Orientation == -1 == Left
+        m_attackPosition[0] = m_position[0] + 5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
      
+        m_attackTarget[0] = m_position[0] + 100*m_orientation;
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
         

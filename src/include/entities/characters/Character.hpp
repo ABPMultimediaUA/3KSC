@@ -38,12 +38,16 @@ class Character : public Entity{
 public:
     Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
     ~Character();
+
+    void            getRespawnPosition();
+    void            createJumpTable();
 	
     void            receiveAttack(int p_damage, bool p_block);
     virtual void    changeHP(int p_variation);
     void            addMP(int p_variation);
     void            die();
-    void            respawn(float p_position[3]);
+    void            setRespawnPosition(float p_respawnPosition[3]);
+    void            respawn();
     void            shield();
     void            wings();
     void            removeWings();
@@ -59,7 +63,7 @@ public:
     char*           getName();
     int             getHP();
     int             getMP();
-    bool            getOrientation();
+    int             getOrientation();
     void            setStunned(float p_time = 0);
     bool            isJumping();
     void            onTouchGround();
@@ -104,7 +108,8 @@ protected:
     float           m_velocity;
     float           m_attackPosition[3];
     float           m_attackTarget[3];
-    bool            m_orientation;
+    float           m_respawnPosition[3];
+    int             m_orientation;
     bool            m_stunned;
     bool            m_blocking;
     bool            m_shielded;

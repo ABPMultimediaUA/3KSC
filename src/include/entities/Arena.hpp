@@ -53,7 +53,6 @@ public:
     void            animateBackground();
     void            restart();
     void            setSpawnPositions(float p_spawnPositions[4][3]); 
-    void            respawnPlayer(int p_player);
     void            update();
     bool            spawnRandomItem();
     void            modeDebug();
@@ -63,6 +62,11 @@ public:
     bool            getOnline();
     void            setRespawnPositions(float p_respawnPosition[3]){ for(int i = 0; i < 3; i++) m_respawnPosition[i] = p_respawnPosition[i]; }
     void            setItemRange(float p_itemRange[3]) { for(int i = 0; i < 3; i++) m_spawnItemRange[i] = p_itemRange[i]; }
+
+    float*          getRespawnPosition();
+
+    void            pleaseKill(int p_playerIndex);
+
 
 private: 
     static Arena*           m_instance;

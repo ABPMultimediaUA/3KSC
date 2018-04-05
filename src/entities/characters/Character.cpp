@@ -77,23 +77,10 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_wingsTime             = 0;
     m_shieldDuration        = 2.0;
     m_shieldTime            = 0;
-
-    m_maxJumps              = 2;
-    m_jumping               = false;
-    m_jumpCurrentTime       = 0;
-    m_jumpMaxTime           = 10;
-    m_jumpTable[0]          = 3.0f;
-    m_jumpTable[1]          = 2.4f;
-    m_jumpTable[2]          = 1.9f;
-    m_jumpTable[3]          = 1.6f;
-    m_jumpTable[4]          = 1.25f;
-    m_jumpTable[5]          = 0.95;
-    m_jumpTable[6]          = 0.75;
-    m_jumpTable[7]          = 0.55;
-    m_jumpTable[8]          = 0.35;
-    m_jumpTable[9]          = 0.15;
-
+    
     mapActions();
+    createJumpTable();
+    setRespawnPosition(m_arena->getRespawnPosition());
 
     m_waitRelease           = false;
     m_keepWaiting           = false;
@@ -115,10 +102,32 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
 
 Character::~Character(){}
 
+void Character::createJumpTable(){
+    m_maxJumps          = 2;
+    m_jumping           = false;
+    m_jumpCurrentTime   = 0;
+    m_jumpMaxTime       = 10;
+    m_jumpTable[0]      = 3.0f;
+    m_jumpTable[1]      = 2.4f;
+    m_jumpTable[2]      = 1.9f;
+    m_jumpTable[3]      = 1.6f;
+    m_jumpTable[4]      = 1.25f;
+    m_jumpTable[5]      = 0.95;
+    m_jumpTable[6]      = 0.75;
+    m_jumpTable[7]      = 0.55;
+    m_jumpTable[8]      = 0.35;
+    m_jumpTable[9]      = 0.15;
+}
+
+void Character::setRespawnPosition(float p_respawnPosition[3]){
+    for(int i = 0; i < 3; i++){
+        m_respawnPosition[i] = p_respawnPosition[i];
+    }
+}
+
 //Initializes actions mapping for this player
 void Character::mapActions(){
     m_actions = new ActionMapping[(int) Action::Count + 1];
-
                       //Action                    //Function                      //onlyOnce  //Enabled
     m_actions[0]    = {Action::Left               , &Character::left              , false     , false};
     m_actions[1]    = {Action::Right              , &Character::right             , false     , false};
@@ -150,14 +159,10 @@ void Character::receiveAttack(int p_damage, bool p_block){
 void Character::changeHP(int p_variation){
     m_HP += p_variation;
 
-    if (m_HP <= 0){
-        m_HP = 0;
+    if (m_HP <= 0)
         die();
-    }
-    
-    else if(m_HP > m_maxHP){
+    else if(m_HP > m_maxHP)
         m_HP = m_maxHP;
-    }
 
     //HUD Stuff
     // m_UIManager->setHP(m_playerIndex, m_HP);
@@ -183,50 +188,47 @@ void Character::shield(){
 //Activates wings, if not already active
 void Character::wings(){
     if(!m_winged){
-        m_velocity *= 1.5f;
+        m_velocity *= 1.5;
         m_winged = true;
     }
+
     m_wingsTime = m_inputManager->getMasterClock() + m_wingsDuration;
 }
 
 void Character::removeWings(){
-    if(m_winged){
-        m_velocity /= 1.5f;
-        m_winged = false;
-    }
+    m_velocity /= 1.5;
+    m_winged = false;
 }
 
 //Decreases number of lives
 void Character::die(){
     m_lives--;
+    //std::cout << "Me quedan " << m_lives << " vidas." << std::endl;
+    m_HP = 0;
     //m_alive = false;
     m_knockback = false;
     m_stunned   = false;
-
     m_shielded = false;
 
     removeWings();
-    
 
-    //if(m_lives >= 0)
-        m_arena->respawnPlayer(m_playerIndex);
-    
+    if(m_lives >= 0)
+        respawn();
+    else
+        m_arena->pleaseKill(m_playerIndex);
+
     //HUD Stuff
     //Delete when m_lives == 0
 }
 
 void Character::lookLeft(){
-    if(m_orientation){
-        m_orientation = false;
-        this->rotate(0);
-    }
+    m_orientation = -1;
+    this->rotate(0);
 }
 
 void Character::lookRight(){
-    if(!m_orientation){
-        m_orientation = true;
-        this->rotate(180);
-    }
+    m_orientation = 1;
+    this->rotate(180);
 }
 
 bool Character::isJumping(){
@@ -317,7 +319,7 @@ void Character::update(){
         m_playerDebug->update();
 
     //Increase magic every second and with attacks
-    if(getY() < -200 || getY() > 200 || getX() < -230 || getX() > 230)
+    if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250)
         die();
 }
 
@@ -356,7 +358,7 @@ int Character::getMP(){
     return m_MP;
 }
 
-bool Character::getOrientation(){
+int Character::getOrientation(){
     return m_orientation;
 }
 
@@ -376,12 +378,12 @@ void Character::modeDebug(){
     }
 }
 
-void Character::respawn(float p_position[3]){
+void Character::respawn(){
     m_respawning = true;
     m_HP = m_maxHP;
     m_MP = m_maxMP;
 
-    moveTo(p_position);
+    moveTo(m_respawnPosition);
     //m_UIManager->setHP(m_playerIndex, m_HP);
     //m_UIManafer->setMP(m_playerIndex, m_MP);
 }
@@ -434,7 +436,7 @@ bool Character::moveToPath(float p_position[2]){
 bool Character::left(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     lookLeft();
-    m_runningFactor = 1.0f;
+    //m_runningFactor = 1.0f;
 
     return false;
 }
@@ -442,7 +444,7 @@ bool Character::left(){
 bool Character::right(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
-    m_runningFactor = 1.0f;
+    //m_runningFactor = 1.0f;
     return false;
 }
 
@@ -463,13 +465,11 @@ bool Character::jump(){
 }
 
 bool Character::run(){
-    if(m_winged){
+    if(m_winged)
         m_runningFactor = 1.5f;
-    }
-    else{
+    else
         m_runningFactor = 2.0f;
-    }
-
+    
     return false;
 }
 

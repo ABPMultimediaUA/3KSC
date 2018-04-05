@@ -70,7 +70,7 @@ bool Plup::basicAttack(){
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
             //Looking at the rival
-            if((m_orientation && t_currentPlayer->getX() >= m_position[0]) || (!m_orientation && t_currentPlayer->getX() <= m_position[0])){
+            if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
                 if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
                     t_currentPlayer->knockback(getOrientation());
@@ -114,12 +114,7 @@ bool Plup::specialAttackUp(){
 //Snowman
 bool Plup::specialAttackDown(){
     if(!m_snowmanPlaced && enoughMP(-35)){
-        //Looking right
-        if(m_orientation)
-            m_attackPosition[0] = m_position[0] + 10;   // Place snowman 10 units to the right
-        else
-            m_attackPosition[0] = m_position[0] - 10;   // Place snowman 10 units to the left
-        
+        m_attackPosition[0] = m_position[0] + 10*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
 
@@ -158,13 +153,8 @@ bool Plup::specialAttackSide(){
     if(m_onGround && enoughMP(-25)){
         //std::cout << m_name << ": Special Attack Side" << std::endl;
 
-        int t_side = 1;
-        //True => Right
-        if(!m_orientation)
-            t_side = -1;
-
         m_physicsManager->getBody(getId())->SetLinearDamping(-0.5);
-        m_physicsManager->getBody(getId())->SetLinearVelocity(b2Vec2(10*t_side,0));
+        m_physicsManager->getBody(getId())->SetLinearVelocity(b2Vec2(10*m_orientation,0));
 
         //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
         m_dashing = true;
@@ -179,7 +169,7 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
-    m_ultimateCharged = true;
+    //m_ultimateCharged = true;
     if(m_ultimateCharged){
         //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
         Character* t_currentPlayer;

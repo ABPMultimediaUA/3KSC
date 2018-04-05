@@ -66,9 +66,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
         m_client->start();
         m_inputManager->onlineMode();
         m_onlineMode = true;
-    }
-
-    else{
+    }else{
        // m_arena->spawnItems();
         m_arena->spawnPlayers();
     }
@@ -162,13 +160,10 @@ void InGameState::update(){
     //Input and update for every character
     for (i = 0; i < t_playerCount; i++){
         t_currentPlayer = m_arena->getPlayer(i);
-
-        // if(inputManager->eventHandler()){
-        //    currentPlayer->input();
-        // }
-        
-        t_currentPlayer->input();
-        t_currentPlayer->update();
+        if(t_currentPlayer != 0){
+            t_currentPlayer->input();
+            t_currentPlayer->update();
+        }
     }
 }
 
