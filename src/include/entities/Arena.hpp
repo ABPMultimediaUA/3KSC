@@ -66,36 +66,35 @@ public:
 
 private: 
     static Arena*           m_instance;
-    static EngineManager*   m_engineManager;
-    static PhysicsManager*  m_physicsManager;
     
     static const char*  m_modelURLs[3];
 	static const char*  m_skyboxURLs[3][6];
-    //Texture*    m_background;
-    float       m_time;
-    //Item**      m_items;
-    int         m_spawningTime;
-    int         m_spawnedItems;
-    int         m_usedItems;
-    int         m_maxItemsOnScreen = 5;
-    int         m_currentItems;
-    int         m_lastItemType = 0;
+    //Texture*          m_background;
+    float               m_time;
+    //Item**            m_items;
+    float               m_offsetSpawnTime;
+    float               m_nextSpawnTime;
+    int                 m_spawnedItems;
+    int                 m_usedItems;
+    int                 m_maxItemsOnScreen = 5;
+    int                 m_currentItems;
+    int                 m_lastItemType = 0;
 
     std::vector<Item*>  m_items;
 
-    int         m_playerCount;
-    Character** m_players;
+    int                 m_playerCount;
+    Character**         m_players;
 
-    Debug*      m_debugBattlefield;
-    bool        m_debugMode;
+    Debug*              m_debugBattlefield;
+    bool                m_debugMode;
 
-    float       m_spawnPositions[4][3];
-    float       m_respawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
-    float       m_spawnItemRange[3];
+    float               m_spawnPositions[4][3];
+    float               m_respawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
+    float               m_spawnItemRange[3];
 
-    bool        m_online = false;
+    bool                m_online = false;
 
-    sf::Clock*  m_clock;
+    sf::Clock*       m_clock;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

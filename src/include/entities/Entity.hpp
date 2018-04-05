@@ -25,6 +25,7 @@
 
 class EngineManager;
 class PhysicsManager;
+class InputManager;
 
 //#include "../Model.hpp"
 //#include "../Texture.hpp"
@@ -53,6 +54,7 @@ class Entity {
     protected:
         static EngineManager*  m_engineManager;
         static PhysicsManager* m_physicsManager;
+        static InputManager*   m_inputManager;
 
         static int m_entityCount;
         int        m_id; 

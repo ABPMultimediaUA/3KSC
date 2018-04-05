@@ -22,6 +22,7 @@
 
 #include "../include/entities/Arena.hpp"
 #include "../include/managers/EngineManager.hpp"
+#include "../include/managers/InputManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 
 #include "../include/entities/characters/Plup.hpp"
@@ -38,24 +39,20 @@
 #include "Client.hpp"
 #include <iostream>
 
-EngineManager*  Arena::m_engineManager     = &EngineManager::instance();
-PhysicsManager* Arena::m_physicsManager    = &PhysicsManager::instance();
-
-
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode):Entity(p_position, p_scale, p_modelURL, 1){
+Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode) : Entity(p_position, p_scale, p_modelURL, 1){
 
-    m_currentItems  = 0;
+    m_currentItems    = 0;
     //m_items         = new Item*[m_maxItemsOnScreen];
-    m_instance      = this;
-    m_debugMode     = p_debugMode;
-    m_spawningTime  = 10;
-    m_clock         = new sf::Clock();
-    m_playerCount   = 0;
-    m_players       = new Character*[4];
-    m_usedItems     = 0;
+    m_instance        = this;
+    m_debugMode       = p_debugMode;
+    m_offsetSpawnTime = 10.0;
+    m_nextSpawnTime   = m_inputManager->getMasterClock() + m_offsetSpawnTime;
+    m_playerCount     = 0;
+    m_players         = new Character*[4];
+    m_usedItems       = 0;
 }
 
 Arena::~Arena(){}
@@ -68,7 +65,7 @@ void Arena::spawnPlayers(){
     float positionPortal[3] = {-70, 5, 0};
     //new Portal(positionPortal);
 
-    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
+    m_players[m_playerCount++] = new Plup("Player 1", m_spawnPositions[0], false);
     m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
     m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
 
@@ -143,10 +140,10 @@ void Arena::respawnPlayer(int p_player){
 }
 
 void Arena::update(){
-    float t_time = m_clock->getElapsedTime().asSeconds();
+    float t_time = m_inputManager->getMasterClock();
     
-    if(t_time > m_spawningTime){
-        m_clock->restart();
+    if(t_time > m_nextSpawnTime){
+        m_nextSpawnTime = t_time + m_offsetSpawnTime;
         spawnRandomItem();
     }
 
@@ -165,16 +162,16 @@ bool Arena::spawnRandomItem(){
 
     int range = m_spawnItemRange[1] - m_spawnItemRange[0] + 1;
     int randx = m_spawnItemRange[0] + (rand() % range);
-
-    spawnItemAt(rand()%3, randx, m_spawnItemRange[2]);
+    int random = rand()%(3-0 + 1) + 0;
+    spawnItemAt(random, randx, m_spawnItemRange[2]);
     return true;
 }
 
 void Arena::onlineUpdate(){
     float t_time = m_clock->getElapsedTime().asSeconds();
     
-    if(t_time > m_spawningTime){
-        m_clock->restart();
+    if(t_time > m_nextSpawnTime){
+        m_nextSpawnTime = t_time + m_offsetSpawnTime;
         if(spawnRandomItem()){
             Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems)->getX(), m_items.at(m_currentItems)->getY());
         }
@@ -187,8 +184,8 @@ void Arena::spawnItemAt(int p_type, int x, int y){
     float t_position[3] = {x, y, 0};
 
     switch (p_type){
-        case 0:     { m_items.push_back(new LifeTank(t_position));   }   break;
-        case 1:     { m_items.push_back(new Shield(t_position));     }   break;
+        case 0:     { m_items.push_back(new Shield(t_position));     }   break;
+        case 1:     { m_items.push_back(new LifeTank(t_position));   }   break;
         case 2:     { m_items.push_back(new Wings(t_position));      }   break;
     }
 
@@ -196,12 +193,10 @@ void Arena::spawnItemAt(int p_type, int x, int y){
     m_lastItemType = p_type;
 }
 
-void Arena::setOnline(bool p_state)
-{
+void Arena::setOnline(bool p_state){
     m_online = p_state;
 }
 
-bool Arena::getOnline()
-{
+bool Arena::getOnline(){
     return m_online;
 }

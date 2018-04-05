@@ -131,11 +131,16 @@ protected:
     Debug*          m_playerDebug;
     bool            m_debugMode;
 
-    sf::Clock       m_knockbackClock;
-    sf::Clock       m_dashClock;
-    sf::Clock       m_stunClock;
-    sf::Clock       m_wingsClock;
-    sf::Clock       m_shieldClock;
+    float           m_knockbackDuration;
+    float           m_knockbackTime;
+    float           m_dashDuration;
+    float           m_dashTime;
+    float           m_stunDuration;
+    float           m_stunTime;
+    float           m_wingsDuration;
+    float           m_wingsTime;
+    float           m_shieldDuration;
+    float           m_shieldTime;
 
     bool            m_knockback;
     bool            m_dashing;

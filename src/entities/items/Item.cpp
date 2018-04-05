@@ -22,12 +22,13 @@
 
 #include "../../include/entities/items/Item.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
+#include "../../include/managers/InputManager.hpp"
 #include "../../include/entities/Arena.hpp"
 #include <iostream>
 
 //Constructor
-Item::Item(float p_position[3], const char* p_modelURL)
-    : Entity(p_position, 4.f, p_modelURL, 2){
+Item::Item(float p_position[3], const char* p_modelURL) : Entity(p_position, 4.f, p_modelURL, 2){
+    m_dieTime = m_inputManager->getMasterClock() + 15.0;
 }
 
 //Destructor
@@ -40,7 +41,7 @@ void Item::use(){}
 void Item::setOwner(int p_owner){}
 
 bool Item::update(){
-    if(m_clock.getElapsedTime().asSeconds() > 15.0){
+    if(m_inputManager->getMasterClock() > m_dieTime){
         delete this;
         return true;
     }

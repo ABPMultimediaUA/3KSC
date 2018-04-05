@@ -25,6 +25,7 @@
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
+#include "../../include/managers/InputManager.hpp"
 //#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
@@ -37,11 +38,15 @@
         SI HACES EL DASH Y CHOCAS CON LA TURRET PETA, MIRAR COMO SOLUCIONARLO
 */
 
-Plup::Plup(char* p_name, float p_position[3], bool p_debugMode)
-    : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode){
-    m_type                  = 3;
+Plup::Plup(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode){
+    m_type           = 3;
 
-    m_snowmanPlaced = false;
+    m_snowmanPlaced  = false;
+
+    m_turretDuration = 15.0;
+    m_turretTime     = 0;
+    m_basicDuration  = 0.5;
+    m_basicTime      = 0;
 }
 
 Plup::~Plup(){}
@@ -52,7 +57,8 @@ bool Plup::jump(){
 
 //Slap
 bool Plup::basicAttack(){
-    if(m_basicClock.getElapsedTime().asSeconds() >= 0.5){
+    float t_currentTime = m_inputManager->getMasterClock();
+    if(t_currentTime >= m_basicTime){
         //std::cout << m_name << ": Slap!" << std::endl;
         Character* t_currentPlayer;
 
@@ -73,7 +79,7 @@ bool Plup::basicAttack(){
                 }
             }
         }
-        m_basicClock.restart();
+        m_basicTime = t_currentTime + m_basicDuration;
     }
     ////std::cout << "PLUP MP: " << m_MP << std::endl;
 
@@ -121,14 +127,14 @@ bool Plup::specialAttackDown(){
         m_snowman = new Snowman(m_attackPosition, m_playerIndex);
         //std::cout << m_name << ": Snowman" << std::endl;
         m_snowmanPlaced = true;
-        m_turretClock.restart();
+        m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
     }
     return false;
 }
 
 void Plup::updateSnowman(){
     //Snowmen AI
-    if(m_turretClock.getElapsedTime().asSeconds() < 15.0){
+    if(m_inputManager->getMasterClock() < m_turretTime){
         if(!m_snowman->getBulletLaunched()){
             if(!m_snowman->lockNLoad())
                 deleteSnowman();
@@ -162,7 +168,7 @@ bool Plup::specialAttackSide(){
 
         //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
         m_dashing = true;
-        m_dashClock.restart();
+        m_dashTime = m_inputManager->getMasterClock() + m_dashDuration;
 
         m_stunned = true;
 
@@ -198,7 +204,7 @@ void Plup::updatePlayer(){
     if(m_dashing){
         //If time is over or collision, finish atack
         //The second param of collision is true because all dash atacks cause stun
-        if(m_dashClock.getElapsedTime().asSeconds() > 0.5 || m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true)){
+        if(m_inputManager->getMasterClock() > m_dashTime || m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true)){
             m_physicsManager->getBody(getId())->SetLinearDamping(0);
             m_dashing = false;
             m_stunned = false;
