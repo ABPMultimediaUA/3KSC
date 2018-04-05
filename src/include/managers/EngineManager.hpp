@@ -62,7 +62,7 @@ public:
 
     virtual bool OnEvent(const irr::SEvent& p_event); 
     void timeStamp();
-    float updateFrameDeltaTime();
+    float updateFrameDeltaTime(float p_delta);
 
     void createCamera(float p_cameraPosition[3], float p_tarjet[3]);
     void moveCamera(float p_posX, float p_posY, float p_posZ);

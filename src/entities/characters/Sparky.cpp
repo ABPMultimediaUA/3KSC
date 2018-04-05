@@ -148,7 +148,6 @@ void Sparky::updatePunch(){
 bool Sparky::ultimateAttack(){
     //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
     //m_soundManager->playSound("ultimate");
-    m_ultimateCharged = true;
     if(m_ultimateCharged){
         //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 

@@ -25,6 +25,7 @@ class EngineManager;
 
 #include "../entities/Entity.hpp"
 #include "../entities/characters/Character.hpp"
+#include "../entities/items/Portal.hpp"
 #include "../managers/ContactManager.hpp"
 #include <vector>
 #include <Box2D.h>
@@ -51,16 +52,20 @@ private:
 
     ContactManager*         m_contactManager;
 
+    b2Fixture*              m_portalFixture;
+
     short                   CATEGORY_PLAYER;
     short                   CATEGORY_ITEM;
     short                   CATEGORY_GROUND;
+
+    float                   m_deltaTime;
 
 public:
     static PhysicsManager& instance();
     PhysicsManager();
     ~PhysicsManager();
     
-    void                    update();
+    void                    update(float p_delta);
     
     void                    createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY);
 
@@ -69,7 +74,7 @@ public:
     //void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    createPhysicBoxPlatform(int* p_id, float p_position[3]);
     void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
-    //void                    createPhysicBox(int* p_id, float p_position[3], float p_dimX, float p_dimY);
+    void                    addDataToPortal(Portal* p_portal);
 
     void                    addForce();
     void                    removeForce();
