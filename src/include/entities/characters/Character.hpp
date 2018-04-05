@@ -88,7 +88,7 @@ public:
 
     void            modeDebug();
     void            setKnockback();
-    void            knockback(bool p_orientation);
+    void            knockback(int p_orientation);
 
     virtual void    updatePlayer() = 0;
     

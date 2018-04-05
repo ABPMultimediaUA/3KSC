@@ -66,6 +66,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_onGround              = false;
     m_ultimateCharged       = false;
     m_runningFactor         = 1.0f;
+    m_orientation           = 1;
 
     m_knockbackDuration     = 0.25;
     m_knockbackTime         = 0;
@@ -73,9 +74,9 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_dashTime              = 0;
     m_stunDuration          = 1.0;
     m_stunTime              = 0;
-    m_wingsDuration         = 5.0;
+    m_wingsDuration         = 10.0;
     m_wingsTime             = 0;
-    m_shieldDuration        = 2.0;
+    m_shieldDuration        = 5.0;
     m_shieldTime            = 0;
     
     mapActions();
@@ -234,7 +235,6 @@ void Character::lookRight(){
 bool Character::isJumping(){
     return m_actions[(int) Action::Jump].enabled;
 }
-
 
 //Calls action functions when they are active
 void Character::doActions(){
@@ -500,15 +500,10 @@ void Character::setKnockback(){
     m_knockback = true;
 }
 
-void Character::knockback(bool p_orientation){
+void Character::knockback(int p_orientation){
     if(!m_knockback){
-        int t_side = 1;
-        //True => Right
-        if(!p_orientation)
-            t_side = -1;
-
         setKnockback();
-        m_physicsManager->applyImpulse(getId(), t_side);
+        m_physicsManager->applyImpulse(getId(), p_orientation);
     }
 }
 
