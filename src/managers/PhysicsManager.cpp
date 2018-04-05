@@ -485,7 +485,7 @@ void PhysicsManager::fastGravity(int p_idBody){
     p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), false);   
 }
 
-void PhysicsManager::machineGun(int p_idBody, bool p_orientation){
+void PhysicsManager::machineGun(int p_idBody, int p_orientation){
     b2Body* p_body = getBody(p_idBody);
 
     //Create a new body and positioning it in the coords of the Entity
@@ -496,10 +496,7 @@ void PhysicsManager::machineGun(int p_idBody, bool p_orientation){
 
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    if(p_orientation)
-        t_polygonShape->SetAsBox(50.0, 5.0, b2Vec2(30,0), 0);
-    else
-        t_polygonShape->SetAsBox(50.0, 5.0, b2Vec2(-30,0), 0);
+    t_polygonShape->SetAsBox(50.0, 5.0, b2Vec2(30*p_orientation,0), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;

@@ -65,7 +65,7 @@ void Arena::spawnPlayers(){
     float positionPortal[3] = {-70, 5, 0};
     //new Portal(positionPortal);
 
-    m_players[m_playerCount++] = new Plup("Player 1", m_spawnPositions[0], false);
+    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
     m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
     m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
 
@@ -89,7 +89,10 @@ int Arena::getPlayerCount(){
 
 //Returns the player with the given index
 Character* Arena::getPlayer(int p_index){
-    return m_players[p_index];
+    if(m_players[p_index] != 0)
+        return m_players[p_index];
+    else
+        return 0;
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it and uses it
@@ -135,8 +138,8 @@ void Arena::setSpawnPositions(float p_spawnPositions[4][3]){
     }
 }
 
-void Arena::respawnPlayer(int p_player){
-    m_players[p_player]->respawn(m_respawnPosition);
+float* Arena::getRespawnPosition(){
+    return m_respawnPosition;
 }
 
 void Arena::update(){
@@ -199,4 +202,9 @@ void Arena::setOnline(bool p_state){
 
 bool Arena::getOnline(){
     return m_online;
+}
+
+void Arena::pleaseKill(int p_playerIndex){
+    //delete m_players[p_playerIndex];
+    //m_players[p_playerIndex] = 0;
 }

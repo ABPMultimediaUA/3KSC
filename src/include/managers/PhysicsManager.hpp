@@ -100,7 +100,7 @@ public:
     void                    shockwaveBox(int p_idBody);
     void                    sparkyJump(int p_idBody);
     void                    fastGravity(int p_idBody);
-    void                    machineGun(int p_idBody, bool p_orientation);
+    void                    machineGun(int p_idBody, int p_orientation);
 };
 
 #endif
