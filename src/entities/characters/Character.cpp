@@ -40,8 +40,6 @@ struct ActionMapping{
     bool    enabled;                    //Enabled or not
 };
 
-InputManager* m_inputManager = &InputManager::instance();
-
 //Static members
 int Character::m_playerCount = 0;
 
@@ -67,9 +65,18 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_dashing               = false;
     m_onGround              = false;
     m_ultimateCharged       = false;
-    m_stunnedTime           = 1.0;
-
     m_runningFactor         = 1.0f;
+
+    m_knockbackDuration     = 0.25;
+    m_knockbackTime         = 0;
+    m_dashDuration          = 0.5;
+    m_dashTime              = 0;
+    m_stunDuration          = 1.0;
+    m_stunTime              = 0;
+    m_wingsDuration         = 5.0;
+    m_wingsTime             = 0;
+    m_shieldDuration        = 2.0;
+    m_shieldTime            = 0;
 
     m_maxJumps              = 2;
     m_jumping               = false;
@@ -170,7 +177,7 @@ void Character::addMP(int p_variation){
 //Activates shield
 void Character::shield(){
     m_shielded = true;
-    m_shieldClock.restart();
+    m_shieldTime = m_inputManager->getMasterClock() + m_shieldDuration;
 }
 
 //Activates wings, if not already active
@@ -179,7 +186,7 @@ void Character::wings(){
         m_velocity *= 1.5f;
         m_winged = true;
     }
-    m_wingsClock.restart();
+    m_wingsTime = m_inputManager->getMasterClock() + m_wingsDuration;
 }
 
 void Character::removeWings(){
@@ -282,20 +289,21 @@ void Character::input(){
 void Character::update(){
     //Specific update for each character
     updatePlayer();
+    float t_currentTime = m_inputManager->getMasterClock();
 
-    if(m_winged && m_wingsClock.getElapsedTime().asSeconds() >= 5.0)
+    if(m_winged && t_currentTime >= m_wingsTime)
         removeWings();
 
-    if(m_shielded && m_shieldClock.getElapsedTime().asSeconds() >= 2.0)
+    if(m_shielded && t_currentTime >= m_shieldTime)
         m_shielded = false;
     
-    if(m_stunned && m_stunClock.getElapsedTime().asSeconds() > m_stunnedTime){
-        m_stunned     = false;
-        m_stunnedTime = 1.0;
+    if(m_stunned && t_currentTime > m_stunTime){
+        m_stunDuration = 1.0;
+        m_stunned      = false;
     }else
         doActions();
 
-    if(m_knockback && m_knockbackClock.getElapsedTime().asSeconds() >= 0.25)
+    if(m_knockback && t_currentTime >= m_knockbackTime)
         m_knockback = false;
 
     if(!m_respawning)
@@ -354,12 +362,12 @@ bool Character::getOrientation(){
 
 void Character::setStunned(float p_time){
     if(p_time != 0)
-        m_stunnedTime = p_time;
+        m_stunDuration = p_time;
     else
-        m_stunnedTime = m_stunnedTime/2;
+        m_stunDuration = m_stunDuration/2;
     
     m_stunned = true;
-    m_stunClock.restart();
+    m_stunTime = m_inputManager->getMasterClock() + m_stunDuration;
 }
 
 void Character::modeDebug(){
@@ -417,7 +425,7 @@ bool Character::moveToPath(float p_position[2]){
     // Jump if enemy is above
     if(p_position[1] > (this->getY() + 15.0f)){
         if(m_flagAIJump)
-        m_inputManager->setAction(Action::Jump, m_playerIndex);
+            m_inputManager->setAction(Action::Jump, m_playerIndex);
     }
 
     return false;
@@ -488,7 +496,7 @@ bool Character::specialAttackSide(){}
 bool Character::ultimateAttack(){}
 
 void Character::setKnockback(){
-    m_knockbackClock.restart();
+    m_knockbackTime = m_inputManager->getMasterClock() + m_knockbackDuration;
     m_knockback = true;
 }
 
@@ -499,8 +507,7 @@ void Character::knockback(bool p_orientation){
         if(!p_orientation)
             t_side = -1;
 
-        m_knockbackClock.restart();
-        m_knockback = true;
+        setKnockback();
         m_physicsManager->applyImpulse(getId(), t_side);
     }
 }

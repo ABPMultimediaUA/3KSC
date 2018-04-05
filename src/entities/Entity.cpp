@@ -23,6 +23,7 @@
 #include "../include/entities/Entity.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
+#include "../include/managers/InputManager.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
 
@@ -31,6 +32,7 @@ int Entity::m_entityCount = 0;
 
 EngineManager*  Entity::m_engineManager     = &EngineManager::instance();
 PhysicsManager* Entity::m_physicsManager    = &PhysicsManager::instance();
+InputManager*   Entity::m_inputManager      = &InputManager::instance();
 
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){

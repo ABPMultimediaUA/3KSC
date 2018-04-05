@@ -326,3 +326,11 @@ void InputManager::updateOnlineInput(int p_player){
 void InputManager::sendOnlineInput(){
     m_client->sendAction(m_lastActions);
 }
+
+void InputManager::resetMasterClock(){
+    m_masterClock.restart();
+}
+
+float InputManager::getMasterClock(){
+    return m_masterClock.getElapsedTime().asSeconds();
+}

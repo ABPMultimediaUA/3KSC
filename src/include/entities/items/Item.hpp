@@ -46,7 +46,7 @@ protected:
     float               m_durationGround;
     static const char*  m_modelURLs[4];
 
-    sf::Clock           m_clock;
+    float               m_dieTime;
 };
 
 #endif

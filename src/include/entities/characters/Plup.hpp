@@ -53,6 +53,12 @@ private:
 
     sf::Clock   m_turretClock;
     sf::Clock   m_basicClock;
+
+    float           m_turretDuration;
+    float           m_turretTime;
+    float           m_basicDuration;
+    float           m_basicTime;
+
 };
 
 #endif

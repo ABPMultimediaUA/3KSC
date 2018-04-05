@@ -25,17 +25,12 @@
 #include "../../include/extra/Actions.hpp"
 #include "../../include/managers/SoundManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
+#include "../../include/managers/InputManager.hpp"
 #include <iostream>
 
 /*
     ATAQUE UP:
         CAIDA EN PICADO
-
-    ATAQUE DOWN:
-        CHISPAZO (HACER UN KCNOCKBACK A LO BESTIA HACIA TODOS LOS LADOS)
-        NO PUEDE MOVERSE
-
-    EN MODO ULTI SOLO PUEDE SALTAR Y MOVERSE, NO PUEDE ATACAR
 */
 
 Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode)
