@@ -414,7 +414,6 @@ void Character::setUltimateCharged(){
     m_ultimateCharged = true;
 }
 
-
 //ACTIONS
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
@@ -445,6 +444,7 @@ bool Character::right(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
     m_runningFactor = 1.0f;
+
     return false;
 }
 
@@ -509,12 +509,9 @@ void Character::knockback(int p_orientation){
 
 int  Character::getCurrentSnowmen(){}
 
-void Character::onPortal(){
+void Character::onPortal(){}
 
-}
-
-void Character::leavePortal(){
-}
+void Character::leavePortal(){}
 
 int Character::getValidation(){
     return m_validation;

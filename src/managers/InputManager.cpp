@@ -52,10 +52,10 @@ InputManager::InputManager(){
     //Devices initialization
     autoassignDevices();
 
-    // m_inputDevices[0]   = -1;
-    // m_inputDevices[1]   = -2;
-    // m_inputDevices[2]   =  0;
-    // m_inputDevices[3]   = -2;
+    //m_inputDevices[0]   = -1;
+    //m_inputDevices[1]   = -2;
+    //m_inputDevices[2]   = -2;
+    //m_inputDevices[3]   = -2;
 
     //Initialize action booleans
     for (int i = 0; i < 4; i++){
@@ -98,19 +98,19 @@ void InputManager::autoassignDevices(){
     bool t_keyboardAssigned = false;
     updateJoysticks();
 
-    for (int i = 0; i < 4; i++){
-        if (isConnected(i)){
+    for (int i = 0; i < 2; i++){
+        if(isConnected(i)){
             m_inputDevices[i] = i;
+            std::cout << i << " es mando." << std::endl;
         }
-
         else{
-            if (!t_keyboardAssigned){
+            if(!t_keyboardAssigned){
                 m_inputDevices[i] = -1;
                 t_keyboardAssigned = true;
-            }
-
-            else{
+                std::cout << i << " es teclado." << std::endl;
+            }else{
                 m_inputDevices[i] = -2;
+                std::cout << i << " es IA." << std::endl;
             }
         }
     }
