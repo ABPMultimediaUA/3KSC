@@ -34,7 +34,7 @@ Game::Game(){
     const int FPS = 40;
     m_nanoFrames = 1000000000/FPS;
     if(m_engineManager->createWindow(false)){
-        m_state = new InGameState(this, false);
+        m_state = new InGameState(this, true);
     }
 }
 

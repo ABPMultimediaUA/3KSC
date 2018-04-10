@@ -46,9 +46,10 @@ int Character::m_playerCount = 0;
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode, bool p_online) : Entity(p_position, 5.f, p_modelURL){
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
+    m_client                = &Client::instance();
     m_name                  = p_name;
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
@@ -78,6 +79,8 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_wingsTime             = 0;
     m_shieldDuration        = 5.0;
     m_shieldTime            = 0;
+
+    m_online                = p_online;
     
     mapActions();
     createJumpTable();
@@ -147,8 +150,16 @@ void Character::mapActions(){
 
 //Receives an attack from other player
 //Parameters: damage, can you block it?
-void Character::receiveAttack(int p_damage, bool p_block, int p_knockback){
-    
+void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool p_checked){
+    std::cout<<"character11111"<<std::endl;
+    if(m_online && !p_checked){
+        if(m_client->getPlayer() == m_playerIndex){
+            m_client->attacked(p_damage, p_block, p_knockback);
+        }
+        else return;  //ignorar ataques que no sean de tu jugador
+    }
+
+    std::cout<<"character ataque"<<std::endl;
     if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
         //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
@@ -158,14 +169,9 @@ void Character::receiveAttack(int p_damage, bool p_block, int p_knockback){
     }
 
     if(p_knockback == 2) //knockback sin direccion
-    {
         setKnockback();
-    }
     else if(p_knockback != 0)
-    {
         knockback(p_knockback);
-    }
-
 }
 
 //Increases or decreases life
@@ -209,8 +215,10 @@ void Character::wings(){
 }
 
 void Character::removeWings(){
-    m_velocity /= 1.5;
-    m_winged = false;
+    if(!m_winged){
+        m_velocity /= 1.5;
+        m_winged = false;
+    }
 }
 
 //Decreases number of lives

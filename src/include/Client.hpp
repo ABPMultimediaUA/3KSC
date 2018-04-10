@@ -25,6 +25,7 @@ class Client{
         const std::vector<std::string> explode(const std::string& s, const char& c);
         void spawnItem(int p_type, int x, int y);
         void printActions(std::string p_actions);
+        void attacked(int p_damage, bool p_block, int p_knockback);
         
     private:
         InputManager*   m_inputManager;

@@ -81,9 +81,9 @@ void Arena::spawnPlayers(){
     }
 }
 
-void Arena::addPlayer(){
+void Arena::addPlayer(bool p_bool){
     float positionSparky[3] = {0, 100, 0};
-    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, m_debugMode);
+    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, m_debugMode, p_bool);
 }
 
 //Returns number of players

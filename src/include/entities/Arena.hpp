@@ -45,7 +45,7 @@ public:
     ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
-    void            addPlayer();
+    void            addPlayer(bool p_online = false);
     int             getPlayerCount();
     Character*      getPlayer(int p_index);
     void            catchItem(int p_owner, float p_where[3]);
