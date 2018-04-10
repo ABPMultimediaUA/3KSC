@@ -28,23 +28,61 @@
 //Constructor
 Portal::Portal(float p_position[3])
     : Entity(p_position, 4.f, "assets/models/items/portal.obj", 3){
-    // m_physicsManager    = &PhysicsManager::instance();
-    // m_arena             = Arena::getInstance();
+    m_arena             = Arena::getInstance();
+    m_physicsManager    = &PhysicsManager::instance();
+    m_using             = false;
+    m_charge            = 0.0f;
+    m_charactersInPortal = 0;
+    m_physicsManager->addDataToPortal(this);
 }
 
 //Destructor
 Portal::~Portal(){
-    // delete m_physicsManager;
-    // delete m_arena;
+    std::cout << "1.5" << std::endl;
+    //delete m_physicsManager;
+   // delete m_arena;
+    std::cout << "2" << std::endl;
 }
 
+void Portal::onEnter(Character* p_character){
+    std::cout<<"enter portal"<<std::endl;
+    m_charactersInPortal++;
+    m_players[p_character->getIndex()] = p_character;
+    m_using = true;
+}
+
+
+void Portal::onLeave(Character* p_character){
+    m_players[p_character->getIndex()] = NULL;
+    m_charactersInPortal--;
+    m_using = false;
+}
+
+void Portal::update(float p_delta){
+    if(m_using && m_charactersInPortal == 1){
+        m_charge += p_delta;
+        if(m_charge >= 4){
+    
+            use();
+            m_charge = 0;
+        }
+    }
+}
 //Increases owner's ultimate bar
-/* void Portal::use(){
-    std::cout << m_arena->getPlayer(m_owner)->getName() <<" filled ultimate bar." << std::endl
-    << std::endl;
-}
+void Portal::use(){
+    uint i;
+    for(i = 0; i < 4; i++)
+    {
+        if(m_players[i]!= NULL)
+        {
+            m_players[i]->setUltimateCharged();
+            break;
+        }
+    }
+    std::cout << m_players[i]->getIndex() <<" filled ultimate bar." << std::endl;
 
-//Sets the owner of the item
-void Portal::setOwner(int p_owner){
-    m_owner = p_owner;
-} */
+    m_arena->hidePortal();
+    m_using             = false;
+    m_charge            = 0.0f;
+    m_charactersInPortal = 1;
+}

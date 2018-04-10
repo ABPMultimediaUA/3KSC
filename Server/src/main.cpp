@@ -78,10 +78,6 @@ int main(void)
 	// Holds user data
 	char portstring[30];
 
-	printf("This is a sample implementation of a text based chat server.\n");
-	printf("Connect to the project 'Chat Example Client'.\n");
-	printf("Difficulty: Beginner\n\n");
-
 	// A server
 	puts("Enter the server port to listen on");
 	Gets(portstring,sizeof(portstring));
@@ -131,7 +127,7 @@ int main(void)
 	}
 
 	printf("\nMy GUID is %s\n", server->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS).ToString());
-	puts("'quit' to quit. 'stat' to show stats. 'ping' to ping.\n'pingip' to ping an ip address\n'ban' to ban an IP from connecting.\n'kick to kick the first connected player.\nType to talk.");
+	puts("'quit' to quit. 'stat' to show stats. 'ping' to ping.\n'pingip' to ping an ip address\n'ban' to ban an IP from connecting.\n'kick to kick the first connected player.\n");
 	char message[2048];
 	int m_playerNumber = 0;
 	std::string m_auxString;

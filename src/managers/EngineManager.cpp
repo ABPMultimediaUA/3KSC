@@ -174,10 +174,8 @@ void EngineManager::timeStamp(){
 }
 
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
-float EngineManager::updateFrameDeltaTime(){
-    m_nowTime = getDevice()->getTimer()->getTime();
-    m_frameDeltaTime = (f32)(m_nowTime-m_prevTime)/1000.f;
-    m_prevTime = m_nowTime;
+float EngineManager::updateFrameDeltaTime(float p_delta){
+    m_frameDeltaTime = p_delta;
 }
 
 //Creates a new node
@@ -256,6 +254,9 @@ void EngineManager::drawScene(){
     m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
     m_scene->drawAll();
     m_vDriver->endScene();
+
+    //    int fps =  m_vDriver->getFPS();
+    //   std::cout<<fps<<std::endl;
 }
 
 //Returns game window

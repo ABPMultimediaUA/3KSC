@@ -51,6 +51,8 @@ PhysicsManager::PhysicsManager(){
     CATEGORY_PLAYER = 0x0001;
     CATEGORY_ITEM   = 0x0002;
     CATEGORY_GROUND = 0x0003;
+
+    m_deltaTime     = 1.0;
 }
 //Destructor
 PhysicsManager::~PhysicsManager(){
@@ -58,7 +60,8 @@ PhysicsManager::~PhysicsManager(){
     m_contactManager = nullptr;
 }
 
-void PhysicsManager::update(){
+void PhysicsManager::update(float p_delta){
+    m_timeStep = p_delta * 10;
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
 }
 
@@ -184,17 +187,17 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
-    t_fixtureDef->density = 1.0f;
-    t_fixtureDef->friction = 0.3f;
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
     t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
-    t_fixtureDef->filter.groupIndex   = -1;
+        t_fixtureDef->filter.groupIndex   = 1;
 
     //Attach the shape to the body
-    b2Fixture* portalSensor = t_body->CreateFixture(t_fixtureDef);
-    portalSensor->SetUserData((void*)888);
+    m_portalFixture = t_body->CreateFixture(t_fixtureDef);
 }
 
+void PhysicsManager::addDataToPortal(Portal* p_portal){
+    m_portalFixture->SetUserData(p_portal);
+}
 
 b2World* PhysicsManager::getWorld(){
     return m_world;
@@ -426,10 +429,9 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                 int t_side = 1;
                 if(t_mainBodyX > t_contactBodyX)
                     t_side = -1;
-                t_player->setKnockback();
                 t_body->SetLinearDamping(1);
                 t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), false);
-                t_player->receiveAttack(15, false);
+                t_player->receiveAttack(15, false, 2);
             }
         }
     }

@@ -81,8 +81,7 @@ bool Sparky::basicAttack(){
             if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
                 if(checkCloseness(t_currentPlayer->getPosition(), 15)){
-                    t_currentPlayer->knockback(getOrientation());
-                    t_currentPlayer->receiveAttack(m_damage/2, true);
+                    t_currentPlayer->receiveAttack(m_damage/2, true, getOrientation());
                     this->addMP(5);
                 }
             }
@@ -136,7 +135,6 @@ bool Sparky::specialAttackSide(){
 bool Sparky::ultimateAttack(){
     //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
     //m_soundManager->playSound("ultimate");
-    m_ultimateCharged = true;
     if(m_ultimateCharged){
         //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
 

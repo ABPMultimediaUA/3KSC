@@ -12,3 +12,4 @@
 
 #Linux config file
 *.directory
+\.vscode/

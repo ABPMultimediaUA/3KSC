@@ -55,6 +55,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_soundManager      = &SoundManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
+    m_deltaTime         = 0;
 
     createArena("assets/Fusfus_Stadium.cgm");
 
@@ -82,6 +83,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
         t_currentPlayer = m_arena->getPlayer(i);
 
         if(t_currentPlayer->isNPC()){
+            std::cout << "Creamos un persoaje IA" << std::endl;
             //Create AI of specific type
             switch (t_currentPlayer->getType()){
                 //case 0:     m_AIPlayers[i] = new AIKira();      break;
@@ -91,7 +93,6 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
                 //case 4:     m_AIPlayers[i] = new AIRawr();      break;
                 case 5:     m_AIPlayers[i] = new AISparky();    break;
             }
-            
             m_AIPlayers[i]->buildTree();
         }
         else{
@@ -142,7 +143,7 @@ void InGameState::input(){
 
 void InGameState::update(){
     m_soundManager->update(false);
-    m_engineManager->updateFrameDeltaTime();
+    m_engineManager->updateFrameDeltaTime(m_deltaTime);
     int t_playerCount = m_arena->getPlayerCount();
     int i;        
 
@@ -153,8 +154,7 @@ void InGameState::update(){
             m_waitRelease = true; 
         } 
     }else 
-    m_waitRelease = false; 
- 
+        m_waitRelease = false; 
  
     if(m_AIactivate){ 
         for (i = 0; i < t_playerCount; i++){ 
@@ -164,19 +164,17 @@ void InGameState::update(){
         }
     }
 
-    if(m_onlineMode){
+    if(m_onlineMode)
         m_client->update();
-    }
     else
-        m_arena->update();
+        m_arena->update((float)m_deltaTime); 
 
     //Update the physics one step more(need to be done first of all)
-    m_physicsManager->update();
-    
+    m_physicsManager->update(m_deltaTime);
     Character* t_currentPlayer;
 
     //Input and update for every character
-    for (i = 0; i < t_playerCount; i++){
+    for(i = 0; i < t_playerCount; i++){
         t_currentPlayer = m_arena->getPlayer(i);
         if(t_currentPlayer != 0){
             t_currentPlayer->input();
@@ -202,7 +200,6 @@ void InGameState::nextState(){
 }
 
 void InGameState::createArena(const char* p_fileCgm){
-
     std::ifstream t_file(p_fileCgm);
     std::string t_line;
     std::string t_name;

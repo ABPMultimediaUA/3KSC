@@ -42,7 +42,7 @@ public:
     void            getRespawnPosition();
     void            createJumpTable();
 	
-    void            receiveAttack(int p_damage, bool p_block);
+    void            receiveAttack(int p_damage, bool p_block, int p_knockback = 0);
     virtual void    changeHP(int p_variation);
     void            addMP(int p_variation);
     bool            useMP(int p_MP);
@@ -70,6 +70,8 @@ public:
     void            onTouchGround();
     void            onLeaveGround();
     void            setUltimateCharged();
+    void            onPortal();
+    void            leavePortal();
     
     //Actions
     bool            left();
@@ -91,6 +93,8 @@ public:
     void            knockback(int p_orientation);
 
     virtual void    updatePlayer() = 0;
+
+    int             getValidation();
     
 protected:
     SoundManager*   m_soundManager;
@@ -150,12 +154,14 @@ protected:
     bool            m_knockback;
     bool            m_dashing;
     float           m_stunnedTime;
+    int             m_validation;
 
 private:
     bool            m_waitRelease;
     bool            m_keepWaiting;
     void            doActions();
     bool            m_flagAIJump = false;
+
 };
 
 #endif

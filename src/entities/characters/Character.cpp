@@ -99,6 +99,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
    
     m_debugMode = p_debugMode;
     m_physicsManager->setPlayerSensor(getId(), this);
+    m_validation = 123;
 }
 
 Character::~Character(){}
@@ -146,7 +147,8 @@ void Character::mapActions(){
 
 //Receives an attack from other player
 //Parameters: damage, can you block it?
-void Character::receiveAttack(int p_damage, bool p_block){
+void Character::receiveAttack(int p_damage, bool p_block, int p_knockback){
+    
     if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
         //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
@@ -154,6 +156,16 @@ void Character::receiveAttack(int p_damage, bool p_block){
         changeHP(-p_damage);
         //std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }
+
+    if(p_knockback == 2) //knockback sin direccion
+    {
+        setKnockback();
+    }
+    else if(p_knockback != 0)
+    {
+        knockback(p_knockback);
+    }
+
 }
 
 //Increases or decreases life
@@ -413,8 +425,6 @@ void Character::setUltimateCharged(){
     m_ultimateCharged = true;
 }
 
-
-
 //ACTIONS
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
@@ -445,6 +455,7 @@ bool Character::right(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
     m_runningFactor = 1.0f;
+
     return false;
 }
 
@@ -508,3 +519,11 @@ void Character::knockback(int p_orientation){
 }
 
 int  Character::getCurrentSnowmen(){}
+
+void Character::onPortal(){}
+
+void Character::leavePortal(){}
+
+int Character::getValidation(){
+    return m_validation;
+}

@@ -30,6 +30,7 @@ class Debug;
 
 #include "characters/Character.hpp"
 #include <SFML/System/Clock.hpp>
+#include "../include/entities/items/Portal.hpp"
 //#include "Skybox.hpp"
 //#include "Texture.hpp"
 //#include "WaterLily.hpp"
@@ -53,7 +54,10 @@ public:
     void            animateBackground();
     void            restart();
     void            setSpawnPositions(float p_spawnPositions[4][3]); 
-    void            update();
+    void            update(float p_delta);
+    void            portalSpawner();
+    void            spawnPortal();
+    void            hidePortal();
     bool            spawnRandomItem();
     void            modeDebug();
     void            onlineUpdate();
@@ -85,6 +89,8 @@ private:
     int                 m_maxItemsOnScreen = 5;
     int                 m_currentItems;
     int                 m_lastItemType = 0;
+    int                 m_spawningPortalTime;
+    Portal*             m_portal;
 
     int                 m_playerCount;
     Character**         m_players;
@@ -97,8 +103,10 @@ private:
     float               m_spawnItemRange[3];
 
     bool                m_online = false;
-
     sf::Clock*          m_clock;
+
+    bool                m_portalState;
+    sf::Clock*          m_portalClock;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;
