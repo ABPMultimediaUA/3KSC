@@ -180,6 +180,17 @@ void Character::addMP(int p_variation){
     // m_UIManager->setMP(m_playerIndex, m_MP);
 }
 
+//Check if we can do an action. If we can, substract the MP and return true, if not, return false.
+bool Character::useMP(int p_MP){
+    //We have enough MP for doing the action
+    if(m_MP >= p_MP){
+        m_MP -= p_MP;
+        return true;
+    }
+
+    return false;
+}
+
 //Activates shield
 void Character::shield(){
     m_shielded = true;
@@ -396,17 +407,6 @@ void Character::onTouchGround(){
 void Character::onLeaveGround(){
     m_onGround = false;
     m_maxJumps = 1;
-}
-
-//Check if we can do an action. If we can, substract the MP and return true, if not, return false.
-bool Character::enoughMP(int p_MP){
-    //We have enough MP for doing the action
-    if(m_MP >= p_MP){
-        m_MP += p_MP;
-        return true;
-    }
-
-    return false;
 }
 
 void Character::setUltimateCharged(){

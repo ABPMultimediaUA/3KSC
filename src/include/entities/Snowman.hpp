@@ -38,14 +38,12 @@ class Snowman: public Entity {
         Snowman(float p_position[3], int p_owner);
         ~Snowman();
         bool        lockNLoad();
-
         void        updateBullet();
 
         Projectile* getBullet();
         bool        getBulletLaunched();
     
     private:
-        // EngineManager*  m_engineManager;
         PhysicsManager* m_physicsManager;
         Arena*          m_arena;
 

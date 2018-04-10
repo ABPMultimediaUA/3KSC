@@ -76,6 +76,8 @@ private:
     //Texture*          m_background;
     float               m_time;
     //Item**            m_items;
+
+    std::vector<Item*>  m_items;
     float               m_offsetSpawnTime;
     float               m_nextSpawnTime;
     int                 m_spawnedItems;
@@ -83,8 +85,6 @@ private:
     int                 m_maxItemsOnScreen = 5;
     int                 m_currentItems;
     int                 m_lastItemType = 0;
-
-    std::vector<Item*>  m_items;
 
     int                 m_playerCount;
     Character**         m_players;
@@ -98,7 +98,7 @@ private:
 
     bool                m_online = false;
 
-    sf::Clock*       m_clock;
+    sf::Clock*          m_clock;
 
     //WaterLily*   m_waterLilys;
     //Branch*      m_branches;

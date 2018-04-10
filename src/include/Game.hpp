@@ -21,13 +21,15 @@
 #ifndef GAME
 #define GAME
 
-class State;
 class EngineManager;
+class InputManager;
+class State;
 
 class Game{
     private:
-        State*          m_state;
         EngineManager*  m_engineManager;
+        InputManager*   m_inputManager;
+        State*          m_state;
 
     public:
         Game();

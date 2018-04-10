@@ -103,12 +103,8 @@ bool Sparky::specialAttackUp(){
     return false;
 }
 
-void Sparky::updateJump(){
-    m_physicsManager->fastGravity(getId());
-}
-
 bool Sparky::specialAttackDown(){
-    if(enoughMP(-35) && !m_ultimateMode){    
+    if(useMP(35) && !m_ultimateMode){    
         //std::cout << m_name << ": Special Attack Down" << std::endl;
         m_physicsManager->shockwaveBox(getId());
     }
@@ -117,7 +113,7 @@ bool Sparky::specialAttackDown(){
 
 //Fireball
 bool Sparky::specialAttackSide(){
-    if(!m_punchLaunched && enoughMP(-25) && !m_ultimateMode){
+    if(!m_punchLaunched && useMP(25) && !m_ultimateMode){
         //Orientation ==  1 == Right
         //Orientation == -1 == Left
         m_attackPosition[0] = m_position[0] + 5*m_orientation;
@@ -137,14 +133,6 @@ bool Sparky::specialAttackSide(){
     return false;
 }
 
-void Sparky::updatePunch(){
-    //Move projectiles, and delete them
-    if(!m_punch->update(true)){
-        delete m_punch;
-        m_punchLaunched = false;
-    }
-}
-
 bool Sparky::ultimateAttack(){
     //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
     //m_soundManager->playSound("ultimate");
@@ -160,9 +148,33 @@ bool Sparky::ultimateAttack(){
     return false;
 }
 
+void Sparky::updatePlayer(){
+    if(m_punchLaunched)
+        updatePunch();
+
+    if(m_sparkyJumping)
+        updateJump();
+
+    if(m_ultimateMode)
+        updateUltimate();
+}
+
+void Sparky::updateJump(){
+    m_physicsManager->fastGravity(getId());
+}
+
+void Sparky::updatePunch(){
+    //Move projectiles, and delete them
+    if(!m_punch->update(true)){
+        delete m_punch;
+        m_punch = nullptr;
+        m_punchLaunched = false;
+    }
+}
+
 void Sparky::updateUltimate(){
     if(!m_ultiBulletLaunched && m_ultimateAmmo > 0){
-                //Orientation ==  1 == Right
+        //Orientation ==  1 == Right
         //Orientation == -1 == Left
         m_attackPosition[0] = m_position[0] + 5*m_orientation;
         m_attackPosition[1] = m_position[1];
@@ -183,15 +195,4 @@ void Sparky::updateUltimate(){
         }
     }else
         m_ultimateMode    = false;
-}
-
-void Sparky::updatePlayer(){
-    if(m_punchLaunched)
-        updatePunch();
-
-    if(m_sparkyJumping)
-        updateJump();
-
-    if(m_ultimateMode)
-        updateUltimate();
 }

@@ -53,7 +53,10 @@ PhysicsManager::PhysicsManager(){
     CATEGORY_GROUND = 0x0003;
 }
 //Destructor
-PhysicsManager::~PhysicsManager(){}
+PhysicsManager::~PhysicsManager(){
+    delete m_contactManager;
+    m_contactManager = nullptr;
+}
 
 void PhysicsManager::update(){
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
