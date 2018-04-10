@@ -55,7 +55,18 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_
     m_usedItems       = 0;
 }
 
-Arena::~Arena(){}
+Arena::~Arena(){
+    for (int i = 0; i < m_playerCount; i++){
+        delete m_players[i];
+        m_players = nullptr;
+    }
+
+    delete[] m_players;
+    m_players = nullptr;
+
+    // delete m_portal;
+    // m_portal = nullptr;
+}
 
 Arena* Arena::getInstance(){
     return m_instance;
@@ -77,6 +88,7 @@ void Arena::spawnPlayers(){
     }
 }
 
+//Adds a player (default)
 void Arena::addPlayer(){
     float positionSparky[3] = {0, 100, 0};
     m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, m_debugMode);

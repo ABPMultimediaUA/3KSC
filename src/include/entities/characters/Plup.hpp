@@ -38,12 +38,9 @@ public:
     bool        specialAttackDown();
     bool        specialAttackSide();
     bool        ultimateAttack();
-
-    void        updateSnowman();
-    void        deleteSnowman();
+    void        updatePlayer();
     int         getCurrentSnowmen();
 
-    void        updatePlayer();
 
 private:
     bool        m_snowmanPlaced;
@@ -59,6 +56,8 @@ private:
     float           m_basicDuration;
     float           m_basicTime;
 
+    void        updateSnowman();
+    void        deleteSnowman();
 };
 
 #endif

@@ -45,6 +45,7 @@ public:
     void            receiveAttack(int p_damage, bool p_block);
     virtual void    changeHP(int p_variation);
     void            addMP(int p_variation);
+    bool            useMP(int p_MP);
     void            die();
     void            setRespawnPosition(float p_respawnPosition[3]);
     void            respawn();
@@ -68,7 +69,6 @@ public:
     bool            isJumping();
     void            onTouchGround();
     void            onLeaveGround();
-    bool            enoughMP(int p_MP);
     void            setUltimateCharged();
     
     //Actions

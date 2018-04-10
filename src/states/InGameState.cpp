@@ -56,7 +56,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
 
-    readFileMapCgm("assets/Fusfus_Stadium.cgm");
+    createArena("assets/Fusfus_Stadium.cgm");
 
     //Online stuff
     m_onlineMode = p_onlineMode;
@@ -107,15 +107,33 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
 //Destructor
 InGameState::~InGameState(){
-    delete m_game;
-    delete m_engineManager;
-    delete m_inputManager;
-    // delete m_UIManager;
-    delete m_soundManager;
     delete m_physicsManager;
-    delete m_AIPlayers;
-    delete m_client;
+    m_physicsManager = nullptr;
+    
+    delete m_soundManager;
+    m_soundManager = nullptr;
+    
+    // delete m_UIManager;
+    // m_UIManager = nullptr;
+
+    int t_length = sizeof(m_AIPlayers)/sizeof(AICharacter*);
+
+    for (int i = 0; i < t_length; i++){
+        delete m_AIPlayers[i];
+        m_AIPlayers[i] = nullptr;
+    }
+
+    delete[] m_AIPlayers;
+    m_AIPlayers = nullptr;
+
+    delete m_pathfinding;
+    m_pathfinding = nullptr;
+    
     delete m_arena;
+    m_arena = nullptr;
+    
+    delete m_client;
+    m_client = nullptr;
 }
 
 void InGameState::input(){
@@ -163,6 +181,11 @@ void InGameState::update(){
         if(t_currentPlayer != 0){
             t_currentPlayer->input();
             t_currentPlayer->update();
+            
+            // if(m_AIactivate && m_AIPlayers[i] != 0){ 
+            //     m_AIPlayers[i]->update(); 
+            // } 
+
         }
     }
 }
@@ -178,7 +201,7 @@ void InGameState::nextState(){
     m_game->setState(new EndGameState(m_game));
 }
 
-void InGameState::readFileMapCgm(const char* p_fileCgm){
+void InGameState::createArena(const char* p_fileCgm){
 
     std::ifstream t_file(p_fileCgm);
     std::string t_line;

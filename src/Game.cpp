@@ -19,9 +19,9 @@
 */
 
 #include "include/Game.hpp"
-#include "include/states/State.hpp"
-#include "include/states/InGameState.hpp"
 #include "include/managers/EngineManager.hpp"
+#include "include/managers/InputManager.hpp"
+#include "include/states/InGameState.hpp"
 
 #include <iostream>
 #include <stdio.h>
@@ -33,12 +33,20 @@ Game::Game(){
     if(m_engineManager->createWindow(false)){
         m_state = new InGameState(this, false);
     }
+
+    m_inputManager = &InputManager::instance();
 }
 
 //Destructor
 Game::~Game(){
-    delete m_state;
     delete m_engineManager;
+    m_engineManager = nullptr;
+
+    delete m_inputManager;
+    m_inputManager = nullptr;
+
+    delete m_state;
+    m_state = nullptr;
 }
 
 //Changes to an specified state

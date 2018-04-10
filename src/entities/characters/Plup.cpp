@@ -89,7 +89,7 @@ bool Plup::basicAttack(){
 
 //Range attack
 bool Plup::specialAttackUp(){
-    if(enoughMP(-30)){
+    if(useMP(30)){
         //std::cout << m_name << ": Range attack" << std::endl;
         Character* t_currentPlayer;
 
@@ -113,7 +113,7 @@ bool Plup::specialAttackUp(){
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if(!m_snowmanPlaced && enoughMP(-35)){
+    if(!m_snowmanPlaced && useMP(35)){
         m_attackPosition[0] = m_position[0] + 10*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -127,30 +127,9 @@ bool Plup::specialAttackDown(){
     return false;
 }
 
-void Plup::updateSnowman(){
-    //Snowmen AI
-    if(m_inputManager->getMasterClock() < m_turretTime){
-        if(!m_snowman->getBulletLaunched()){
-            if(!m_snowman->lockNLoad())
-                deleteSnowman();
-        }else
-            m_snowman->updateBullet();
-    }else if(m_snowman->getBulletLaunched())
-        m_snowman->updateBullet();
-    else
-        deleteSnowman();
-}
-
-void Plup::deleteSnowman(){
-    //delete m_snowman->getBullet();
-    delete m_snowman;
-    m_snowman = 0;
-    m_snowmanPlaced = false;
-}
-
 //Dash
 bool Plup::specialAttackSide(){
-    if(m_onGround && enoughMP(-25)){
+    if(m_onGround && useMP(25)){
         //std::cout << m_name << ": Special Attack Side" << std::endl;
 
         m_physicsManager->getBody(getId())->SetLinearDamping(-0.5);
@@ -202,8 +181,31 @@ void Plup::updatePlayer(){
         }
     }
 
-    if(m_snowmanPlaced)
+    if(m_snowmanPlaced){
         updateSnowman();
+    }
+}
+
+void Plup::updateSnowman(){
+    std::cout << "updateSnowman" << std::endl;
+    //Snowmen AI
+    if(m_inputManager->getMasterClock() < m_turretTime){
+        if(!m_snowman->getBulletLaunched()){
+            if(!m_snowman->lockNLoad())
+                deleteSnowman();
+        }else
+            m_snowman->updateBullet();
+    }else if(m_snowman->getBulletLaunched())
+        m_snowman->updateBullet();
+    else
+        deleteSnowman();
+}
+
+void Plup::deleteSnowman(){
+    //delete m_snowman->getBullet();
+    delete m_snowman;
+    m_snowman = nullptr;
+    m_snowmanPlaced = false;
 }
 
 int Plup::getCurrentSnowmen(){
