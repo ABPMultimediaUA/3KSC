@@ -147,7 +147,8 @@ void Character::mapActions(){
 
 //Receives an attack from other player
 //Parameters: damage, can you block it?
-void Character::receiveAttack(int p_damage, bool p_block){
+void Character::receiveAttack(int p_damage, bool p_block, int p_knockback){
+    
     if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
         //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
@@ -155,6 +156,16 @@ void Character::receiveAttack(int p_damage, bool p_block){
         changeHP(-p_damage);
         //std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }
+
+    if(p_knockback == 2) //knockback sin direccion
+    {
+        setKnockback();
+    }
+    else if(p_knockback != 0)
+    {
+        knockback(p_knockback);
+    }
+
 }
 
 //Increases or decreases life

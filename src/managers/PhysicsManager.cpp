@@ -426,10 +426,9 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                 int t_side = 1;
                 if(t_mainBodyX > t_contactBodyX)
                     t_side = -1;
-                t_player->setKnockback();
                 t_body->SetLinearDamping(1);
                 t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), false);
-                t_player->receiveAttack(15, false);
+                t_player->receiveAttack(15, false, 2);
             }
         }
     }
