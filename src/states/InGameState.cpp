@@ -159,7 +159,7 @@ void InGameState::update(){
     if(m_AIactivate){ 
         for (i = 0; i < t_playerCount; i++){ 
             if(m_AIPlayers[i] != 0){ 
-                m_AIPlayers[i]->update(); 
+                // m_AIPlayers[i]->update(); 
             } 
         }
     }

@@ -185,7 +185,7 @@ void AIPlup::update(){
     }
     else if (t_action == "special_attack_down"){
         // m_inputManager->setAction(Action::SpecialAttackDown, t_PLUP_index);
-        // t_currentPlayer->specialAttackDown();
+        t_currentPlayer->specialAttackDown();
     }
     else if (t_action == "block"){
         m_inputManager->setAction(Action::Block, t_PLUP_index);
