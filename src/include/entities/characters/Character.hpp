@@ -42,7 +42,7 @@ public:
     void            getRespawnPosition();
     void            createJumpTable();
 	
-    void            receiveAttack(int p_damage, bool p_block);
+    void            receiveAttack(int p_damage, bool p_block, int p_knockback = 0);
     virtual void    changeHP(int p_variation);
     void            addMP(int p_variation);
     void            die();

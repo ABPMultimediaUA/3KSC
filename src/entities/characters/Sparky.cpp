@@ -81,8 +81,7 @@ bool Sparky::basicAttack(){
             if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
                 if(checkCloseness(t_currentPlayer->getPosition(), 15)){
-                    t_currentPlayer->knockback(getOrientation());
-                    t_currentPlayer->receiveAttack(m_damage/2, true);
+                    t_currentPlayer->receiveAttack(m_damage/2, true, getOrientation());
                     this->addMP(5);
                 }
             }
