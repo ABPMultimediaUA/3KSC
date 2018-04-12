@@ -30,7 +30,7 @@ class Snowman;
 
 class Plup: public Character {
 public:
-    Plup(char* p_name, float p_position[3], bool p_debugMode);
+    Plup(char* p_name, float p_position[3], bool p_debugMode, bool p_online = false);
     ~Plup();
     bool        jump();
     bool        basicAttack();

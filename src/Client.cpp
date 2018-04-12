@@ -207,13 +207,13 @@ void Client::readMessage(std::string p_message){
 		m_yourPlayer = std::stoi(t_parsed[1]);
 		m_yourPlayerString = t_parsed[1];
 		for(int i = -1; i < m_yourPlayer; ++i){
-			m_arena->addPlayer();
+			m_arena->addPlayer(true);
 		}
 		if(m_debug) std::cout<<"Bienvenido, "<<t_parsed[1]<<" jugadores en la partida"<<std::endl;
 		m_inputManager->setOnlineControl(m_yourPlayer);
 	}
 	else if(t_parsed[0] == "joined"){
-		Arena::getInstance()->addPlayer();
+		Arena::getInstance()->addPlayer(true);
 		m_inputManager -> sendOnlineInput();
 		if(m_debug) std::cout<<"Nuevo jugador en la partida"<<std::endl;
 	}
@@ -221,6 +221,21 @@ void Client::readMessage(std::string p_message){
 		std::cout<<"item"<<std::endl;
 		Arena::getInstance()->spawnItemAt(std::stof(t_parsed[1]), std::stof(t_parsed[2]), std::stof(t_parsed[3]));
 		if(m_debug) std::cout<<"Objeto de tipo "<<t_parsed[1]<<" añadido"<<std::endl;
+	}
+	else if(t_parsed[0] == "attack"){	
+		int t_dmg = std::stoi(t_parsed[1]);
+		bool t_block;
+		if(std::stoi(t_parsed[2]) == 0)
+			t_block = false;
+		else
+			t_block = true;
+		int t_knockback = std::stoi(t_parsed[3]);
+		int t_player = std::stoi(t_parsed[4]);
+		std::cout<<"mi jugador"<< m_yourPlayer<< ";el otro"<<t_player<<std::endl;
+		// Arena::getInstance()->getPlayer(t_player)->setX(300);
+		// Arena::getInstance()->getPlayer(t_player)->setY(100);
+		Arena::getInstance()->getPlayer(t_player)->receiveAttack(t_dmg, t_block, t_knockback, true);
+		std::cout<<"recibiendo ataque"<<std::endl;
 	}
 	else{
 		if(t_parsed.size()<4)
@@ -333,4 +348,27 @@ void Client::printActions(std::string p_actions){
 		std::cout<<"     -Count"<<std::endl;	
 	
 	std::cout<<"Ping: "<<client->GetLastPing(client->GetSystemAddressFromIndex(0))<<std::endl;
+}
+
+void Client::attacked(int p_damage, bool p_block, int p_knockback)
+{
+	std::string t_toSend 	= "attack:" + std::to_string(p_damage) + ":" + std::to_string(p_block) 
+							+ ":" + std::to_string(p_knockback) + ":" + std::to_string(m_yourPlayer)
+							+ ":" + std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getX())
+							+ ":" + std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getY());
+    char const *t_toSendChar = t_toSend.c_str();
+	send(t_toSendChar);
+
+	if(m_debug)
+	{
+		std::cout<<"-- Enviando al servidor --"<<std::endl;
+		std::cout<<"ID: "<<m_yourPlayerString<<std::endl;
+		std::cout<<"Daño recibido: "<< p_damage <<std::endl;
+		std::cout<<"Bloqueable: "<< p_block <<std::endl;
+		std::cout<<"Direccion fuerza: "<< p_knockback <<std::endl;
+		std::cout<<"Mi X"<< std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getX())<<std::endl;
+		std::cout<<"Mi Y"<< std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getY())<<std::endl;
+
+		std::cout<<""<<std::endl;
+	}
 }
