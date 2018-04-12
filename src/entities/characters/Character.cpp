@@ -49,6 +49,11 @@ Arena*          m_arena             = 0;
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode) : Entity(p_position, 5.f, p_modelURL){
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
+    
+    m_playerIndex = Character::m_playerCount++;
+    m_NPC                   = m_inputManager->getInputDevice(m_playerIndex) == -2;
+    m_AI                    = nullptr;      //Each character will create it if not NPC
+    
     m_name                  = p_name;
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
@@ -86,7 +91,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_waitRelease           = false;
     m_keepWaiting           = false;
 
-    m_playerIndex = Character::m_playerCount++;
 
     switch(m_playerIndex){
         case 0:
@@ -142,7 +146,8 @@ void Character::mapActions(){
     m_actions[8]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
     m_actions[9]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
     m_actions[10]   = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
-    m_actions[11]   = {Action::Count              , 0                             , false     , false};
+    m_actions[11]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
+    m_actions[12]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
@@ -182,8 +187,8 @@ void Character::changeHP(int p_variation){
 }
 
 //Increases or decreases magic
-void Character::addMP(int p_variation){
-    m_MP += p_variation;
+void Character::addMP(int p_MP){
+    m_MP += p_MP;
 
     if(m_MP > m_maxMP)
         m_MP = m_maxMP;
@@ -273,13 +278,13 @@ void Character::doActions(){
 }
 
 void Character::input(){
-    m_inputManager->updateActions(m_playerIndex);
+    m_inputManager->updatePlayerActions(m_playerIndex);
     
     //For movement
     m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
     //Block
-    m_actions[(int) Action::Block].enabled = m_inputManager->checkAction(Action::Block, m_playerIndex);
+    m_actions[(int) Action::Block].enabled = m_inputManager->checkPlayerAction(Action::Block, m_playerIndex);
 
     //Input blocked if stunned, blocking or dead
     if(!m_stunned && !m_actions[(int) Action::Block].enabled && m_alive){
@@ -288,19 +293,20 @@ void Character::input(){
         //Loop through actions to enable them
         while(t_iterator->function){    
             if (t_iterator->onlyOnce){
-                if (m_inputManager->checkAction(t_iterator->action, m_playerIndex)){
+                if (m_inputManager->checkPlayerAction(t_iterator->action, m_playerIndex)){
                     m_keepWaiting = true;
 
                     if (!m_waitRelease){
                         t_iterator->enabled = true;
                         m_waitRelease = true;
                     }
-                }                
+                }
             }
 
             else{
-                t_iterator->enabled = m_inputManager->checkAction(t_iterator->action, m_playerIndex);
+                t_iterator->enabled = m_inputManager->checkPlayerAction(t_iterator->action, m_playerIndex);
             }
+
             m_inputManager->setAction(t_iterator->action, m_playerIndex, false);
             ++t_iterator;
         }
@@ -314,6 +320,7 @@ void Character::input(){
 void Character::update(){
     //Specific update for each character
     updatePlayer();
+
     float t_currentTime = m_inputManager->getMasterClock();
 
     if(m_winged && t_currentTime >= m_wingsTime)
@@ -341,7 +348,6 @@ void Character::update(){
     if(m_debugMode)
         m_playerDebug->update();
 
-    //Increase magic every second and with attacks
     if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250)
         die();
 }
@@ -353,7 +359,7 @@ int Character::getType(){
 
 //Returns if the player is an NPC
 bool Character::isNPC(){
-    return m_inputManager->getInputDevice(m_playerIndex) == -2;
+    return m_NPC;
 }
 
 //Returns the damage of the player
@@ -425,7 +431,6 @@ void Character::setUltimateCharged(){
     m_ultimateCharged = true;
 }
 
-//ACTIONS
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
     // Move
@@ -443,6 +448,38 @@ bool Character::moveToPath(float p_position[2]){
     return false;
 }
 
+void Character::setKnockback(){
+    m_knockbackTime = m_inputManager->getMasterClock() + m_knockbackDuration;
+    m_knockback = true;
+}
+
+void Character::knockback(int p_orientation){
+    if(!m_knockback){
+        setKnockback();
+        m_physicsManager->applyImpulse(getId(), p_orientation);
+    }
+}
+
+int  Character::getCurrentSnowmen(){}
+
+void Character::onPortal(){}
+
+void Character::leavePortal(){}
+
+int Character::getValidation(){
+    return m_validation;
+}
+
+
+
+
+
+
+
+
+
+
+/* ****************************** ACTIONS ****************************** */
 bool Character::left(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     lookLeft();
@@ -506,24 +543,8 @@ bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
 
-void Character::setKnockback(){
-    m_knockbackTime = m_inputManager->getMasterClock() + m_knockbackDuration;
-    m_knockback = true;
-}
-
-void Character::knockback(int p_orientation){
-    if(!m_knockback){
-        setKnockback();
-        m_physicsManager->applyImpulse(getId(), p_orientation);
-    }
-}
-
-int  Character::getCurrentSnowmen(){}
-
-void Character::onPortal(){}
-
-void Character::leavePortal(){}
-
-int Character::getValidation(){
-    return m_validation;
+bool Character::toggleAI(){
+    m_AIEnabled = !m_AIEnabled;
+    
+    return false;
 }

@@ -24,6 +24,7 @@
 #define CHARACTER
 
 class SoundManager;
+class AICharacter;
 class Debug;
 
 #include <SFML/System.hpp>
@@ -44,7 +45,7 @@ public:
 	
     void            receiveAttack(int p_damage, bool p_block, int p_knockback = 0);
     virtual void    changeHP(int p_variation);
-    void            addMP(int p_variation);
+    void            addMP(int p_MP);
     bool            useMP(int p_MP);
     void            die();
     void            setRespawnPosition(float p_respawnPosition[3]);
@@ -85,6 +86,8 @@ public:
     virtual bool    specialAttackDown();
     virtual bool    specialAttackSide();
     virtual bool    ultimateAttack();
+    bool            toggleAI();
+
     virtual int     getCurrentSnowmen();
     bool            moveToPath(float p_position[2]);
 
@@ -100,6 +103,8 @@ protected:
     SoundManager*   m_soundManager;
     static int      m_playerCount;
     int             m_playerIndex;
+    bool            m_NPC;
+    AICharacter*    m_AI;
 
     int             m_type;                 //0-5: {Kira, Luka, Miyagi, Plup, Rawr, Sparky}
     char*           m_name;
@@ -159,8 +164,10 @@ protected:
 private:
     bool            m_waitRelease;
     bool            m_keepWaiting;
-    void            doActions();
+    bool            m_AIEnabled;
     bool            m_flagAIJump = false;
+
+    void            doActions();
 
 };
 

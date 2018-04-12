@@ -33,6 +33,7 @@
         SpecialAttackDown,
         SpecialAttackSide,
         UltimateAttack,
+        ToggleAI,
 
         Count
     };
