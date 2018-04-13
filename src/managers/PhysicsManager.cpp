@@ -232,6 +232,8 @@ b2Body* PhysicsManager::getBody(int p_id){
 
     while(t_body != NULL){
         t_id = static_cast<int*>(t_body->GetUserData());
+        if(t_id == NULL)
+            return 0;
         t_value = *t_id;
         if(p_id == t_value)
             return t_body;
@@ -259,6 +261,15 @@ float32 PhysicsManager::getTimeStep(){
     return m_timeStep;
 }
 
+void PhysicsManager::moveBody(int p_idBody, float p_x, float p_y){
+    
+    b2Body* t_body = getBody(p_idBody);
+    if(t_body == 0)
+        return;
+
+    b2Vec2 t_vec(p_x, p_y);
+    t_body->SetTransform(t_vec, 0);
+}
 //Adds a force to an entity
 void PhysicsManager::addForce(){}
 
@@ -368,6 +379,7 @@ void PhysicsManager::applyImpulse(int p_idBody, int t_side){
     b2Body* t_body = getBody(p_idBody);
     t_body->SetLinearDamping(1);
     t_body->ApplyLinearImpulse(b2Vec2(1000*t_side, 500), b2Vec2(t_body->GetWorldCenter()), false);
+    std::cout<<"applying impulse"<<std::endl;
 }
 
 //The p_body is the body that realize the action/atak
@@ -508,9 +520,15 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation){
 
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
-
     //Check collision with the other players
     checkCollisionMultiple(t_body, p_body);
     
     m_world->DestroyBody(t_body);
+}
+
+void PhysicsManager::jump(int p_idBody){
+    b2Body*             body = getBody(p_idBody);
+    float impulse = body->GetMass() * 300;
+    body->ApplyLinearImpulse( b2Vec2(90,impulse), body->GetWorldCenter(), true);
+    std::cout<<"impulse"<<std::endl;
 }

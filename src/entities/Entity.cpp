@@ -81,7 +81,13 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
-    if(p_knockback || p_dashing){
+    m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
+    m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
+    // if(p_jumping)
+    // {
+    //     std::cout<<p_jumping<<std::endl;
+    // }
+/*     if(p_knockback || p_dashing){
         m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
         m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
         m_engineManager->moveEntity(this);
@@ -93,32 +99,35 @@ void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
     }
     else{
         //We are falling or in the ground, so we put in the Y coord the value of the body
-        m_physicsManager->getBody(m_id)->SetAwake(true);
+         m_physicsManager->getBody(m_id)->SetAwake(true);
         m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-    }
+    } */
     //Add to the body the actual position of the model
-    b2Vec2 t_vec(m_position[0], m_position[1]);
-    m_physicsManager->getBody(m_id)->SetTransform(t_vec, 0);
+    //b2Vec2 t_vec(m_position[0], m_position[1]);
+    //m_physicsManager->getBody(m_id)->SetTransform(t_vec, 0);
 
     m_engineManager->moveEntity(this);
 
 }
 
 void Entity::moveTo(float p_position[3]){
-    std::memcpy(m_position,  p_position, 3 * sizeof(float));
-    m_engineManager->moveEntity(this);
+
+    m_physicsManager -> moveBody(m_id, p_position[0], p_position[1]);
+    //m_engineManager->moveEntity(this);
+}
+
+void Entity::moveTo(float p_y, float p_x)
+{
+    float t_position[3] = {p_y, p_x, getZ()};
+    moveTo(t_position);
 }
 
 void Entity::moveX(float p_variation){
-    m_lastPosition[0] = m_position[0];
-    m_position[0] += p_variation;
-    m_engineManager->moveEntity(this);
+    moveTo(getX() + p_variation, getY());
 }
 
 void Entity::moveY(float p_variation){
-    m_lastPosition[1] = m_position[1];
-    m_position[1] += p_variation;
-    m_engineManager->moveEntity(this);
+    moveTo(getX(), getY() + p_variation);
 }
 
 void Entity::moveZ(float p_variation){
@@ -168,13 +177,9 @@ void Entity::rotate(float p_degrees){
 }
 
 void Entity::setX(float p_position){
-    m_lastPosition[0] = m_position[0];
-    m_position[0] = p_position;
-    m_engineManager->moveEntity(this);
+    moveTo(p_position, getY());
 }
 
 void Entity::setY(float p_position){
-    m_lastPosition[1] = m_position[1];
-    m_position[1] = p_position;
-    m_engineManager->moveEntity(this);
+    moveTo(getX(), p_position);
 }

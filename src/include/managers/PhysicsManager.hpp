@@ -76,6 +76,7 @@ public:
     void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    addDataToPortal(Portal* p_portal);
 
+    void                    moveBody(int p_idBody, float p_x, float p_y);
     void                    addForce();
     void                    removeForce();
     void                    updateGravity();
@@ -106,6 +107,8 @@ public:
     void                    sparkyJump(int p_idBody);
     void                    fastGravity(int p_idBody);
     void                    machineGun(int p_idBody, int p_orientation);
+    void                    jump(int p_idBody);
+
 };
 
 #endif

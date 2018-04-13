@@ -151,7 +151,6 @@ void Character::mapActions(){
 //Receives an attack from other player
 //Parameters: damage, can you block it?
 void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool p_checked){
-    std::cout<<"character11111"<<std::endl;
     if(m_online && !p_checked){
         if(m_client->getPlayer() == m_playerIndex){
             m_client->attacked(p_damage, p_block, p_knockback);
@@ -159,7 +158,6 @@ void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool 
         else return;  //ignorar ataques que no sean de tu jugador
     }
 
-    std::cout<<"character ataque"<<std::endl;
     if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
         //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
@@ -468,17 +466,20 @@ bool Character::right(){
 }
 
 bool Character::jump(){
-    // Start or continue jump movement
-    if(m_jumpCurrentTime < m_jumpMaxTime && m_maxJumps > 0){
-        moveY(m_jumpTable[m_jumpCurrentTime++]*3.0f);
-    }
-    // Jump has ended. Starting to go down
-    else{
-        // If there is collision
-        m_maxJumps--;
-        m_jumpCurrentTime = 0;
-        return false; // We are on the floor. Reset jump
-    }
+
+     m_physicsManager->jump(getId());
+     return false;
+    // // Start or continue jump movement
+    // if(m_jumpCurrentTime < m_jumpMaxTime && m_maxJumps > 0){
+    //     moveY(m_jumpTable[m_jumpCurrentTime++]*3.0f);
+    // }
+    // // Jump has ended. Starting to go down
+    // else{
+    //     // If there is collision
+    //     m_maxJumps--;
+    //     m_jumpCurrentTime = 0;
+    //     return false; // We are on the floor. Reset jump
+    // }
 
     return true;
 }

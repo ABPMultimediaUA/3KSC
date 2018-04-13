@@ -36,6 +36,7 @@ class Entity {
         Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
         ~Entity();
         void moveTo(float p_position[3]);
+        void moveTo(float p_x,float p_y);
         void moveX(float p_variation);
         void moveY(float p_variation);
         void moveZ(float p_variation);
