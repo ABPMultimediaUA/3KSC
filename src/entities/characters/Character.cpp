@@ -22,6 +22,7 @@
 
 
 #include "../../include/entities/characters/Character.hpp"
+#include"../../include/AI/AICharacter.hpp"
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
@@ -106,7 +107,18 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_validation = 123;
 }
 
-Character::~Character(){}
+Character::~Character(){
+    if (m_AI){
+        delete m_AI;
+        m_AI = nullptr;
+    }
+
+   delete[] m_actions;
+   m_actions = nullptr;
+
+   delete m_playerDebug;
+   m_playerDebug = nullptr;
+}
 
 void Character::createJumpTable(){
     m_maxJumps          = 2;
@@ -278,6 +290,9 @@ void Character::doActions(){
 }
 
 void Character::input(){
+    //NPCs don't need input
+    if (m_NPC) return;
+
     m_inputManager->updatePlayerActions(m_playerIndex);
     
     //For movement
@@ -318,38 +333,51 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
+    //Update AI if exists and is enabled
+    if(m_AI && m_AIEnabled){
+        m_AI->update();
+    }
+
     //Specific update for each character
     updatePlayer();
 
     float t_currentTime = m_inputManager->getMasterClock();
 
-    if(m_winged && t_currentTime >= m_wingsTime)
+    if(m_winged && t_currentTime >= m_wingsTime){
         removeWings();
+    }
 
-    if(m_shielded && t_currentTime >= m_shieldTime)
+    if(m_shielded && t_currentTime >= m_shieldTime){
         m_shielded = false;
-    
+    }
+
     if(m_stunned && t_currentTime > m_stunTime){
         m_stunDuration = 1.0;
         m_stunned      = false;
-    }else
+    }    
+    else{
         doActions();
+    }
 
-    if(m_knockback && t_currentTime >= m_knockbackTime)
+    if(m_knockback && t_currentTime >= m_knockbackTime){
         m_knockback = false;
+    }
 
-    if(!m_respawning)
+    if(!m_respawning){
         updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
+    }
     else{
         updatePosition(true, m_knockback, m_dashing);
         m_respawning = false;
     }
     
-    if(m_debugMode)
+    if(m_debugMode){
         m_playerDebug->update();
+    }
 
-    if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250)
+    if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250){
         die();
+    }
 }
 
 //Returns the type of the player
@@ -545,6 +573,7 @@ bool Character::ultimateAttack(){}
 
 bool Character::toggleAI(){
     m_AIEnabled = !m_AIEnabled;
-    
+    std::cout << "AI state is now set to " << m_AIEnabled << std::endl;
+
     return false;
 }

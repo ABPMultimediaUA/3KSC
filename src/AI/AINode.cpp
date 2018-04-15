@@ -24,21 +24,12 @@
 #include <iostream>
 
 AINode::AINode(int p_type, float p_comparison_value, float *p_data, std::string p_action){
-    m_type = p_type;
-    m_comparison_value = p_comparison_value;
-    m_data = p_data;
-    m_action = p_action;
-    m_true_children = new AINode*;
-    m_false_children = new AINode*;
-}
-
-AINode::AINode(int p_type, float p_comparison_value, float *p_data){
-    m_type = p_type;
-    m_comparison_value = p_comparison_value;
-    m_data = p_data;
-    m_action = "";
-    m_true_children = new AINode*;
-    m_false_children = new AINode*;
+    m_type              = p_type;
+    m_comparison_value  = p_comparison_value;
+    m_data              = p_data;
+    m_action            = p_action;
+    m_true_children     = new AINode*;
+    m_false_children    = new AINode*;
 }
 
 AINode::~AINode(){}

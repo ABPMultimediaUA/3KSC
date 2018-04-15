@@ -278,6 +278,8 @@ void InputManager::playerInputJoystick(int p_player){
     m_playerActions[p_player][(int) Action::SpecialAttackDown]  = t_special && t_down;
     m_playerActions[p_player][(int) Action::SpecialAttackSide]  = t_special && (t_left || t_right);
     m_playerActions[p_player][(int) Action::UltimateAttack]     = getAxisPosition(t_joystick, Axis::Z) >= 0 && getAxisPosition(t_joystick, Axis::R) >= 0;
+    
+    m_playerActions[p_player][(int) Action::ToggleAI]           = isButtonPressed(t_joystick, Button::LS);
 }
 
 //Updates player actions (Keyboard input)
@@ -303,6 +305,8 @@ void InputManager::playerInputKeyboard(int p_player){
     m_playerActions[p_player][(int) Action::SpecialAttackDown]  = t_special && t_down;
     m_playerActions[p_player][(int) Action::SpecialAttackSide]  = t_special && (t_left || t_right);
     m_playerActions[p_player][(int) Action::UltimateAttack]     = isKeyPressed(Key::Z);
+
+    m_playerActions[p_player][(int) Action::ToggleAI]           = isKeyPressed(Key::O);
 }
 
 //Updates player actions (for NPC)

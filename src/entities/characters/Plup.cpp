@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../../include/entities/characters/Plup.hpp"
+#include "../../include/AI/AIPlup.hpp"
 #include "../../include/entities/Snowman.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
@@ -38,7 +39,7 @@
         SI HACES EL DASH Y CHOCAS CON LA TURRET PETA, MIRAR COMO SOLUCIONARLO
 */
 
-Plup::Plup(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode){
+Plup::Plup(char* p_name, float p_position[3], bool p_debugMode) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode){    
     m_type           = 3;
 
     m_snowmanPlaced  = false;
@@ -47,6 +48,10 @@ Plup::Plup(char* p_name, float p_position[3], bool p_debugMode) : Character(p_na
     m_turretTime     = 0;
     m_basicDuration  = 0.5;
     m_basicTime      = 0;
+
+    if (m_NPC){
+        m_AI = new AIPlup(this);
+    }
 }
 
 Plup::~Plup(){}

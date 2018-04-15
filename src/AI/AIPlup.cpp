@@ -22,25 +22,17 @@
 
 #include "../include/AI/AIPlup.hpp"
 #include "../include/AI/AINode.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/managers/InputManager.hpp"
+#include "../include/entities/Arena.hpp"
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/entities/characters/Character.hpp"
-#include "../include/managers/PhysicsManager.hpp"
-#include "../include/entities/Arena.hpp"
-#include "../include/managers/InputManager.hpp"
 #include <iostream>
 #include <string>
 
-//Returns the only instance of this class
-AIPlup& AIPlup::instance(){
-    static AIPlup instance;
-    return instance;
-}
-
-AIPlup::AIPlup(){
-    m_physicsManager    = &PhysicsManager::instance();
-    m_pathfinding       = &Pathfinding::instance();
-    m_arena             = Arena::getInstance();
-    m_inputManager      = &InputManager::instance();
+AIPlup::AIPlup(Character* p_player)
+    : AICharacter(p_player){
+    buildTree();
 }
 
 AIPlup::~AIPlup(){}

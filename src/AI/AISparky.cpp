@@ -23,20 +23,16 @@
 #include "../include/AI/AISparky.hpp"
 #include "../include/AI/AINode.hpp"
 #include "../include/managers/PhysicsManager.hpp"
-#include "../include/entities/characters/Character.hpp"
+#include "../include/managers/InputManager.hpp"
 #include "../include/entities/Arena.hpp"
+#include "../include/AI/Pathfinding.hpp"
+#include "../include/entities/characters/Character.hpp"
 #include <iostream>
 #include <string>
-        
-//Returns the only instance of this class
-AISparky& AISparky::instance(){
-    static AISparky instance;
-    return instance;
-}
 
-AISparky::AISparky(){
-    m_physicsManager    = &PhysicsManager::instance();
-    m_arena             = Arena::getInstance();
+AISparky::AISparky(Character* p_player)
+    : AICharacter(p_player){
+    buildTree();
 }
 
 AISparky::~AISparky(){
