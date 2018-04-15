@@ -95,7 +95,7 @@ public:
 
     ContactManager*         getContactManager();
 
-    void                    applyImpulse(int p_idBody, int t_side);
+    void                    applyKnockback(int p_idBody, int t_side);
 
     bool                    checkCollisionSimple(b2Body* p_body, bool p_stun);
     void                    checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody);

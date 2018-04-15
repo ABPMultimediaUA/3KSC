@@ -364,10 +364,11 @@ ContactManager* PhysicsManager::getContactManager(){
     return m_contactManager;
 }
 
-void PhysicsManager::applyImpulse(int p_idBody, int t_side){
+void PhysicsManager::applyKnockback(int p_idBody, int t_side){
     b2Body* t_body = getBody(p_idBody);
     t_body->SetLinearDamping(1);
-    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side, 500), b2Vec2(t_body->GetWorldCenter()), false);
+    //t_body->ApplyLinearImpulse(b2Vec2(1000*t_side, 250), b2Vec2(t_body->GetWorldCenter()), true);
+    t_body->ApplyForce(b2Vec2(1000*t_side, 500), b2Vec2(t_body->GetWorldCenter()), true);
 }
 
 //The p_body is the body that realize the action/atak
@@ -430,7 +431,7 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                 if(t_mainBodyX > t_contactBodyX)
                     t_side = -1;
                 t_body->SetLinearDamping(1);
-                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), false);
+                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), true);
                 t_player->receiveAttack(15, false, 2);
             }
         }
@@ -487,7 +488,7 @@ void PhysicsManager::sparkyJump(int p_idBody){
 void PhysicsManager::fastGravity(int p_idBody){
     b2Body* p_body = getBody(p_idBody);
 
-    p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), false);   
+    p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), true);   
 }
 
 void PhysicsManager::machineGun(int p_idBody, int p_orientation){

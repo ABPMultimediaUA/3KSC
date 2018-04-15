@@ -142,10 +142,11 @@ void InGameState::input(){
 }
 
 void InGameState::update(){
+    m_inputManager->updateMasterClock();
     m_soundManager->update(false);
     m_engineManager->updateFrameDeltaTime(m_deltaTime);
     int t_playerCount = m_arena->getPlayerCount();
-    int i;        
+    int i;
 
     //Update AIs
     if(m_inputManager->isKeyPressed(Key::O)){ 
@@ -169,8 +170,6 @@ void InGameState::update(){
     else
         m_arena->update((float)m_deltaTime); 
 
-    //Update the physics one step more(need to be done first of all)
-    m_physicsManager->update(m_deltaTime);
     Character* t_currentPlayer;
 
     //Input and update for every character
@@ -186,6 +185,8 @@ void InGameState::update(){
 
         }
     }
+    //Update the physics one step more(need to be done first of all)
+    m_physicsManager->update(m_deltaTime);
 }
 
 void InGameState::render(){
