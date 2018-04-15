@@ -524,28 +524,12 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation){
     m_world->DestroyBody(t_body);
 }
 
-void PhysicsManager::jump(int p_idBody){
-    b2Body* t_body = getBody(p_idBody);
-    float t_impulse = t_body->GetMass() * 300;
-    t_body->SetLinearVelocity(b2Vec2(10,20));
-    //t_body->ApplyLinearImpulse(b2Vec2(0,t_impulse), t_body->GetWorldCenter(), true);
-    std::cout<<"impulse"<<std::endl;
-}
-
 void PhysicsManager::getPosition(int p_idBody){
     b2Body* t_body = getBody(p_idBody);
     std::cout << t_body->GetPosition().x << ", " << t_body->GetPosition().y << std::endl;
 }
 
-void PhysicsManager::walk(int p_idBody, float p_velocity){
-    b2Body* t_body = getBody(p_idBody);
-    //t_body->ApplyLinearImpulse(b2Vec2(p_distance,0), t_body->GetWorldCenter(), true);
-    t_body->SetLinearVelocity(b2Vec2(p_velocity,0));
-    std::cout << "Vel: " << p_velocity << std::endl;
-}
-
-void PhysicsManager::move(int p_idBody, int p_moveFlag, int p_jumpFlag, float p_run){
+void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
     b2Body* t_body = getBody(p_idBody);   
-    //t_body->SetLinearVelocity(b2Vec2(100*p_moveFlag*p_run,100*p_jumpFlag));
-    t_body->ApplyLinearImpulse(b2Vec2(10000*p_moveFlag,30000*p_jumpFlag), t_body->GetWorldCenter(), true);
+    t_body->ApplyForce(b2Vec2(p_moveX, p_moveY), t_body->GetWorldCenter(), true);
 }

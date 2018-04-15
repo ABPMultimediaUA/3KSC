@@ -159,8 +159,8 @@ protected:
     int             m_validation;
     bool            m_online;
 
-    int m_moveFlag;
-    int m_jumpFlag;
+    float m_moveAmmount;
+    float m_jumpAmmount;
 
 private:
     bool            m_waitRelease;

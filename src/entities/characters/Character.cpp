@@ -83,6 +83,9 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_shieldTime            = 0;
 
     m_online                = p_online;
+
+    m_moveAmmount = 0;
+    m_jumpAmmount = 0;
     
     mapActions();
     createJumpTable();
@@ -321,7 +324,7 @@ void Character::input(){
 //Update state of player
 void Character::update(){
     //Specific update for each character
-    m_physicsManager->getPosition(getId());
+    //m_physicsManager->getPosition(getId());
 
     updatePlayer();
     float t_currentTime = m_inputManager->getMasterClock();
@@ -338,11 +341,9 @@ void Character::update(){
     }else
         doActions();
 
-
-    m_physicsManager->move(getId(), m_moveFlag, m_jumpFlag, m_runningFactor);
-    m_runningFactor = 1.0f;
-    m_moveFlag = 0;
-
+    //std::cout << m_maxJumps << std::endl;
+    m_physicsManager->move(getId(), m_moveAmmount, m_jumpAmmount);
+    m_moveAmmount = 0;
 
     if(m_knockback && t_currentTime >= m_knockbackTime)
         m_knockback = false;
@@ -428,14 +429,15 @@ void Character::respawn(){
 }
 
 void Character::onTouchGround(){
+    std::cout << "TOUCH" << std::endl;
     m_onGround = true;
-    m_jumpFlag = 0;
+    m_jumpAmmount = 0;
     m_maxJumps = 2;
 }
 
 void Character::onLeaveGround(){
+    std::cout << "LEAVE" << std::endl;
     m_onGround = false;
-    //m_jumpFlag = -1;
     m_maxJumps = 1;
 }
 
@@ -462,41 +464,35 @@ bool Character::moveToPath(float p_position[2]){
 }
 
 bool Character::left(){
-    //moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
-    //m_physicsManager->walk(getId(), m_velocity * m_frameDeltaTime * m_runningFactor * -1);
-    //m_physicsManager->walk(getId(), -10 * m_runningFactor);
-    m_moveFlag = -1;
     lookLeft();
-    //m_runningFactor = 1.0f;
+    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1000;
+    m_runningFactor = 1.0f;
 
     return false;
 }
 
 bool Character::right(){
-    //moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
-    //m_physicsManager->walk(getId(), m_velocity * m_frameDeltaTime * m_runningFactor);
-    //m_physicsManager->walk(getId(), 10 * m_runningFactor);
-    m_moveFlag = 1;
     lookRight();
-    //m_runningFactor = 1.0f;
+    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1000;
+    m_runningFactor = 1.0f;
 
     return false;
 }
 
-bool Character::jump(){
-    if(!m_jumping){
+bool Character::jump(){     
+    if(!m_jumping && m_maxJumps > 0){
         m_jumping = true;
-        m_jumpFlag = 1;
+        m_maxJumps--;
         m_jumpTime = m_inputManager->getMasterClock() + m_jumpDuration;
-    }
-
-    if(m_inputManager->getMasterClock() < m_jumpTime){
-        //m_physicsManager->jump(getId());
-        return true;
     }else{
-        m_jumping = false;
-        m_jumpFlag = -1;
-        return false;
+        if(m_inputManager->getMasterClock() < m_jumpTime){
+            m_jumpAmmount = 3000;
+            return true;
+        }else{
+            m_jumping = false;
+            m_jumpAmmount = 0;
+            return false;
+        }
     }
 
     // // Start or continue jump movement
@@ -506,7 +502,6 @@ bool Character::jump(){
     // // Jump has ended. Starting to go down
     // else{
     //     // If there is collision
-    //     m_maxJumps--;
     //     m_jumpCurrentTime = 0;
     //     return false; // We are on the floor. Reset jump
     // }
