@@ -140,6 +140,8 @@ protected:
     Debug*          m_playerDebug;
     bool            m_debugMode;
 
+    float           m_jumpDuration;
+    float           m_jumpTime;
     float           m_knockbackDuration;
     float           m_knockbackTime;
     float           m_dashDuration;
@@ -156,6 +158,9 @@ protected:
     float           m_stunnedTime;
     int             m_validation;
     bool            m_online;
+
+    int m_moveFlag;
+    int m_jumpFlag;
 
 private:
     bool            m_waitRelease;

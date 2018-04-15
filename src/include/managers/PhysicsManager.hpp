@@ -109,6 +109,11 @@ public:
     void                    machineGun(int p_idBody, int p_orientation);
     void                    jump(int p_idBody);
 
+    void                    getPosition(int p_idBody);
+    void                    walk(int p_idBody, float p_distance);
+    void                    move(int p_idBody, int p_moveFlag, int p_jumpFlag, float p_run);
+
+
 };
 
 #endif

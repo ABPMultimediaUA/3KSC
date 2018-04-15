@@ -170,7 +170,6 @@ void InGameState::update(){
         m_arena->update((float)m_deltaTime); 
 
     //Update the physics one step more(need to be done first of all)
-    m_physicsManager->update(m_deltaTime);
     Character* t_currentPlayer;
 
     //Input and update for every character
@@ -186,6 +185,7 @@ void InGameState::update(){
 
         }
     }
+    m_physicsManager->update(m_deltaTime);
 }
 
 void InGameState::render(){
@@ -249,7 +249,7 @@ void InGameState::createArena(const char* p_fileCgm){
             const char* t_path = t_elements[2].c_str();
             const char* t_name = t_elements[3].c_str();
             m_soundManager->createSoundEvent(t_path, t_name);
-            m_soundManager->playSound(t_name);
+            //m_soundManager->playSound(t_name);
         }
         //create waypoints
         else if(t_name == "w"){

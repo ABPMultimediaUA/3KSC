@@ -262,13 +262,11 @@ float32 PhysicsManager::getTimeStep(){
 }
 
 void PhysicsManager::moveBody(int p_idBody, float p_x, float p_y){
-    
     b2Body* t_body = getBody(p_idBody);
     if(t_body == 0)
         return;
 
-    b2Vec2 t_vec(p_x, p_y);
-    t_body->SetTransform(t_vec, 0);
+    t_body->SetTransform(b2Vec2(p_x, p_y), 0);
 }
 //Adds a force to an entity
 void PhysicsManager::addForce(){}
@@ -527,8 +525,27 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation){
 }
 
 void PhysicsManager::jump(int p_idBody){
-    b2Body*             body = getBody(p_idBody);
-    float impulse = body->GetMass() * 300;
-    body->ApplyLinearImpulse( b2Vec2(90,impulse), body->GetWorldCenter(), true);
+    b2Body* t_body = getBody(p_idBody);
+    float t_impulse = t_body->GetMass() * 300;
+    t_body->SetLinearVelocity(b2Vec2(10,20));
+    //t_body->ApplyLinearImpulse(b2Vec2(0,t_impulse), t_body->GetWorldCenter(), true);
     std::cout<<"impulse"<<std::endl;
+}
+
+void PhysicsManager::getPosition(int p_idBody){
+    b2Body* t_body = getBody(p_idBody);
+    std::cout << t_body->GetPosition().x << ", " << t_body->GetPosition().y << std::endl;
+}
+
+void PhysicsManager::walk(int p_idBody, float p_velocity){
+    b2Body* t_body = getBody(p_idBody);
+    //t_body->ApplyLinearImpulse(b2Vec2(p_distance,0), t_body->GetWorldCenter(), true);
+    t_body->SetLinearVelocity(b2Vec2(p_velocity,0));
+    std::cout << "Vel: " << p_velocity << std::endl;
+}
+
+void PhysicsManager::move(int p_idBody, int p_moveFlag, int p_jumpFlag, float p_run){
+    b2Body* t_body = getBody(p_idBody);   
+    //t_body->SetLinearVelocity(b2Vec2(100*p_moveFlag*p_run,100*p_jumpFlag));
+    t_body->ApplyLinearImpulse(b2Vec2(10000*p_moveFlag,30000*p_jumpFlag), t_body->GetWorldCenter(), true);
 }

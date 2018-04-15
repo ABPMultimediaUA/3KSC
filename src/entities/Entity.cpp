@@ -83,6 +83,7 @@ Entity::~Entity(){
 void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
     m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
     m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
+
     // if(p_jumping)
     // {
     //     std::cout<<p_jumping<<std::endl;
@@ -107,17 +108,15 @@ void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
     //m_physicsManager->getBody(m_id)->SetTransform(t_vec, 0);
 
     m_engineManager->moveEntity(this);
-
 }
 
 void Entity::moveTo(float p_position[3]){
-
-    m_physicsManager -> moveBody(m_id, p_position[0], p_position[1]);
+    std::cout << "MOVE TOOOOOOOOOOOOOOOOOOOOOO!!" << std::endl;
+    m_physicsManager->moveBody(m_id, p_position[0], p_position[1]);
     //m_engineManager->moveEntity(this);
 }
 
-void Entity::moveTo(float p_y, float p_x)
-{
+void Entity::moveTo(float p_y, float p_x){
     float t_position[3] = {p_y, p_x, getZ()};
     moveTo(t_position);
 }
@@ -133,7 +132,7 @@ void Entity::moveY(float p_variation){
 void Entity::moveZ(float p_variation){
     m_lastPosition[2] = m_position[2];
     m_position[2] += p_variation;
-    m_engineManager->moveEntity(this);
+    //m_engineManager->moveEntity(this);
 }
 
 //Checks if an entity is close to a certain point (in specified range)
