@@ -69,6 +69,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_runningFactor         = 1.0f;
     m_orientation           = 1;
 
+    m_sideKnockback         = 0;
     m_knockbackDuration     = 0.25;
     m_knockbackTime         = 0;
     m_dashDuration          = 0.5;
@@ -226,7 +227,7 @@ void Character::wings(){
 }
 
 void Character::removeWings(){
-    if(!m_winged){
+    if(m_winged){
         m_velocity /= 1.5;
         m_winged = false;
     }
@@ -336,8 +337,12 @@ void Character::update(){
     }else
         doActions();
 
-    if(m_knockback && t_currentTime >= m_knockbackTime)
-        m_knockback = false;
+    if(m_knockback){
+        if(t_currentTime >= m_knockbackTime)
+            m_knockback = false;
+        else
+            knockback(m_sideKnockback);
+    }
 
     if(!m_respawning)
         updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
@@ -515,15 +520,18 @@ bool Character::specialAttackSide(){}
 bool Character::ultimateAttack(){}
 
 void Character::setKnockback(){
-    m_knockbackTime = m_inputManager->getMasterClock() + m_knockbackDuration;
+    float t_knockbackDuration = (1-(m_HP*0.01)); 
+    std::cout << t_knockbackDuration << std::endl;
+    m_knockbackTime = m_inputManager->getMasterClock() + t_knockbackDuration;
     m_knockback = true;
 }
 
 void Character::knockback(int p_orientation){
     if(!m_knockback){
+        m_sideKnockback = p_orientation;
         setKnockback();
-        m_physicsManager->applyImpulse(getId(), p_orientation);
     }
+    m_physicsManager->applyKnockback(getId(), p_orientation);
 }
 
 int  Character::getCurrentSnowmen(){}

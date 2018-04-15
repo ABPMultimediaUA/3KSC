@@ -95,7 +95,7 @@ public:
     virtual void    updatePlayer() = 0;
 
     int             getValidation();
-    
+
 protected:
     SoundManager*   m_soundManager;
     static int      m_playerCount;
@@ -151,6 +151,7 @@ protected:
     float           m_shieldDuration;
     float           m_shieldTime;
 
+    int             m_sideKnockback;
     bool            m_knockback;
     bool            m_dashing;
     float           m_stunnedTime;

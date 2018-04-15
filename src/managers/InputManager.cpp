@@ -35,6 +35,7 @@ InputManager& InputManager::instance(){
 InputManager::InputManager(){
     m_engineManager = &EngineManager::instance();
 
+    m_masterTime = m_masterClock.getElapsedTime().asSeconds();
     m_bindings = 0;
 
     //Event handling
@@ -353,10 +354,14 @@ void InputManager::sendOnlineInput(){
     m_client->sendAction(m_lastActions);
 }
 
+void InputManager::updateMasterClock(){
+    m_masterTime = m_masterClock.getElapsedTime().asSeconds();
+}
+
 void InputManager::resetMasterClock(){
     m_masterClock.restart();
 }
 
 float InputManager::getMasterClock(){
-    return m_masterClock.getElapsedTime().asSeconds();
+    return m_masterTime;
 }
