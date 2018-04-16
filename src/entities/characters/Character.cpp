@@ -54,6 +54,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_playerIndex = Character::m_playerCount++;
     m_NPC                   = m_inputManager->getInputDevice(m_playerIndex) == -2;
     m_AI                    = nullptr;      //Each character will create it if not NPC
+    m_AIEnabled             = false;
     
     m_name                  = p_name;
     m_lives                 = 3;
@@ -174,12 +175,10 @@ void Character::receiveAttack(int p_damage, bool p_block, int p_knockback){
         //std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }
 
-    if(p_knockback == 2) //knockback sin direccion
-    {
+    if(p_knockback == 2){ //knockback sin direccion
         setKnockback();
     }
-    else if(p_knockback != 0)
-    {
+    else if(p_knockback != 0){
         knockback(p_knockback);
     }
 

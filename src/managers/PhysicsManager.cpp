@@ -62,9 +62,9 @@ PhysicsManager::~PhysicsManager(){
 
 void PhysicsManager::update(float p_delta){
     m_timeStep = p_delta * 10;
-    std::cout << "Before Step" << std::endl;
+    // std::cout << "Before Step" << std::endl;
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
-    std::cout << "After Step" << std::endl;
+    // std::cout << "After Step" << std::endl;
 }
 
 void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY){

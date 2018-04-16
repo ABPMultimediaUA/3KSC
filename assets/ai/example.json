@@ -1,0 +1,6 @@
+{
+    "nodes":[
+        { "name": "First"           , "value": 10 },
+        { "name": "Second"          , "value": 20 }
+    ]
+} 

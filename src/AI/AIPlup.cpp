@@ -28,7 +28,6 @@
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/entities/characters/Character.hpp"
 #include <iostream>
-#include <string>
 
 AIPlup::AIPlup(Character* p_player)
     : AICharacter(p_player){

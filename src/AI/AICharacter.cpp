@@ -26,8 +26,10 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/entities/characters/Character.hpp"
+
 #include <iostream>
-#include <string>
+#include <fstream>
+#include <sstream>
 
 AICharacter::AICharacter(Character* p_player){
     m_root              = nullptr;                      //Different in each character
@@ -48,4 +50,18 @@ AICharacter::AICharacter(Character* p_player){
 AICharacter::~AICharacter(){
     delete m_root;
     m_root = nullptr;
+}
+
+//Reads a file and returns its content as an string
+std::string AICharacter::readFile(const char* p_url){
+    //Open file
+    std::ifstream t_file;
+    t_file.open(p_url);
+
+    //Read file contents
+    std::stringstream t_strStream;
+    t_strStream << t_file.rdbuf();
+
+    //Return file contents as a string
+    return t_strStream.str();
 }

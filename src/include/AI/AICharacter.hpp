@@ -31,6 +31,7 @@ class Character;
 class AINode;
 
 #include <Box2D/Common/b2Math.h> 
+#include <string>
 
 class AICharacter{
     protected:
@@ -52,6 +53,7 @@ class AICharacter{
         float           m_specialUpRange;       // Determines if an enemy is in range of special ability up
         float           m_specialSideRange;     // Determines if an enemy is in range of special ability side
         
+        std::string     readFile(const char* p_url);
     public:
         AICharacter(Character* p_player);
         ~AICharacter();

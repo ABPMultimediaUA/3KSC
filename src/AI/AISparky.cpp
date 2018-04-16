@@ -27,8 +27,10 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/entities/characters/Character.hpp"
+
 #include <iostream>
-#include <string>
+#include <fstream>
+#include <json.hpp>
 
 AISparky::AISparky(Character* p_player)
     : AICharacter(p_player){
@@ -46,5 +48,10 @@ void AISparky::update(){
 
 // Builds the tree containing Sparky's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AISparky::buildTree(){
-    
+    std::ifstream t_file("assets/ai/example.json");
+    nlohmann::json t_json;
+    t_file >> t_json;
+    auto nodes = t_json["nodes"];
+
+    std::cout << nodes[0]["name"] << std::endl;
 }
