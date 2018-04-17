@@ -34,12 +34,12 @@ Pathfinding::Pathfinding(){}
 
 Pathfinding::~Pathfinding(){}
 
-void    Pathfinding::init(std::vector<Waypoint*> p_waypoints){
+void Pathfinding::init(std::vector<Waypoint*> p_waypoints){
     m_waypoints = p_waypoints;
 }
 
 // Returns position of the closest waypoint connected to the waypoint we last standed in
-b2Vec2  Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint){
+b2Vec2 Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint){
     PhysicsManager physicsManager = PhysicsManager::instance();
     float t_closestDistance = 0.0f;
     Waypoint *t_closestWaypoint;

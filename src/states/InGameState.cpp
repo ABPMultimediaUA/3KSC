@@ -28,16 +28,7 @@
 #include "../include/managers/SoundManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
-
-#include "../include/AI/AICharacter.hpp"
-//#include "../include/AI/AIKira.hpp"
-//#include "../include/AI/AILuka.hpp"
-//#include "../include/AI/AIMiyagi.hpp"
-#include "../include/AI/AIPlup.hpp"
-//#include "../include/AI/AIRawr.hpp"
-#include "../include/AI/AISparky.hpp"
 #include "../include/AI/Pathfinding.hpp"
-
 #include "../include/Client.hpp"
 
 #include <iostream>
@@ -67,43 +58,13 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
         m_client->start();
         m_inputManager->onlineMode();
         m_onlineMode = true;
-    }else{
+    }
+    else{
        // m_arena->spawnItems();
         m_arena->spawnPlayers();
     }
-    
-    //Initialize AI
-    int i, t_playerCount = m_arena->getPlayerCount();
-    Character* t_currentPlayer;
-    m_AIPlayers = new AICharacter*[t_playerCount];
-    //m_pathfinding->testWaypoints();
-
-    //Create AI instances for needed players and build trees
-    for (i = 0; i < t_playerCount; i++){
-        t_currentPlayer = m_arena->getPlayer(i);
-
-        if(t_currentPlayer->isNPC()){
-            std::cout << "Creamos un persoaje IA" << std::endl;
-            //Create AI of specific type
-            switch (t_currentPlayer->getType()){
-                //case 0:     m_AIPlayers[i] = new AIKira();      break;
-                //case 1:     m_AIPlayers[i] = new AILuka();      break;
-                //case 2:     m_AIPlayers[i] = new AIMiyagi();    break;
-                case 3:     m_AIPlayers[i] = new AIPlup();      break;
-                //case 4:     m_AIPlayers[i] = new AIRawr();      break;
-                case 5:     m_AIPlayers[i] = new AISparky();    break;
-            }
-            m_AIPlayers[i]->buildTree();
-        }
-        else{
-            m_AIPlayers[i] = 0;
-        }
-    }
 
     m_engineManager->timeStamp();
-
-    m_waitRelease = false;
-    m_AIactivate = false;
 }
 
 //Destructor
@@ -116,23 +77,13 @@ InGameState::~InGameState(){
     
     // delete m_UIManager;
     // m_UIManager = nullptr;
-
-    int t_length = sizeof(m_AIPlayers)/sizeof(AICharacter*);
-
-    for (int i = 0; i < t_length; i++){
-        delete m_AIPlayers[i];
-        m_AIPlayers[i] = nullptr;
-    }
-
-    delete[] m_AIPlayers;
-    m_AIPlayers = nullptr;
-
-    delete m_pathfinding;
-    m_pathfinding = nullptr;
     
     delete m_arena;
     m_arena = nullptr;
     
+    delete m_pathfinding;
+    m_pathfinding = nullptr;
+
     delete m_client;
     m_client = nullptr;
 }
@@ -148,41 +99,22 @@ void InGameState::update(){
     int t_playerCount = m_arena->getPlayerCount();
     int i;
 
-    //Update AIs
-    if(m_inputManager->isKeyPressed(Key::O)){ 
-        if(!m_waitRelease){ 
-            m_AIactivate = !m_AIactivate; 
-            m_waitRelease = true; 
-        } 
-    }else 
-        m_waitRelease = false; 
- 
-    if(m_AIactivate){ 
-        for (i = 0; i < t_playerCount; i++){ 
-            if(m_AIPlayers[i] != 0){ 
-                // m_AIPlayers[i]->update(); 
-            } 
-        }
-    }
-
-    if(m_onlineMode)
+    if(m_onlineMode){
         m_client->update();
-    else
-        m_arena->update((float)m_deltaTime); 
+    }
+    else{
+        m_arena->update((float)m_deltaTime);
+    }
 
     Character* t_currentPlayer;
 
     //Input and update for every character
     for(i = 0; i < t_playerCount; i++){
         t_currentPlayer = m_arena->getPlayer(i);
-        if(t_currentPlayer != 0){
+
+        if(t_currentPlayer){
             t_currentPlayer->input();
             t_currentPlayer->update();
-            
-            // if(m_AIactivate && m_AIPlayers[i] != 0){ 
-            //     m_AIPlayers[i]->update(); 
-            // } 
-
         }
     }
     //Update the physics one step more(need to be done first of all)

@@ -22,6 +22,7 @@
 
 
 #include "../../include/entities/characters/Character.hpp"
+#include"../../include/AI/AICharacter.hpp"
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
@@ -50,6 +51,12 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
     m_client                = &Client::instance();
+    
+    m_playerIndex           = Character::m_playerCount++;
+    m_NPC                   = m_inputManager->getInputDevice(m_playerIndex) == -2;
+    m_AI                    = nullptr;      //Each character will create it if not NPC
+    m_AIEnabled             = false;
+    
     m_name                  = p_name;
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
@@ -90,7 +97,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_waitRelease           = false;
     m_keepWaiting           = false;
 
-    m_playerIndex = Character::m_playerCount++;
 
     switch(m_playerIndex){
         case 0:
@@ -106,7 +112,18 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_validation = 123;
 }
 
-Character::~Character(){}
+Character::~Character(){
+    if (m_AI){
+        delete m_AI;
+        m_AI = nullptr;
+    }
+
+   delete[] m_actions;
+   m_actions = nullptr;
+
+   delete m_playerDebug;
+   m_playerDebug = nullptr;
+}
 
 void Character::createJumpTable(){
     m_maxJumps          = 2;
@@ -146,7 +163,8 @@ void Character::mapActions(){
     m_actions[8]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
     m_actions[9]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
     m_actions[10]   = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
-    m_actions[11]   = {Action::Count              , 0                             , false     , false};
+    m_actions[11]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
+    m_actions[12]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
@@ -160,7 +178,8 @@ void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool 
         else return;  //ignorar ataques que no sean de tu jugador
     }
 
-    std::cout<<"character ataque"<<std::endl;
+    std::cout<<"character attack"<<std::endl;
+
     if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
         changeHP(-p_damage/2);
         //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
@@ -169,10 +188,12 @@ void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool 
         //std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
     }
 
-    if(p_knockback == 2) //knockback sin direccion
+    if(p_knockback == 2){ //knockback sin direccion
         setKnockback();
-    else if(p_knockback != 0)
+    }
+    else if(p_knockback != 0){
         knockback(p_knockback);
+    }
 }
 
 //Increases or decreases life
@@ -189,8 +210,8 @@ void Character::changeHP(int p_variation){
 }
 
 //Increases or decreases magic
-void Character::addMP(int p_variation){
-    m_MP += p_variation;
+void Character::addMP(int p_MP){
+    m_MP += p_MP;
 
     if(m_MP > m_maxMP)
         m_MP = m_maxMP;
@@ -282,13 +303,16 @@ void Character::doActions(){
 }
 
 void Character::input(){
-    m_inputManager->updateActions(m_playerIndex);
+    //NPCs don't need input
+    if (m_NPC) return;
+
+    m_inputManager->updatePlayerActions(m_playerIndex);
     
     //For movement
     m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
     //Block
-    m_actions[(int) Action::Block].enabled = m_inputManager->checkAction(Action::Block, m_playerIndex);
+    m_actions[(int) Action::Block].enabled = m_inputManager->checkPlayerAction(Action::Block, m_playerIndex);
 
     //Input blocked if stunned, blocking or dead
     if(!m_stunned && !m_actions[(int) Action::Block].enabled && m_alive){
@@ -297,19 +321,20 @@ void Character::input(){
         //Loop through actions to enable them
         while(t_iterator->function){    
             if (t_iterator->onlyOnce){
-                if (m_inputManager->checkAction(t_iterator->action, m_playerIndex)){
+                if (m_inputManager->checkPlayerAction(t_iterator->action, m_playerIndex)){
                     m_keepWaiting = true;
 
                     if (!m_waitRelease){
                         t_iterator->enabled = true;
                         m_waitRelease = true;
                     }
-                }                
+                }
             }
 
             else{
-                t_iterator->enabled = m_inputManager->checkAction(t_iterator->action, m_playerIndex);
+                t_iterator->enabled = m_inputManager->checkPlayerAction(t_iterator->action, m_playerIndex);
             }
+
             m_inputManager->setAction(t_iterator->action, m_playerIndex, false);
             ++t_iterator;
         }
@@ -321,42 +346,56 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
+    //Update AI if exists and is enabled
+    if(m_AI && m_AIEnabled){
+        m_AI->update();
+    }
+
     //Specific update for each character
     updatePlayer();
+
     float t_currentTime = m_inputManager->getMasterClock();
 
-    if(m_winged && t_currentTime >= m_wingsTime)
+    if(m_winged && t_currentTime >= m_wingsTime){
         removeWings();
+    }
 
-    if(m_shielded && t_currentTime >= m_shieldTime)
+    if(m_shielded && t_currentTime >= m_shieldTime){
         m_shielded = false;
-    
+    }
+
     if(m_stunned && t_currentTime > m_stunTime){
         m_stunDuration = 1.0;
         m_stunned      = false;
-    }else
+    }    
+    else{
         doActions();
-
-    if(m_knockback){
-        if(t_currentTime >= m_knockbackTime)
-            m_knockback = false;
-        else
-            knockback(m_sideKnockback);
     }
 
-    if(!m_respawning)
+    if(m_knockback){
+        if(t_currentTime >= m_knockbackTime){
+            m_knockback = false;
+        }
+        else{
+            knockback(m_sideKnockback);
+        }
+    }
+
+    if(!m_respawning){
         updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
+    }
     else{
         updatePosition(true, m_knockback, m_dashing);
         m_respawning = false;
     }
     
-    if(m_debugMode)
+    if(m_debugMode){
         m_playerDebug->update();
+    }
 
-    //Increase magic every second and with attacks
-    if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250)
+    if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250){
         die();
+    }
 }
 
 //Returns the type of the player
@@ -366,7 +405,7 @@ int Character::getType(){
 
 //Returns if the player is an NPC
 bool Character::isNPC(){
-    return m_inputManager->getInputDevice(m_playerIndex) == -2;
+    return m_NPC;
 }
 
 //Returns the damage of the player
@@ -438,7 +477,6 @@ void Character::setUltimateCharged(){
     m_ultimateCharged = true;
 }
 
-//ACTIONS
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
     // Move
@@ -456,6 +494,41 @@ bool Character::moveToPath(float p_position[2]){
     return false;
 }
 
+void Character::setKnockback(){
+    float t_knockbackDuration = (1-(m_HP*0.01)); 
+    std::cout << t_knockbackDuration << std::endl;
+    m_knockbackTime = m_inputManager->getMasterClock() + t_knockbackDuration;
+    m_knockback = true;
+}
+
+void Character::knockback(int p_orientation){
+    if(!m_knockback){
+        m_sideKnockback = p_orientation;
+        setKnockback();
+    }
+    m_physicsManager->applyKnockback(getId(), p_orientation);
+}
+
+int  Character::getCurrentSnowmen(){}
+
+void Character::onPortal(){}
+
+void Character::leavePortal(){}
+
+int Character::getValidation(){
+    return m_validation;
+}
+
+
+
+
+
+
+
+
+
+
+/* ****************************** ACTIONS ****************************** */
 bool Character::left(){
     moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     lookLeft();
@@ -519,27 +592,9 @@ bool Character::specialAttackSide(){}
 
 bool Character::ultimateAttack(){}
 
-void Character::setKnockback(){
-    float t_knockbackDuration = (1-(m_HP*0.01)); 
-    std::cout << t_knockbackDuration << std::endl;
-    m_knockbackTime = m_inputManager->getMasterClock() + t_knockbackDuration;
-    m_knockback = true;
-}
+bool Character::toggleAI(){
+    m_AIEnabled = !m_AIEnabled;
+    std::cout << "AI state is now set to " << m_AIEnabled << std::endl;
 
-void Character::knockback(int p_orientation){
-    if(!m_knockback){
-        m_sideKnockback = p_orientation;
-        setKnockback();
-    }
-    m_physicsManager->applyKnockback(getId(), p_orientation);
-}
-
-int  Character::getCurrentSnowmen(){}
-
-void Character::onPortal(){}
-
-void Character::leavePortal(){}
-
-int Character::getValidation(){
-    return m_validation;
+    return false;
 }

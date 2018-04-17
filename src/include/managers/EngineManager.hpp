@@ -87,6 +87,8 @@ public:
     irr::video::IVideoDriver* getVideoDriver();
     irr::IrrlichtDevice* getDevice();
 
+    bool isWindowActive();
+
     void loadCharacter();
     void loadObject();
 

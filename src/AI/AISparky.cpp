@@ -23,20 +23,18 @@
 #include "../include/AI/AISparky.hpp"
 #include "../include/AI/AINode.hpp"
 #include "../include/managers/PhysicsManager.hpp"
-#include "../include/entities/characters/Character.hpp"
+#include "../include/managers/InputManager.hpp"
 #include "../include/entities/Arena.hpp"
-#include <iostream>
-#include <string>
-        
-//Returns the only instance of this class
-AISparky& AISparky::instance(){
-    static AISparky instance;
-    return instance;
-}
+#include "../include/AI/Pathfinding.hpp"
+#include "../include/entities/characters/Character.hpp"
 
-AISparky::AISparky(){
-    m_physicsManager    = &PhysicsManager::instance();
-    m_arena             = Arena::getInstance();
+#include <iostream>
+#include <fstream>
+#include <json.hpp>
+
+AISparky::AISparky(Character* p_player)
+    : AICharacter(p_player){
+    buildTree();
 }
 
 AISparky::~AISparky(){
@@ -50,5 +48,10 @@ void AISparky::update(){
 
 // Builds the tree containing Sparky's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AISparky::buildTree(){
-    
+    std::ifstream t_file("assets/ai/example.json");
+    nlohmann::json t_json;
+    t_file >> t_json;
+    auto nodes = t_json["nodes"];
+
+    std::cout << nodes[0]["name"] << " <- This is data from a json file" << std::endl;
 }

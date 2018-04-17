@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../../include/entities/characters/Plup.hpp"
+#include "../../include/AI/AIPlup.hpp"
 #include "../../include/entities/Snowman.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
@@ -47,6 +48,10 @@ Plup::Plup(char* p_name, float p_position[3], bool p_debugMode, bool p_online) :
     m_turretTime     = 0;
     m_basicDuration  = 0.5;
     m_basicTime      = 0;
+
+    if (m_NPC){
+        m_AI = new AIPlup(this);
+    }
 }
 
 Plup::~Plup(){}

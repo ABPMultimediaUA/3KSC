@@ -28,8 +28,8 @@ class SoundManager;
 class PhysicsManager;
 class AICharacter;
 class Arena;
-class Client;
 class Pathfinding;
+class Client;
 
 #include "State.hpp"
 
@@ -40,14 +40,11 @@ class InGameState : public State{
         UIManager*      m_UIManager;
         SoundManager*   m_soundManager;
         PhysicsManager* m_physicsManager;
-        AICharacter**   m_AIPlayers;
         Arena*          m_arena;
-        Client*         m_client;
         Pathfinding*    m_pathfinding;
+        Client*         m_client;
 
         bool            m_onlineMode;
-        bool            m_waitRelease;
-        bool            m_AIactivate;
     public:
         InGameState(Game* p_game, bool p_onlineMode = false);
         ~InGameState();
