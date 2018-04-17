@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../include/AI/AICharacter.hpp"
+#include "../include/AI/AINode.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/entities/Arena.hpp"

@@ -56,6 +56,13 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_
     m_spawningPortalTime    = 10;
     m_portalClock           = new sf::Clock();
     m_portalState           = false;
+
+    if(m_debugMode){
+        int t_total = m_physicsManager->getTotalFixtures(getId());
+        for(int i = 0; i < t_total; i++){
+            m_debugBattlefield = new Debug(m_physicsManager->getBody(getId()), i);
+        }
+    }
 }
 
 Arena::~Arena(){
@@ -101,13 +108,6 @@ void Arena::spawnPlayers(){
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
     m_players[m_playerCount++] = new Sparky(  "Player 2", m_spawnPositions[1], false);
     //m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
-
-    if(m_debugMode){
-        for(int i = 0; i < m_playerCount; i++){
-            m_players[i]->modeDebug();
-        }
-        modeDebug();
-    }
 }
 
 void Arena::addPlayer(bool p_bool){
@@ -157,11 +157,6 @@ void Arena::movePlatforms(){}
 void Arena::animateBackground(){}
 
 void Arena::restart(){}
-
-void Arena::modeDebug(){
-    if(m_debugMode)
-        m_debugBattlefield = new Debug(666, m_physicsManager->getBody(getId()));
-}
 
 void Arena::setSpawnPositions(float p_spawnPositions[4][3]){
     for(int i = 0; i < 4; i++){
@@ -236,8 +231,8 @@ void Arena::onlineUpdate(){
     //         Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems)->getX(), m_items.at(m_currentItems)->getY());
     //     }
     // }
-    if(m_debugMode)
-        m_debugBattlefield->update();
+    /*if(m_debugMode)
+        m_debugBattlefield->update();*/
 }
 
 void Arena::spawnItemAt(int p_type, int x, int y){

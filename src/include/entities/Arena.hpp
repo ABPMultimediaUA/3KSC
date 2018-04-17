@@ -59,7 +59,6 @@ public:
     void            spawnPortal();
     void            hidePortal();
     bool            spawnRandomItem();
-    void            modeDebug();
     void            onlineUpdate();
     void            spawnItemAt(int p_type, int x, int y);
     void            setOnline(bool p_state);

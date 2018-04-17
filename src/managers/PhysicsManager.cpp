@@ -136,6 +136,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     t_bodyDef->position.Set(0.0f, 0.0f);
     
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
+    t_body->SetUserData(p_id);
 
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
     float t_minX, t_maxX;
@@ -516,4 +517,18 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation){
     checkCollisionMultiple(t_body, p_body);
     
     m_world->DestroyBody(t_body);
+}
+
+int PhysicsManager::getTotalFixtures(int p_idBody){
+    int t_totalFixtures = 0;
+    b2Body* t_body = getBody(p_idBody);
+    b2Fixture* t_fixture = t_body->GetFixtureList();
+    while(t_fixture != NULL){
+        b2Shape* t_shape = t_fixture->GetShape();
+        if(t_shape->GetType() == 2)
+            t_totalFixtures++;
+        t_fixture = t_fixture->GetNext();
+    }
+
+    return t_totalFixtures;
 }

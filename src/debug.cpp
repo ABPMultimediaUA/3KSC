@@ -24,39 +24,40 @@
 #include "include/managers/EngineManager.hpp"
 #include <iostream>
 
-Debug::Debug(s32 p_id, b2Body* p_body) 
-    : scene::ISceneNode(EngineManager::instance().getSceneManager()->getRootSceneNode(), EngineManager::instance().getSceneManager(), p_id) {
-    m_Material.Wireframe = false;
+Debug::Debug(b2Body* p_body, int p_num) : scene::ISceneNode(EngineManager::instance().getSceneManager()->getRootSceneNode(), EngineManager::instance().getSceneManager(), 500) {
+    m_Material.Wireframe = true;
     m_Material.Lighting = false;
 
     video::SColor red = video::SColor(50,255,0,0);
+    int t_count = -1;
 
     m_body = p_body;
-    b2Fixture* t_fixture = p_body->GetFixtureList();
+    b2Fixture* t_fixture = m_body->GetFixtureList();
     while(t_fixture != NULL){
         b2Shape* t_shape = t_fixture->GetShape();
         if(t_shape->GetType() == 2){
-            m_shape = static_cast<b2PolygonShape*>(t_shape);
-        
-            int t_bodyPositionX = m_body->GetPosition().x;
-            int t_bodyPositionY = m_body->GetPosition().y;
-
-            int t_count = m_shape->GetVertexCount();
-            std::cout << "++++++++++++++++++" << std::endl;
-            for(int i = 0; i < t_count; i++){
-                b2Vec2 t_verts = m_shape->GetVertex(i);
-                m_posVertex[i][0] = t_verts.x + t_bodyPositionX;
-                m_posVertex[i][1] = t_verts.y + t_bodyPositionY;
-                std::cout << "(" << t_verts.x << "," << t_verts.y << ")\n";
-            }
+            t_count++;
+            if(t_count == p_num){
+                m_shape = t_shape;
+                b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(t_shape);
             
-            for(int i = 0; i < 4; i++){
-                m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
+                int t_bodyPositionX = m_body->GetPosition().x;
+                int t_bodyPositionY = m_body->GetPosition().y;
+
+                int t_count = t_polyShape->GetVertexCount();
+                for(int i = 0; i < t_count; i++){
+                    b2Vec2 t_verts = t_polyShape->GetVertex(i);
+                    m_posVertex[i][0] = t_verts.x + t_bodyPositionX;
+                    m_posVertex[i][1] = t_verts.y + t_bodyPositionY;
+                }
+                
+                for(int i = 0; i < 4; i++){
+                    m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
+                }
             }
         }
         t_fixture = t_fixture->GetNext();
     }
-    render();
 }
 
 void Debug::OnRegisterSceneNode(){
@@ -90,27 +91,21 @@ video::SMaterial& Debug::getMaterial(u32 i){
 void Debug::update(){
     video::SColor red = video::SColor(50,255,0,0);
     
-    b2Fixture* t_fixture = m_body->GetFixtureList();
+    b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(m_shape);
 
-    while(t_fixture != NULL){
-        b2Shape* t_shape = t_fixture->GetShape();
-        if(t_shape->GetType() == 1){
-            m_shape = static_cast<b2PolygonShape*>(t_shape);
-        
-            int t_bodyPositionX = m_body->GetPosition().x;
-            int t_bodyPositionY = m_body->GetPosition().y;
+    int t_bodyPositionX = m_body->GetPosition().x;
+    int t_bodyPositionY = m_body->GetPosition().y;
 
-            int t_count = m_shape->GetVertexCount();
-            for(int i = 0; i < t_count; i++){
-                b2Vec2 t_verts = m_shape->GetVertex(i);
-                m_posVertex[i][0] = t_verts.x + t_bodyPositionX;
-                m_posVertex[i][1] = t_verts.y + t_bodyPositionY;
-            }
-            
-            for(int i = 0; i < 4; i++){
-                m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
-            }
-        }
-        t_fixture = t_fixture->GetNext();
+    int t_count = t_polyShape->GetVertexCount();
+    //std::cout << "++++++++++++++++++" << std::endl;
+    for(int i = 0; i < t_count; i++){
+        b2Vec2 t_verts = t_polyShape->GetVertex(i);
+        m_posVertex[i][0] = t_verts.x + t_bodyPositionX;
+        m_posVertex[i][1] = t_verts.y + t_bodyPositionY;
+        //std::cout << "(" << t_verts.x << "," << t_verts.y << ")\n";
+    }
+    
+    for(int i = 0; i < 4; i++){
+        m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
     }
 }

@@ -106,6 +106,9 @@ public:
     void                    sparkyJump(int p_idBody);
     void                    fastGravity(int p_idBody);
     void                    machineGun(int p_idBody, int p_orientation);
+
+    int                     getTotalFixtures(int p_idBody);
+
 };
 
 #endif
