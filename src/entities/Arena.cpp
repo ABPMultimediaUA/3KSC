@@ -93,9 +93,9 @@ Arena* Arena::getInstance(){
 }
 
 void Arena::spawnPlayers(){
-    float positionPortal[3] = {0, 5, 0};
+    float positionPortal[3] = {0, 0.5, 0};
     m_portal = new Portal(positionPortal);
-    float positionPortal2[3] = {-300, 5, 0};
+    float positionPortal2[3] = {-300, 0.5, 0};
     m_portal -> moveTo(positionPortal2);
 
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);

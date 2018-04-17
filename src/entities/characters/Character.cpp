@@ -47,7 +47,7 @@ int Character::m_playerCount = 0;
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode, bool p_online) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode, bool p_online) : Entity(p_position, 0.5f, p_modelURL){
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
     m_client                = &Client::instance();
@@ -129,17 +129,12 @@ void Character::createJumpTable(){
     m_maxJumps          = 2;
     m_jumping           = false;
     m_jumpCurrentTime   = 0;
-    m_jumpMaxTime       = 10;
-    m_jumpTable[0]      = 3.0f;
-    m_jumpTable[1]      = 2.4f;
-    m_jumpTable[2]      = 1.9f;
-    m_jumpTable[3]      = 1.6f;
-    m_jumpTable[4]      = 1.25f;
-    m_jumpTable[5]      = 0.95;
-    m_jumpTable[6]      = 0.75;
-    m_jumpTable[7]      = 0.55;
-    m_jumpTable[8]      = 0.35;
-    m_jumpTable[9]      = 0.15;
+    m_jumpMaxTime       = 5;
+    m_jumpTable[0]      = 0.95;
+    m_jumpTable[1]      = 0.75;
+    m_jumpTable[2]      = 0.55;
+    m_jumpTable[3]      = 0.35;
+    m_jumpTable[4]      = 0.15;
 }
 
 void Character::setRespawnPosition(float p_respawnPosition[3]){
@@ -393,7 +388,7 @@ void Character::update(){
         m_playerDebug->update();
     }
 
-    if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250){
+    if(getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25){
         die();
     }
 }
