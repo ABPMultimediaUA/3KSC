@@ -28,16 +28,7 @@
 #include "../include/managers/SoundManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
-
-#include "../include/AI/AICharacter.hpp"
-//#include "../include/AI/AIKira.hpp"
-//#include "../include/AI/AILuka.hpp"
-//#include "../include/AI/AIMiyagi.hpp"
-#include "../include/AI/AIPlup.hpp"
-//#include "../include/AI/AIRawr.hpp"
-#include "../include/AI/AISparky.hpp"
 #include "../include/AI/Pathfinding.hpp"
-
 #include "../include/Client.hpp"
 
 #include <iostream>
@@ -67,43 +58,13 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
         m_client->start();
         m_inputManager->onlineMode();
         m_onlineMode = true;
-    }else{
+    }
+    else{
        // m_arena->spawnItems();
         m_arena->spawnPlayers();
     }
-    
-    //Initialize AI
-    int i, t_playerCount = m_arena->getPlayerCount();
-    Character* t_currentPlayer;
-    m_AIPlayers = new AICharacter*[t_playerCount];
-    //m_pathfinding->testWaypoints();
-
-    //Create AI instances for needed players and build trees
-    for (i = 0; i < t_playerCount; i++){
-        t_currentPlayer = m_arena->getPlayer(i);
-
-        if(t_currentPlayer->isNPC()){
-            std::cout << "Creamos un persoaje IA" << std::endl;
-            //Create AI of specific type
-            switch (t_currentPlayer->getType()){
-                //case 0:     m_AIPlayers[i] = new AIKira();      break;
-                //case 1:     m_AIPlayers[i] = new AILuka();      break;
-                //case 2:     m_AIPlayers[i] = new AIMiyagi();    break;
-                case 3:     m_AIPlayers[i] = new AIPlup();      break;
-                //case 4:     m_AIPlayers[i] = new AIRawr();      break;
-                case 5:     m_AIPlayers[i] = new AISparky();    break;
-            }
-            m_AIPlayers[i]->buildTree();
-        }
-        else{
-            m_AIPlayers[i] = 0;
-        }
-    }
 
     m_engineManager->timeStamp();
-
-    m_waitRelease = false;
-    m_AIactivate = false;
 }
 
 //Destructor
@@ -116,23 +77,13 @@ InGameState::~InGameState(){
     
     // delete m_UIManager;
     // m_UIManager = nullptr;
-
-    int t_length = sizeof(m_AIPlayers)/sizeof(AICharacter*);
-
-    for (int i = 0; i < t_length; i++){
-        delete m_AIPlayers[i];
-        m_AIPlayers[i] = nullptr;
-    }
-
-    delete[] m_AIPlayers;
-    m_AIPlayers = nullptr;
-
-    delete m_pathfinding;
-    m_pathfinding = nullptr;
     
     delete m_arena;
     m_arena = nullptr;
     
+    delete m_pathfinding;
+    m_pathfinding = nullptr;
+
     delete m_client;
     m_client = nullptr;
 }
@@ -142,26 +93,17 @@ void InGameState::input(){
 }
 
 void InGameState::update(){
+    m_inputManager->updateMasterClock();
     m_soundManager->update(false);
     m_engineManager->updateFrameDeltaTime(m_deltaTime);
     int t_playerCount = m_arena->getPlayerCount();
-    int i;        
+    int i;
 
-    //Update AIs
-    if(m_inputManager->isKeyPressed(Key::O)){ 
-        if(!m_waitRelease){ 
-            m_AIactivate = !m_AIactivate; 
-            m_waitRelease = true; 
-        } 
-    }else 
-        m_waitRelease = false; 
- 
-    if(m_AIactivate){ 
-        for (i = 0; i < t_playerCount; i++){ 
-            if(m_AIPlayers[i] != 0){ 
-                // m_AIPlayers[i]->update(); 
-            } 
-        }
+    if(m_onlineMode){
+        m_client->update();
+    }
+    else{
+        m_arena->update((float)m_deltaTime);
     }
 
     if(m_onlineMode)
@@ -175,14 +117,10 @@ void InGameState::update(){
     //Input and update for every character
     for(i = 0; i < t_playerCount; i++){
         t_currentPlayer = m_arena->getPlayer(i);
-        if(t_currentPlayer != 0){
+
+        if(t_currentPlayer){
             t_currentPlayer->input();
             t_currentPlayer->update();
-            
-            // if(m_AIactivate && m_AIPlayers[i] != 0){ 
-            //     m_AIPlayers[i]->update(); 
-            // } 
-
         }
     }
     m_physicsManager->update(m_deltaTime);
@@ -216,6 +154,7 @@ void InGameState::createArena(const char* p_fileCgm){
         if(t_name == "m"){
 //TODO hacer que se puedan cargar varios modelos en la arena
             float t_scale = strtof((t_elements[2]).c_str(), 0);
+            m_scale = t_scale;
             float t_position[3];
             t_position[0] = strtof((t_elements[3]).c_str(), 0);
             t_position[1] = strtof((t_elements[4]).c_str(), 0);
@@ -229,14 +168,14 @@ void InGameState::createArena(const char* p_fileCgm){
         else if(t_name == "c"){
 
             float t_position[3];
-            t_position[0] = strtof((t_elements[1]).c_str(), 0);
-            t_position[1] = strtof((t_elements[2]).c_str(), 0);
-            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+            t_position[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_position[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             float t_target[3];
-            t_target[0] = strtof((t_elements[4]).c_str(), 0);
-            t_target[1] = strtof((t_elements[5]).c_str(), 0);
-            t_target[2] = strtof((t_elements[6]).c_str(), 0);
+            t_target[0] = strtof((t_elements[4]).c_str(), 0) * m_scale;
+            t_target[1] = strtof((t_elements[5]).c_str(), 0) * m_scale;
+            t_target[2] = strtof((t_elements[6]).c_str(), 0) * m_scale;
 
             m_engineManager->createCamera(t_position, t_target);
         }
@@ -256,8 +195,8 @@ void InGameState::createArena(const char* p_fileCgm){
     
             float t_position[3];
             t_position[0] = strtof((t_elements[1]).c_str(), 0);
-            t_position[1] = strtof((t_elements[2]).c_str(), 0);
-            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+            t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_position[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             m_pathfinding->addWaypoint(t_position);
         }
@@ -273,39 +212,39 @@ void InGameState::createArena(const char* p_fileCgm){
         else if(t_name == "sp"){
        
             float t_spawnPositions[4][3];
-            t_spawnPositions[0][0] = strtof((t_elements[1]).c_str(), 0);
-            t_spawnPositions[0][1] = strtof((t_elements[2]).c_str(), 0);
-            t_spawnPositions[0][2] = strtof((t_elements[3]).c_str(), 0);
+            t_spawnPositions[0][0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_spawnPositions[0][1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_spawnPositions[0][2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
-            t_spawnPositions[1][0] = strtof((t_elements[4]).c_str(), 0);
-            t_spawnPositions[1][1] = strtof((t_elements[5]).c_str(), 0);
-            t_spawnPositions[1][2] = strtof((t_elements[6]).c_str(), 0);
+            t_spawnPositions[1][0] = strtof((t_elements[4]).c_str(), 0) * m_scale;
+            t_spawnPositions[1][1] = strtof((t_elements[5]).c_str(), 0) * m_scale;
+            t_spawnPositions[1][2] = strtof((t_elements[6]).c_str(), 0) * m_scale;
 
-            t_spawnPositions[2][0] = strtof((t_elements[7]).c_str(), 0);
-            t_spawnPositions[2][1] = strtof((t_elements[8]).c_str(), 0);
-            t_spawnPositions[2][2] = strtof((t_elements[9]).c_str(), 0);
+            t_spawnPositions[2][0] = strtof((t_elements[7]).c_str(), 0) * m_scale;
+            t_spawnPositions[2][1] = strtof((t_elements[8]).c_str(), 0) * m_scale;
+            t_spawnPositions[2][2] = strtof((t_elements[9]).c_str(), 0) * m_scale;
 
-            t_spawnPositions[3][0] = strtof((t_elements[10]).c_str(), 0);
-            t_spawnPositions[3][1] = strtof((t_elements[11]).c_str(), 0);
-            t_spawnPositions[3][2] = strtof((t_elements[12]).c_str(), 0);
+            t_spawnPositions[3][0] = strtof((t_elements[10]).c_str(), 0) * m_scale;
+            t_spawnPositions[3][1] = strtof((t_elements[11]).c_str(), 0) * m_scale;
+            t_spawnPositions[3][2] = strtof((t_elements[12]).c_str(), 0) * m_scale;
 
             m_arena->setSpawnPositions(t_spawnPositions);
         }
         else if(t_name == "rp"){
 
             float t_respawnPosition[3];
-            t_respawnPosition[0] = strtof((t_elements[1]).c_str(), 0);
-            t_respawnPosition[1] = strtof((t_elements[2]).c_str(), 0);
-            t_respawnPosition[2] = strtof((t_elements[3]).c_str(), 0);
+            t_respawnPosition[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_respawnPosition[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_respawnPosition[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             m_arena->setRespawnPositions(t_respawnPosition);
         }
         else if(t_name == "si"){
 
             float t_itemRange[3];
-            t_itemRange[0] = strtof((t_elements[1]).c_str(), 0);
-            t_itemRange[1] = strtof((t_elements[2]).c_str(), 0);
-            t_itemRange[2] = strtof((t_elements[3]).c_str(), 0);
+            t_itemRange[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_itemRange[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_itemRange[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             m_arena->setItemRange(t_itemRange);
         }

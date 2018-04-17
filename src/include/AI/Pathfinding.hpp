@@ -23,7 +23,7 @@
 #define PATHFINDING
 
 #include <vector>
-#include <Box2D.h>
+#include <Box2D/Common/b2Math.h>
 
 class Waypoint;
 

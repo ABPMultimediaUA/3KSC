@@ -25,19 +25,40 @@
 
 class PhysicsManager;
 class Pathfinding;
-class Arena;
 class InputManager;
+class Arena;
+class Character;
+class AINode;
+
+#include <Box2D/Common/b2Math.h> 
+#include <string>
 
 class AICharacter{
     protected:
+        AINode*         m_root;                 // Root of player tree
         PhysicsManager* m_physicsManager;
-        Pathfinding*    m_pathfinding;
         InputManager*   m_inputManager;
         Arena*          m_arena;
+        Pathfinding*    m_pathfinding;
 
+        Character*      m_player;               // Pointer to player
+        int             m_index;                // Player index
+        float           m_HP;                   // Player HP
+        float           m_MP;                   // Player MP
+        float           m_x;                    // Player X coordinate
+        float           m_y;                    // Player Y coordinate
+        b2Vec2          m_position;             // Vector containing player position
+        float           m_distanceToEnemy;      // Determines if an enemy is close
+        float           m_distanceToItem;       // Determines if an item is close
+        float           m_specialUpRange;       // Determines if an enemy is in range of special ability up
+        float           m_specialSideRange;     // Determines if an enemy is in range of special ability side
+        
+        std::string     readFile(const char* p_url);
     public:
-        virtual void update()       = 0;
-        virtual void buildTree()    = 0;
+        AICharacter(Character* p_player);
+        ~AICharacter();
+        virtual void update()       {}
+        virtual void buildTree()    {}
 };
 
 #endif

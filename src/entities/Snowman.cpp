@@ -28,7 +28,7 @@
 #include <iostream>
 
 //Constructor
-Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "assets/models/characters/plup/snowman.obj", 5){
+Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 0.3f, "assets/models/characters/plup/snowman.obj", 5){
     m_physicsManager = &PhysicsManager::instance();
     m_arena          = Arena::getInstance();
     

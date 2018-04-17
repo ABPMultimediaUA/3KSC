@@ -49,15 +49,21 @@ public:
     void    onlineMode();
     void    setOnlineControl(int p_player);
     void    setAction(Action p_action, int p_player, bool p_bool = true); 
-    void    setNetPlayer(int p_player, bool p_actions[12]);        
+    void    setNetPlayer(int p_player, bool p_actions[12]);     
+
     void    updateActions(int p_player);
-    bool    checkAction(Action p_action, int p_player);
+    
     int     getInputDevice(int p_player);
     void    updateOnlineInput(int p_player);
     void    sendOnlineInput();
 
+    void    updateMasterClock();
     void    resetMasterClock();
     float   getMasterClock();
+
+    //Actions
+    void    updatePlayerActions(int p_player);
+    bool    checkPlayerAction(Action p_action, int p_player);
 
 private:
     EngineManager*          m_engineManager;
@@ -68,6 +74,7 @@ private:
     int                     m_onlinePlayer;
     bool                    m_lastActions[12] = {false};
     bool                    m_isOnline = false;
+    float                   m_masterTime;
     sf::Clock               m_masterClock;
 
     //Event handling
@@ -78,8 +85,13 @@ private:
     int     m_inputDevices[4];
     void    autoassignDevices();
 
-    //Player actions
-    bool m_actions[4][(int) Action::Count]; 
+    //Actions
+    bool    m_playerActions[4][(int) Action::Count];
+
+    void    playerInputJoystick(int p_player);
+    void    playerInputKeyboard(int p_player);
+    void    playerInputNPC(int p_player);
+    void    playerInputOnline(int p_player);
 };
 
 #endif

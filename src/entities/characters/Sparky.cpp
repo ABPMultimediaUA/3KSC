@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../../include/entities/characters/Sparky.hpp"
+#include "../../include/AI/AISparky.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
 #include "../../include/managers/SoundManager.hpp"
@@ -34,7 +35,7 @@
 */
 
 Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode, bool p_online)
-    : Character(p_name, p_position, 100, 100, 15, 70.f, "assets/models/characters/sparky/sparky.obj", p_debugMode, p_online){
+    : Character(p_name, p_position, 100, 100, 15, 12.f, "assets/models/characters/sparky/sparky.obj", p_debugMode, p_online){
     m_type                  = 4;
     
     m_sparkyJumping      = false;
@@ -51,6 +52,10 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode, bool p_onlin
     m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
     m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );*/
     //m_soundManager->modifyParameter("random", 0.95, "Prob");
+
+    if (m_NPC){
+        m_AI = new AISparky(this);
+    }
 }
 
 Sparky::~Sparky(){}
@@ -115,11 +120,11 @@ bool Sparky::specialAttackSide(){
     if(!m_punchLaunched && useMP(25) && !m_ultimateMode){
         //Orientation ==  1 == Right
         //Orientation == -1 == Left
-        m_attackPosition[0] = m_position[0] + 5*m_orientation;
+        m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
      
-        m_attackTarget[0] = m_position[0] + 100*m_orientation;
+        m_attackTarget[0] = m_position[0] + 10*m_orientation;
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
 
@@ -174,11 +179,11 @@ void Sparky::updateUltimate(){
     if(!m_ultiBulletLaunched && m_ultimateAmmo > 0){
         //Orientation ==  1 == Right
         //Orientation == -1 == Left
-        m_attackPosition[0] = m_position[0] + 5*m_orientation;
+        m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
      
-        m_attackTarget[0] = m_position[0] + 100*m_orientation;
+        m_attackTarget[0] = m_position[0] + 10*m_orientation;
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
         

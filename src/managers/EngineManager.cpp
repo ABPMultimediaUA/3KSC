@@ -277,17 +277,16 @@ scene::ISceneNode* EngineManager::getEntityNode(int p_id){
     return m_entityNodes.at(p_id);
 }
 
-
-
-
-
-
-
-
-
-
 irr::video::IVideoDriver* EngineManager::getVideoDriver(){
     return m_vDriver;
+}
+
+IrrlichtDevice* EngineManager::getDevice(){
+    return m_device;
+}
+
+bool EngineManager::isWindowActive(){
+    return m_device->isWindowActive();
 }
 
 void EngineManager::loadCharacter(){
@@ -315,10 +314,6 @@ void EngineManager::drawCharacter(){
 
 void EngineManager::drawObject(){
 
-}
-
-IrrlichtDevice* EngineManager::getDevice(){
-    return m_device;
 }
 
 void EngineManager::parseOBJ(const char* p_filename){

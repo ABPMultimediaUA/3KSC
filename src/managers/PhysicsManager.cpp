@@ -37,7 +37,7 @@ PhysicsManager& PhysicsManager::instance(){
 PhysicsManager::PhysicsManager(){
     m_engineManager = &EngineManager::instance();
 
-    b2Vec2 gravity(0.0f, -10.0f);
+    b2Vec2 gravity(0.0f, -8.0f);
 
     m_world = new b2World(gravity);
 
@@ -62,7 +62,9 @@ PhysicsManager::~PhysicsManager(){
 
 void PhysicsManager::update(float p_delta){
     m_timeStep = p_delta * 10;
+    // std::cout << "Before Step" << std::endl;
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
+    // std::cout << "After Step" << std::endl;
 }
 
 void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY){
@@ -112,7 +114,7 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     b2Body* t_body = getBody(p_id);
     float t_tam = 10;
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
+    t_polygonShape->SetAsBox(0.1, 0.1, b2Vec2(-0.2,-0.5), 0);
     //t_polygonShape->SetAsBox(t_tam, t_tam/4);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
@@ -139,7 +141,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     float t_minX, t_maxX;
     float t_minY, t_maxY;
     float t_dimX, t_dimY;
-    float t_factor = 10;
+    float t_factor = 1;
 
     for(int i = 0; i < m_engineManager->getTotalVertex(); i++){
         t_minX = m_engineManager->getTotalVertexX().at(i*2);
@@ -175,7 +177,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
 }
 
 void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY){
-    float size = 10;
+    float size = 1;
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
     t_bodyDef->position.Set(p_position[0]-size/2 , p_position[1]);
@@ -373,10 +375,9 @@ ContactManager* PhysicsManager::getContactManager(){
     return m_contactManager;
 }
 
-void PhysicsManager::applyImpulse(int p_idBody, int t_side){
+void PhysicsManager::applyKnockback(int p_idBody, int t_side){
     b2Body* t_body = getBody(p_idBody);
     t_body->SetLinearDamping(1);
-    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side, 500), b2Vec2(t_body->GetWorldCenter()), false);
     std::cout<<"applying impulse"<<std::endl;
 }
 
@@ -440,7 +441,7 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                 if(t_mainBodyX > t_contactBodyX)
                     t_side = -1;
                 t_body->SetLinearDamping(1);
-                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), false);
+                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), true);
                 t_player->receiveAttack(15, false, 2);
             }
         }
@@ -497,7 +498,7 @@ void PhysicsManager::sparkyJump(int p_idBody){
 void PhysicsManager::fastGravity(int p_idBody){
     b2Body* p_body = getBody(p_idBody);
 
-    p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), false);   
+    p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), true);   
 }
 
 void PhysicsManager::machineGun(int p_idBody, int p_orientation){
@@ -531,5 +532,11 @@ void PhysicsManager::getPosition(int p_idBody){
 
 void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
     b2Body* t_body = getBody(p_idBody);   
-    t_body->ApplyForce(b2Vec2(p_moveX, p_moveY), t_body->GetWorldCenter(), true);
+    t_body -> SetLinearVelocity(b2Vec2(p_moveX, t_body->GetLinearVelocity().y));
+    //t_body->ApplyForce(b2Vec2(p_moveX, p_moveY), t_body->GetWorldCenter(), true);
+}
+
+void PhysicsManager::jump(int p_idBody, float p_force){
+    b2Body* t_body = getBody(p_idBody);
+    t_body->ApplyLinearImpulse(b2Vec2(0,p_force * 1000), b2Vec2(t_body->GetWorldCenter()), true);
 }

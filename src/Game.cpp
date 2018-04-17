@@ -67,16 +67,19 @@ void Game::nextState(){
 void Game::run(){
     auto t_now = std::chrono::high_resolution_clock::now();
     auto t_elapsed  = std::chrono::high_resolution_clock::now() - t_now;
+
     while(true){
         if(!m_engineManager->running())
             break;
+
         t_elapsed = std::chrono::high_resolution_clock::now() - t_now;
         m_elapsedTotal += std::chrono::duration_cast<std::chrono::nanoseconds>(t_elapsed).count();
-        while (m_elapsedTotal  > m_nanoFrames)
-        {
+
+        while (m_elapsedTotal  > m_nanoFrames){
             fixedUpdate(m_elapsedTotal);
             m_elapsedTotal  -= m_nanoFrames;
         }
+
         t_now = std::chrono::high_resolution_clock::now();
     }
 }

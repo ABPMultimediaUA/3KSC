@@ -23,10 +23,7 @@
 #ifndef AI_PLUP
 #define AI_PLUP
 
-class AINode;
-
 #include "AICharacter.hpp"
-#include <Box2D.h>
 
 class AIPlup : public AICharacter{
     private:
@@ -40,8 +37,7 @@ class AIPlup : public AICharacter{
         b2Vec2 m_PLUP_position;               // Vector containing Plup's position
         AINode* m_PLUP_root;                  // Root of Plup's tree
     public:
-        static AIPlup& instance();
-        AIPlup();
+        AIPlup(Character* p_player);
         ~AIPlup();
         void update();
         void buildTree();
