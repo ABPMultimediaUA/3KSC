@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
 
@@ -62,7 +63,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
 
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 5.0, 5.0);
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 10.0, 3.0);
             break;
 
         case 4:
@@ -73,6 +74,10 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             m_physicsManager->createPhysicBox(Box::Other, &m_id, p_position, 5.0, 5.0);
             break;
     }
+
+    m_debugMode = true;
+    if(m_debugMode)
+        createDebug();
 }
 
 Entity::~Entity(){
@@ -102,6 +107,8 @@ void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
 
     m_engineManager->moveEntity(this);
 
+    if(m_debugMode)
+        updateDebug();
 }
 
 void Entity::moveTo(float p_position[3]){
@@ -177,4 +184,18 @@ void Entity::setY(float p_position){
     m_lastPosition[1] = m_position[1];
     m_position[1] = p_position;
     m_engineManager->moveEntity(this);
+}
+
+void Entity::createDebug(){
+    m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
+
+    for(int i = 0; i < m_totalFixtures; i++){
+        m_entityDebug[i] = new Debug(m_physicsManager->getBody(m_id), i);
+    }
+}
+
+void Entity::updateDebug(){
+    for(int i = 0; i < m_totalFixtures; i++){
+        m_entityDebug[i]->update();
+    }
 }

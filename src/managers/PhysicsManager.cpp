@@ -114,7 +114,7 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     b2Body* t_body = getBody(p_id);
     float t_tam = 10;
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(0.3, 0.3, b2Vec2(-2,-5), 0);
+    t_polygonShape->SetAsBox(1, 1, b2Vec2(0,-5), 0);
     //t_polygonShape->SetAsBox(t_tam, t_tam/4);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
@@ -178,15 +178,14 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
 }
 
 void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY){
-    float size = 10;
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
-    t_bodyDef->position.Set(p_position[0]-size/2 , p_position[1]);
+    t_bodyDef->position.Set(p_position[0], p_position[1]);
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
     
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(size,size/4);
+    t_polygonShape->SetAsBox(p_dimX, p_dimY);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
@@ -196,6 +195,7 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
 
     //Attach the shape to the body
     m_portalFixture = t_body->CreateFixture(t_fixtureDef);
+    t_body->SetUserData(p_id);
 }
 
 void PhysicsManager::addDataToPortal(Portal* p_portal){

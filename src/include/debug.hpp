@@ -43,6 +43,7 @@ private:
     core::aabbox3d<f32> m_Box;
     video::S3DVertex    m_Vertices[4];
     video::SMaterial    m_Material;
+    video::SColor       m_color;
     std::vector<video::S3DVertex>    m_VerticesVector;
     
     b2Body*             m_body;

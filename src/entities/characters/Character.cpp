@@ -30,7 +30,6 @@
 #include "../../include/managers/UIManager.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
-#include "../../include/debug.hpp"
 
 #include <iostream>
 
@@ -47,7 +46,7 @@ int Character::m_playerCount = 0;
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode, bool p_online) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_online) : Entity(p_position, 5.f, p_modelURL){
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
     m_client                = &Client::instance();
@@ -105,19 +104,9 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
             lookLeft();
             break;
     }
-   
-    //m_debugMode = p_debugMode;
-    m_debugMode = true;
-    
-    if(m_debugMode){
-        m_totalFixtures = m_physicsManager->getTotalFixtures(getId());
-        std::cout << m_totalFixtures << std::endl;
-        for(int i = 0; i < m_totalFixtures; i++){
-            m_playerDebug[i] = new Debug(m_physicsManager->getBody(getId()), i);
-        }
-    }
 
     m_physicsManager->setPlayerSensor(getId(), this);
+    createDebug();
     m_validation = 123;
 }
 
@@ -129,9 +118,6 @@ Character::~Character(){
 
    delete[] m_actions;
    m_actions = nullptr;
-
-   //delete m_playerDebug;
-   //m_playerDebug = nullptr;
 }
 
 void Character::createJumpTable(){
@@ -391,11 +377,11 @@ void Character::update(){
         m_respawning = false;
     }
     
-    if(m_debugMode){
+    /*if(m_debugMode){
         for(int i = 0; i < m_totalFixtures; i++){
             m_playerDebug[i]->update();
         }
-    }
+    }*/
 
     if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250)
         die();

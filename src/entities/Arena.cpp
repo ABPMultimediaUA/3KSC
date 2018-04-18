@@ -34,19 +34,17 @@
 #include "../include/entities/items/Wings.hpp"
 #include "../include/entities/items/FOAH.hpp"
 
-#include "../include/debug.hpp"
 #include "Client.hpp"
 #include <iostream>
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode) : Entity(p_position, p_scale, p_modelURL, 1){
+Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entity(p_position, p_scale, p_modelURL, 1){
 
     m_currentItems    = 0;
     //m_items         = new Item*[m_maxItemsOnScreen];
     m_instance        = this;
-    m_debugMode       = p_debugMode;
     m_offsetSpawnTime = 10.0;
     m_nextSpawnTime   = m_inputManager->getMasterClock() + m_offsetSpawnTime;
     m_playerCount     = 0;
@@ -56,13 +54,6 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_
     m_spawningPortalTime    = 10;
     m_portalClock           = new sf::Clock();
     m_portalState           = false;
-
-    if(m_debugMode){
-        int t_total = m_physicsManager->getTotalFixtures(getId());
-        for(int i = 0; i < t_total; i++){
-            m_debugBattlefield = new Debug(m_physicsManager->getBody(getId()), i);
-        }
-    }
 }
 
 Arena::~Arena(){
@@ -88,11 +79,6 @@ Arena::~Arena(){
         delete m_portalClock;
         m_portalClock = nullptr;
     }
-
-    if (m_debugBattlefield){
-        delete m_debugBattlefield;
-        m_debugBattlefield = nullptr;
-    }
 }
 
 Arena* Arena::getInstance(){
@@ -103,16 +89,16 @@ void Arena::spawnPlayers(){
     float positionPortal[3] = {0, 5, 0};
     m_portal = new Portal(positionPortal);
     float positionPortal2[3] = {-300, 5, 0};
-    m_portal -> moveTo(positionPortal2);
+    m_portal->moveTo(positionPortal2);
 
-    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
-    m_players[m_playerCount++] = new Sparky(  "Player 2", m_spawnPositions[1], false);
-    //m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
+    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
+    m_players[m_playerCount++] = new Sparky(  "Player 2", m_spawnPositions[1]);
+    //m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2]);
 }
 
 void Arena::addPlayer(bool p_bool){
     float positionSparky[3] = {0, 100, 0};
-    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, m_debugMode, p_bool);
+    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, p_bool);
 }
 
 //Returns number of players
@@ -184,7 +170,7 @@ void Arena::update(float p_delta){
     }
 
     if(m_portalState)
-        m_portal -> update(p_delta);
+        m_portal->update(p_delta);
 
     portalSpawner();
 }

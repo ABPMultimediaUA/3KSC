@@ -26,7 +26,6 @@
 class EngineManager;
 class PhysicsManager;
 class Item;
-class Debug;
 
 #include "characters/Character.hpp"
 #include <SFML/System/Clock.hpp>
@@ -41,7 +40,7 @@ class Debug;
 
 class Arena : public Entity {
 public:
-    Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode = false);
+    Arena(float p_position[3], float p_scale, const char* p_modelURL);
     ~Arena();
     static Arena*   getInstance();
     void            spawnPlayers();
@@ -93,9 +92,6 @@ private:
 
     int                 m_playerCount;
     Character**         m_players;
-
-    Debug*              m_debugBattlefield;
-    bool                m_debugMode;
 
     float               m_spawnPositions[4][3];
     float               m_respawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z

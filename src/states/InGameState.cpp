@@ -156,7 +156,7 @@ void InGameState::createArena(const char* p_fileCgm){
 
             const char* t_path = t_elements[1].c_str();
             //load Arena
-            m_arena = new Arena(t_position, t_scale, t_path, true);
+            m_arena = new Arena(t_position, t_scale, t_path);
         }
          //Create camera
         else if(t_name == "c"){

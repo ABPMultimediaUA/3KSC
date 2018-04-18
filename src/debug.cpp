@@ -28,7 +28,11 @@ Debug::Debug(b2Body* p_body, int p_num) : scene::ISceneNode(EngineManager::insta
     m_Material.Wireframe = true;
     m_Material.Lighting = false;
 
-    video::SColor red = video::SColor(50,255,0,0);
+    int red   = rand()%(256);
+    int green = rand()%(256);
+    int blue  = rand()%(256);
+    m_color = video::SColor(red, green, blue, 0);
+    
     int t_count = -1;
 
     m_body = p_body;
@@ -52,7 +56,7 @@ Debug::Debug(b2Body* p_body, int p_num) : scene::ISceneNode(EngineManager::insta
                 }
                 
                 for(int i = 0; i < 4; i++){
-                    m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
+                    m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, m_color, 0, 0);
                 }
             }
         }
@@ -89,8 +93,6 @@ video::SMaterial& Debug::getMaterial(u32 i){
 }
 
 void Debug::update(){
-    video::SColor red = video::SColor(50,255,0,0);
-    
     b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(m_shape);
 
     int t_bodyPositionX = m_body->GetPosition().x;
@@ -106,6 +108,6 @@ void Debug::update(){
     }
     
     for(int i = 0; i < 4; i++){
-        m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, red, 0, 0);
+        m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, m_color, 0, 0);
     }
 }
