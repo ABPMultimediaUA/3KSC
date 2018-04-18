@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
 
@@ -48,7 +49,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 
     switch(p_type){
         case 0:
-            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.5);
+            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
             break;
 
         case 1: {
@@ -62,7 +63,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
 
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 0.5, 0.5);
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1, 0.4);
             break;
 
         case 4:
@@ -73,11 +74,22 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             m_physicsManager->createPhysicBox(Box::Other, &m_id, p_position, 0.5, 0.5);
             break;
     }
+
+    m_debugMode = true;
+    if(m_debugMode)
+        createDebug();
 }
 
 Entity::~Entity(){
     m_engineManager->deleteEntity(m_id);
     m_physicsManager->destroyBody(m_id);
+
+    /*for(int i = 0; i < m_totalFixtures; i++){
+        if(m_entityDebug[i]){
+            delete m_entityDebug[i];
+            m_entityDebug[i] = nullptr;
+        }
+    }*/
 }
 
 void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
@@ -108,10 +120,12 @@ void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
     //m_physicsManager->getBody(m_id)->SetTransform(t_vec, 0);
 
     m_engineManager->moveEntity(this);
+
+    if(m_debugMode)
+        updateDebug();
 }
 
 void Entity::moveTo(float p_position[3]){
-    std::cout << "MOVE TOOOOOOOOOOOOOOOOOOOOOO!!" << std::endl;
     m_physicsManager->moveBody(m_id, p_position[0], p_position[1]);
     //m_engineManager->moveEntity(this);
 }
@@ -181,4 +195,18 @@ void Entity::setX(float p_position){
 
 void Entity::setY(float p_position){
     moveTo(getX(), p_position);
+}
+
+void Entity::createDebug(){
+    m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
+
+    for(int i = 0; i < m_totalFixtures; i++){
+        m_entityDebug[i] = new Debug(m_physicsManager->getBody(m_id), i);
+    }
+}
+
+void Entity::updateDebug(){
+    for(int i = 0; i < m_totalFixtures; i++){
+        m_entityDebug[i]->update();
+    }
 }

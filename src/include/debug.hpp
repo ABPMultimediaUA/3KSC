@@ -31,7 +31,7 @@ using namespace irr;
 
 class Debug : public scene::ISceneNode{
 public:
-    Debug(s32 p_id, b2Body* p_body);
+    Debug(b2Body* p_body, int p_num);
     void OnRegisterSceneNode();
     void render();
     const core::aabbox3d<f32>& getBoundingBox() const;
@@ -43,10 +43,11 @@ private:
     core::aabbox3d<f32> m_Box;
     video::S3DVertex    m_Vertices[4];
     video::SMaterial    m_Material;
+    video::SColor       m_color;
     std::vector<video::S3DVertex>    m_VerticesVector;
     
     b2Body*             m_body;
-    b2PolygonShape*     m_shape;
+    b2Shape*            m_shape;
     float               m_posVertex[4][2];
 };
 
