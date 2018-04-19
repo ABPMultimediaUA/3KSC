@@ -91,7 +91,6 @@ public:
     virtual int     getCurrentSnowmen();
     bool            moveToPath(float p_position[2]);
 
-    void            modeDebug();
     void            setKnockback();
     void            knockback(int p_orientation);
 
@@ -142,8 +141,9 @@ protected:
     ActionMapping*  m_actions;
     void            mapActions();
 
-    Debug*          m_playerDebug;
+    Debug*          m_playerDebug[2];
     bool            m_debugMode;
+    int             m_totalFixtures;
 
     float           m_jumpDuration;
     float           m_jumpTime;

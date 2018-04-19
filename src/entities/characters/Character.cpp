@@ -101,7 +101,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_waitRelease           = false;
     m_keepWaiting           = false;
 
-
     switch(m_playerIndex){
         case 0:
             lookRight();
@@ -111,7 +110,17 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
             break;
     }
    
-    m_debugMode = p_debugMode;
+    //m_debugMode = p_debugMode;
+    m_debugMode = true;
+    
+    if(m_debugMode){
+        m_totalFixtures = m_physicsManager->getTotalFixtures(getId());
+        std::cout << m_totalFixtures << std::endl;
+        for(int i = 0; i < m_totalFixtures; i++){
+            m_playerDebug[i] = new Debug(m_physicsManager->getBody(getId()), i);
+        }
+    }
+
     m_physicsManager->setPlayerSensor(getId(), this);
     m_validation = 123;
 }
@@ -125,8 +134,8 @@ Character::~Character(){
    delete[] m_actions;
    m_actions = nullptr;
 
-   delete m_playerDebug;
-   m_playerDebug = nullptr;
+   //delete m_playerDebug;
+   //m_playerDebug = nullptr;
 }
 
 void Character::createJumpTable(){
@@ -343,9 +352,8 @@ void Character::input(){
 //Update state of player
 void Character::update(){
     //Update AI if exists and is enabled
-    if(m_AI && m_AIEnabled){
+    if(m_AI && m_AIEnabled)
         m_AI->update();
-    }
 
     //Specific update for each character
     //m_physicsManager->getPosition(getId());
@@ -354,21 +362,18 @@ void Character::update(){
 
     float t_currentTime = m_inputManager->getMasterClock();
 
-    if(m_winged && t_currentTime >= m_wingsTime){
+    if(m_winged && t_currentTime >= m_wingsTime)
         removeWings();
-    }
 
-    if(m_shielded && t_currentTime >= m_shieldTime){
+    if(m_shielded && t_currentTime >= m_shieldTime)
         m_shielded = false;
-    }
 
     if(m_stunned && t_currentTime > m_stunTime){
         m_stunDuration = 1.0;
         m_stunned      = false;
     }    
-    else{
+    else
         doActions();
-    }
 
     //std::cout << m_maxJumps << std::endl;
     m_moveAmmount = 0;
@@ -376,21 +381,29 @@ void Character::update(){
     if(m_knockback && t_currentTime >= m_knockbackTime)
         m_knockback = false;
 
-    if(!m_respawning){
+        /*
+    if(m_knockback){
+        if(t_currentTime >= m_knockbackTime)
+            m_knockback = false;
+        else
+            knockback(m_sideKnockback);
+    }*/
+
+    if(!m_respawning)
         updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
-    }
     else{
         updatePosition(true, m_knockback, m_dashing);
         m_respawning = false;
     }
     
     if(m_debugMode){
-        m_playerDebug->update();
+        for(int i = 0; i < m_totalFixtures; i++){
+            m_playerDebug[i]->update();
+        }
     }
 
-    if(getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25){
+    if(getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25)
         die();
-    }
 }
 
 //Returns the type of the player
@@ -440,12 +453,6 @@ void Character::setStunned(float p_time){
     
     m_stunned = true;
     m_stunTime = m_inputManager->getMasterClock() + m_stunDuration;
-}
-
-void Character::modeDebug(){
-    if(m_debugMode){
-        m_playerDebug = new Debug(666, m_physicsManager->getBody(getId()));
-    }
 }
 
 void Character::respawn(){
