@@ -52,11 +52,10 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
             break;
 
-        case 1: {
+        case 1:
             m_engineManager->parseOBJ(p_modelURL);
             m_physicsManager->createPhysicBoxPlatform(&m_id, p_position);
             break;
-        }
 
         case 2:
             m_physicsManager->createPhysicBox(Box::Item, &m_id, p_position, 0.5, 0.5);
@@ -76,7 +75,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     }
 
     m_debugMode = true;
-    if(m_debugMode)
+    if(m_debugMode && p_type != 0)
         createDebug();
 }
 
@@ -93,36 +92,17 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
-    m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
-    m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-
-    // if(p_jumping)
-    // {
-    //     std::cout<<p_jumping<<std::endl;
-    // }
-/*     if(p_knockback || p_dashing){
-        m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
-        m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-        m_engineManager->moveEntity(this);
-        return;
-    }
-    if(p_jumping){
-        //If we are jumping sleeps the body, so gravity dont affect it
-        m_physicsManager->getBody(m_id)->SetAwake(false);
-    }
-    else{
-        //We are falling or in the ground, so we put in the Y coord the value of the body
-         m_physicsManager->getBody(m_id)->SetAwake(true);
-        m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-    } */
-    //Add to the body the actual position of the model
-    //b2Vec2 t_vec(m_position[0], m_position[1]);
-    //m_physicsManager->getBody(m_id)->SetTransform(t_vec, 0);
-
-    m_engineManager->moveEntity(this);
+    //if(m_id == 1)
+    //    m_physicsManager->getPosition(m_id);
 
     if(m_debugMode)
         updateDebug();
+
+    //Set to the entity the new position of the body
+    m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
+    m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
+
+    m_engineManager->moveEntity(this);
 }
 
 void Entity::moveTo(float p_position[3]){

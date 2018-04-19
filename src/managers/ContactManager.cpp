@@ -46,6 +46,7 @@ void ContactManager::checkLeave(void* p_data1, void* p_data2){
 }
 
 void ContactManager::onCollide(void* p_data1, void* p_data2){
+	std::cout << "CONTACT" << std::endl;
 	/*if(p_data1){
 		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
 			//comprobamos que el character exista de verdad

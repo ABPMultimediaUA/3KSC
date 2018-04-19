@@ -43,7 +43,7 @@ PhysicsManager::PhysicsManager(){
 
     m_timeStep = 10.0f/60.0f;
     m_velocityIterations = 8;
-    m_positionIterations = 4;
+    m_positionIterations = 6;
 
     m_contactManager = new ContactManager();
     m_world->SetContactListener(m_contactManager);
@@ -192,7 +192,7 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
     t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
-        t_fixtureDef->filter.groupIndex   = 1;
+    t_fixtureDef->filter.groupIndex   = 1;
 
     //Attach the shape to the body
     m_portalFixture = t_body->CreateFixture(t_fixtureDef);
@@ -247,10 +247,8 @@ float32 PhysicsManager::getTimeStep(){
 
 void PhysicsManager::moveBody(int p_idBody, float p_x, float p_y){
     b2Body* t_body = getBody(p_idBody);
-    if(t_body == 0)
-        return;
-
-    t_body->SetTransform(b2Vec2(p_x, p_y), 0);
+    if(t_body != 0)
+        t_body->SetTransform(b2Vec2(p_x, p_y), 0);
 }
 
 //Casts a ray between 2 points and returns the a number between 0 and 1. 1 is max distance collision.
@@ -264,15 +262,14 @@ float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     //check every fixture of every body to find closest
     float t_closestFraction = 1; //start with end of line as p2
 
-    for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()) {
-        for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
+    for(b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()){
+        for(b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()){
   
             b2RayCastOutput t_output;
-            if ( !f->RayCast( &t_output, t_input, 0 ) ) // No collision
+            if(!f->RayCast( &t_output, t_input, 0)) // No collision
                 continue;
-            if ( t_output.fraction < t_closestFraction ) {
+            if(t_output.fraction < t_closestFraction)
                 t_closestFraction = t_output.fraction;
-            }            
         }
     }
     return t_closestFraction;
@@ -286,7 +283,7 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
     t_closestPlayer = 0;
     float t_shortestModule = 0;
 
-    for (int i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount; i++){
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
         float t_target_x = t_currentPlayer->getX();
         float t_target_y = t_currentPlayer->getY();
@@ -300,11 +297,10 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
         if(t_module <= 0.5)
             continue;
 
-        if(t_shortestModule==0){
+        if(t_shortestModule == 0){
             t_shortestModule = t_module;
             t_closestPlayer = t_currentPlayer;
-        }
-        else{
+        }else{
             if(t_module < t_shortestModule){
                 t_shortestModule = t_module;
                 t_closestPlayer = t_currentPlayer;
@@ -324,9 +320,7 @@ float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
         t_target_y = t_closestPlayer->getY();
         t_target_z = t_closestPlayer->getZ();
     
-
-        b2Vec2 t_p2 = b2Vec2(t_target_x, t_target_y); 
-
+        b2Vec2 t_p2   = b2Vec2(t_target_x, t_target_y); 
         b2Vec2 t_p2p1 = b2Vec2(t_target_x - p_p1.x, t_target_y - p_p1.y);
 
         float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
@@ -348,7 +342,6 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
 void PhysicsManager::applyKnockback(int p_idBody, int t_side){
     b2Body* t_body = getBody(p_idBody);
     t_body->SetLinearDamping(1);
-    std::cout<<"applying impulse"<<std::endl;
 }
 
 //The p_body is the body that realize the action/atak
@@ -501,7 +494,7 @@ int PhysicsManager::getTotalFixtures(int p_idBody){
     b2Fixture* t_fixture = t_body->GetFixtureList();
     while(t_fixture != NULL){
         b2Shape* t_shape = t_fixture->GetShape();
-        if(t_shape->GetType() == 2)
+        if(t_shape->GetType() == b2Shape::e_polygon)
             t_totalFixtures++;
         t_fixture = t_fixture->GetNext();
     }
@@ -516,8 +509,7 @@ void PhysicsManager::getPosition(int p_idBody){
 
 void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
     b2Body* t_body = getBody(p_idBody);   
-    t_body -> SetLinearVelocity(b2Vec2(p_moveX, t_body->GetLinearVelocity().y));
-    //t_body->ApplyForce(b2Vec2(p_moveX, p_moveY), t_body->GetWorldCenter(), true);
+    t_body->SetLinearVelocity(b2Vec2(p_moveX, t_body->GetLinearVelocity().y));
 }
 
 void PhysicsManager::jump(int p_idBody, float p_force){

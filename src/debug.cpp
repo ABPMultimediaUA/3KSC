@@ -26,7 +26,7 @@
 
 Debug::Debug(b2Body* p_body, int p_num) : scene::ISceneNode(EngineManager::instance().getSceneManager()->getRootSceneNode(), EngineManager::instance().getSceneManager(), 500) {
     m_Material.Wireframe = true;
-    m_Material.Lighting = false;
+    m_Material.Lighting  = false;
 
     int red   = rand()%(256);
     int green = rand()%(256);
@@ -39,7 +39,7 @@ Debug::Debug(b2Body* p_body, int p_num) : scene::ISceneNode(EngineManager::insta
     b2Fixture* t_fixture = m_body->GetFixtureList();
     while(t_fixture != NULL){
         b2Shape* t_shape = t_fixture->GetShape();
-        if(t_shape->GetType() == 2){
+        if(t_shape->GetType() == b2Shape::e_polygon){
             t_count++;
             if(t_count == p_num){
                 m_shape = t_shape;
@@ -99,12 +99,10 @@ void Debug::update(){
     int t_bodyPositionY = m_body->GetPosition().y;
 
     int t_count = t_polyShape->GetVertexCount();
-    //std::cout << "++++++++++++++++++" << std::endl;
     for(int i = 0; i < t_count; i++){
         b2Vec2 t_verts = t_polyShape->GetVertex(i);
         m_posVertex[i][0] = t_verts.x + t_bodyPositionX;
         m_posVertex[i][1] = t_verts.y + t_bodyPositionY;
-        //std::cout << "(" << t_verts.x << "," << t_verts.y << ")\n";
     }
     
     for(int i = 0; i < 4; i++){
