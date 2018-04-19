@@ -421,14 +421,14 @@ void Character::respawn(){
 }
 
 void Character::onTouchGround(){
-    std::cout << "TOUCH" << std::endl;
+    //std::cout << "TOUCH" << std::endl;
     m_onGround = true;
     //m_jumpAmmount = 0;
     m_maxJumps = 2;
 }
 
 void Character::onLeaveGround(){
-    std::cout << "LEAVE" << std::endl;
+    //std::cout << "LEAVE" << std::endl;
     m_onGround = false;
     m_maxJumps = 1;
 }
@@ -507,40 +507,10 @@ bool Character::right(){
 }
 
 bool Character::jump(){
-    std::cout << m_maxJumps << std::endl;
     if(m_maxJumps > 0){
         m_maxJumps--;
         m_physicsManager->jump(m_id, 300);    
     }
-    /*else{
-        if(m_inputManager->getMasterClock() < m_jumpTime){
-            m_jumpAmmount = 300;
-            return true;
-        }else{
-            m_jumping = false;
-            m_jumpAmmount = 0;
-            return false;
-        }
-    }*/
-/*
-    //Start or continue jump movement
-    if(m_jumpCurrentTime < m_jumpMaxTime && m_maxJumps > 0)
-        moveY(m_jumpTable[m_jumpCurrentTime++]*3.0f);
-    //Jump has ended. Starting to go down
-    else{
-        //If there is collision
-        m_jumpCurrentTime = 0;
-        return false; //We are on the floor. Reset jump
-    }
-    if(m_inputManager->getMasterClock() < m_jumpTime){
-        m_jumpAmmount = 300;
-        return true;
-    }else{
-        m_jumping = false;
-        m_jumpAmmount = 0;
-        return false;
-    }
-*/
 }
 
 bool Character::run(){
