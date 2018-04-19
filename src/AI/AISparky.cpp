@@ -30,7 +30,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <json.hpp>
 
 AISparky::AISparky(Character* p_player)
     : AICharacter(p_player){

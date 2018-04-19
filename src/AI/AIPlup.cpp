@@ -28,6 +28,7 @@
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/entities/characters/Character.hpp"
 #include <iostream>
+#include <fstream>
 
 AIPlup::AIPlup(Character* p_player)
     : AICharacter(p_player){
@@ -38,19 +39,19 @@ AIPlup::~AIPlup(){}
 
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
-    int t_PLUP_index = 1;
-    m_PLUP_special_up_range = 0.0;
-    m_PLUP_special_side_range = 0.0;
+    int m_index = 1;
+    m_specialUpRange = 0.0;
+    m_specialSideRange = 0.0;
     /*************************************************************/
     /****************      Get Plup's life        ****************/
     /*************************************************************/
-    m_PLUP_life = (float)m_arena->getPlayer(t_PLUP_index)->getHP();
+    m_HP = (float)m_arena->getPlayer(m_index)->getHP();
 
 
     /*************************************************************/
     /****************      Get Plup's mana        ****************/
     /*************************************************************/
-    m_PLUP_mana = (float)m_arena->getPlayer(t_PLUP_index)->getMP();
+    m_MP = (float)m_arena->getPlayer(m_index)->getMP();
 
     /*************************************************************/
     /**************  Get distance to closest enemy  **************/
@@ -59,13 +60,13 @@ void AIPlup::update(){
     Character* t_currentPlayer;
     
     // Get Plup's coordinates
-    t_currentPlayer = m_arena->getPlayer(t_PLUP_index);
+    t_currentPlayer = m_arena->getPlayer(m_index);
     float self_x, self_y, self_z;
     self_x = t_currentPlayer->getX();
     self_y = t_currentPlayer->getY();
     self_z = t_currentPlayer->getZ();
-    m_PLUP_position = b2Vec2(self_x, self_y);
-    m_PLUP_distance_to_enemy = m_physicsManager->getDistanceToClosestCharacter(m_PLUP_position);
+    m_position = b2Vec2(self_x, self_y);
+    m_distanceToEnemy = m_physicsManager->getDistanceToClosestCharacter(m_position);
 
     /*************************************************************/
     /*   Check if an enemy is in range for a special attack up   */
@@ -77,7 +78,7 @@ void AIPlup::update(){
 
     for (int i = 0; i < t_playerCount; i++){
         //Plup shall not take himself into consideration
-        if (i == t_PLUP_index)
+        if (i == m_index)
             continue;
 
         // Get enemy coordinates
@@ -100,7 +101,7 @@ void AIPlup::update(){
 
                 // Check wether there is an object between the 2 characters
                 if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
-                    m_PLUP_special_up_range = 1.0;
+                    m_specialUpRange = 1.0;
                 }
             }
         }
@@ -114,7 +115,7 @@ void AIPlup::update(){
 
                 // Check wether there is an object between the 2 characters
                 if(t_closestBodyFraction >= 0.83f){ //If there is not an intersection to the raycast
-                    m_PLUP_special_side_range = 1.0;
+                    m_specialSideRange = 1.0;
                 }
             }
         }
@@ -123,7 +124,7 @@ void AIPlup::update(){
     /*************************************************************/
     /*******  Check if there is already a snowman placed  ********/
     /*************************************************************/
-    t_currentPlayer = m_arena->getPlayer(t_PLUP_index);
+    t_currentPlayer = m_arena->getPlayer(m_index);
     if(t_currentPlayer!=0){
         if(t_currentPlayer->getCurrentSnowmen() > 0)
             m_PLUP_snowman_placed = 1.0;
@@ -134,12 +135,12 @@ void AIPlup::update(){
     /*************************************************************/
     /*******        Check if there is an item close       ********/
     /*************************************************************/
-    m_PLUP_distance_to_item = 0.0; // TODO: Raycast to items only
+    m_distanceToItem = 0.0; // TODO: Raycast to items only
 
     /*************************************************************/
     /*******             Get closest character            ********/
     /*************************************************************/
-    Character* t_closestPlayer = m_physicsManager->getClosestCharacter(m_PLUP_position);
+    Character* t_closestPlayer = m_physicsManager->getClosestCharacter(m_position);
 
     /*************************************************************/
     /*******        MAKE DECISION ABOUT WHAT TO DO        ********/
@@ -149,11 +150,11 @@ void AIPlup::update(){
     if (t_action == "move"){
         b2Vec2 t_destination;
         if(t_closestPlayer!=0){
-            if(m_PLUP_position.x > t_closestPlayer->getX()){
-                t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 0); // Find waypoint to the left
+            if(m_position.x > t_closestPlayer->getX()){
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
             }
             else{
-                t_destination = m_pathfinding->getClosestWaypoint(m_PLUP_position, 1); // Find waypoint to the right
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 1); // Find waypoint to the right
             }
 
             float t_destination_float[2];
@@ -167,17 +168,17 @@ void AIPlup::update(){
         t_currentPlayer->basicAttack();
     }
     else if (t_action == "special_attack_up"){
-        m_inputManager->setAction(Action::SpecialAttackUp, t_PLUP_index);
+        m_inputManager->setAction(Action::SpecialAttackUp, m_index);
     }
     else if (t_action == "special_attack_side"){
-        //m_inputManager->setAction(Action::SpecialAttackSide, t_PLUP_index);
+        //m_inputManager->setAction(Action::SpecialAttackSide, m_index);
     }
     else if (t_action == "special_attack_down"){
-        // m_inputManager->setAction(Action::SpecialAttackDown, t_PLUP_index);
+        // m_inputManager->setAction(Action::SpecialAttackDown, m_index);
         t_currentPlayer->specialAttackDown();
     }
     else if (t_action == "block"){
-        m_inputManager->setAction(Action::Block, t_PLUP_index);
+        m_inputManager->setAction(Action::Block, m_index);
     }
     else{
        //std::cout<<"NOTHING?"<<std::endl;
@@ -186,216 +187,99 @@ void AIPlup::update(){
 
 // Builds the tree containing Plup's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AIPlup::buildTree(){
-    // Enemy close
-    m_PLUP_root = new AINode(1, 100, &m_PLUP_distance_to_enemy);
-        // Life > 80%
-        m_PLUP_root->m_true_children[0] = new AINode(0, 80.0, &m_PLUP_life);
-            //Mana > 35%
-            m_PLUP_root->m_true_children[0]->m_true_children[0] = new AINode(0, 35.0, &m_PLUP_mana);
-                // Snowman placed
-                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(2, 1.0, &m_PLUP_snowman_placed);
-                    // In range of Special Attack Up
-                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(2, 1.0, &m_PLUP_special_up_range);
-                        // Mana > 25%
-                        m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(0, 25.0, &m_PLUP_mana);
-                            // DO ACTION: SPECIAL ATTACK UP
-                            m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_up");
-                            // In range of Special Attack side
-                            m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(0, 1.0, &m_PLUP_special_side_range);
-                                // Mana > 20%
-                                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 20.0, &m_PLUP_mana);
-                                    // DO ACTION: SPECIAL ATTACK SIDE
-                                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_side");
-                                    // In range of basic attack
-                                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                        // DO ACTION: BASIC ATTACK
-                                        m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                        // DO ACTION: MOVE
-                                        m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                            // In range of basic attack
-                            m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                // DO ACTION: BASIC ATTACK
-                                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                // DO ACTION: MOVE
-                                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                        // In range of Special Attack Up (ALREADY CREATED. REFERENCE IT)
-                        m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0];
-                    // DO ACTION: SPECIAL ATTACK DOWN
-                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "special_attack_down");
-                // In range of Special Attack Up
-                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_up_range);
-                    // Mana > 25%
-                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 25.0, &m_PLUP_mana);
-                        // DO ACTION: SPECIAL ATTACK UP
-                        m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_up");
-                        // In range of Special Attack Side
-                        m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_side_range);
-                            // Mana > 20%
-                            m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 20.0, &m_PLUP_mana);
-                                // DO ACTION: SPECIAL ATTACK SIDE
-                                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_side");
-                                // In range of basic attack
-                                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                    // DO ACTION: BASIC ATTACK
-                                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                    // DO ACTION: MOVE
-                                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                            // In range of basic attack
-                            m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                // DO ACTION: BASIC ATTACK
-                                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                // DO ACTION: MOVE
-                                m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                    // In range of Special Attack Side (ALREADY CREATED. REFERENCE IT)
-                    m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0];
-            // Life > 50%
-            m_PLUP_root->m_true_children[0]->m_false_children[0] = new AINode(0, 50.0, &m_PLUP_life);
-                //Mana > 35%
-                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 35.0, &m_PLUP_mana);
-                    // Snowman placed
-                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(2, 1.0, &m_PLUP_snowman_placed);
-                        // In range of Special Attack Up
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(2, 1.0, &m_PLUP_special_up_range);
-                            // Mana > 25%
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(0, 25.0, &m_PLUP_mana);
-                                // DO ACTION: SPECIAL ATTACK UP
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_up");
-                                // In range of Special Attack side
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_side_range);
-                                    // Mana > 20%
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 20.0, &m_PLUP_mana);
-                                        // DO ACTION: SPECIAL ATTACK SIDE
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_side");
-                                        // In range of basic attack
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(1, 20.0, &m_PLUP_distance_to_enemy);
-                                            // DO ACTION: BASIC ATTACK
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                            // OR DO ACTION: BLOCK
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                            // DO ACTION: MOVE
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                                // In range of basic attack
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                    // DO ACTION: BASIC ATTACK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                    // OR DO ACTION: BLOCK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                    // DO ACTION: MOVE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                            // In range of Special Attack Up (ALREADY CREATED. REFERENCE IT)
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0];
-                        // DO ACTION: SPECIAL ATTACK DOWN
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "special_attack_down");
-                    // In range of Special Attack Up
-                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_up_range);
-                        // Mana > 25%
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 25.0, &m_PLUP_mana);
-                            // DO ACTION: SPECIAL ATTACK UP
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_up");
-                            // In range of Special Attack Side
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_side_range);
-                                // Mana > 20%
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 20.0, &m_PLUP_mana);
-                                    // DO ACTION: SPECIAL ATTACK SIDE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_side");
-                                    // In range of basic attack
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                        // DO ACTION: BASIC ATTACK
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                        // OR DO ACTION: BLOCK
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                        // DO ACTION: MOVE
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                                // In range of basic attack
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                    // DO ACTION: BASIC ATTACK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                    // OR DO ACTION: BLOCK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                    // DO ACTION: MOVE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                        // In range of Special Attack Side (ALREADY CREATED. REFERENCE IT)
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0];
-                // Life < 25%
-                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(1, 80.0, &m_PLUP_life);
-                    //Mana > 35%
-                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 35.0, &m_PLUP_mana);
-                    // Snowman placed
-                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(2, 1.0, &m_PLUP_snowman_placed);
-                        // In range of Special Attack Up
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(2, 1.0, &m_PLUP_special_up_range);
-                            // Mana > 25%
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(0, 25.0, &m_PLUP_mana);
-                                // DO ACTION: SPECIAL ATTACK UP
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_up");
-                                // In range of Special Attack side
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_side_range);
-                                    // Mana > 20%
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 20.0, &m_PLUP_mana);
-                                        // DO ACTION: SPECIAL ATTACK SIDE
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_side");
-                                        // In range of basic attack
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                            // DO ACTION: BASIC ATTACK
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                            // OR DO ACTION: BLOCK
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                            // OR DO ACTION: MOVE
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[2] = new AINode(-1, 0, 0, "move");
-                                            // DO ACTION: MOVE
-                                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                                // In range of basic attack
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                    // DO ACTION: BASIC ATTACK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                    // OR DO ACTION: BLOCK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                    // OR DO ACTION: MOVE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[2] = new AINode(-1, 0, 0, "move");
-                                    // DO ACTION: MOVE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                            // In range of Special Attack Up (ALREADY CREATED. REFERENCE IT)
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = m_PLUP_root->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0];
-                        // DO ACTION: SPECIAL ATTACK DOWN
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "special_attack_down");
-                    // In range of Special Attack Up
-                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_up_range);
-                        // Mana > 25%
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 25.0, &m_PLUP_mana);
-                            // DO ACTION: SPECIAL ATTACK UP
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_up");
-                            // In range of Special Attack Side
-                            m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(2, 1.0, &m_PLUP_special_side_range);
-                                // Mana > 20%
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(0, 20.0, &m_PLUP_mana);
-                                    // DO ACTION: SPECIAL ATTACK SIDE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "special_attack_side");
-                                    // In range of basic attack
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                        // DO ACTION: BASIC ATTACK
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                        // OR DO ACTION: BLOCK
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                        // OR DO ACTION: MOVE
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[2] = new AINode(-1, 0, 0, "move");
-                                        // DO ACTION: MOVE
-                                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                                // In range of basic attack
-                                m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = new AINode(1, 10.0, &m_PLUP_distance_to_enemy);
-                                    // DO ACTION: BASIC ATTACK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "basic_attack");
-                                    // OR DO ACTION: BLOCK
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[1] = new AINode(-1, 0, 0, "block");
-                                    // OR DO ACTION: MOVE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[2] = new AINode(-1, 0, 0, "move");
-                                    // DO ACTION: MOVE
-                                    m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "move");
-                        // In range of Special Attack Side (ALREADY CREATED. REFERENCE IT)
-                        m_PLUP_root->m_true_children[0]->m_false_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0]->m_false_children[0] = m_PLUP_root->m_true_children[0]->m_true_children[0]->m_false_children[0]->m_true_children[0]->m_false_children[0];
-        // Item close
-        m_PLUP_root->m_false_children[0] = new AINode(1, 100.0, &m_PLUP_distance_to_item);
-            // DO ACTION: PICK ITEM UP
-            m_PLUP_root->m_false_children[0]->m_false_children[0] = new AINode(-1, 0, 0, "pick_item_up");
-            // DO ACTION: MOVE
-            m_PLUP_root->m_false_children[0]->m_true_children[0] = new AINode(-1, 0, 0, "move");
+    // Read JSON
+    std::ifstream t_file("assets/ai/ai_tree_plup.json");
+    nlohmann::json t_json;
+    t_file >> t_json;
+    auto nodes = t_json["nodes"];
+
+    // Initialize
+    int t_comparison_type = -1;
+    float t_value = -1;
+    float* t_data = -1;
+    int t_node_type = 0;
+    std::string t_action = "";
+    int t_true_child = -1;
+    int t_false_child = -1;
+    
+    // Iterate through every node
+    for(int i=0; nodes[i]!=nullptr; i++){
+        if(nodes[i]["type"] == "comparison"){   // Comparison
+            t_node_type = 0;
+        }
+        else{                                   // Action
+            t_node_type = 1;
+        }
+
+        // Determine which variable to use to create the node
+        if(t_node_type == 0){
+            t_comparison_type = nodes[i]["data"]["comparison_type"];
+            if(nodes[i]["name"] == "portal_active"){
+                t_data = m_distanceToPortal;
+            }
+            else if(nodes[i]["name"] == "on_portal"){
+                t_data = m_distanceToPortal;
+            }
+            else if(nodes[i]["name"] == "enemy_close"){
+                t_data = m_distanceToEnemy;
+            }
+            else if(nodes[i]["name"] == "life_above_first_threshold"){
+                t_data = m_HP;
+            }
+            else if(nodes[i]["name"] == "mana_above_first_threshold"){
+                t_data = m_MP;
+            }
+            else if(nodes[i]["name"] == "snowman_placed"){
+                t_data = m_PLUP_snowman_placed;
+            }
+            else if(nodes[i]["name"] == "special_up_range"){
+                t_data = m_specialUpRange;
+            }
+            else if(nodes[i]["name"] == "mana_above_second_threshold"){
+                t_data = m_MP;
+            }
+            else if(nodes[i]["name"] == "special_side_range"){
+                t_data = m_specialSideRange;
+            }
+            else if(nodes[i]["name"] == "mana_above_third_threshold"){
+                t_data = m_MP;
+            }
+            else if(nodes[i]["name"] == "basic_attack_range"){
+                t_data = m_distanceToEnemy;
+            }
+            else if(nodes[i]["name"] == "time_above_first_threshold"){
+                t_data = m_time;
+            }
+            else if(nodes[i]["name"] == "time_above_second_threshold"){
+                t_data = m_time;
+            }
+            else if(nodes[i]["name"] == "item_close"){
+                t_data = m_distanceToItem;
+            }
+            else if(nodes[i]["name"] == "pick_up_range"){
+                t_data = m_distanceToItem;
+            }
+            t_value = nodes[i]["data"]["value"];
+        }
+        else{
+            t_action = nodes[i]["data"]["value"];
+        }
+
+        // Create AINode   
+        m_nodes[i] = new AINode(t_comparison_type, t_value, t_data, t_action);
+    }
+
+    // Set child nodes
+    for(int i=0; nodes[i]!=nullptr; i++){
+        if(m_nodes[i]["children"] != nullptr){
+            if(m_nodes[i]["children"][0] != nullptr){
+                t_true_child = m_nodes[i]["children"][0];
+                m_nodes[i]->m_true_children = m_nodes[t_true_child];
+            }
+            if(m_nodes[i]["children"][1] != nullptr){
+                t_false_child = m_nodes[i]["children"][1];
+                m_nodes[i]->m_false_children = m_nodes[t_false_child];
+            }
+        }
+    }
 }

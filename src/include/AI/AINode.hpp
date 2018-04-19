@@ -30,8 +30,8 @@ class AINode{
         float    m_comparison_value;
         float*   m_data;
     public:
-        AINode** m_true_children;
-        AINode** m_false_children;
+        AINode* m_true_children;
+        AINode* m_false_children;
         AINode(int p_type, float p_comparison_value, float *p_data, std::string action = "");
         ~AINode();
         AINode* makeDecision(AINode* node);

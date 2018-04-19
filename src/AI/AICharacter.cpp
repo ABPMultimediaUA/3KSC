@@ -32,7 +32,7 @@
 #include <sstream>
 
 AICharacter::AICharacter(Character* p_player){
-    m_root              = nullptr;                      //Different in each character
+    m_nodes              = nullptr;                      //Different in each character
     m_physicsManager    = &PhysicsManager::instance();
     m_inputManager      = &InputManager::instance();
     m_arena             = Arena::getInstance();
@@ -45,11 +45,12 @@ AICharacter::AICharacter(Character* p_player){
     m_x                 = m_player->getX();
     m_y                 = m_player->getY();
     m_position          = b2Vec2(m_x, m_y);
+    m_time              = 0.0f;
 }
 
 AICharacter::~AICharacter(){
-    delete m_root;
-    m_root = nullptr;
+    delete m_nodes;
+    m_nodes = nullptr;
 }
 
 //Reads a file and returns its content as an string

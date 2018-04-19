@@ -38,9 +38,9 @@ AINode* AINode::makeDecision(AINode* node){
     if(node->m_type==0){
         if(node->m_data != 0){
             if(*(node->m_data) > node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
+                return(makeDecision(node->m_true_children));
             else
-                return(makeDecision(node->m_false_children[0]));
+                return(makeDecision(node->m_false_children));
         }
         else
             return(node);
@@ -48,9 +48,9 @@ AINode* AINode::makeDecision(AINode* node){
     else if(node->m_type==1){
         if(node->m_data != 0){
             if(*(node->m_data) < node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
+                return(makeDecision(node->m_true_children));
             else
-                return(makeDecision(node->m_false_children[0]));
+                return(makeDecision(node->m_false_children));
         }
         else
             return(node);
@@ -58,9 +58,9 @@ AINode* AINode::makeDecision(AINode* node){
     else if(node->m_type==2){
         if(node->m_data != 0){
             if(*(node->m_data) == node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
+                return(makeDecision(node->m_true_children));
             else
-                return(makeDecision(node->m_false_children[0]));
+                return(makeDecision(node->m_false_children));
         }
         else
             return(node);
@@ -68,9 +68,9 @@ AINode* AINode::makeDecision(AINode* node){
     else if(node->m_type==3){
         if(node->m_data != 0){
             if(*(node->m_data) >= node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
+                return(makeDecision(node->m_true_children));
             else
-                return(makeDecision(node->m_false_children[0]));
+                return(makeDecision(node->m_false_children));
         }
         else
             return(node);
@@ -78,9 +78,9 @@ AINode* AINode::makeDecision(AINode* node){
     else if(node->m_type==4){
         if(node->m_data != 0){
             if(*(node->m_data) <= node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
+                return(makeDecision(node->m_true_children));
             else
-                return(makeDecision(node->m_false_children[0]));
+                return(makeDecision(node->m_false_children));
         }
         else{
             return(node);
