@@ -34,8 +34,7 @@
         CAIDA EN PICADO
 */
 
-Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode, bool p_online)
-    : Character(p_name, p_position, 100, 100, 15, 12.f, "assets/models/characters/sparky/sparky.obj", p_debugMode, p_online){
+Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 15, 70.f, "assets/models/characters/sparky/sparky.obj", p_online){
     m_type                  = 4;
     
     m_sparkyJumping      = false;
@@ -53,9 +52,8 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_debugMode, bool p_onlin
     m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );*/
     //m_soundManager->modifyParameter("random", 0.95, "Prob");
 
-    if (m_NPC){
+    if(m_NPC)
         m_AI = new AISparky(this);
-    }
 }
 
 Sparky::~Sparky(){}

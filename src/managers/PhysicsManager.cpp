@@ -37,13 +37,13 @@ PhysicsManager& PhysicsManager::instance(){
 PhysicsManager::PhysicsManager(){
     m_engineManager = &EngineManager::instance();
 
-    b2Vec2 gravity(0.0f, -8.0f);
+    b2Vec2 gravity(0.0f, -4.9f);
 
     m_world = new b2World(gravity);
 
-    m_timeStep = 10.f/60.0f;
-    m_velocityIterations = 6;
-    m_positionIterations = 2;
+    m_timeStep = 10.0f/60.0f;
+    m_velocityIterations = 8;
+    m_positionIterations = 6;
 
     m_contactManager = new ContactManager();
     m_world->SetContactListener(m_contactManager);
@@ -61,7 +61,7 @@ PhysicsManager::~PhysicsManager(){
 }
 
 void PhysicsManager::update(float p_delta){
-    m_timeStep = p_delta * 10;
+    //m_timeStep = p_delta * 10;
     // std::cout << "Before Step" << std::endl;
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
     // std::cout << "After Step" << std::endl;
@@ -80,8 +80,9 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
-    t_fixtureDef->density = 1.0f;
-    t_fixtureDef->friction = 0.3f;
+    t_fixtureDef->density  = 750.0f;
+    t_fixtureDef->friction = 1.0f;
+    t_fixtureDef->isSensor = false;
 
     switch(p_type){
         case Box::Player:
@@ -112,17 +113,16 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
 
 void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     b2Body* t_body = getBody(p_id);
-    float t_tam = 10;
+
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(0.1, 0.1, b2Vec2(-0.2,-0.5), 0);
-    //t_polygonShape->SetAsBox(t_tam, t_tam/4);
+    t_polygonShape->SetAsBox(0.5, 0.5, b2Vec2(0,-1), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
+    t_fixtureDef->shape = t_polygonShape;
+    t_fixtureDef->isSensor = true;
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
     t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
     t_fixtureDef->filter.groupIndex   = -1;
-    t_fixtureDef->shape = t_polygonShape;
-    t_fixtureDef->isSensor = true;
 
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
@@ -181,21 +181,22 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     float size = 1;
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
-    t_bodyDef->position.Set(p_position[0]-size/2 , p_position[1]);
+    t_bodyDef->position.Set(p_position[0], p_position[1]);
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
     
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(size,size/4);
+    t_polygonShape->SetAsBox(p_dimX, p_dimY);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
     t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
-        t_fixtureDef->filter.groupIndex   = 1;
+    t_fixtureDef->filter.groupIndex   = 1;
 
     //Attach the shape to the body
     m_portalFixture = t_body->CreateFixture(t_fixtureDef);
+    t_body->SetUserData(p_id);
 }
 
 void PhysicsManager::addDataToPortal(Portal* p_portal){
@@ -206,27 +207,6 @@ b2World* PhysicsManager::getWorld(){
     return m_world;
 }
 
-b2PolygonShape* PhysicsManager::getShape(int p_id){
-    b2Body* t_body = m_world->GetBodyList();
-    b2Shape* t_shape = 0;
-    int* t_id = 0;
-    int  t_value = 0;
-
-    while(t_body != NULL){
-        t_id = static_cast<int*>(t_body->GetUserData());
-        t_value = *t_id;
-        if(p_id == t_value){
-            t_shape = t_body->GetFixtureList()->GetShape();
-            if(t_shape->GetType() == 1){
-                b2PolygonShape* t_polygonShape = (b2PolygonShape*)t_shape;
-                return t_polygonShape;
-            }
-        }        
-        t_body = t_body->GetNext();
-    }
-    return 0;
-}
-
 //An ID is receive and we look for the body with that ID
 b2Body* PhysicsManager::getBody(int p_id){
     b2Body* t_body = m_world->GetBodyList();
@@ -235,11 +215,12 @@ b2Body* PhysicsManager::getBody(int p_id){
 
     while(t_body != NULL){
         t_id = static_cast<int*>(t_body->GetUserData());
-        if(t_id == NULL)
+        if(t_id != NULL){
+            t_value = *t_id;
+            if(p_id == t_value)
+                return t_body;
+        }else
             return 0;
-        t_value = *t_id;
-        if(p_id == t_value)
-            return t_body;
 
         t_body = t_body->GetNext();
     }
@@ -266,19 +247,9 @@ float32 PhysicsManager::getTimeStep(){
 
 void PhysicsManager::moveBody(int p_idBody, float p_x, float p_y){
     b2Body* t_body = getBody(p_idBody);
-    if(t_body == 0)
-        return;
-
-    t_body->SetTransform(b2Vec2(p_x, p_y), 0);
+    if(t_body != 0)
+        t_body->SetTransform(b2Vec2(p_x, p_y), 0);
 }
-//Adds a force to an entity
-void PhysicsManager::addForce(){}
-
-//Removes a force from an entity
-void PhysicsManager::removeForce(){}
-
-//Handles gravity changes in Kawaiisaki map
-void PhysicsManager::updateGravity(){}
 
 //Casts a ray between 2 points and returns the a number between 0 and 1. 1 is max distance collision.
 float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
@@ -291,15 +262,14 @@ float PhysicsManager::RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     //check every fixture of every body to find closest
     float t_closestFraction = 1; //start with end of line as p2
 
-    for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()) {
-        for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
+    for(b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()){
+        for(b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()){
   
             b2RayCastOutput t_output;
-            if ( !f->RayCast( &t_output, t_input, 0 ) ) // No collision
+            if(!f->RayCast( &t_output, t_input, 0)) // No collision
                 continue;
-            if ( t_output.fraction < t_closestFraction ) {
+            if(t_output.fraction < t_closestFraction)
                 t_closestFraction = t_output.fraction;
-            }            
         }
     }
     return t_closestFraction;
@@ -313,7 +283,7 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
     t_closestPlayer = 0;
     float t_shortestModule = 0;
 
-    for (int i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount; i++){
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
         float t_target_x = t_currentPlayer->getX();
         float t_target_y = t_currentPlayer->getY();
@@ -327,11 +297,10 @@ Character* PhysicsManager::getClosestCharacter(b2Vec2 p_p1){
         if(t_module <= 0.5)
             continue;
 
-        if(t_shortestModule==0){
+        if(t_shortestModule == 0){
             t_shortestModule = t_module;
             t_closestPlayer = t_currentPlayer;
-        }
-        else{
+        }else{
             if(t_module < t_shortestModule){
                 t_shortestModule = t_module;
                 t_closestPlayer = t_currentPlayer;
@@ -351,9 +320,7 @@ float PhysicsManager::getDistanceToClosestCharacter(b2Vec2 p_p1){
         t_target_y = t_closestPlayer->getY();
         t_target_z = t_closestPlayer->getZ();
     
-
-        b2Vec2 t_p2 = b2Vec2(t_target_x, t_target_y); 
-
+        b2Vec2 t_p2   = b2Vec2(t_target_x, t_target_y); 
         b2Vec2 t_p2p1 = b2Vec2(t_target_x - p_p1.x, t_target_y - p_p1.y);
 
         float t_module = sqrt(pow(t_p2p1.x,2) + pow(t_p2p1.y,2));
@@ -372,14 +339,19 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     return t_distance;
 }
 
-ContactManager* PhysicsManager::getContactManager(){
-    return m_contactManager;
-}
-
 void PhysicsManager::applyKnockback(int p_idBody, int t_side){
+    /*
+    PARA CALCULAR EL RETROCESO:
+    
+    RETROCESO = BASE_FIJA * POTENCIA_ATAQUE * INVERSA_VIDA;
+    
+    BASE_FIJA = 1000???
+    POTENCIA_ATAQUE = DEPENDE DEL ATAQUE
+    */
+    std::cout << "KNOCKBACK!" << std::endl;
     b2Body* t_body = getBody(p_idBody);
-    t_body->SetLinearDamping(1);
-    std::cout<<"applying impulse"<<std::endl;
+    //t_body->SetLinearDamping(1);
+    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,1000), t_body->GetWorldCenter(), true);
 }
 
 //The p_body is the body that realize the action/atak
@@ -532,14 +504,13 @@ void PhysicsManager::getPosition(int p_idBody){
 }
 
 void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
-    b2Body* t_body = getBody(p_idBody);   
-    t_body -> SetLinearVelocity(b2Vec2(p_moveX, t_body->GetLinearVelocity().y));
-    //t_body->ApplyForce(b2Vec2(p_moveX, p_moveY), t_body->GetWorldCenter(), true);
+    b2Body* t_body = getBody(p_idBody);
+    t_body->SetLinearVelocity(b2Vec2(p_moveX, t_body->GetLinearVelocity().y));
 }
 
 void PhysicsManager::jump(int p_idBody, float p_force){
     b2Body* t_body = getBody(p_idBody);
-    t_body->ApplyLinearImpulse(b2Vec2(0,p_force * 1000), b2Vec2(t_body->GetWorldCenter()), true);
+    t_body->ApplyLinearImpulse(b2Vec2(0,p_force * 25), b2Vec2(t_body->GetWorldCenter()), true);
 }
 int PhysicsManager::getTotalFixtures(int p_idBody){
     int t_totalFixtures = 0;

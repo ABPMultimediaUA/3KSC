@@ -26,46 +26,54 @@
 class EngineManager;
 class PhysicsManager;
 class InputManager;
+class Debug;
 
 //#include "../Model.hpp"
 //#include "../Texture.hpp"
 //#include "../Hitbox.hpp"
 
 class Entity {
-    public:
-        Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
-        ~Entity();
-        void moveTo(float p_position[3]);
-        void moveTo(float p_x,float p_y);
-        void moveX(float p_variation);
-        void moveY(float p_variation);
-        void moveZ(float p_variation);
-        bool checkCloseness(float* p_point, float p_range);
-        int getId();
-        float* getPosition();
-        float getX();
-        float getY();
-        float getZ();
-        void setX(float p_position);
-        void setY(float p_position);
-        void rotate(float degrees);
-        void updatePosition(bool p_jumping, bool p_knockback, bool p_dashing);
-        static int getEntityCount();
+public:
+    Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
+    ~Entity();
+    void        moveTo(float p_position[3]);
+    void        moveTo(float p_y, float p_x);
+    void        moveX(float p_variation);
+    void        moveY(float p_variation);
+    void        moveZ(float p_variation);
+    bool        checkCloseness(float* p_point, float p_range);
+    int         getId();
+    float*      getPosition();
+    float       getX();
+    float       getY();
+    float       getZ();
+    void        setX(float p_position);
+    void        setY(float p_position);
+    void        rotate(float degrees);
+    void        updatePosition(bool p_jumping, bool p_knockback, bool p_dashing);
+    static int  getEntityCount();
 
-    protected:
-        static EngineManager*  m_engineManager;
-        static PhysicsManager* m_physicsManager;
-        static InputManager*   m_inputManager;
+    void        createDebug();
+    void        updateDebug();
 
-        static int m_entityCount;
-        int        m_id; 
-        float      m_position[3]; // [0] for x, [1] for y, [2] for z
-        float      m_lastPosition[3]; // [0] for x, [1] for y, [2] for z
-        const char* m_modelURL;
-        //Model*     m_model;
-        //Texture*   m_texture;
-        //Hitbox*    m_hitbox;
-        float      m_weight;
+protected:
+    static EngineManager*   m_engineManager;
+    static PhysicsManager*  m_physicsManager;
+    static InputManager*    m_inputManager;
+
+    static int              m_entityCount;
+    int                     m_id; 
+    float                   m_position[3]; // [0] for x, [1] for y, [2] for z
+    float                   m_lastPosition[3]; // [0] for x, [1] for y, [2] for z
+    const char*             m_modelURL;
+    //Model*                m_model;
+    //Texture*              m_texture;
+    //Hitbox*               m_hitbox;
+    float                   m_weight;
+    
+    bool                    m_debugMode;
+    int                     m_totalFixtures;
+    Debug*                  m_entityDebug[4];
 };
 
 #endif

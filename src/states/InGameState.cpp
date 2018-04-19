@@ -88,34 +88,25 @@ InGameState::~InGameState(){
     m_client = nullptr;
 }
 
-void InGameState::input(){
-
-}
+void InGameState::input(){}
 
 void InGameState::update(){
     m_inputManager->updateMasterClock();
     m_soundManager->update(false);
     m_engineManager->updateFrameDeltaTime(m_deltaTime);
-    int t_playerCount = m_arena->getPlayerCount();
-    int i;
-
-    if(m_onlineMode){
-        m_client->update();
-    }
-    else{
-        m_arena->update((float)m_deltaTime);
-    }
 
     if(m_onlineMode)
         m_client->update();
     else
-        m_arena->update((float)m_deltaTime); 
+        m_arena->update((float)m_deltaTime);
 
     //Update the physics one step more(need to be done first of all)
+    m_physicsManager->update(m_deltaTime);
+    
+    int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
-
     //Input and update for every character
-    for(i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount; i++){
         t_currentPlayer = m_arena->getPlayer(i);
 
         if(t_currentPlayer){
@@ -123,7 +114,6 @@ void InGameState::update(){
             t_currentPlayer->update();
         }
     }
-    m_physicsManager->update(m_deltaTime);
 }
 
 void InGameState::render(){
@@ -162,7 +152,7 @@ void InGameState::createArena(const char* p_fileCgm){
 
             const char* t_path = t_elements[1].c_str();
             //load Arena
-            m_arena = new Arena(t_position, t_scale, t_path, true);
+            m_arena = new Arena(t_position, t_scale, t_path);
         }
          //Create camera
         else if(t_name == "c"){

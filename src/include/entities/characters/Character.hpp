@@ -25,7 +25,6 @@
 
 class SoundManager;
 class AICharacter;
-class Debug;
 
 #include <SFML/System.hpp>
 
@@ -37,11 +36,10 @@ struct ActionMapping;
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode, bool p_online = false);
+    Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_online = false);
     ~Character();
 
     void            getRespawnPosition();
-    void            createJumpTable();
 	
     void            receiveAttack(int p_damage, bool p_block, int p_knockback = 0, bool p_checked = 0);
     virtual void    changeHP(int p_variation);
@@ -141,9 +139,8 @@ protected:
     ActionMapping*  m_actions;
     void            mapActions();
 
-    Debug*          m_playerDebug[2];
+    Debug*          m_playerDebug;
     bool            m_debugMode;
-    int             m_totalFixtures;
 
     float           m_jumpDuration;
     float           m_jumpTime;
@@ -166,7 +163,6 @@ protected:
     bool            m_online;
 
     float m_moveAmmount;
-    float m_jumpAmmount;
 
 private:
     bool            m_waitRelease;

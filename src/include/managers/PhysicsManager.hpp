@@ -77,9 +77,6 @@ public:
     void                    addDataToPortal(Portal* p_portal);
 
     void                    moveBody(int p_idBody, float p_x, float p_y);
-    void                    addForce();
-    void                    removeForce();
-    void                    updateGravity();
 
     float                   RaycastBetween(b2Vec2 p_p1, b2Vec2 p_p2);
     Character*              getClosestCharacter(b2Vec2 p_p1);
@@ -87,14 +84,11 @@ public:
     float                   getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2);
 
     b2World*                getWorld();
-    b2PolygonShape*         getShape(int p_id);
     b2Body*                 getBody(int p_id);
     void                    destroyBody(int p_id);
     int32                   getVelocityIterations();
     int32                   getPositionIterations();
     float32                 getTimeStep();
-
-    ContactManager*         getContactManager();
 
     void                    applyKnockback(int p_idBody, int t_side);
 
@@ -107,12 +101,10 @@ public:
     void                    sparkyJump(int p_idBody);
     void                    fastGravity(int p_idBody);
     void                    machineGun(int p_idBody, int p_orientation);
-
+    int                     getTotalFixtures(int p_idBody);
     void                    getPosition(int p_idBody);
     void                    move(int p_idBody, float p_moveX, float p_moveY);
     void                    jump(int p_idBody, float p_force);
-    int                     getTotalFixtures(int p_idBody);
-
 };
 
 #endif
