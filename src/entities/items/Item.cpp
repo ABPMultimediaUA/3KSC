@@ -27,7 +27,7 @@
 #include <iostream>
 
 //Constructor
-Item::Item(float p_position[3], const char* p_modelURL) : Entity(p_position, 4.f, p_modelURL, 2){
+Item::Item(float p_position[3], const char* p_modelURL) : Entity(p_position, 0.5f, p_modelURL, 2){
     m_dieTime = m_inputManager->getMasterClock() + 15.0;
 }
 

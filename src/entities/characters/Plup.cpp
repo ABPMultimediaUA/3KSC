@@ -39,7 +39,7 @@
         SI HACES EL DASH Y CHOCAS CON LA TURRET PETA, MIRAR COMO SOLUCIONARLO
 */
 
-Plup::Plup(char* p_name, float p_position[3], bool p_debugMode, bool p_online) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_debugMode, p_online){
+Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_online){
     m_type           = 3;
 
     m_snowmanPlaced  = false;
@@ -118,7 +118,7 @@ bool Plup::specialAttackUp(){
 //Snowman
 bool Plup::specialAttackDown(){
     if(!m_snowmanPlaced && useMP(35)){
-        m_attackPosition[0] = m_position[0] + 10*m_orientation;
+        m_attackPosition[0] = m_position[0] + 1*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
 
@@ -137,7 +137,7 @@ bool Plup::specialAttackSide(){
         //std::cout << m_name << ": Special Attack Side" << std::endl;
 
         m_physicsManager->getBody(getId())->SetLinearDamping(-0.5);
-        m_physicsManager->getBody(getId())->SetLinearVelocity(b2Vec2(10*m_orientation,0));
+        m_physicsManager->getBody(getId())->SetLinearVelocity(b2Vec2(4*m_orientation,0));
 
         //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
         m_dashing = true;

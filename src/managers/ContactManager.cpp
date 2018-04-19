@@ -23,7 +23,6 @@
 #include "../include/entities/characters/Character.hpp"
 #include "../include/entities/items/Portal.hpp"
 
-
 void ContactManager::BeginContact(b2Contact* p_contact){
 	void* dataA = p_contact->GetFixtureA()->GetUserData();
 	void* dataB = p_contact->GetFixtureB()->GetUserData();
@@ -47,25 +46,29 @@ void ContactManager::checkLeave(void* p_data1, void* p_data2){
 }
 
 void ContactManager::onCollide(void* p_data1, void* p_data2){
-
-	if(p_data1){
+	/*if(p_data1){
 		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
-			if(static_cast<Character*>(p_data1)->getValidation() != 123) return;//comprobamos que el character exista de verdad
+			//comprobamos que el character exista de verdad
+			if(static_cast<Character*>(p_data1)->getValidation() != 123)
+				return;
 			static_cast<Portal*>(p_data2)->onEnter(static_cast<Character*>(p_data1));
-		}
-		else
+		}else
 			static_cast<Character*>(p_data1)->onTouchGround();
-	}
+	}*/
+	if(static_cast<Character*>(p_data1))
+		static_cast<Character*>(p_data1)->onTouchGround();
 }
 
 void ContactManager::onLeave(void* p_data1, void* p_data2){
-	if(p_data1){
+	/*if(p_data1){
 		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
-		if(static_cast<Character*>(p_data1)->getValidation() != 123) return;//comprobamos que el character exista de verdad
+			//comprobamos que el character exista de verdad
+			if(static_cast<Character*>(p_data1)->getValidation() != 123)
+				return;
 			static_cast<Portal*>(p_data2)->onLeave(static_cast<Character*>(p_data1));
-		}
-		else
+		}else
 			static_cast<Character*>(p_data1)->onLeaveGround();
-		
-	}
+	}*/
+	if(static_cast<Character*>(p_data1))
+		static_cast<Character*>(p_data1)->onLeaveGround();
 }

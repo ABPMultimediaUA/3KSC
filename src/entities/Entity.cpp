@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
 
@@ -48,83 +49,81 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 
     switch(p_type){
         case 0:
-            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 5.0, 5.0);
+            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
             break;
 
-        case 1: {
+        case 1:
             m_engineManager->parseOBJ(p_modelURL);
             m_physicsManager->createPhysicBoxPlatform(&m_id, p_position);
             break;
-        }
 
         case 2:
-            m_physicsManager->createPhysicBox(Box::Item, &m_id, p_position, 5.0, 5.0);
+            m_physicsManager->createPhysicBox(Box::Item, &m_id, p_position, 0.5, 0.5);
             break;
 
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 5.0, 5.0);
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1, 0.4);
             break;
 
         case 4:
-            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 5.0, 5.0);
+            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.5);
             break;
 
         case 5:
-            m_physicsManager->createPhysicBox(Box::Other, &m_id, p_position, 5.0, 5.0);
+            m_physicsManager->createPhysicBox(Box::Other, &m_id, p_position, 0.5, 0.5);
             break;
     }
+
+    m_debugMode = true;
+    if(m_debugMode && p_type != 0)
+        createDebug();
 }
 
 Entity::~Entity(){
     m_engineManager->deleteEntity(m_id);
     m_physicsManager->destroyBody(m_id);
+
+    /*for(int i = 0; i < m_totalFixtures; i++){
+        if(m_entityDebug[i]){
+            delete m_entityDebug[i];
+            m_entityDebug[i] = nullptr;
+        }
+    }*/
 }
 
 void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
-    if(p_knockback || p_dashing){
-        m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
-        m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-        m_engineManager->moveEntity(this);
-        return;
-    }
-    if(p_jumping){
-        //If we are jumping sleeps the body, so gravity dont affect it
-        m_physicsManager->getBody(m_id)->SetAwake(false);
-    }
-    else{
-        //We are falling or in the ground, so we put in the Y coord the value of the body
-        m_physicsManager->getBody(m_id)->SetAwake(true);
-        m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-    }
-    //Add to the body the actual position of the model
-    b2Vec2 t_vec(m_position[0], m_position[1]);
-    m_physicsManager->getBody(m_id)->SetTransform(t_vec, 0);
+    if(m_debugMode)
+        updateDebug();
+
+    //Set to the entity the new position of the body
+    m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
+    m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
 
     m_engineManager->moveEntity(this);
-
 }
 
 void Entity::moveTo(float p_position[3]){
-    std::memcpy(m_position,  p_position, 3 * sizeof(float));
-    m_engineManager->moveEntity(this);
+    m_physicsManager->moveBody(m_id, p_position[0], p_position[1]);
+    //m_engineManager->moveEntity(this);
+}
+
+void Entity::moveTo(float p_y, float p_x){
+    float t_position[3] = {p_y, p_x, getZ()};
+    moveTo(t_position);
 }
 
 void Entity::moveX(float p_variation){
-    m_lastPosition[0] = m_position[0];
-    m_position[0] += p_variation;
-    m_engineManager->moveEntity(this);
+    moveTo(getX() + p_variation, getY());
 }
 
 void Entity::moveY(float p_variation){
-    m_lastPosition[1] = m_position[1];
-    m_position[1] += p_variation;
-    m_engineManager->moveEntity(this);
+    moveTo(getX(), getY() + p_variation);
 }
 
 void Entity::moveZ(float p_variation){
     m_lastPosition[2] = m_position[2];
     m_position[2] += p_variation;
-    m_engineManager->moveEntity(this);
+    //m_engineManager->moveEntity(this);
 }
 
 //Checks if an entity is close to a certain point (in specified range)
@@ -132,9 +131,8 @@ bool Entity::checkCloseness(float* p_point, float p_range){
     //X axis
     if(p_point[0] >= m_position[0] - p_range && p_point[0] <= m_position[0] + p_range){
         //Y axis
-        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range){
+        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range)
             return true;
-        }
     }   
     return false;
 }
@@ -168,13 +166,23 @@ void Entity::rotate(float p_degrees){
 }
 
 void Entity::setX(float p_position){
-    m_lastPosition[0] = m_position[0];
-    m_position[0] = p_position;
-    m_engineManager->moveEntity(this);
+    moveTo(p_position, getY());
 }
 
 void Entity::setY(float p_position){
-    m_lastPosition[1] = m_position[1];
-    m_position[1] = p_position;
-    m_engineManager->moveEntity(this);
+    moveTo(getX(), p_position);
+}
+
+void Entity::createDebug(){
+    m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
+
+    for(int i = 0; i < m_totalFixtures; i++){
+        m_entityDebug[i] = new Debug(m_physicsManager->getBody(m_id), i);
+    }
+}
+
+void Entity::updateDebug(){
+    for(int i = 0; i < m_totalFixtures; i++){
+        m_entityDebug[i]->update();
+    }
 }

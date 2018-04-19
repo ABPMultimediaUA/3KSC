@@ -30,7 +30,6 @@
 #include "../../include/managers/UIManager.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
-#include "../../include/debug.hpp"
 
 #include <iostream>
 
@@ -47,7 +46,7 @@ int Character::m_playerCount = 0;
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode, bool p_online) : Entity(p_position, 5.f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_online) : Entity(p_position, 0.5f, p_modelURL){
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
     m_client                = &Client::instance();
@@ -76,7 +75,8 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_runningFactor         = 1.0f;
     m_orientation           = 1;
 
-    m_sideKnockback         = 0;
+    m_jumpDuration          = 0.75;
+    m_jumpTime              = 0;
     m_knockbackDuration     = 0.25;
     m_knockbackTime         = 0;
     m_dashDuration          = 0.5;
@@ -89,14 +89,14 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_shieldTime            = 0;
 
     m_online                = p_online;
-    
+
+    m_moveAmmount = 0;
+    m_maxJumps    = 2;
     mapActions();
-    createJumpTable();
     setRespawnPosition(m_arena->getRespawnPosition());
 
     m_waitRelease           = false;
     m_keepWaiting           = false;
-
 
     switch(m_playerIndex){
         case 0:
@@ -106,10 +106,11 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
             lookLeft();
             break;
     }
-   
-    m_debugMode = p_debugMode;
-    m_physicsManager->setPlayerSensor(getId(), this);
+
     m_validation = 123;
+
+    m_physicsManager->setPlayerSensor(getId(), this);
+    createDebug();
 }
 
 Character::~Character(){
@@ -120,26 +121,6 @@ Character::~Character(){
 
    delete[] m_actions;
    m_actions = nullptr;
-
-   delete m_playerDebug;
-   m_playerDebug = nullptr;
-}
-
-void Character::createJumpTable(){
-    m_maxJumps          = 2;
-    m_jumping           = false;
-    m_jumpCurrentTime   = 0;
-    m_jumpMaxTime       = 10;
-    m_jumpTable[0]      = 3.0f;
-    m_jumpTable[1]      = 2.4f;
-    m_jumpTable[2]      = 1.9f;
-    m_jumpTable[3]      = 1.6f;
-    m_jumpTable[4]      = 1.25f;
-    m_jumpTable[5]      = 0.95;
-    m_jumpTable[6]      = 0.75;
-    m_jumpTable[7]      = 0.55;
-    m_jumpTable[8]      = 0.35;
-    m_jumpTable[9]      = 0.15;
 }
 
 void Character::setRespawnPosition(float p_respawnPosition[3]){
@@ -170,30 +151,22 @@ void Character::mapActions(){
 //Receives an attack from other player
 //Parameters: damage, can you block it?
 void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool p_checked){
-    std::cout<<"character11111"<<std::endl;
     if(m_online && !p_checked){
-        if(m_client->getPlayer() == m_playerIndex){
+        if(m_client->getPlayer() == m_playerIndex)
             m_client->attacked(p_damage, p_block, p_knockback);
-        }
+
         else return;  //ignorar ataques que no sean de tu jugador
     }
 
-    std::cout<<"character attack"<<std::endl;
-
-    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
+    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded)
         changeHP(-p_damage/2);
-        //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
-    }else{
+    else
         changeHP(-p_damage);
-        //std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
-    }
 
-    if(p_knockback == 2){ //knockback sin direccion
+    if(p_knockback == 2) //knockback sin direccion
         setKnockback();
-    }
-    else if(p_knockback != 0){
+    else if(p_knockback != 0)
         knockback(p_knockback);
-    }
 }
 
 //Increases or decreases life
@@ -347,55 +320,39 @@ void Character::input(){
 //Update state of player
 void Character::update(){
     //Update AI if exists and is enabled
-    if(m_AI && m_AIEnabled){
+    if(m_AI && m_AIEnabled)
         m_AI->update();
-    }
 
     //Specific update for each character
     updatePlayer();
+    m_moveAmmount = 0;
 
     float t_currentTime = m_inputManager->getMasterClock();
-
-    if(m_winged && t_currentTime >= m_wingsTime){
+    if(m_winged && t_currentTime >= m_wingsTime)
         removeWings();
-    }
 
-    if(m_shielded && t_currentTime >= m_shieldTime){
+    if(m_shielded && t_currentTime >= m_shieldTime)
         m_shielded = false;
-    }
 
     if(m_stunned && t_currentTime > m_stunTime){
         m_stunDuration = 1.0;
         m_stunned      = false;
     }    
-    else{
+    else
         doActions();
-    }
 
-    if(m_knockback){
-        if(t_currentTime >= m_knockbackTime){
-            m_knockback = false;
-        }
-        else{
-            knockback(m_sideKnockback);
-        }
-    }
+    if(m_knockback && t_currentTime >= m_knockbackTime)
+        m_knockback = false;
 
-    if(!m_respawning){
+    if(!m_respawning)
         updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
-    }
     else{
         updatePosition(true, m_knockback, m_dashing);
         m_respawning = false;
     }
     
-    if(m_debugMode){
-        m_playerDebug->update();
-    }
-
-    if(getY() < -250 || getY() > 250 || getX() < -250 || getX() > 250){
+    if(getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25)
         die();
-    }
 }
 
 //Returns the type of the player
@@ -447,12 +404,6 @@ void Character::setStunned(float p_time){
     m_stunTime = m_inputManager->getMasterClock() + m_stunDuration;
 }
 
-void Character::modeDebug(){
-    if(m_debugMode){
-        m_playerDebug = new Debug(666, m_physicsManager->getBody(getId()));
-    }
-}
-
 void Character::respawn(){
     m_respawning = true;
     m_HP = m_maxHP;
@@ -464,11 +415,13 @@ void Character::respawn(){
 }
 
 void Character::onTouchGround(){
+    //std::cout << "TOUCH" << std::endl;
     m_onGround = true;
     m_maxJumps = 2;
 }
 
 void Character::onLeaveGround(){
+    //std::cout << "LEAVE" << std::endl;
     m_onGround = false;
     m_maxJumps = 1;
 }
@@ -530,35 +483,27 @@ int Character::getValidation(){
 
 /* ****************************** ACTIONS ****************************** */
 bool Character::left(){
-    moveX(m_velocity * m_frameDeltaTime * m_runningFactor * -1);
     lookLeft();
+    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
     m_runningFactor = 1.0f;
-
+    m_physicsManager->move(getId(), m_moveAmmount, 0);
     return false;
 }
 
 bool Character::right(){
-    moveX(m_velocity * m_frameDeltaTime * m_runningFactor);
     lookRight();
+    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
     m_runningFactor = 1.0f;
+    m_physicsManager->move(getId(), m_moveAmmount, 0);
 
     return false;
 }
 
 bool Character::jump(){
-    // Start or continue jump movement
-    if(m_jumpCurrentTime < m_jumpMaxTime && m_maxJumps > 0){
-        moveY(m_jumpTable[m_jumpCurrentTime++]*3.0f);
-    }
-    // Jump has ended. Starting to go down
-    else{
-        // If there is collision
+    if(m_maxJumps > 0){
         m_maxJumps--;
-        m_jumpCurrentTime = 0;
-        return false; // We are on the floor. Reset jump
+        m_physicsManager->jump(m_id, 300);
     }
-
-    return true;
 }
 
 bool Character::run(){

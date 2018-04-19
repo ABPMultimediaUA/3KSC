@@ -88,28 +88,25 @@ InGameState::~InGameState(){
     m_client = nullptr;
 }
 
-void InGameState::input(){
-
-}
+void InGameState::input(){}
 
 void InGameState::update(){
     m_inputManager->updateMasterClock();
     m_soundManager->update(false);
     m_engineManager->updateFrameDeltaTime(m_deltaTime);
-    int t_playerCount = m_arena->getPlayerCount();
-    int i;
 
-    if(m_onlineMode){
+    if(m_onlineMode)
         m_client->update();
-    }
-    else{
+    else
         m_arena->update((float)m_deltaTime);
-    }
 
+    //Update the physics one step more(need to be done first of all)
+    m_physicsManager->update(m_deltaTime);
+    
+    int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
-
     //Input and update for every character
-    for(i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount; i++){
         t_currentPlayer = m_arena->getPlayer(i);
 
         if(t_currentPlayer){
@@ -117,8 +114,6 @@ void InGameState::update(){
             t_currentPlayer->update();
         }
     }
-    //Update the physics one step more(need to be done first of all)
-    m_physicsManager->update(m_deltaTime);
 }
 
 void InGameState::render(){
@@ -149,6 +144,7 @@ void InGameState::createArena(const char* p_fileCgm){
         if(t_name == "m"){
 //TODO hacer que se puedan cargar varios modelos en la arena
             float t_scale = strtof((t_elements[2]).c_str(), 0);
+            m_scale = t_scale;
             float t_position[3];
             t_position[0] = strtof((t_elements[3]).c_str(), 0);
             t_position[1] = strtof((t_elements[4]).c_str(), 0);
@@ -156,20 +152,20 @@ void InGameState::createArena(const char* p_fileCgm){
 
             const char* t_path = t_elements[1].c_str();
             //load Arena
-            m_arena = new Arena(t_position, t_scale, t_path, false);
+            m_arena = new Arena(t_position, t_scale, t_path);
         }
          //Create camera
         else if(t_name == "c"){
 
             float t_position[3];
-            t_position[0] = strtof((t_elements[1]).c_str(), 0);
-            t_position[1] = strtof((t_elements[2]).c_str(), 0);
-            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+            t_position[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_position[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             float t_target[3];
-            t_target[0] = strtof((t_elements[4]).c_str(), 0);
-            t_target[1] = strtof((t_elements[5]).c_str(), 0);
-            t_target[2] = strtof((t_elements[6]).c_str(), 0);
+            t_target[0] = strtof((t_elements[4]).c_str(), 0) * m_scale;
+            t_target[1] = strtof((t_elements[5]).c_str(), 0) * m_scale;
+            t_target[2] = strtof((t_elements[6]).c_str(), 0) * m_scale;
 
             m_engineManager->createCamera(t_position, t_target);
         }
@@ -182,15 +178,15 @@ void InGameState::createArena(const char* p_fileCgm){
             const char* t_path = t_elements[2].c_str();
             const char* t_name = t_elements[3].c_str();
             m_soundManager->createSoundEvent(t_path, t_name);
-            m_soundManager->playSound(t_name);
+            //m_soundManager->playSound(t_name);
         }
         //create waypoints
         else if(t_name == "w"){
     
             float t_position[3];
             t_position[0] = strtof((t_elements[1]).c_str(), 0);
-            t_position[1] = strtof((t_elements[2]).c_str(), 0);
-            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+            t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_position[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             m_pathfinding->addWaypoint(t_position);
         }
@@ -206,39 +202,39 @@ void InGameState::createArena(const char* p_fileCgm){
         else if(t_name == "sp"){
        
             float t_spawnPositions[4][3];
-            t_spawnPositions[0][0] = strtof((t_elements[1]).c_str(), 0);
-            t_spawnPositions[0][1] = strtof((t_elements[2]).c_str(), 0);
-            t_spawnPositions[0][2] = strtof((t_elements[3]).c_str(), 0);
+            t_spawnPositions[0][0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_spawnPositions[0][1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_spawnPositions[0][2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
-            t_spawnPositions[1][0] = strtof((t_elements[4]).c_str(), 0);
-            t_spawnPositions[1][1] = strtof((t_elements[5]).c_str(), 0);
-            t_spawnPositions[1][2] = strtof((t_elements[6]).c_str(), 0);
+            t_spawnPositions[1][0] = strtof((t_elements[4]).c_str(), 0) * m_scale;
+            t_spawnPositions[1][1] = strtof((t_elements[5]).c_str(), 0) * m_scale;
+            t_spawnPositions[1][2] = strtof((t_elements[6]).c_str(), 0) * m_scale;
 
-            t_spawnPositions[2][0] = strtof((t_elements[7]).c_str(), 0);
-            t_spawnPositions[2][1] = strtof((t_elements[8]).c_str(), 0);
-            t_spawnPositions[2][2] = strtof((t_elements[9]).c_str(), 0);
+            t_spawnPositions[2][0] = strtof((t_elements[7]).c_str(), 0) * m_scale;
+            t_spawnPositions[2][1] = strtof((t_elements[8]).c_str(), 0) * m_scale;
+            t_spawnPositions[2][2] = strtof((t_elements[9]).c_str(), 0) * m_scale;
 
-            t_spawnPositions[3][0] = strtof((t_elements[10]).c_str(), 0);
-            t_spawnPositions[3][1] = strtof((t_elements[11]).c_str(), 0);
-            t_spawnPositions[3][2] = strtof((t_elements[12]).c_str(), 0);
+            t_spawnPositions[3][0] = strtof((t_elements[10]).c_str(), 0) * m_scale;
+            t_spawnPositions[3][1] = strtof((t_elements[11]).c_str(), 0) * m_scale;
+            t_spawnPositions[3][2] = strtof((t_elements[12]).c_str(), 0) * m_scale;
 
             m_arena->setSpawnPositions(t_spawnPositions);
         }
         else if(t_name == "rp"){
 
             float t_respawnPosition[3];
-            t_respawnPosition[0] = strtof((t_elements[1]).c_str(), 0);
-            t_respawnPosition[1] = strtof((t_elements[2]).c_str(), 0);
-            t_respawnPosition[2] = strtof((t_elements[3]).c_str(), 0);
+            t_respawnPosition[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_respawnPosition[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_respawnPosition[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             m_arena->setRespawnPositions(t_respawnPosition);
         }
         else if(t_name == "si"){
 
             float t_itemRange[3];
-            t_itemRange[0] = strtof((t_elements[1]).c_str(), 0);
-            t_itemRange[1] = strtof((t_elements[2]).c_str(), 0);
-            t_itemRange[2] = strtof((t_elements[3]).c_str(), 0);
+            t_itemRange[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
+            t_itemRange[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
+            t_itemRange[2] = strtof((t_elements[3]).c_str(), 0) * m_scale;
 
             m_arena->setItemRange(t_itemRange);
         }
