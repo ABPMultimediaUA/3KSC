@@ -108,13 +108,10 @@ public:
     void                    fastGravity(int p_idBody);
     void                    machineGun(int p_idBody, int p_orientation);
 
-<<<<<<< HEAD
     void                    getPosition(int p_idBody);
     void                    move(int p_idBody, float p_moveX, float p_moveY);
     void                    jump(int p_idBody, float p_force);
-=======
     int                     getTotalFixtures(int p_idBody);
->>>>>>> debuug
 
 };
 
