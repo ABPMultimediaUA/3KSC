@@ -91,7 +91,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_online                = p_online;
 
     m_moveAmmount = 0;
-    m_jumpAmmount = 0;
     m_maxJumps    = 2;
     mapActions();
     setRespawnPosition(m_arena->getRespawnPosition());
@@ -153,26 +152,21 @@ void Character::mapActions(){
 //Parameters: damage, can you block it?
 void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool p_checked){
     if(m_online && !p_checked){
-        if(m_client->getPlayer() == m_playerIndex){
+        if(m_client->getPlayer() == m_playerIndex)
             m_client->attacked(p_damage, p_block, p_knockback);
-        }
+
         else return;  //ignorar ataques que no sean de tu jugador
     }
 
-    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded){
+    if((p_block && m_actions[(int) Action::Block].enabled) || m_shielded)
         changeHP(-p_damage/2);
-        //std::cout << m_name << " blocked an attack and now has " << m_HP << " HP." << std::endl << std::endl;
-    }else{
+    else
         changeHP(-p_damage);
-        //std::cout << m_name << " took an attack and now has " << m_HP << " HP." << std::endl << std::endl;
-    }
 
-    if(p_knockback == 2){ //knockback sin direccion
+    if(p_knockback == 2) //knockback sin direccion
         setKnockback();
-    }
-    else if(p_knockback != 0){
+    else if(p_knockback != 0)
         knockback(p_knockback);
-    }
 }
 
 //Increases or decreases life
@@ -423,7 +417,6 @@ void Character::respawn(){
 void Character::onTouchGround(){
     //std::cout << "TOUCH" << std::endl;
     m_onGround = true;
-    //m_jumpAmmount = 0;
     m_maxJumps = 2;
 }
 
@@ -509,7 +502,7 @@ bool Character::right(){
 bool Character::jump(){
     if(m_maxJumps > 0){
         m_maxJumps--;
-        m_physicsManager->jump(m_id, 300);    
+        m_physicsManager->jump(m_id, 300);
     }
 }
 

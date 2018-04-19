@@ -52,9 +52,8 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );*/
     //m_soundManager->modifyParameter("random", 0.95, "Prob");
 
-    if (m_NPC){
+    if(m_NPC)
         m_AI = new AISparky(this);
-    }
 }
 
 Sparky::~Sparky(){}

@@ -340,8 +340,18 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
 }
 
 void PhysicsManager::applyKnockback(int p_idBody, int t_side){
+    /*
+    PARA CALCULAR EL RETROCESO:
+    
+    RETROCESO = BASE_FIJA * POTENCIA_ATAQUE * INVERSA_VIDA;
+    
+    BASE_FIJA = 1000???
+    POTENCIA_ATAQUE = DEPENDE DEL ATAQUE
+    */
+    std::cout << "KNOCKBACK!" << std::endl;
     b2Body* t_body = getBody(p_idBody);
-    t_body->SetLinearDamping(1);
+    //t_body->SetLinearDamping(1);
+    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,1000), t_body->GetWorldCenter(), true);
 }
 
 //The p_body is the body that realize the action/atak
@@ -508,7 +518,7 @@ void PhysicsManager::getPosition(int p_idBody){
 }
 
 void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
-    b2Body* t_body = getBody(p_idBody);   
+    b2Body* t_body = getBody(p_idBody);
     t_body->SetLinearVelocity(b2Vec2(p_moveX, t_body->GetLinearVelocity().y));
 }
 

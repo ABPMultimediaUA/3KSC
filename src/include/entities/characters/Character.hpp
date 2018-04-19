@@ -163,7 +163,6 @@ protected:
     bool            m_online;
 
     float m_moveAmmount;
-    float m_jumpAmmount;
 
 private:
     bool            m_waitRelease;

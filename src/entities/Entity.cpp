@@ -92,9 +92,6 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
-    //if(m_id == 1)
-    //    m_physicsManager->getPosition(m_id);
-
     if(m_debugMode)
         updateDebug();
 
@@ -134,9 +131,8 @@ bool Entity::checkCloseness(float* p_point, float p_range){
     //X axis
     if(p_point[0] >= m_position[0] - p_range && p_point[0] <= m_position[0] + p_range){
         //Y axis
-        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range){
+        if(p_point[1] >= m_position[1] - p_range && p_point[1] <= m_position[1] + p_range)
             return true;
-        }
     }   
     return false;
 }
