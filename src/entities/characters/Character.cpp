@@ -110,7 +110,17 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_validation = 123;
 
     m_physicsManager->setPlayerSensor(getId(), this);
-    createDebug();
+    //createDebug();
+
+    m_damageBasic    = 0;
+    m_damageSide     = 0;
+    m_damageUp       = 0;
+    m_damageDown     = 0;
+    m_damageUlti     = 0;
+    m_knockbackBasic = 0;
+    m_knockbackSide  = 0;
+    m_knockbackUp    = 0;
+    m_knockbackUlti  = 0;
 }
 
 Character::~Character(){
@@ -150,10 +160,10 @@ void Character::mapActions(){
 
 //Receives an attack from other player
 //Parameters: damage, can you block it?
-void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool p_checked){
+void Character::receiveAttack(int p_damage, bool p_block, float p_knockPower, int p_knockSide, bool p_checked){
     if(m_online && !p_checked){
         if(m_client->getPlayer() == m_playerIndex)
-            m_client->attacked(p_damage, p_block, p_knockback);
+            m_client->attacked(p_damage, p_block, p_knockSide);
 
         else return;  //ignorar ataques que no sean de tu jugador
     }
@@ -163,10 +173,10 @@ void Character::receiveAttack(int p_damage, bool p_block, int p_knockback, bool 
     else
         changeHP(-p_damage);
 
-    if(p_knockback == 2) //knockback sin direccion
+    if(p_knockSide == 2) //knockback sin direccion
         setKnockback();
-    else if(p_knockback != 0)
-        knockback(p_knockback);
+    else if(p_knockSide != 0)
+        knockback(p_knockSide, p_knockPower);
 }
 
 //Increases or decreases life
@@ -405,6 +415,7 @@ void Character::setStunned(float p_time){
 }
 
 void Character::respawn(){
+    m_physicsManager->respawn(getId());
     m_respawning = true;
     m_HP = m_maxHP;
     m_MP = m_maxMP;
@@ -448,18 +459,16 @@ bool Character::moveToPath(float p_position[2]){
 }
 
 void Character::setKnockback(){
-    float t_knockbackDuration = (1-(m_HP*0.01)); 
-    std::cout << t_knockbackDuration << std::endl;
-    m_knockbackTime = m_inputManager->getMasterClock() + t_knockbackDuration;
+    m_knockbackTime = m_inputManager->getMasterClock() + m_knockbackDuration;
     m_knockback = true;
 }
 
-void Character::knockback(int p_orientation){
+void Character::knockback(int p_orientation, float p_knockPower){
     if(!m_knockback){
         m_sideKnockback = p_orientation;
         setKnockback();
     }
-    m_physicsManager->applyKnockback(getId(), p_orientation);
+    m_physicsManager->applyKnockback(getId(), p_orientation, p_knockPower, m_HP);
 }
 
 int  Character::getCurrentSnowmen(){}

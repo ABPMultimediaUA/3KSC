@@ -339,23 +339,28 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     return t_distance;
 }
 
-void PhysicsManager::applyKnockback(int p_idBody, int t_side){
-    /*
-    PARA CALCULAR EL RETROCESO:
-    
-    RETROCESO = BASE_FIJA * POTENCIA_ATAQUE * INVERSA_VIDA;
-    
-    BASE_FIJA = 1000???
-    POTENCIA_ATAQUE = DEPENDE DEL ATAQUE
-    */
+void PhysicsManager::applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP){
     std::cout << "KNOCKBACK!" << std::endl;
     b2Body* t_body = getBody(p_idBody);
-    //t_body->SetLinearDamping(1);
-    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,1000), t_body->GetWorldCenter(), true);
+
+    float t_inverseHP = (1-(p_HP*0.01)) * 5;
+    int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
+    int t_powerY = 1000 * p_knockPower * t_inverseHP;
+    std::cout << t_powerX << " - " << t_powerY << std::endl;
+    t_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), t_body->GetWorldCenter(), true);
+}
+
+void PhysicsManager::applyKnockback(b2Body* p_body, int t_side, float p_knockPower, int p_HP){
+    float t_inverseHP = (1-(p_HP*0.01)) * 5;
+    int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
+    int t_powerY = 1000 * p_knockPower * t_inverseHP;
+
+    std::cout << t_powerX << " - " << t_powerY << std::endl;
+    p_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), p_body->GetWorldCenter(), true);
 }
 
 //The p_body is the body that realize the action/atak
-bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
+bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun, float p_damage, float p_knockPower){
     for(int i = 0; i < m_playersBody.size(); i++){
         //Not the same body we pass to the function
         b2Body* t_body = m_playersBody.at(i);
@@ -378,7 +383,7 @@ bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
                 if(p_stun)
                     t_player->setStunned();
-                t_player->receiveAttack(15, false);
+                t_player->receiveAttack(p_damage, false, p_knockPower);
                 return true;
             }
         }
@@ -386,7 +391,7 @@ bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
     return false;
 }
 
-void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody){
+void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody, float p_damage, float p_knockPower){
     for(int i = 0; i < m_playersBody.size(); i++){
         //Not the same body we pass to the function
         b2Body* t_body = m_playersBody.at(i);
@@ -408,14 +413,12 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
             if(fixtureCollide(*fixtureA, *fixtureB)){
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
                 //Calculate the side of the knocback
-                float t_mainBodyX    = p_ignoreBody->GetPosition().x;
-                float t_contactBodyX = t_body->GetPosition().x;
                 int t_side = 1;
-                if(t_mainBodyX > t_contactBodyX)
+                if(p_ignoreBody->GetPosition().x > t_body->GetPosition().x)
                     t_side = -1;
-                t_body->SetLinearDamping(1);
-                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), true);
-                t_player->receiveAttack(15, false, 2);
+                //t_player->receiveAttack(p_damage, false, p_knockPower, t_side);
+                t_player->changeHP(-p_damage);
+                applyKnockback(t_body, t_side, p_knockPower, t_player->getHP());
             }
         }
     }
@@ -436,7 +439,7 @@ bool PhysicsManager::fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB){
     return false;
 }
 
-void PhysicsManager::shockwaveBox(int p_idBody){
+void PhysicsManager::shockwaveBox(int p_idBody, float p_damage, float p_knockPower){
     b2Body* p_body = getBody(p_idBody);
 
     //Create a new body and positioning it in the coords of the Entity
@@ -447,7 +450,7 @@ void PhysicsManager::shockwaveBox(int p_idBody){
 
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(20.0, 20.0);
+    t_polygonShape->SetAsBox(2.0, 2.0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
@@ -456,7 +459,7 @@ void PhysicsManager::shockwaveBox(int p_idBody){
     t_body->CreateFixture(t_fixtureDef);
 
     //Check collision with the other players
-    checkCollisionMultiple(t_body, p_body);
+    checkCollisionMultiple(t_body, p_body, p_damage, p_knockPower);
     
     m_world->DestroyBody(t_body);
 }
@@ -474,7 +477,7 @@ void PhysicsManager::fastGravity(int p_idBody){
     p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), true);   
 }
 
-void PhysicsManager::machineGun(int p_idBody, int p_orientation){
+void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower){
     b2Body* p_body = getBody(p_idBody);
 
     //Create a new body and positioning it in the coords of the Entity
@@ -485,7 +488,7 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation){
 
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(50.0, 5.0, b2Vec2(30*p_orientation,0), 0);
+    t_polygonShape->SetAsBox(5.0, 0.5, b2Vec2(3*p_orientation,0), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
@@ -493,7 +496,7 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation){
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
     //Check collision with the other players
-    checkCollisionMultiple(t_body, p_body);
+    checkCollisionMultiple(t_body, p_body, p_damage, p_knockPower);
     
     m_world->DestroyBody(t_body);
 }
@@ -524,4 +527,10 @@ int PhysicsManager::getTotalFixtures(int p_idBody){
     }
 
     return t_totalFixtures;
+}
+
+void PhysicsManager::respawn(int p_idBody){
+    b2Body* t_body = getBody(p_idBody);
+
+    t_body->SetLinearVelocity(b2Vec2(0,0));
 }

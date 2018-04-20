@@ -54,6 +54,19 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
 
     if(m_NPC)
         m_AI = new AISparky(this);
+
+    m_damageBasic    = 5.0f;
+    m_damageSide     = 15.0f;
+    m_damageUp       = 50.0f;
+    m_damageDown     = 15.0f;
+    m_damageUlti     = 10.0f;
+
+    m_knockbackBasic = 1.0f;
+    m_knockbackSide  = 1.0f;
+    m_knockbackUp    = 1.0f;
+    m_knockbackDown  = 1.0f;
+    m_knockbackUlti  = 1.0f;
+
 }
 
 Sparky::~Sparky(){}
@@ -65,7 +78,6 @@ bool Sparky::jump(){
 //Headbutt
 bool Sparky::basicAttack(){
     if(!m_ultimateMode){
-        //std::cout << m_name << ": Headbutt!" << std::endl;
         Character* t_currentPlayer;
         
         /*float t_prob = ((float)rand() / (float)RAND_MAX);
@@ -83,8 +95,8 @@ bool Sparky::basicAttack(){
             //Looking at the rival
             if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
-                if(checkCloseness(t_currentPlayer->getPosition(), 15)){
-                    t_currentPlayer->receiveAttack(m_damage/2, true, getOrientation());
+                if(checkCloseness(t_currentPlayer->getPosition(), 1.5)){
+                    t_currentPlayer->receiveAttack(m_damageBasic, true, m_knockbackBasic, getOrientation());
                     this->addMP(5);
                 }
             }
@@ -95,29 +107,19 @@ bool Sparky::basicAttack(){
 
 //Range attack
 bool Sparky::specialAttackUp(){
-    //std::cout << m_name << ": Special Attack Up" << std::endl;
-
-    /*m_physicsManager->sparkyJump(getId());
-    m_sparkyJumping = true;
-    m_knockback = true;
-    m_knockbackClock.restart();*/
     
     return false;
 }
 
 bool Sparky::specialAttackDown(){
-    if(useMP(35) && !m_ultimateMode){    
-        //std::cout << m_name << ": Special Attack Down" << std::endl;
-        m_physicsManager->shockwaveBox(getId());
-    }
+    if(useMP(35) && !m_ultimateMode)   
+        m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
+
     return false;
 }
 
-//Fireball
 bool Sparky::specialAttackSide(){
     if(!m_punchLaunched && useMP(25) && !m_ultimateMode){
-        //Orientation ==  1 == Right
-        //Orientation == -1 == Left
         m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -127,9 +129,8 @@ bool Sparky::specialAttackSide(){
         m_attackTarget[2] = m_position[2];
 
         //Create attack and increase projectile count
-        m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 15, 0);
+        m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 0);
         m_punchLaunched = true;
-        //std::cout << m_name << ": Punch" << std::endl;
     }
 
     return false;
@@ -139,8 +140,6 @@ bool Sparky::ultimateAttack(){
     //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
     //m_soundManager->playSound("ultimate");
     if(m_ultimateCharged){
-        //std::cout << m_name << ": ULTIMATE TIME!!!" << std::endl;
-
         m_ultimateMode = true;
         m_ultimateAmmo = 10;
         m_ultimateCharged = false;
@@ -175,8 +174,6 @@ void Sparky::updatePunch(){
 
 void Sparky::updateUltimate(){
     if(!m_ultiBulletLaunched && m_ultimateAmmo > 0){
-        //Orientation ==  1 == Right
-        //Orientation == -1 == Left
         m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -185,13 +182,14 @@ void Sparky::updateUltimate(){
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
         
-        m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, 0, 2);
-        m_physicsManager->machineGun(getId(), m_orientation);
+        m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 2);
+        m_physicsManager->machineGun(getId(), m_orientation, m_damageUlti, m_knockbackUlti);
         m_ultiBulletLaunched = true;
         m_ultimateAmmo--;
     }else if(m_ultiBulletLaunched){
         if(!m_ultimateBullet->update(false)){
             delete m_ultimateBullet;
+            m_ultimateBullet     = nullptr;
             m_ultiBulletLaunched = false;
         }
     }else

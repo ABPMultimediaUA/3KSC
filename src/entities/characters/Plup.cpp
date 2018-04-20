@@ -49,9 +49,21 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name,
     m_basicDuration  = 0.5;
     m_basicTime      = 0;
 
-    if (m_NPC){
+    if (m_NPC)
         m_AI = new AIPlup(this);
-    }
+
+
+    m_damageBasic    = 5.0f;
+    m_damageSide     = 15.0f;
+    m_damageUp       = 50.0f;
+    m_damageDown     = 15.0f;
+    m_damageUlti     = 10.0f;
+
+    m_knockbackBasic = 1.0f;
+    m_knockbackSide  = 1.0f;
+    m_knockbackUp    = 1.0f;
+    m_knockbackDown  = 1.0f;
+    m_knockbackUlti  = 1.0f;
 }
 
 Plup::~Plup(){}
@@ -78,7 +90,7 @@ bool Plup::basicAttack(){
             if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
                 if(checkCloseness(t_currentPlayer->getPosition(), 15)){                
-                    t_currentPlayer->receiveAttack(m_damage/2, true, getOrientation());
+                    t_currentPlayer->receiveAttack(m_damageBasic, true, m_knockbackUp, getOrientation());
                     this->addMP(5);
                 }
             }
@@ -107,7 +119,7 @@ bool Plup::specialAttackUp(){
             if(t_currentPlayer!=0){
                 //Rival close enough
                 if (checkCloseness(t_currentPlayer->getPosition(), 35)){
-                    t_currentPlayer->receiveAttack(m_damage, true);
+                    t_currentPlayer->receiveAttack(m_damageUp, true, m_knockbackBasic, getOrientation());
                 }
             }
         }
@@ -123,7 +135,7 @@ bool Plup::specialAttackDown(){
         m_attackPosition[2] = m_position[2];
 
         //Create snowman and increase snowmen count
-        m_snowman = new Snowman(m_attackPosition, m_playerIndex);
+        m_snowman = new Snowman(m_attackPosition, m_playerIndex, m_damageDown, m_knockbackDown);
         //std::cout << m_name << ": Snowman" << std::endl;
         m_snowmanPlaced = true;
         m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
@@ -145,7 +157,7 @@ bool Plup::specialAttackSide(){
 
         m_stunned = true;
 
-        m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true);
+        m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide);
     }
 
     return false;
@@ -176,7 +188,7 @@ void Plup::updatePlayer(){
     if(m_dashing){
         //If time is over or collision, finish atack
         //The second param of collision is true because all dash atacks cause stun
-        if(m_inputManager->getMasterClock() > m_dashTime || m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true)){
+        if(m_inputManager->getMasterClock() > m_dashTime || m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide)){
             m_physicsManager->getBody(getId())->SetLinearDamping(0);
             m_dashing = false;
             m_stunned = false;

@@ -27,20 +27,22 @@
 
 class Projectile: public Entity {
 public:
-    Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, int p_type);
+    Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, float p_knockbackPower, int p_type);
     ~Projectile();
     bool    hit();
     bool    update(bool p_shouldHit);
 private:
+    static const char*  m_modelURLs[3];
     int     m_owner;
     int     m_type;
     float   m_target[3];
     int     m_damage;
     float   m_velocity;
     float   m_distanceLeft;
-    static const char*  m_modelURLs[3];
+    float   m_knockbackPower;
 
-    float   m_step[3];
+
+    float   m_step[2];
     void    calculateSteps();
 };
 

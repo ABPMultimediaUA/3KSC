@@ -28,7 +28,7 @@
 #include <iostream>
 
 //Constructor
-Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 0.3f, "assets/models/characters/plup/snowman.obj", 5){
+Snowman::Snowman(float p_position[3], int p_owner, float p_damage, float p_knockSide) : Entity(p_position, 0.3f, "assets/models/characters/plup/snowman.obj", 5){
     m_physicsManager = &PhysicsManager::instance();
     m_arena          = Arena::getInstance();
     
@@ -36,6 +36,9 @@ Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 0.3f, "a
     m_owner          = p_owner;
     
     m_bulletLaunched = false;
+
+    m_damage         = p_damage;
+    m_knockbackSide  = p_knockSide;
 }
 
 //Destructor
@@ -68,7 +71,7 @@ bool Snowman::lockNLoad(){
                 //Create snowball (if any left)
                 if(m_ammo > 0){
                     m_ammo--;
-                    m_snowball = new Projectile(m_position, m_target, true, m_owner, 7, 1);
+                    m_snowball = new Projectile(m_position, m_target, true, m_owner, m_damage, m_knockbackSide, 1);
                     
                     //
                     m_bulletLaunched = true;
