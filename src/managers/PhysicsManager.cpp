@@ -340,22 +340,23 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
 }
 
 void PhysicsManager::applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP){
-    /*
-    PARA CALCULAR EL RETROCESO:    
-    RETROCESO = BASE_FIJA * POTENCIA_ATAQUE * INVERSA_VIDA;
-    
-    BASE_FIJA = 1000???
-    POTENCIA_ATAQUE = DEPENDE DEL ATAQUE
-    */
     std::cout << "KNOCKBACK!" << std::endl;
-
     b2Body* t_body = getBody(p_idBody);
 
-    float t_inverseHP = (1-(p_HP*0.01));
-    int t_powerX = 10000 * p_knockPower * t_inverseHP * t_side;
-    int t_powerY = 10000 * p_knockPower * t_inverseHP;
+    float t_inverseHP = (1-(p_HP*0.01)) * 5;
+    int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
+    int t_powerY = 1000 * p_knockPower * t_inverseHP;
     std::cout << t_powerX << " - " << t_powerY << std::endl;
     t_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), t_body->GetWorldCenter(), true);
+}
+
+void PhysicsManager::applyKnockback(b2Body* p_body, int t_side, float p_knockPower, int p_HP){
+    float t_inverseHP = (1-(p_HP*0.01)) * 5;
+    int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
+    int t_powerY = 1000 * p_knockPower * t_inverseHP;
+
+    std::cout << t_powerX << " - " << t_powerY << std::endl;
+    p_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), p_body->GetWorldCenter(), true);
 }
 
 //The p_body is the body that realize the action/atak
@@ -412,14 +413,12 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
             if(fixtureCollide(*fixtureA, *fixtureB)){
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
                 //Calculate the side of the knocback
-                float t_mainBodyX    = p_ignoreBody->GetPosition().x;
-                float t_contactBodyX = t_body->GetPosition().x;
                 int t_side = 1;
-                if(t_mainBodyX > t_contactBodyX)
+                if(p_ignoreBody->GetPosition().x > t_body->GetPosition().x)
                     t_side = -1;
-                t_body->SetLinearDamping(1);
-                t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), true);
-                t_player->receiveAttack(p_damage, false, p_knockPower, 2);
+                //t_player->receiveAttack(p_damage, false, p_knockPower, t_side);
+                t_player->changeHP(-p_damage);
+                applyKnockback(t_body, t_side, p_knockPower, t_player->getHP());
             }
         }
     }
@@ -451,7 +450,7 @@ void PhysicsManager::shockwaveBox(int p_idBody, float p_damage, float p_knockPow
 
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(20.0, 20.0);
+    t_polygonShape->SetAsBox(2.0, 2.0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
@@ -489,7 +488,7 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage,
 
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(50.0, 5.0, b2Vec2(30*p_orientation,0), 0);
+    t_polygonShape->SetAsBox(5.0, 0.5, b2Vec2(3*p_orientation,0), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;

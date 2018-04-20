@@ -42,7 +42,7 @@ private:
     float   m_knockbackPower;
 
 
-    float   m_step[3];
+    float   m_step[2];
     void    calculateSteps();
 };
 

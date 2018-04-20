@@ -110,7 +110,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_validation = 123;
 
     m_physicsManager->setPlayerSensor(getId(), this);
-    createDebug();
+    //createDebug();
 
     m_damageBasic    = 0;
     m_damageSide     = 0;

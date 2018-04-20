@@ -61,11 +61,11 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     m_damageDown     = 15.0f;
     m_damageUlti     = 10.0f;
 
-    m_knockbackBasic = 10.0f;
-    m_knockbackSide  = 10.0f;
-    m_knockbackUp    = 10.0f;
-    m_knockbackDown  = 10.0f;
-    m_knockbackUlti  = 10.0f;
+    m_knockbackBasic = 1.0f;
+    m_knockbackSide  = 1.0f;
+    m_knockbackUp    = 1.0f;
+    m_knockbackDown  = 1.0f;
+    m_knockbackUlti  = 1.0f;
 
 }
 
@@ -77,9 +77,7 @@ bool Sparky::jump(){
 
 //Headbutt
 bool Sparky::basicAttack(){
-    //std::cout << m_damageBasic << " - " << m_knockbackBasic << std::endl;
     if(!m_ultimateMode){
-        //std::cout << m_name << ": Headbutt!" << std::endl;
         Character* t_currentPlayer;
         
         /*float t_prob = ((float)rand() / (float)RAND_MAX);
@@ -97,7 +95,7 @@ bool Sparky::basicAttack(){
             //Looking at the rival
             if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
-                if(checkCloseness(t_currentPlayer->getPosition(), 15)){
+                if(checkCloseness(t_currentPlayer->getPosition(), 1.5)){
                     t_currentPlayer->receiveAttack(m_damageBasic, true, m_knockbackBasic, getOrientation());
                     this->addMP(5);
                 }
@@ -120,10 +118,8 @@ bool Sparky::specialAttackDown(){
     return false;
 }
 
-//Fireball
 bool Sparky::specialAttackSide(){
     if(!m_punchLaunched && useMP(25) && !m_ultimateMode){
-        std::cout << "SIDE" << std::endl;
         m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];

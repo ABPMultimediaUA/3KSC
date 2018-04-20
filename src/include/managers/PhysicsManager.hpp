@@ -91,6 +91,7 @@ public:
     float32                 getTimeStep();
 
     void                    applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP);
+    void                    applyKnockback(b2Body* p_body, int t_side, float p_knockPower, int p_HP);
 
     bool                    checkCollisionSimple(b2Body* p_body, bool p_stun, float p_damage, float p_knockPower);
     void                    checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody, float p_damage, float p_knockPower);

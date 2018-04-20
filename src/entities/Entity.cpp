@@ -74,7 +74,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
     }
 
-    m_debugMode = true;
+    m_debugMode = false;
     if(m_debugMode && p_type != 0)
         createDebug();
 }
@@ -106,8 +106,8 @@ void Entity::moveTo(float p_position[3]){
     m_physicsManager->moveBody(m_id, p_position[0], p_position[1]);
 }
 
-void Entity::moveTo(float p_y, float p_x){
-    float t_position[3] = {p_y, p_x, getZ()};
+void Entity::moveTo(float p_x, float p_y){
+    float t_position[3] = {p_x, p_y, getZ()};
     moveTo(t_position);
 }
 
