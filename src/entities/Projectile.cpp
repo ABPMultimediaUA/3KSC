@@ -35,9 +35,11 @@ const char* Projectile::m_modelURLs[3] = {
     "assets/models/characters/sparky/balas.obj"
 };
 
-Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, int p_type) : Entity(p_position, 0.7f, m_modelURLs[p_type], 5){
+Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, float p_knockbackPower, int p_type) : Entity(p_position, 0.7f, m_modelURLs[p_type], 5){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
+
+    m_knockbackPower = p_knockbackPower;
 
     if(p_rotation == 1)
         rotate(180);
@@ -103,16 +105,17 @@ bool Projectile::hit(){
     Character* t_currentPlayer;
     int t_playerCount = Arena::getInstance()->getPlayerCount();
 
-    for (int i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount; i++){
         //Ignore owner
-        if (i == m_owner)
+        if(i == m_owner)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Rival close enough
-        if (checkCloseness(t_currentPlayer->getPosition(), 10)){
-            t_currentPlayer->receiveAttack(m_damage, false);
+        if(checkCloseness(t_currentPlayer->getPosition(), 10)){
+            std::cout << "IMPACTO" << std::endl;
+            t_currentPlayer->receiveAttack(m_damage, false, m_knockbackPower);
 
             return true;
         }
@@ -125,9 +128,9 @@ bool Projectile::hit(){
 bool Projectile::update(bool p_shouldHit){
     //Go on
     if(m_distanceLeft > 0){
+        std::cout << m_step[0] << std::endl;
         moveX(m_step[0]);
         moveY(m_step[1]);
-        moveZ(m_step[2]);
 
         if(p_shouldHit){
             if(hit())

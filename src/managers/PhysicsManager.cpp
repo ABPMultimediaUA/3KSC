@@ -339,23 +339,27 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     return t_distance;
 }
 
-void PhysicsManager::applyKnockback(int p_idBody, int t_side){
+void PhysicsManager::applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP){
     /*
-    PARA CALCULAR EL RETROCESO:
-    
+    PARA CALCULAR EL RETROCESO:    
     RETROCESO = BASE_FIJA * POTENCIA_ATAQUE * INVERSA_VIDA;
     
     BASE_FIJA = 1000???
     POTENCIA_ATAQUE = DEPENDE DEL ATAQUE
     */
     std::cout << "KNOCKBACK!" << std::endl;
+
     b2Body* t_body = getBody(p_idBody);
-    //t_body->SetLinearDamping(1);
-    t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,1000), t_body->GetWorldCenter(), true);
+
+    float t_inverseHP = (1-(p_HP*0.01));
+    int t_powerX = 10000 * p_knockPower * t_inverseHP * t_side;
+    int t_powerY = 10000 * p_knockPower * t_inverseHP;
+    std::cout << t_powerX << " - " << t_powerY << std::endl;
+    t_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), t_body->GetWorldCenter(), true);
 }
 
 //The p_body is the body that realize the action/atak
-bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
+bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun, float p_damage, float p_knockPower){
     for(int i = 0; i < m_playersBody.size(); i++){
         //Not the same body we pass to the function
         b2Body* t_body = m_playersBody.at(i);
@@ -378,7 +382,7 @@ bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
                 Character* t_player = static_cast<Character*>(fixtureBsensor->GetUserData());
                 if(p_stun)
                     t_player->setStunned();
-                t_player->receiveAttack(15, false);
+                t_player->receiveAttack(p_damage, false, p_knockPower);
                 return true;
             }
         }
@@ -386,7 +390,7 @@ bool PhysicsManager::checkCollisionSimple(b2Body* p_body, bool p_stun){
     return false;
 }
 
-void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody){
+void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody, float p_damage, float p_knockPower){
     for(int i = 0; i < m_playersBody.size(); i++){
         //Not the same body we pass to the function
         b2Body* t_body = m_playersBody.at(i);
@@ -415,7 +419,7 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                     t_side = -1;
                 t_body->SetLinearDamping(1);
                 t_body->ApplyLinearImpulse(b2Vec2(1000*t_side,500), b2Vec2(t_body->GetWorldCenter()), true);
-                t_player->receiveAttack(15, false, 2);
+                t_player->receiveAttack(p_damage, false, p_knockPower, 2);
             }
         }
     }
@@ -436,7 +440,7 @@ bool PhysicsManager::fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB){
     return false;
 }
 
-void PhysicsManager::shockwaveBox(int p_idBody){
+void PhysicsManager::shockwaveBox(int p_idBody, float p_damage, float p_knockPower){
     b2Body* p_body = getBody(p_idBody);
 
     //Create a new body and positioning it in the coords of the Entity
@@ -456,7 +460,7 @@ void PhysicsManager::shockwaveBox(int p_idBody){
     t_body->CreateFixture(t_fixtureDef);
 
     //Check collision with the other players
-    checkCollisionMultiple(t_body, p_body);
+    checkCollisionMultiple(t_body, p_body, p_damage, p_knockPower);
     
     m_world->DestroyBody(t_body);
 }
@@ -474,7 +478,7 @@ void PhysicsManager::fastGravity(int p_idBody){
     p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), true);   
 }
 
-void PhysicsManager::machineGun(int p_idBody, int p_orientation){
+void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower){
     b2Body* p_body = getBody(p_idBody);
 
     //Create a new body and positioning it in the coords of the Entity
@@ -493,7 +497,7 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation){
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
     //Check collision with the other players
-    checkCollisionMultiple(t_body, p_body);
+    checkCollisionMultiple(t_body, p_body, p_damage, p_knockPower);
     
     m_world->DestroyBody(t_body);
 }
@@ -525,4 +529,10 @@ void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
 void PhysicsManager::jump(int p_idBody, float p_force){
     b2Body* t_body = getBody(p_idBody);
     t_body->ApplyLinearImpulse(b2Vec2(0,p_force * 25), b2Vec2(t_body->GetWorldCenter()), true);
+}
+
+void PhysicsManager::respawn(int p_idBody){
+    b2Body* t_body = getBody(p_idBody);
+
+    t_body->SetLinearVelocity(b2Vec2(0,0));
 }

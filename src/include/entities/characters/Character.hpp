@@ -41,7 +41,7 @@ public:
 
     void            getRespawnPosition();
 	
-    void            receiveAttack(int p_damage, bool p_block, int p_knockback = 0, bool p_checked = 0);
+    void            receiveAttack(int p_damage, bool p_block, float p_knockPower, int p_knockSide = 0, bool p_checked = 0);
     virtual void    changeHP(int p_variation);
     void            addMP(int p_MP);
     bool            useMP(int p_MP);
@@ -90,7 +90,7 @@ public:
     bool            moveToPath(float p_position[2]);
 
     void            setKnockback();
-    void            knockback(int p_orientation);
+    void            knockback(int p_orientation, float p_knockPower);
 
     virtual void    updatePlayer() = 0;
 
@@ -162,7 +162,17 @@ protected:
     int             m_validation;
     bool            m_online;
 
-    float m_moveAmmount;
+    float           m_moveAmmount;
+    float           m_damageBasic;
+    float           m_damageSide;
+    float           m_damageUp;
+    float           m_damageDown;
+    float           m_damageUlti;
+    float           m_knockbackBasic;
+    float           m_knockbackSide;
+    float           m_knockbackUp;
+    float           m_knockbackDown;
+    float           m_knockbackUlti;
 
 private:
     bool            m_waitRelease;

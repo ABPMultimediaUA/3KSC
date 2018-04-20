@@ -104,7 +104,6 @@ void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
 
 void Entity::moveTo(float p_position[3]){
     m_physicsManager->moveBody(m_id, p_position[0], p_position[1]);
-    //m_engineManager->moveEntity(this);
 }
 
 void Entity::moveTo(float p_y, float p_x){

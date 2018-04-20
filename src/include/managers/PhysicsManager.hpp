@@ -90,21 +90,22 @@ public:
     int32                   getPositionIterations();
     float32                 getTimeStep();
 
-    void                    applyKnockback(int p_idBody, int t_side);
+    void                    applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP);
 
-    bool                    checkCollisionSimple(b2Body* p_body, bool p_stun);
-    void                    checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody);
+    bool                    checkCollisionSimple(b2Body* p_body, bool p_stun, float p_damage, float p_knockPower);
+    void                    checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody, float p_damage, float p_knockPower);
 
     bool                    fixtureCollide(b2Fixture& fixtureA, b2Fixture& fixtureB);
 
-    void                    shockwaveBox(int p_idBody);
+    void                    shockwaveBox(int p_idBody, float p_damage, float p_knockPower);
     void                    sparkyJump(int p_idBody);
     void                    fastGravity(int p_idBody);
-    void                    machineGun(int p_idBody, int p_orientation);
+    void                    machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower);
     int                     getTotalFixtures(int p_idBody);
     void                    getPosition(int p_idBody);
     void                    move(int p_idBody, float p_moveX, float p_moveY);
     void                    jump(int p_idBody, float p_force);
+    void                    respawn(int p_idBody);
 };
 
 #endif
