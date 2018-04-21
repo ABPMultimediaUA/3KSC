@@ -30,39 +30,33 @@
 //#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
-/*
-    COSAS POR HACER:
-        ATAQUE HACIA ARRIBA (IMPLEMENTAR)
-        SI LA TORRETA SE SUICIDA, QUE MUERAN LAS BALAS CON ELLA
-
-    BUGS PARA ARREGLAR:
-        SI HACES EL DASH Y CHOCAS CON LA TURRET PETA, MIRAR COMO SOLUCIONARLO
-*/
-
 Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_online){
-    m_type           = 3;
+    m_type              = 3;
 
-    m_snowmanPlaced  = false;
+    m_snowmanPlaced     = false;
+    m_ultimateMode      = false;
 
-    m_turretDuration = 15.0;
-    m_turretTime     = 0;
-    m_basicDuration  = 0.5;
-    m_basicTime      = 0;
+    m_turretDuration    = 15.0f;
+    m_turretTime        = 0.0f;
+    m_basicDuration     = 0.5f;
+    m_basicTime         = 0.0f;
+    m_ultimateDuration  = 3.0f;
+    m_ultimateTime      = 0.0f;
+
+    m_damageBasic       = 5.0f;
+    m_damageSide        = 15.0f;
+    m_damageUp          = 50.0f;
+    m_damageDown        = 15.0f;
+    m_damageUlti        = 15.0f;
+
+    m_knockbackBasic    = 1.0f;
+    m_knockbackSide     = 1.0f;
+    m_knockbackUp       = 1.0f;
+    m_knockbackDown     = 1.0f;
+    m_knockbackUlti     = 2.5f;
 
     if(m_NPC)
         m_AI = new AIPlup(this);
-
-    m_damageBasic    = 5.0f;
-    m_damageSide     = 15.0f;
-    m_damageUp       = 50.0f;
-    m_damageDown     = 15.0f;
-    m_damageUlti     = 10.0f;
-
-    m_knockbackBasic = 1.0f;
-    m_knockbackSide  = 1.0f;
-    m_knockbackUp    = 1.0f;
-    m_knockbackDown  = 1.0f;
-    m_knockbackUlti  = 1.0f;
 }
 
 Plup::~Plup(){}
@@ -88,7 +82,10 @@ bool Plup::basicAttack(){
             if((m_orientation == 1 && t_currentPlayer->getX() >= m_position[0]) || (m_orientation != 1 && t_currentPlayer->getX() <= m_position[0])){
                 //Rival close enough
                 if(checkCloseness(t_currentPlayer->getPosition(), 1.5)){
-                    t_currentPlayer->receiveAttack(m_damageBasic, true, m_knockbackUp, getOrientation());
+                    if(!m_ultimateMode)
+                        t_currentPlayer->receiveAttack(m_damageBasic, true, m_knockbackBasic, getOrientation());
+                    else
+                        t_currentPlayer->receiveAttack(m_damageUlti, true, m_knockbackUlti, getOrientation());
                     this->addMP(5);
                 }
             }
@@ -149,17 +146,20 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
+    m_ultimateCharged = true;
     if(m_ultimateCharged){
-        Character* t_currentPlayer;
+        m_ultimateMode = true;
 
+        Character* t_currentPlayer;
         for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
             if(i == m_playerIndex)
                 continue;
 
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
-            t_currentPlayer->setStunned(2.5);
+            t_currentPlayer->setStunned(3.0);
         }
+        m_ultimateTime = m_inputManager->getMasterClock() + m_ultimateDuration;
         m_ultimateCharged = false;
     }
 
@@ -167,6 +167,9 @@ bool Plup::ultimateAttack(){
 }
 
 void Plup::updatePlayer(){
+    if(m_inputManager->getMasterClock() > m_ultimateTime)
+        m_ultimateMode = false;
+    
     if(m_dashing)
         updateDash();
 

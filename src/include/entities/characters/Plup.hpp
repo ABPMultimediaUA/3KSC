@@ -44,6 +44,7 @@ public:
 
 private:
     bool        m_snowmanPlaced;
+    bool        m_ultimateMode;
 
     int         m_maxSnowmen;
     Snowman*    m_snowman;
@@ -52,6 +53,8 @@ private:
     float       m_turretTime;
     float       m_basicDuration;
     float       m_basicTime;
+    float       m_ultimateDuration;
+    float       m_ultimateTime;
 
     void        updateSnowman();
     void        deleteSnowman();

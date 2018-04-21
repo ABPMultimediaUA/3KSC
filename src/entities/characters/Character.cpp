@@ -188,6 +188,9 @@ void Character::changeHP(int p_variation){
     else if(m_HP > m_maxHP)
         m_HP = m_maxHP;
 
+    if(m_stunned)
+        m_stunned = false;
+
     std::cout << "HP: " << m_HP << std::endl;
 
     //HUD Stuff

@@ -29,11 +29,6 @@
 #include "../../include/managers/InputManager.hpp"
 #include <iostream>
 
-/*
-    ATAQUE UP:
-        CAIDA EN PICADO
-*/
-
 Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 15, 70.f, "assets/models/characters/sparky/sparky.obj", p_online){
     m_type                  = 4;
     
