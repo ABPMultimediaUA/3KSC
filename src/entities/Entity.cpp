@@ -62,7 +62,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
 
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1, 0.4);
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1.75, 1.5);
             break;
 
         case 4:
@@ -75,7 +75,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     }
 
     m_debugMode = false;
-    if(m_debugMode && p_type != 0)
+    if(m_debugMode)
         createDebug();
 }
 
@@ -185,6 +185,7 @@ void Entity::createDebug(){
 
 void Entity::updateDebug(){
     for(int i = 0; i < m_totalFixtures; i++){
+        if(m_entityDebug[i] != 0)
         m_entityDebug[i]->update();
     }
 }

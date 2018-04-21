@@ -429,13 +429,11 @@ void Character::respawn(){
 }
 
 void Character::onTouchGround(){
-    //std::cout << "TOUCH" << std::endl;
     m_onGround = true;
     m_maxJumps = 2;
 }
 
 void Character::onLeaveGround(){
-    //std::cout << "LEAVE" << std::endl;
     m_onGround = false;
     m_maxJumps = 1;
 }

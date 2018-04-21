@@ -146,7 +146,6 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
-    m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
 
