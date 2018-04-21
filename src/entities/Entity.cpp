@@ -91,7 +91,7 @@ Entity::~Entity(){
     }*/
 }
 
-void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
+void Entity::updatePosition(){
     if(m_debugMode)
         updateDebug();
 
@@ -122,7 +122,10 @@ void Entity::moveY(float p_variation){
 void Entity::moveZ(float p_variation){
     m_lastPosition[2] = m_position[2];
     m_position[2] += p_variation;
-    //m_engineManager->moveEntity(this);
+}
+
+void Entity::moveXY(float p_variationX, float p_variationY){
+    moveTo(getX() + p_variationX, getY() + p_variationY);
 }
 
 //Checks if an entity is close to a certain point (in specified range)

@@ -48,16 +48,14 @@ private:
     int         m_maxSnowmen;
     Snowman*    m_snowman;
 
-    sf::Clock   m_turretClock;
-    sf::Clock   m_basicClock;
-
-    float           m_turretDuration;
-    float           m_turretTime;
-    float           m_basicDuration;
-    float           m_basicTime;
+    float       m_turretDuration;
+    float       m_turretTime;
+    float       m_basicDuration;
+    float       m_basicTime;
 
     void        updateSnowman();
     void        deleteSnowman();
+    void        updateDash();
 };
 
 #endif

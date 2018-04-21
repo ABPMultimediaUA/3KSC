@@ -83,7 +83,7 @@ bool Snowman::lockNLoad(){
     }
 
     //Update position of the turret (gravity)
-    updatePosition(false, false, false);
+    updatePosition();
 
     //Delete turret when last bullet is gone
     if (m_ammo == -1)
@@ -93,7 +93,7 @@ bool Snowman::lockNLoad(){
 }
 
 void Snowman::updateBullet(){
-    updatePosition(false, false, false);
+    updatePosition();
 
     if(!m_snowball->update(true)){
         m_bulletLaunched = false;
