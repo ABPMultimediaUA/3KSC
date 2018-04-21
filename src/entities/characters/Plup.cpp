@@ -33,6 +33,8 @@
 Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_online){
     m_type              = 3;
 
+    m_kalasnikovBulletLaunched = false;
+    m_kalasnikov        = false;
     m_snowmanPlaced     = false;
     m_ultimateMode      = false;
 
@@ -45,7 +47,7 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name,
 
     m_damageBasic       = 5.0f;
     m_damageSide        = 15.0f;
-    m_damageUp          = 50.0f;
+    m_damageUp          = 25.0f;
     m_damageDown        = 15.0f;
     m_damageUlti        = 15.0f;
 
@@ -98,20 +100,8 @@ bool Plup::basicAttack(){
 //Range attack
 bool Plup::specialAttackUp(){
     if(useMP(30)){
-        Character* t_currentPlayer;
-
-        for(int i = 0; i < m_playerCount; i++){
-            //Ignore myself
-            if(i == m_playerIndex)
-                continue;
-            
-            t_currentPlayer = Arena::getInstance()->getPlayer(i);
-            if(t_currentPlayer != 0){
-                //Rival close enough
-                if(checkCloseness(t_currentPlayer->getPosition(), 3.5))
-                    t_currentPlayer->receiveAttack(m_damageUp, true, m_knockbackBasic, getOrientation());
-            }
-        }
+        m_kalasnikov = true;
+        m_kalasnikovAmmo = 5;
     }
     return false;
 }
@@ -174,6 +164,9 @@ void Plup::updatePlayer(){
 
     if(m_snowmanPlaced)
         updateSnowman();
+
+    if(m_kalasnikov)
+        updateKalasnikov();
 }
 
 void Plup::updateSnowman(){
@@ -211,4 +204,28 @@ void Plup::updateDash(){
         m_physicsManager->resetVelocity(getId());
         m_dashing = false;
     }
+}
+
+void Plup::updateKalasnikov(){
+    if(!m_kalasnikovBulletLaunched && m_kalasnikovAmmo > 0){
+        m_attackPosition[0] = m_position[0];
+        m_attackPosition[1] = m_position[1] + 0.5;
+        m_attackPosition[2] = m_position[2];
+     
+        m_attackTarget[0] = m_position[0];
+        m_attackTarget[1] = m_position[1] + 10;
+        m_attackTarget[2] = m_position[2];
+        
+        m_kalasnikovBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 1);
+        m_physicsManager->machineGun(getId(), m_orientation, m_damageUp, m_knockbackUp, false);
+        m_kalasnikovBulletLaunched = true;
+        m_kalasnikovAmmo--;
+    }else if(m_kalasnikovBulletLaunched){
+        if(!m_kalasnikovBullet->update(false)){
+            delete m_kalasnikovBullet;
+            m_kalasnikovBullet         = nullptr;
+            m_kalasnikovBulletLaunched = false;
+        }
+    }else
+        m_kalasnikov = false;
 }

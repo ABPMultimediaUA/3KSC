@@ -468,17 +468,18 @@ void PhysicsManager::shockwaveBox(int p_idBody, float p_damage, float p_knockPow
 void PhysicsManager::sparkyJump(int p_idBody){
     b2Body* t_body = getBody(p_idBody);
 
-    t_body->SetLinearDamping(-1);
-    //t_body->SetTransform(b2Vec2(0,50), 0);
+    t_body->SetLinearDamping(0);
+    t_body->SetLinearVelocity(b2Vec2(0,0));
+    t_body->ApplyLinearImpulse(b2Vec2(0,7500), t_body->GetWorldCenter(), true);
 }
 
 void PhysicsManager::fastGravity(int p_idBody){
     b2Body* t_body = getBody(p_idBody);
 
-    t_body->ApplyForce(b2Vec2(100,0), t_body->GetWorldCenter(), true);
+    t_body->SetGravityScale(4);
 }
 
-void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower){
+void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower, bool p_horizontalSide){
     b2Body* p_body = getBody(p_idBody);
 
     //Create a new body and positioning it in the coords of the Entity
@@ -489,7 +490,10 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage,
 
     //Create a shape for the body
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(5.0, 0.5, b2Vec2(3*p_orientation,0), 0);
+    if(p_horizontalSide)
+        t_polygonShape->SetAsBox(5.0, 0.5, b2Vec2(3*p_orientation,0), 0);
+    else
+        t_polygonShape->SetAsBox(2.0, 5.0, b2Vec2(0,0.5), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
@@ -535,6 +539,7 @@ void PhysicsManager::resetVelocity(int p_idBody){
 
     t_body->SetLinearDamping(0);
     t_body->SetLinearVelocity(b2Vec2(0,0));
+    t_body->SetGravityScale(1);
 }
 
 void PhysicsManager::dash(int p_idBody, int t_side){

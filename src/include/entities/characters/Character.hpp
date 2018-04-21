@@ -43,6 +43,7 @@ public:
 	
     void            receiveAttack(int p_damage, bool p_block, float p_knockPower, int p_knockSide = 0, bool p_checked = 0);
     virtual void    changeHP(int p_variation);
+    void            checkAlive();
     void            addMP(int p_MP);
     bool            useMP(int p_MP);
     void            die();

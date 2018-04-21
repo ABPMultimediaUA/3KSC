@@ -30,13 +30,32 @@
 #include <iostream>
 
 Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 15, 70.f, "assets/models/characters/sparky/sparky.obj", p_online){
-    m_type                  = 4;
+    m_type               = 4;
     
+    m_jumpingDuration    = 0.10;
+    m_jumpingTime        = 0;
+
+    m_gravity            = false;
     m_sparkyJumping      = false;
     m_punchLaunched      = false;
     m_ultimateMode       = false;
     m_ultiBulletLaunched = false;
     m_ultimateAmmo       = 10;
+
+    m_damageBasic        = 5.0f;
+    m_damageSide         = 15.0f;
+    m_damageUp           = 25.0f;
+    m_damageDown         = 15.0f;
+    m_damageUlti         = 10.0f;
+
+    m_knockbackBasic     = 1.0f;
+    m_knockbackSide      = 1.0f;
+    m_knockbackUp        = 1.0f;
+    m_knockbackDown      = 1.0f;
+    m_knockbackUlti      = 1.0f;
+
+    if(m_NPC)
+        m_AI = new AISparky(this);
 
     /*m_soundManager->loadBank(SoundID::S_SPARKY);
     m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "death"       );
@@ -46,21 +65,6 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
     m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );*/
     //m_soundManager->modifyParameter("random", 0.95, "Prob");
-
-    if(m_NPC)
-        m_AI = new AISparky(this);
-
-    m_damageBasic    = 5.0f;
-    m_damageSide     = 15.0f;
-    m_damageUp       = 50.0f;
-    m_damageDown     = 15.0f;
-    m_damageUlti     = 10.0f;
-
-    m_knockbackBasic = 1.0f;
-    m_knockbackSide  = 1.0f;
-    m_knockbackUp    = 1.0f;
-    m_knockbackDown  = 1.0f;
-    m_knockbackUlti  = 1.0f;
 
 }
 
@@ -100,8 +104,12 @@ bool Sparky::basicAttack(){
     return false;
 }
 
-//Range attack
 bool Sparky::specialAttackUp(){
+    if(useMP(30)){
+        m_physicsManager->sparkyJump(getId());
+        m_jumpingTime = m_inputManager->getMasterClock() + m_jumpingDuration;
+        m_sparkyJumping = true;
+    }
     
     return false;
 }
@@ -155,7 +163,17 @@ void Sparky::updatePlayer(){
 }
 
 void Sparky::updateJump(){
-    m_physicsManager->fastGravity(getId());
+    if(m_inputManager->getMasterClock() > m_jumpingTime){
+        if(!m_gravity){
+            m_gravity = true;
+            m_physicsManager->fastGravity(getId());
+        }else if(m_onGround){
+            m_gravity       = false;
+            m_sparkyJumping = false;
+            m_physicsManager->shockwaveBox(getId(), m_damageUp, m_knockbackUp);
+            m_physicsManager->resetVelocity(getId());
+        }
+    }
 }
 
 void Sparky::updatePunch(){
@@ -178,7 +196,7 @@ void Sparky::updateUltimate(){
         m_attackTarget[2] = m_position[2];
         
         m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 2);
-        m_physicsManager->machineGun(getId(), m_orientation, m_damageUlti, m_knockbackUlti);
+        m_physicsManager->machineGun(getId(), m_orientation, m_damageUlti, m_knockbackUlti, true);
         m_ultiBulletLaunched = true;
         m_ultimateAmmo--;
     }else if(m_ultiBulletLaunched){
