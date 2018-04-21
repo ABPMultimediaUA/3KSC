@@ -62,7 +62,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
 
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1, 0.4);
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1.75, 1.5);
             break;
 
         case 4:
@@ -75,7 +75,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     }
 
     m_debugMode = false;
-    if(m_debugMode && p_type != 0)
+    if(m_debugMode)
         createDebug();
 }
 
@@ -91,7 +91,7 @@ Entity::~Entity(){
     }*/
 }
 
-void Entity::updatePosition(bool p_jumping, bool p_knockback, bool p_dashing){
+void Entity::updatePosition(){
     if(m_debugMode)
         updateDebug();
 
@@ -122,7 +122,10 @@ void Entity::moveY(float p_variation){
 void Entity::moveZ(float p_variation){
     m_lastPosition[2] = m_position[2];
     m_position[2] += p_variation;
-    //m_engineManager->moveEntity(this);
+}
+
+void Entity::moveXY(float p_variationX, float p_variationY){
+    moveTo(getX() + p_variationX, getY() + p_variationY);
 }
 
 //Checks if an entity is close to a certain point (in specified range)
@@ -182,6 +185,7 @@ void Entity::createDebug(){
 
 void Entity::updateDebug(){
     for(int i = 0; i < m_totalFixtures; i++){
+        if(m_entityDebug[i] != 0)
         m_entityDebug[i]->update();
     }
 }

@@ -340,22 +340,23 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
 }
 
 void PhysicsManager::applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP){
-    std::cout << "KNOCKBACK!" << std::endl;
+    //std::cout << "KNOCKBACK!" << std::endl;
     b2Body* t_body = getBody(p_idBody);
 
     float t_inverseHP = (1-(p_HP*0.01)) * 5;
     int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
-    int t_powerY = 1000 * p_knockPower * t_inverseHP;
-    std::cout << t_powerX << " - " << t_powerY << std::endl;
+    int t_powerY = 750  * p_knockPower * t_inverseHP;
+    //std::cout << t_powerX << " - " << t_powerY << std::endl;
     t_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), t_body->GetWorldCenter(), true);
 }
 
 void PhysicsManager::applyKnockback(b2Body* p_body, int t_side, float p_knockPower, int p_HP){
+    //std::cout << "KNOCKBACK!" << std::endl;
     float t_inverseHP = (1-(p_HP*0.01)) * 5;
     int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
-    int t_powerY = 1000 * p_knockPower * t_inverseHP;
+    int t_powerY = 750 * p_knockPower * t_inverseHP;
 
-    std::cout << t_powerX << " - " << t_powerY << std::endl;
+    //std::cout << t_powerX << " - " << t_powerY << std::endl;
     p_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), p_body->GetWorldCenter(), true);
 }
 
@@ -465,16 +466,16 @@ void PhysicsManager::shockwaveBox(int p_idBody, float p_damage, float p_knockPow
 }
 
 void PhysicsManager::sparkyJump(int p_idBody){
-    b2Body* p_body = getBody(p_idBody);
+    b2Body* t_body = getBody(p_idBody);
 
-    p_body->SetLinearDamping(-1);
-    //p_body->SetTransform(b2Vec2(0,50), 0);
+    t_body->SetLinearDamping(-1);
+    //t_body->SetTransform(b2Vec2(0,50), 0);
 }
 
 void PhysicsManager::fastGravity(int p_idBody){
-    b2Body* p_body = getBody(p_idBody);
+    b2Body* t_body = getBody(p_idBody);
 
-    p_body->ApplyForce(b2Vec2(100,0), p_body->GetWorldCenter(), true);   
+    t_body->ApplyForce(b2Vec2(100,0), t_body->GetWorldCenter(), true);
 }
 
 void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower){
@@ -529,8 +530,17 @@ int PhysicsManager::getTotalFixtures(int p_idBody){
     return t_totalFixtures;
 }
 
-void PhysicsManager::respawn(int p_idBody){
+void PhysicsManager::resetVelocity(int p_idBody){
     b2Body* t_body = getBody(p_idBody);
 
+    t_body->SetLinearDamping(0);
     t_body->SetLinearVelocity(b2Vec2(0,0));
+}
+
+void PhysicsManager::dash(int p_idBody, int t_side){
+    b2Body* t_body = getBody(p_idBody);
+
+    t_body->SetLinearDamping(-0.5);
+    //t_body->ApplyLinearImpulse(b2Vec2(250*t_side,0), t_body->GetWorldCenter(), true);
+    t_body->SetLinearVelocity(b2Vec2(7.5*t_side,0));
 }

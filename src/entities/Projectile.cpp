@@ -55,7 +55,7 @@ Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, i
 
         //Plup's snowmen's snowball
         case 1:{
-            m_velocity = 0.3;
+            m_velocity = 0.5;
             m_distanceLeft = 15;
             break;
         }
@@ -124,8 +124,7 @@ bool Projectile::hit(){
 bool Projectile::update(bool p_shouldHit){
     //Go on
     if(m_distanceLeft > 0){
-        moveY(m_step[1]);
-        moveX(m_step[0]);
+        moveXY(m_step[0], m_step[1]);
         updatePosition();
 
         if(p_shouldHit){

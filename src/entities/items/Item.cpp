@@ -46,7 +46,7 @@ bool Item::update(){
         return true;
     }
 
-    updatePosition(false, false, false);
+    updatePosition();
 
     return false;
 }

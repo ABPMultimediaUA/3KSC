@@ -26,8 +26,7 @@
 #include <iostream>
 
 //Constructor
-Portal::Portal(float p_position[3])
-    : Entity(p_position, 0.5f, "assets/models/items/portal.obj", 3){
+Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/items/portal.obj", 3){
     m_arena             = Arena::getInstance();
     m_physicsManager    = &PhysicsManager::instance();
     m_using             = false;
@@ -45,7 +44,7 @@ Portal::~Portal(){
 }
 
 void Portal::onEnter(Character* p_character){
-    std::cout<<"enter portal"<<std::endl;
+    std::cout<< "ENTER PORTAL" <<std::endl;
     m_charactersInPortal++;
     m_players[p_character->getIndex()] = p_character;
     m_using = true;
@@ -53,6 +52,7 @@ void Portal::onEnter(Character* p_character){
 
 
 void Portal::onLeave(Character* p_character){
+    std::cout<< "LEAVE PORTAL" <<std::endl;
     m_players[p_character->getIndex()] = NULL;
     m_charactersInPortal--;
     m_using = false;
@@ -71,10 +71,8 @@ void Portal::update(float p_delta){
 //Increases owner's ultimate bar
 void Portal::use(){
     uint i;
-    for(i = 0; i < 4; i++)
-    {
-        if(m_players[i]!= NULL)
-        {
+    for(i = 0; i < 4; i++){
+        if(m_players[i]!= NULL){
             m_players[i]->setUltimateCharged();
             break;
         }

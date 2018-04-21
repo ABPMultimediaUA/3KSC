@@ -79,7 +79,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_jumpTime              = 0;
     m_knockbackDuration     = 0.25;
     m_knockbackTime         = 0;
-    m_dashDuration          = 0.5;
+    m_dashDuration          = 0.25;
     m_dashTime              = 0;
     m_stunDuration          = 1.0;
     m_stunTime              = 0;
@@ -183,10 +183,15 @@ void Character::receiveAttack(int p_damage, bool p_block, float p_knockPower, in
 void Character::changeHP(int p_variation){
     m_HP += p_variation;
 
-    if (m_HP <= 0)
+    if(m_HP <= 0)
         die();
     else if(m_HP > m_maxHP)
         m_HP = m_maxHP;
+
+    if(m_stunned)
+        m_stunned = false;
+
+    std::cout << "HP: " << m_HP << std::endl;
 
     //HUD Stuff
     // m_UIManager->setHP(m_playerIndex, m_HP);
@@ -354,12 +359,10 @@ void Character::update(){
     if(m_knockback && t_currentTime >= m_knockbackTime)
         m_knockback = false;
 
-    if(!m_respawning)
-        updatePosition(m_actions[(int) Action::Jump].enabled, m_knockback, m_dashing);
-    else{
-        updatePosition(true, m_knockback, m_dashing);
+    if(m_respawning)
         m_respawning = false;
-    }
+    
+    updatePosition();
     
     if(getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25)
         die();
@@ -415,7 +418,7 @@ void Character::setStunned(float p_time){
 }
 
 void Character::respawn(){
-    m_physicsManager->respawn(getId());
+    m_physicsManager->resetVelocity(getId());
     m_respawning = true;
     m_HP = m_maxHP;
     m_MP = m_maxMP;
@@ -426,13 +429,11 @@ void Character::respawn(){
 }
 
 void Character::onTouchGround(){
-    //std::cout << "TOUCH" << std::endl;
     m_onGround = true;
     m_maxJumps = 2;
 }
 
 void Character::onLeaveGround(){
-    //std::cout << "LEAVE" << std::endl;
     m_onGround = false;
     m_maxJumps = 1;
 }

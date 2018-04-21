@@ -41,6 +41,7 @@ public:
     void        moveX(float p_variation);
     void        moveY(float p_variation);
     void        moveZ(float p_variation);
+    void        moveXY(float p_variationX, float p_variationY);
     bool        checkCloseness(float* p_point, float p_range);
     int         getId();
     float*      getPosition();
@@ -50,7 +51,7 @@ public:
     void        setX(float p_position);
     void        setY(float p_position);
     void        rotate(float degrees);
-    void        updatePosition(bool p_jumping = false, bool p_knockback = false, bool p_dashing = false);
+    void        updatePosition();
     static int  getEntityCount();
 
     void        createDebug();
