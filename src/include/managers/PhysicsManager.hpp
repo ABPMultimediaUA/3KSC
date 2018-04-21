@@ -101,7 +101,7 @@ public:
     void                    shockwaveBox(int p_idBody, float p_damage, float p_knockPower);
     void                    sparkyJump(int p_idBody);
     void                    fastGravity(int p_idBody);
-    void                    machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower);
+    void                    machineGun(int p_idBody, int p_orientation, float p_damage, float p_knockPower, bool p_horizontalSide);
     int                     getTotalFixtures(int p_idBody);
     void                    getPosition(int p_idBody);
     void                    move(int p_idBody, float p_moveX, float p_moveY);

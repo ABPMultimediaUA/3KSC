@@ -183,9 +183,7 @@ void Character::receiveAttack(int p_damage, bool p_block, float p_knockPower, in
 void Character::changeHP(int p_variation){
     m_HP += p_variation;
 
-    if(m_HP <= 0)
-        die();
-    else if(m_HP > m_maxHP)
+    if(m_HP > m_maxHP)
         m_HP = m_maxHP;
 
     if(m_stunned)
@@ -195,6 +193,11 @@ void Character::changeHP(int p_variation){
 
     //HUD Stuff
     // m_UIManager->setHP(m_playerIndex, m_HP);
+}
+
+void Character::checkAlive(){
+    if(m_HP <= 0)
+        die();
 }
 
 //Increases or decreases magic
@@ -366,6 +369,8 @@ void Character::update(){
     
     if(getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25)
         die();
+
+    checkAlive();
 }
 
 //Returns the type of the player

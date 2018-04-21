@@ -45,9 +45,14 @@ public:
 private:
     bool        m_snowmanPlaced;
     bool        m_ultimateMode;
+    bool        m_kalasnikov;
+    bool        m_kalasnikovBulletLaunched;
 
+    int         m_kalasnikovAmmo;
     int         m_maxSnowmen;
     Snowman*    m_snowman;
+
+    Projectile* m_kalasnikovBullet;
 
     float       m_turretDuration;
     float       m_turretTime;
@@ -59,6 +64,7 @@ private:
     void        updateSnowman();
     void        deleteSnowman();
     void        updateDash();
+    void        updateKalasnikov();
 };
 
 #endif
