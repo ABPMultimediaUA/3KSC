@@ -501,20 +501,6 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage,
     m_world->DestroyBody(t_body);
 }
 
-int PhysicsManager::getTotalFixtures(int p_idBody){
-    int t_totalFixtures = 0;
-    b2Body* t_body = getBody(p_idBody);
-    b2Fixture* t_fixture = t_body->GetFixtureList();
-    while(t_fixture != NULL){
-        b2Shape* t_shape = t_fixture->GetShape();
-        if(t_shape->GetType() == b2Shape::e_polygon)
-            t_totalFixtures++;
-        t_fixture = t_fixture->GetNext();
-    }
-
-    return t_totalFixtures;
-}
-
 void PhysicsManager::getPosition(int p_idBody){
     b2Body* t_body = getBody(p_idBody);
     std::cout << t_body->GetPosition().x << ", " << t_body->GetPosition().y << std::endl;
@@ -528,6 +514,19 @@ void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
 void PhysicsManager::jump(int p_idBody, float p_force){
     b2Body* t_body = getBody(p_idBody);
     t_body->ApplyLinearImpulse(b2Vec2(0,p_force * 25), b2Vec2(t_body->GetWorldCenter()), true);
+}
+int PhysicsManager::getTotalFixtures(int p_idBody){
+    int t_totalFixtures = 0;
+    b2Body* t_body = getBody(p_idBody);
+    b2Fixture* t_fixture = t_body->GetFixtureList();
+    while(t_fixture != NULL){
+        b2Shape* t_shape = t_fixture->GetShape();
+        if(t_shape->GetType() == 2)
+            t_totalFixtures++;
+        t_fixture = t_fixture->GetNext();
+    }
+
+    return t_totalFixtures;
 }
 
 void PhysicsManager::respawn(int p_idBody){
