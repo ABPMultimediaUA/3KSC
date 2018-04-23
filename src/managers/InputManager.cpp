@@ -174,14 +174,13 @@ void InputManager::setNetPlayer(int p_player, bool p_actions[12]){
     m_playerActions[p_player][(int) Action::Left]                 = p_actions[0]; 
     m_playerActions[p_player][(int) Action::Right]                = p_actions[1];             
     m_playerActions[p_player][(int) Action::Jump]                 = p_actions[2];
-    m_playerActions[p_player][(int) Action::Run]                  = p_actions[3];
-    m_playerActions[p_player][(int) Action::Block]                = p_actions[4];
-    m_playerActions[p_player][(int) Action::Pick]                 = p_actions[5];
-    m_playerActions[p_player][(int) Action::BasicAttack]          = p_actions[6];
-    m_playerActions[p_player][(int) Action::SpecialAttackUp]      = p_actions[7];
-    m_playerActions[p_player][(int) Action::SpecialAttackDown]    = p_actions[8];
-    m_playerActions[p_player][(int) Action::SpecialAttackSide]    = p_actions[9];
-    m_playerActions[p_player][(int) Action::UltimateAttack]       = p_actions[10];
+    m_playerActions[p_player][(int) Action::Block]                = p_actions[3];
+    m_playerActions[p_player][(int) Action::Pick]                 = p_actions[4];
+    m_playerActions[p_player][(int) Action::BasicAttack]          = p_actions[5];
+    m_playerActions[p_player][(int) Action::SpecialAttackUp]      = p_actions[6];
+    m_playerActions[p_player][(int) Action::SpecialAttackDown]    = p_actions[7];
+    m_playerActions[p_player][(int) Action::SpecialAttackSide]    = p_actions[8];
+    m_playerActions[p_player][(int) Action::UltimateAttack]       = p_actions[9];
 }
 
 // Enables an action for AI
@@ -274,7 +273,6 @@ void InputManager::playerInputJoystick(int p_player){
     m_playerActions[p_player][(int) Action::Right]  = t_right;
 
     m_playerActions[p_player][(int) Action::Jump]   = isButtonPressed(t_joystick, Button::A);
-    m_playerActions[p_player][(int) Action::Run]    = isButtonPressed(t_joystick, Button::RB);
     m_playerActions[p_player][(int) Action::Block]  = isButtonPressed(t_joystick, Button::LB);
     m_playerActions[p_player][(int) Action::Pick]   = isButtonPressed(t_joystick, Button::Y);
 
@@ -301,7 +299,6 @@ void InputManager::playerInputKeyboard(int p_player){
     m_playerActions[p_player][(int) Action::Right]  = t_right;
 
     m_playerActions[p_player][(int) Action::Jump]   = isKeyPressed(Key::Space);
-    m_playerActions[p_player][(int) Action::Run]    = isKeyPressed(Key::LShift) || isKeyPressed(Key::RShift);
     m_playerActions[p_player][(int) Action::Block]  = isKeyPressed(Key::B);
     m_playerActions[p_player][(int) Action::Pick]   = isKeyPressed(Key::Q);      
 

@@ -145,16 +145,15 @@ void Character::mapActions(){
     m_actions[0]    = {Action::Left               , &Character::left              , false     , false};
     m_actions[1]    = {Action::Right              , &Character::right             , false     , false};
     m_actions[2]    = {Action::Jump               , &Character::jump              , true      , false};
-    m_actions[3]    = {Action::Run                , &Character::run               , false     , false};
-    m_actions[4]    = {Action::Block              , &Character::block             , false     , false};
-    m_actions[5]    = {Action::Pick               , &Character::pick              , true      , false};
-    m_actions[6]    = {Action::BasicAttack        , &Character::basicAttack       , true      , false};
-    m_actions[7]    = {Action::SpecialAttackUp    , &Character::specialAttackUp   , true      , false};
-    m_actions[8]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
-    m_actions[9]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
-    m_actions[10]   = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
-    m_actions[11]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
-    m_actions[12]   = {Action::Count              , 0                             , false     , false};
+    m_actions[3]    = {Action::Block              , &Character::block             , false     , false};
+    m_actions[4]    = {Action::Pick               , &Character::pick              , true      , false};
+    m_actions[5]    = {Action::BasicAttack        , &Character::basicAttack       , true      , false};
+    m_actions[6]    = {Action::SpecialAttackUp    , &Character::specialAttackUp   , true      , false};
+    m_actions[7]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
+    m_actions[8]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
+    m_actions[9]    = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
+    m_actions[10]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
+    m_actions[11]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
@@ -230,7 +229,7 @@ void Character::shield(){
 //Activates wings, if not already active
 void Character::wings(){
     if(!m_winged){
-        m_velocity *= 1.5;
+        m_runningFactor = 1.5f;
         m_winged = true;
     }
 
@@ -239,7 +238,7 @@ void Character::wings(){
 
 void Character::removeWings(){
     if(m_winged){
-        m_velocity /= 1.5;
+        m_runningFactor = 1.0f;
         m_winged = false;
     }
 }
@@ -499,7 +498,6 @@ int Character::getValidation(){
 bool Character::left(){
     lookLeft();
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
-    m_runningFactor = 1.0f;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
     return false;
 }
@@ -507,7 +505,6 @@ bool Character::left(){
 bool Character::right(){
     lookRight();
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
-    m_runningFactor = 1.0f;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
 
     return false;
@@ -518,15 +515,6 @@ bool Character::jump(){
         m_maxJumps--;
         m_physicsManager->jump(m_id, 300);
     }
-}
-
-bool Character::run(){
-    if(m_winged)
-        m_runningFactor = 1.5f;
-    else
-        m_runningFactor = 2.0f;
-    
-    return false;
 }
 
 bool Character::block(){
