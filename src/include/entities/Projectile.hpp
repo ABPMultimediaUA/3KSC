@@ -40,6 +40,7 @@ private:
     float   m_velocity;
     float   m_distanceLeft;
     float   m_knockbackPower;
+    int     m_knockSide;
 
 
     float   m_step[2];

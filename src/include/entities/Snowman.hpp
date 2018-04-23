@@ -35,7 +35,7 @@ class Arena;
 
 class Snowman: public Entity {
     public:
-        Snowman(float p_position[3], int p_owner, float p_damage, float p_knockSide);
+        Snowman(float p_position[3], int p_owner, float p_damage, float p_knockPower);
         ~Snowman();
         bool        lockNLoad();
         void        updateBullet();
@@ -55,7 +55,7 @@ class Snowman: public Entity {
         bool            m_bulletLaunched;
 
         float           m_damage;
-        float           m_knockbackSide;
+        float           m_knockPower;
 
         sf::Clock       m_launchClock;
 };

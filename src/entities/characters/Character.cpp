@@ -46,7 +46,7 @@ int Character::m_playerCount = 0;
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_online) : Entity(p_position, 0.5f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online) : Entity(p_position, 0.5f, p_modelURL){
     m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
     m_client                = &Client::instance();
@@ -60,7 +60,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, int 
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
     m_MP                    = m_maxMP = p_MP;
-    m_damage                = p_damage;
     m_velocity              = p_velocity;
     m_stunned               = false;  
     m_blocking              = false;
