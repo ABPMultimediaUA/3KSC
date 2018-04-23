@@ -30,7 +30,7 @@
 //#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
-Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 12, 80.f, "assets/models/characters/plup/plup.obj", p_online){
+Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.obj", p_online){
     m_type              = 3;
 
     m_kalasnikovBulletLaunched = false;
@@ -45,17 +45,17 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name,
     m_ultimateDuration  = 3.0f;
     m_ultimateTime      = 0.0f;
 
-    m_damageBasic       = 5.0f;
-    m_damageSide        = 15.0f;
-    m_damageUp          = 25.0f;
-    m_damageDown        = 15.0f;
-    m_damageUlti        = 15.0f;
+    m_damageBasic       = 15.0f;
+    m_damageSide        = 35.0f;
+    m_damageUp          = 7.0f;    //Total damage => 7.0 * 5.0(bullets) = 35.0f
+    m_damageDown        = 40.0f;
+    m_damageUlti        = 30.0f;
 
     m_knockbackBasic    = 1.0f;
-    m_knockbackSide     = 1.0f;
-    m_knockbackUp       = 1.0f;
-    m_knockbackDown     = 1.0f;
-    m_knockbackUlti     = 2.5f;
+    m_knockbackSide     = 0.0f;
+    m_knockbackUp       = 0.25f;
+    m_knockbackDown     = 0.25f;
+    m_knockbackUlti     = 2.0f;
 
     if(m_NPC)
         m_AI = new AIPlup(this);
@@ -88,7 +88,7 @@ bool Plup::basicAttack(){
                         t_currentPlayer->receiveAttack(m_damageBasic, true, m_knockbackBasic, getOrientation());
                     else
                         t_currentPlayer->receiveAttack(m_damageUlti, true, m_knockbackUlti, getOrientation());
-                    this->addMP(5);
+                    this->addMP(10);
                 }
             }
         }
@@ -99,7 +99,7 @@ bool Plup::basicAttack(){
 
 //Range attack
 bool Plup::specialAttackUp(){
-    if(useMP(30)){
+    if(useMP(15)){
         m_kalasnikov = true;
         m_kalasnikovAmmo = 5;
     }
@@ -108,7 +108,7 @@ bool Plup::specialAttackUp(){
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if(!m_snowmanPlaced && useMP(35)){
+    if(!m_snowmanPlaced && useMP(40)){
         m_attackPosition[0] = m_position[0] + 1*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -123,7 +123,7 @@ bool Plup::specialAttackDown(){
 
 //Dash
 bool Plup::specialAttackSide(){
-    if(m_onGround && !m_dashing && useMP(25)){
+    if(m_onGround && !m_dashing && useMP(20)){
         //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
         m_dashTime = m_inputManager->getMasterClock() + m_dashDuration;
         m_dashing = true;

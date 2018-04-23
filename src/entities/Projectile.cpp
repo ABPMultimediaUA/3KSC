@@ -41,6 +41,7 @@ Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, i
 
     m_damage = p_damage;
     m_knockbackPower = p_knockbackPower;
+    m_knockSide = p_rotation;
 
     if(p_rotation == 1)
         rotate(180);
@@ -111,7 +112,7 @@ bool Projectile::hit(){
         //Rival close enough
         if(checkCloseness(t_currentPlayer->getPosition(), 1)){
             //SI QUEREMOS QUE EL MISIL TENGA RETROCESO TENEMOS QUE PONER UN PARAMETRO MAS CON LA DIRECCION
-            t_currentPlayer->receiveAttack(m_damage, false, m_knockbackPower);
+            t_currentPlayer->receiveAttack(m_damage, false, m_knockbackPower, m_knockSide);
 
             return true;
         }
