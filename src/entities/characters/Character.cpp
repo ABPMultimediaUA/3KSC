@@ -163,8 +163,9 @@ void Character::mapActions(){
 void Character::receiveAttack(int p_damage, bool p_block, float p_knockPower, int p_knockSide, bool p_checked){
     if(m_online && !p_checked){
         if(m_client->getPlayer() == m_playerIndex)
-            m_client->attacked(p_damage, p_block, p_knockSide);
-
+        {
+            m_client->attacked(p_damage, p_block, p_knockPower, p_knockSide);
+        }
         else return;  //ignorar ataques que no sean de tu jugador
     }
 

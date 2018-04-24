@@ -74,7 +74,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
     }
 
-    m_debugMode = false;
+    m_debugMode = true;
     if(m_debugMode)
         createDebug();
 }
@@ -146,13 +146,12 @@ int Entity::getId(){
 float* Entity::getPosition(){
     return m_position;
 }
-
 float Entity::getX(){
-    return m_position[0];
+    return m_physicsManager->getBody(m_id)->GetPosition().x;
 }
 
 float Entity::getY(){
-    return m_position[1];
+    return m_physicsManager->getBody(m_id)->GetPosition().y;
 }
 
 float Entity::getZ(){
