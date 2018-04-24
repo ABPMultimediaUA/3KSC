@@ -29,7 +29,7 @@
 #include "../../include/managers/InputManager.hpp"
 #include <iostream>
 
-Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 15, 70.f, "assets/models/characters/sparky/sparky.obj", p_online){
+Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 150, 70, 65.f, "assets/models/characters/sparky/sparky.obj", p_online){
     m_type               = 4;
     
     m_jumpingDuration    = 0.10;
@@ -42,17 +42,17 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     m_ultiBulletLaunched = false;
     m_ultimateAmmo       = 10;
 
-    m_damageBasic        = 5.0f;
-    m_damageSide         = 15.0f;
-    m_damageUp           = 25.0f;
-    m_damageDown         = 15.0f;
+    m_damageBasic        = 20.0f;
+    m_damageSide         = 35.0f;
+    m_damageUp           = 30.0f;
+    m_damageDown         = 30.0f;
     m_damageUlti         = 10.0f;
 
     m_knockbackBasic     = 1.0f;
     m_knockbackSide      = 1.0f;
-    m_knockbackUp        = 1.0f;
-    m_knockbackDown      = 1.0f;
-    m_knockbackUlti      = 1.0f;
+    m_knockbackUp        = 1.5f;
+    m_knockbackDown      = 1.5f;
+    m_knockbackUlti      = 0.25f;
 
     if(m_NPC)
         m_AI = new AISparky(this);
@@ -96,7 +96,7 @@ bool Sparky::basicAttack(){
                 //Rival close enough
                 if(checkCloseness(t_currentPlayer->getPosition(), 1.5)){
                     t_currentPlayer->receiveAttack(m_damageBasic, true, m_knockbackBasic, getOrientation());
-                    this->addMP(5);
+                    this->addMP(15);
                 }
             }
         }
@@ -105,7 +105,7 @@ bool Sparky::basicAttack(){
 }
 
 bool Sparky::specialAttackUp(){
-    if(useMP(30)){
+    if(useMP(10)){
         m_physicsManager->sparkyJump(getId());
         m_jumpingTime = m_inputManager->getMasterClock() + m_jumpingDuration;
         m_sparkyJumping = true;
@@ -115,14 +115,14 @@ bool Sparky::specialAttackUp(){
 }
 
 bool Sparky::specialAttackDown(){
-    if(useMP(35) && !m_ultimateMode)   
+    if(useMP(20) && !m_ultimateMode)   
         m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
 
     return false;
 }
 
 bool Sparky::specialAttackSide(){
-    if(!m_punchLaunched && useMP(25) && !m_ultimateMode){
+    if(!m_punchLaunched && useMP(35) && !m_ultimateMode){
         m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];

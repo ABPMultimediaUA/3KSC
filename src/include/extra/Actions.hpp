@@ -25,7 +25,6 @@
         Left = 0,
         Right,
         Jump,
-        Run,
         Block,
         Pick,
         BasicAttack,

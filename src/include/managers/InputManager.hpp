@@ -72,7 +72,7 @@ private:
     sf::Joystick::Axis      m_axis[8];
     Client*                 m_client;
     int                     m_onlinePlayer;
-    bool                    m_lastActions[12] = {false};
+    bool                    m_lastActions[11] = {false};
     bool                    m_isOnline = false;
     float                   m_masterTime;
     sf::Clock               m_masterClock;
