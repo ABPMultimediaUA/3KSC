@@ -35,7 +35,6 @@ EngineManager& EngineManager::instance(){
 //Constructor
 EngineManager::EngineManager(){
     m_moveCamera = false;
-    
 }
 
 //Destructor
@@ -43,40 +42,15 @@ EngineManager::~EngineManager(){}
 
 //Creates the game window
 bool EngineManager::createWindow(bool p_fullscreen){
- 
-    core::dimension2d<u32> t_windowSize;
- 
-    if (p_fullscreen){
-        //Create a null device to get the desktop resolution
-        IrrlichtDevice* t_nulldevice = createDevice(video::EDT_NULL);
-        t_windowSize = t_nulldevice->getVideoModeList()->getDesktopResolution();
-        t_nulldevice->drop();
-    }
- 
-    else{
-        t_windowSize = core::dimension2d<u32>(1024, 768);
-        //t_windowSize = core::dimension2d<u32>(640,480);
-    }
- 
-    //Use the desktop resolution to create a real device
-    m_device = createDevice(video::EDT_OPENGL, t_windowSize, 16, p_fullscreen, false, false, this);
-    
-    //If m_device is NULL
-    if(!m_device)
-        return false;
- 
-    m_device->setWindowCaption(L"3KSC");
- 
-    //Create video driver and scene manager
-    m_vDriver = m_device->getVideoDriver();
-    m_scene = m_device->getSceneManager();
+    CEWindow* m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
+    CEScene*  m_scene  = new CEScene();
     
     return true;
 }
 
 //Creates a camera
 void EngineManager::createCamera(float p_cameraPosition[3], float p_tarjet[3]){
-    m_cameraNode = m_scene->addCameraSceneNode();
+    m_cameraNode = m_scene->createCamera(true);
     if(m_cameraNode){
         m_resetPosition[0] = m_cameraPosition[0] = p_cameraPosition[0];
         m_resetPosition[1] = m_cameraPosition[1] = p_cameraPosition[1];
@@ -84,8 +58,8 @@ void EngineManager::createCamera(float p_cameraPosition[3], float p_tarjet[3]){
         m_resetPosition[3] = m_cameraPosition[3] = p_tarjet[0];
         m_resetPosition[4] = m_cameraPosition[4] = p_tarjet[1];
         m_resetPosition[5] = m_cameraPosition[5] = p_tarjet[2];
-        m_cameraNode->setPosition(core::vector3df(p_cameraPosition[0],p_cameraPosition[1],p_cameraPosition[2]));
-        m_cameraNode->setTarget(core::vector3df(p_tarjet[0],p_tarjet[1],p_tarjet[2]));
+        m_cameraNode->setAbsolutePosition(p_cameraPosition[0],p_cameraPosition[1],p_cameraPosition[2]);
+        m_cameraNode->lookAt(p_tarjet[0],p_tarjet[1],p_tarjet[2]);
     }
 }
 
@@ -124,7 +98,7 @@ void EngineManager::resetCamera(){
 }
 
 void EngineManager::updateCamera(){
-    if(m_cameraNode && m_moveCamera){
+    /*if(m_cameraNode && m_moveCamera){
         float t_maxTime = 1.0;
         m_amountTime += getFrameDeltaTime();
 
@@ -150,28 +124,24 @@ void EngineManager::updateCamera(){
             m_cameraPosition[4] = m_newCameraPosition[4];
             m_cameraPosition[5] = m_newCameraPosition[5];
         }
-    }
+    }*/
 }
 
 //Returns whether the device is running or not
 bool EngineManager::running(){
-    return  m_device != 0 && m_device->run();
+    return m_window->isOpen();
 }
 
 //Drops the device
 void EngineManager::stop(){
-    if(m_device != 0){
-        m_device->drop();
-        m_device = 0;
-    }
+    m_scene->release();
+    m_window->close();
 }
-
-//Irrlicht events
-bool EngineManager::OnEvent(const SEvent& p_event){}
 
 //Sets m_prevTime for the first time
 void EngineManager::timeStamp(){
-    m_prevTime = getDevice()->getTimer()->getTime();
+    std::cout << "NO TENEMOS TIMESTAMP" << std::endl;
+    //m_prevTime = getDevice()->getTimer()->getTime();
 }
 
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
@@ -179,41 +149,27 @@ float EngineManager::updateFrameDeltaTime(float p_delta){
     m_frameDeltaTime = p_delta;
 }
 
-//Creates a new node
-void EngineManager::createEntity(int p_id, float p_position[3]){
-    scene::ISceneNode* t_node = m_scene->addCubeSceneNode();
-
-    if (t_node){
-        //Add node to class node vector
-        m_entityNodes.push_back(t_node);
-
-        t_node->setPosition(core::vector3df(p_position[0],p_position[1],p_position[2]));
-        t_node->setMaterialFlag(video::EMF_LIGHTING, false);
-    }
-}
-
 void EngineManager::deleteEntity(int p_id){
-    m_entityNodes.at(p_id)->remove();
+    std::cout << "IMPLEMENTAR DELETE EN MESH EN NUETRO MOTOR" << std::endl;
+    //m_entityNodes.at(p_id)->remove();
 }
 
 //Loads a 3D model
 void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL){
-    scene::IAnimatedMesh* t_mesh = m_scene->getMesh(p_modelURL);
-    scene::ISceneNode* t_node = 0;
+    CESceneMesh* t_mesh = m_scene->createMesh(p_modelURL);
 
-    if (t_mesh){
-        t_node = m_scene->addOctreeSceneNode(t_mesh->getMesh(0), 0, p_id, 1024);
-        t_node->setPosition(core::vector3df(p_position[0], p_position[1], p_position[2]));
-        t_node->setMaterialFlag(video::EMF_LIGHTING, false);
-        t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
+    if(t_mesh){
+        t_mesh->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
+        t_node->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
 
-        //Add node to class node vector 
-        m_entityNodes.push_back(t_node);
+        m_entityNodes.push_back(t_mesh);
     }
 }
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
-    m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+    std::cout << "AUN NO TENEMOS SKYBOOOOX! (COMING SOON!)" << std::endl;
+    
+    /*m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
     scene::ISceneNode* t_skybox = m_scene->addSkyBoxSceneNode(
         m_vDriver->getTexture(p_skyboxURLs[0]),
@@ -225,66 +181,59 @@ void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
 
     m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
 
-    //m_entityNodes.push_back(t_skybox);
+    //m_entityNodes.push_back(t_skybox);*/
 }
 
 void EngineManager::moveEntity(Entity* p_entity){
-    core::vector3df t_position;
-    float*          t_entityPosition = p_entity->getPosition();
-    t_position.X = (f32) t_entityPosition[0];
-    t_position.Y = (f32) t_entityPosition[1];
-    t_position.Z = (f32) t_entityPosition[2];
+    float* t_position = p_entity->getPosition();
 
-    m_entityNodes.at(p_entity->getId())->setPosition(t_position);
+    m_entityNodes.at(p_entity->getId())->setPosition(t_position[0], t_position[1], t_position[2]);
 }
 
 void EngineManager::setRotation(int p_id, float p_degrees){
-    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
+    CESceneMesh* t_node  = m_entityNodes.at(p_id);
     
-    t_node->setRotation(core::vector3df(0.0f, p_degrees, 0.0f));
+    t_node->setRotation((0.0f, p_degrees, 0.0f));
 }
 
 void EngineManager::scale(int p_id, float p_scale[3]){
-    scene::ISceneNode* t_node  = m_entityNodes.at(p_id);
+    CESceneMesh* t_node  = m_entityNodes.at(p_id);
 
-    t_node->setScale(core::vector3df(p_scale[0], p_scale[1], p_scale[2]));
+    t_node->setScale(p_scale[0], p_scale[1], p_scale[2]);
 }
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_vDriver->beginScene(true, true, video::SColor(255,79,195,247));
-    m_scene->drawAll();
-    m_vDriver->endScene();
+    window->processInput();
+    window->clear(0.5f, 0.0f, 0.0f, 1.0f);
 
-    //    int fps =  m_vDriver->getFPS();
-    //   std::cout<<fps<<std::endl;
+    scene->draw();
+
+    window->swapBuffers();
+    window->pollEvents();
 }
-
-//Returns game window
-// sf::RenderWindow* EngineManager::getWindow(){
-//    return m_window;
-// }
 
 float EngineManager::getFrameDeltaTime(){
-    return (float) m_frameDeltaTime;
+    return (float)m_frameDeltaTime;
 }
-
+/*
 irr::scene::ISceneManager* EngineManager::getSceneManager(){
     return m_scene;
 }
-
-scene::ISceneNode* EngineManager::getEntityNode(int p_id){
+*/
+CESceneMesh* EngineManager::getEntityNode(int p_id){
     return m_entityNodes.at(p_id);
 }
-
+/*
 irr::video::IVideoDriver* EngineManager::getVideoDriver(){
     return m_vDriver;
 }
-
+*/
+/*
 IrrlichtDevice* EngineManager::getDevice(){
     return m_device;
 }
-
+*/
 bool EngineManager::isWindowActive(){
     return m_device->isWindowActive();
 }

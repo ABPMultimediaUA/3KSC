@@ -21,23 +21,27 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-#include <irrlicht.h>
-//#include <SFML/Graphics/RenderWindow.hpp>
+#include "../../../include/ChaoticEngine/include/fachada/CEWindow.hpp"
+#include "../../../include/ChaoticEngine/include/fachada/CEScene.hpp"
+#include "../../../include/ChaoticEngine/include/fachada/CESceneCamera.hpp"
+#include "../../../include/ChaoticEngine/include/fachada/CESceneLight.hpp"
+#include "../../../include/ChaoticEngine/include/fachada/CESceneMesh.hpp"
+#include "../../../include/ChaoticEngine/include/fachada/CEShader.hpp"
+
 #include <vector>
 #include "../entities/Entity.hpp"
 
-class EngineManager : public irr::IEventReceiver{
+class EngineManager{
 private:
-    std::vector<irr::scene::ISceneNode*>    m_entityNodes;
-    irr::IrrlichtDevice*                    m_device;
-    irr::video::IVideoDriver*               m_vDriver;
-    irr::scene::ISceneManager*              m_scene;
+    std::vector<CESceneMesh*>   m_entityNodes;
+    CEWindow*       m_window;
+    CEScene*        m_scene;
 
-    irr::scene::ICameraSceneNode* m_cameraNode;
+    CESceneCamera*  m_cameraNode;
 
-    irr::u32        m_prevTime;
-    irr::u32        m_nowTime;
-    irr::f32        m_frameDeltaTime;
+    unsigned int    m_prevTime;
+    unsigned int    m_nowTime;
+    unsigned float  m_frameDeltaTime;
 
     float   m_resetPosition[6];
     float   m_cameraPosition[6];
@@ -60,7 +64,6 @@ public:
     bool running();
     void stop();
 
-    virtual bool OnEvent(const irr::SEvent& p_event); 
     void timeStamp();
     float updateFrameDeltaTime(float p_delta);
 
@@ -69,7 +72,6 @@ public:
     void resetCamera();
     void updateCamera();
 
-    void createEntity(int p_id, float p_position[3]);
     void deleteEntity(int p_id);
     void load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
     void loadSkybox(const char* p_skyboxURLs[6]); 
@@ -82,7 +84,7 @@ public:
     // sf::RenderWindow* getWindow();
     float getFrameDeltaTime();
     irr::scene::ISceneManager* getSceneManager();
-    irr::scene::ISceneNode* getEntityNode(int p_id);
+    CESceneMesh* getEntityNode(int p_id);
 
     irr::video::IVideoDriver* getVideoDriver();
     irr::IrrlichtDevice* getDevice();
