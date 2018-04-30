@@ -64,7 +64,7 @@ SoundManager::SoundManager(){
 //Destructor
 SoundManager::~SoundManager(){}
 
-void SoundManager::update(bool p_paused){
+void SoundManager::update(){
     ERRCHECK(m_system->update());
 }
 

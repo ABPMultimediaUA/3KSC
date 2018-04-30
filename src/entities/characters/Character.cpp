@@ -121,7 +121,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
 }
 
 Character::~Character(){
-    if (m_AI){
+    if(m_AI){
         delete m_AI;
         m_AI = nullptr;
     }

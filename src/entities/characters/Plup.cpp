@@ -84,7 +84,7 @@ bool Plup::basicAttack(){
     if(t_currentTime >= m_basicTime){
         Character* t_currentPlayer;
 
-        m_soundManager->playSound("p_random");
+        m_soundManager->playSound("p_random", 1);
 
         for(int i = 0; i < m_playerCount; i++){
             //Ignore myself

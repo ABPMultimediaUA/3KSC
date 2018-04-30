@@ -34,7 +34,6 @@ FOAH::FOAH(float p_position[3])
 
 //Destructor
 FOAH::~FOAH(){
-    delete m_physicsManager;
     delete m_arena;
 }
 

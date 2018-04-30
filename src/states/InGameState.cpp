@@ -71,20 +71,11 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
 //Destructor
 InGameState::~InGameState(){
-    delete m_physicsManager;
-    m_physicsManager = nullptr;
-    
-    delete m_soundManager;
-    m_soundManager = nullptr;
-    
     // delete m_UIManager;
     // m_UIManager = nullptr;
     
     delete m_arena;
     m_arena = nullptr;
-    
-    delete m_pathfinding;
-    m_pathfinding = nullptr;
 
     delete m_client;
     m_client = nullptr;
@@ -94,7 +85,7 @@ void InGameState::input(){}
 
 void InGameState::update(){
     m_inputManager->updateMasterClock();
-    m_soundManager->update(false);
+    m_soundManager->update();
     m_engineManager->updateFrameDeltaTime(m_deltaTime);
 
     if(m_onlineMode)
@@ -117,7 +108,6 @@ void InGameState::update(){
         }
     }
 
-    //PAUSE ALL
     if(m_inputManager->isKeyPressed(Key::P))
         m_soundManager->pauseAll();
     else if(m_inputManager->isKeyPressed(Key::O))

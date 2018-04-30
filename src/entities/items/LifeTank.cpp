@@ -34,7 +34,6 @@ LifeTank::LifeTank(float p_position[3])
 
 //Destructor
 LifeTank::~LifeTank(){
-    delete m_physicsManager;
     delete m_arena;
 }
 

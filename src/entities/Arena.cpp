@@ -41,7 +41,6 @@
 Arena* Arena::m_instance = 0;
 
 Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entity(p_position, p_scale, p_modelURL, 1){
-
     m_currentItems    = 0;
     //m_items         = new Item*[m_maxItemsOnScreen];
     m_instance        = this;
@@ -57,7 +56,7 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
 }
 
 Arena::~Arena(){
-    for (int i = 0; i < m_playerCount; i++){
+    for(int i = 0; i < m_playerCount; i++){
         delete m_players[i];
         m_players = nullptr;
     }
@@ -65,17 +64,17 @@ Arena::~Arena(){
     delete[] m_players;
     m_players = nullptr;
 
-    if (m_portal){
+    if(m_portal){
         delete m_portal;
         m_portal = nullptr;
     }
 
-    if (m_clock){
+    if(m_clock){
         delete m_clock;
         m_clock = nullptr;
     }
 
-    if (m_portalClock){
+    if(m_portalClock){
         delete m_portalClock;
         m_portalClock = nullptr;
     }

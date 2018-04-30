@@ -59,7 +59,7 @@ public:
     void unPauseAll();
 
     void setVolume(float p_vol);
-    void update(bool p_paused);
+    void update();
 
     void loadBanks();
     void loadBank(SoundID p_bank);
