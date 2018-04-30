@@ -27,7 +27,7 @@
 #include "../../include/extra/Actions.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
-//#include "../../include/managers/SoundManager.hpp"
+#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.obj", p_online){
@@ -57,6 +57,17 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name,
     m_knockbackDown     = 0.25f;
     m_knockbackUlti     = 2.0f;
 
+    m_soundManager->loadBank(SoundID::S_PLUP);
+    m_soundManager->loadEvents(SoundID::S_PLUP);
+    //m_soundManager->createSoundEvent("event:/characters/plup/death"     , "p_death"       );
+    //m_soundManager->createSoundEvent("event:/characters/plup/kill"      , "p_kill"        );
+    //m_soundManager->createSoundEvent("event:/characters/plup/random"    , "p_random"      );
+    //m_soundManager->createSoundEvent("event:/characters/plup/special"   , "p_special"     );
+    //m_soundManager->createSoundEvent("event:/characters/plup/taunt"     , "p_taunt"       );
+    //m_soundManager->createSoundEvent("event:/characters/plup/ultimate"  , "p_ultimate"    );
+    
+    m_soundManager->modifyParameter("p_random", 0.90, "Prob");
+
     if(m_NPC)
         m_AI = new AIPlup(this);
 }
@@ -73,9 +84,11 @@ bool Plup::basicAttack(){
     if(t_currentTime >= m_basicTime){
         Character* t_currentPlayer;
 
-        for (int i = 0; i < m_playerCount; i++){
+        m_soundManager->playSound("p_random");
+
+        for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
-            if (i == m_playerIndex)
+            if(i == m_playerIndex)
                 continue;
 
             t_currentPlayer = Arena::getInstance()->getPlayer(i);

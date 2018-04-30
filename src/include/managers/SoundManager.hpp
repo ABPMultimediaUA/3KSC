@@ -26,6 +26,7 @@
 #include <fmod/fmod_common.h>
 #include <fmod/fmod_errors.h>
 #include <string>
+#include <vector>
 #include <map>
 
 enum class SoundID{
@@ -53,8 +54,9 @@ public:
     ~SoundManager();
 
     void createSoundEvent(const char* eventPath, const char* name);
-    void playSound(const char* name);
-
+    void playSound(const char* name, float p_volume = 0.5f);
+    void pauseAll();
+    void unPauseAll();
 
     void setVolume(float p_vol);
     void update(bool p_paused);
@@ -63,7 +65,6 @@ public:
     void loadBank(SoundID p_bank);
     void loadEvents(SoundID p_bank);
 
-    void getEvents();
     void modifyParameter(const char* name, float num, const char* parameter);
 
 private:
@@ -77,7 +78,10 @@ private:
 
     //FMOD::Studio::EventDescription*     m_musicEvent;
 
-    std::map<const char*, SoundEvent*> m_soundEvents;
+    std::map<const char*, SoundEvent*>           m_soundEvents;
+    std::map<const char*, SoundEvent*>::iterator m_iterator;
+
+    std::vector<SoundEvent*>    m_mutedSounds;
 };
 
 class SoundEvent{
@@ -88,11 +92,13 @@ public:
     void start();
     void stop();
     void pause();
-    void setVolume(float p_vol);
+    void unPause();
+    void setVolume(float p_volume);
     bool isPlaying();
 
     void modifyParameter(float num, const char* parameter);
 
+    FMOD::Studio::EventInstance*    getEventInstance();
 
 protected:
     FMOD::Studio::EventInstance*    m_soundInstance;

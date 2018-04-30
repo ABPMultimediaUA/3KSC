@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 #include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
@@ -34,6 +35,7 @@ int Entity::m_entityCount = 0;
 EngineManager*  Entity::m_engineManager     = &EngineManager::instance();
 PhysicsManager* Entity::m_physicsManager    = &PhysicsManager::instance();
 InputManager*   Entity::m_inputManager      = &InputManager::instance();
+SoundManager*   Entity::m_soundManager      = &SoundManager::instance();
 
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
@@ -74,7 +76,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
     }
 
-    m_debugMode = true;
+    m_debugMode = false;
     if(m_debugMode)
         createDebug();
 }

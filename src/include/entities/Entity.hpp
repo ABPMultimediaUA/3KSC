@@ -26,6 +26,7 @@
 class EngineManager;
 class PhysicsManager;
 class InputManager;
+class SoundManager;
 class Debug;
 
 //#include "../Model.hpp"
@@ -61,6 +62,7 @@ protected:
     static EngineManager*   m_engineManager;
     static PhysicsManager*  m_physicsManager;
     static InputManager*    m_inputManager;
+    static SoundManager*    m_soundManager;
 
     static int              m_entityCount;
     int                     m_id; 
