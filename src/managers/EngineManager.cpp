@@ -55,6 +55,7 @@ bool EngineManager::createWindow(bool p_fullscreen){
  
     else{
         t_windowSize = core::dimension2d<u32>(1024, 768);
+        //t_windowSize = core::dimension2d<u32>(640,480);
     }
  
     //Use the desktop resolution to create a real device

@@ -89,7 +89,7 @@ void Client::listen(){
 		{
 
 		case ID_CONNECTION_LOST:
-			printf("ID_CONNECTION_LOST\n");
+			printf("ID_CONNECTION_LOSTReceive\n");
 			break;
 
 		case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -229,13 +229,15 @@ void Client::readMessage(std::string p_message){
 			t_block = false;
 		else
 			t_block = true;
-		int t_knockback = std::stoi(t_parsed[3]);
-		int t_player = std::stoi(t_parsed[4]);
-		std::cout<<"mi jugador"<< m_yourPlayer<< ";el otro"<<t_player<<std::endl;
-		// Arena::getInstance()->getPlayer(t_player)->setX(300);
-		// Arena::getInstance()->getPlayer(t_player)->setY(100);
-		Arena::getInstance()->getPlayer(t_player)->receiveAttack(t_dmg, t_block, t_knockback, true);
-		std::cout<<"recibiendo ataque"<<std::endl;
+		float t_knockPower = std::stoi(t_parsed[3]);
+		int t_knockback = std::stoi(t_parsed[4]);
+		int t_player = std::stoi(t_parsed[5]);
+		 Arena::getInstance()->getPlayer(t_player)->setX(std::stoi(t_parsed[6]));
+		 Arena::getInstance()->getPlayer(t_player)->setY(std::stoi(t_parsed[7]));
+		 std::cout<<"Posicion x"<<std::stoi(t_parsed[6])<<std::endl;
+		 std::cout<<"Posicion y"<<std::stoi(t_parsed[7])<<std::endl;
+
+		Arena::getInstance()->getPlayer(t_player)->receiveAttack(t_dmg, t_block, t_knockPower, t_knockback,true);
 	}
 	else{
 		if(t_parsed.size()<4)
@@ -350,9 +352,9 @@ void Client::printActions(std::string p_actions){
 	std::cout<<"Ping: "<<client->GetLastPing(client->GetSystemAddressFromIndex(0))<<std::endl;
 }
 
-void Client::attacked(int p_damage, bool p_block, int p_knockback)
+void Client::attacked(int p_damage, bool p_block, float p_knockPower, int p_knockback)
 {
-	std::string t_toSend 	= "attack:" + std::to_string(p_damage) + ":" + std::to_string(p_block) 
+	std::string t_toSend 	= "attack:" + std::to_string(p_damage) + ":" + std::to_string(p_block) + ":" + std::to_string(p_knockPower)
 							+ ":" + std::to_string(p_knockback) + ":" + std::to_string(m_yourPlayer)
 							+ ":" + std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getX())
 							+ ":" + std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getY());
@@ -365,6 +367,7 @@ void Client::attacked(int p_damage, bool p_block, int p_knockback)
 		std::cout<<"ID: "<<m_yourPlayerString<<std::endl;
 		std::cout<<"Daño recibido: "<< p_damage <<std::endl;
 		std::cout<<"Bloqueable: "<< p_block <<std::endl;
+		std::cout<<"Fuerza knockback: "<< p_knockPower <<std::endl;
 		std::cout<<"Direccion fuerza: "<< p_knockback <<std::endl;
 		std::cout<<"Mi X"<< std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getX())<<std::endl;
 		std::cout<<"Mi Y"<< std::to_string(Arena::getInstance()->getPlayer(m_yourPlayer)->getY())<<std::endl;

@@ -27,7 +27,7 @@
 
 class Sparky: public Character {
 public:
-	Sparky(char* p_name, float p_position[3], bool p_debugMode, bool p_online = false);
+	Sparky(char* p_name, float p_position[3], bool p_online = false);
     ~Sparky();
     bool    jump();
     bool    basicAttack();
@@ -39,10 +39,15 @@ public:
     void    updateJump();
 
 private:
+    float           m_jumpingDuration;
+    float           m_jumpingTime;
+
+    bool            m_gravity;
     bool            m_sparkyJumping;
     bool            m_punchLaunched;
     bool            m_ultimateMode;
     bool            m_ultiBulletLaunched;
+
     Projectile*     m_punch;
     Projectile*     m_ultimateBullet;
 

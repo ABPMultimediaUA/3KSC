@@ -28,7 +28,7 @@
 #include <iostream>
 
 //Constructor
-Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "assets/models/characters/plup/snowman.obj", 5){
+Snowman::Snowman(float p_position[3], int p_owner, float p_damage, float p_knockPower) : Entity(p_position, 0.3f, "assets/models/characters/plup/snowman.obj", 5){
     m_physicsManager = &PhysicsManager::instance();
     m_arena          = Arena::getInstance();
     
@@ -36,6 +36,9 @@ Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "as
     m_owner          = p_owner;
     
     m_bulletLaunched = false;
+
+    m_damage         = p_damage;
+    m_knockPower     = p_knockPower;
 }
 
 //Destructor
@@ -45,12 +48,13 @@ Snowman::~Snowman(){}
 //Looks for player and fires after finding
 bool Snowman::lockNLoad(){
     if(!m_bulletLaunched && m_ammo > 0 && (m_launchClock.getElapsedTime().asSeconds() >= 1.5 || m_ammo == 3)){
+        int t_side = 1;
         int t_playerCount = m_arena->getPlayerCount();
         Character* t_currentPlayer;
         
-        for (int i = 0; i < t_playerCount; i++){
+        for(int i = 0; i < t_playerCount; i++){
             //Snowman shall not shoot its owner
-            if (i == m_owner)
+            if(i == m_owner)
                 continue;
             
             t_currentPlayer = m_arena->getPlayer(i);
@@ -67,11 +71,13 @@ bool Snowman::lockNLoad(){
             if(t_closestBodyFraction >= 0.2f){ //If there is not an intersection to the raycast
                 //Create snowball (if any left)
                 if(m_ammo > 0){
+                    m_bulletLaunched = true;
                     m_ammo--;
-                    m_snowball = new Projectile(m_position, m_target, true, m_owner, 7, 1);
+                    if(m_position[0] > m_target[0])
+                        t_side = -1;
+                    m_snowball = new Projectile(m_position, m_target, true, m_owner, m_damage, t_side, 1);
                     
                     //
-                    m_bulletLaunched = true;
                     m_launchClock.restart();
                     break;
                 }
@@ -80,7 +86,7 @@ bool Snowman::lockNLoad(){
     }
 
     //Update position of the turret (gravity)
-    updatePosition(false, false, false);
+    updatePosition();
 
     //Delete turret when last bullet is gone
     if (m_ammo == -1)
@@ -90,7 +96,7 @@ bool Snowman::lockNLoad(){
 }
 
 void Snowman::updateBullet(){
-    updatePosition(false, false, false);
+    updatePosition();
 
     if(!m_snowball->update(true)){
         m_bulletLaunched = false;

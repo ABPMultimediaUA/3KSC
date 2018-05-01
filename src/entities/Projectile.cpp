@@ -35,9 +35,13 @@ const char* Projectile::m_modelURLs[3] = {
     "assets/models/characters/sparky/balas.obj"
 };
 
-Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, int p_type) : Entity(p_position, 7.f, m_modelURLs[p_type], 5){
+Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, float p_knockbackPower, int p_type) : Entity(p_position, 0.7f, m_modelURLs[p_type], 5){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
+
+    m_damage = p_damage;
+    m_knockbackPower = p_knockbackPower;
+    m_knockSide = p_rotation;
 
     if(p_rotation == 1)
         rotate(180);
@@ -45,25 +49,22 @@ Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, i
     switch(p_type){
         //Sparky's punches
         case 0:{
-            m_damage = p_damage;
-            m_velocity = 4;
-            m_distanceLeft = 120;
+            m_velocity = 0.4;
+            m_distanceLeft = 12;
             break;
         }
 
         //Plup's snowmen's snowball
         case 1:{
-            m_damage = p_damage;
-            m_velocity = 3;
-            m_distanceLeft = 150;
+            m_velocity = 0.5;
+            m_distanceLeft = 15;
             break;
         }
 
         //Sparky bullets
         case 2:{
-            m_damage = p_damage;
-            m_velocity = 4;
-            m_distanceLeft = 45;
+            m_velocity = 0.4;
+            m_distanceLeft = 4.5;
             break;
         }
     }
@@ -77,15 +78,14 @@ Projectile::~Projectile(){
 
 //Precalculates step for each axis
 void Projectile::calculateSteps(){
-    float t_distanceX, t_distanceY, t_distanceZ, t_distance, t_time;
+    float t_distanceX, t_distanceY, t_distance, t_time;
     
     //d = target - origin
     t_distanceX = m_target[0] - m_position[0];
     t_distanceY = m_target[1] - m_position[1];
-    t_distanceZ = m_target[2] - m_position[2];
 
-    //Apply d²=x²+y²+z²
-    t_distance = t_distanceX*t_distanceX + t_distanceY*t_distanceY + t_distanceZ*t_distanceZ;
+    //Apply d²=x²+y²
+    t_distance = t_distanceX*t_distanceX + t_distanceY*t_distanceY;
     t_distance = std::sqrt(t_distance);
 
     //t = d/v
@@ -95,7 +95,6 @@ void Projectile::calculateSteps(){
     //v = d/t
     m_step[0] = t_distanceX/t_time;
     m_step[1] = t_distanceY/t_time;
-    m_step[2] = t_distanceZ/t_time;
 }
 
 //Checks if projectile hits a player
@@ -103,16 +102,17 @@ bool Projectile::hit(){
     Character* t_currentPlayer;
     int t_playerCount = Arena::getInstance()->getPlayerCount();
 
-    for (int i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount; i++){
         //Ignore owner
-        if (i == m_owner)
+        if(i == m_owner)
             continue;
 
         t_currentPlayer = Arena::getInstance()->getPlayer(i);
 
         //Rival close enough
-        if (checkCloseness(t_currentPlayer->getPosition(), 10)){
-            t_currentPlayer->receiveAttack(m_damage, false);
+        if(checkCloseness(t_currentPlayer->getPosition(), 1)){
+            //SI QUEREMOS QUE EL MISIL TENGA RETROCESO TENEMOS QUE PONER UN PARAMETRO MAS CON LA DIRECCION
+            t_currentPlayer->receiveAttack(m_damage, false, m_knockbackPower, m_knockSide);
 
             return true;
         }
@@ -125,9 +125,8 @@ bool Projectile::hit(){
 bool Projectile::update(bool p_shouldHit){
     //Go on
     if(m_distanceLeft > 0){
-        moveX(m_step[0]);
-        moveY(m_step[1]);
-        moveZ(m_step[2]);
+        moveXY(m_step[0], m_step[1]);
+        updatePosition();
 
         if(p_shouldHit){
             if(hit())

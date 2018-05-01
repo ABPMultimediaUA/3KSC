@@ -30,7 +30,7 @@ class Snowman;
 
 class Plup: public Character {
 public:
-    Plup(char* p_name, float p_position[3], bool p_debugMode, bool p_online = false);
+    Plup(char* p_name, float p_position[3], bool p_online = false);
     ~Plup();
     bool        jump();
     bool        basicAttack();
@@ -44,20 +44,27 @@ public:
 
 private:
     bool        m_snowmanPlaced;
+    bool        m_ultimateMode;
+    bool        m_kalasnikov;
+    bool        m_kalasnikovBulletLaunched;
 
+    int         m_kalasnikovAmmo;
     int         m_maxSnowmen;
     Snowman*    m_snowman;
 
-    sf::Clock   m_turretClock;
-    sf::Clock   m_basicClock;
+    Projectile* m_kalasnikovBullet;
 
-    float           m_turretDuration;
-    float           m_turretTime;
-    float           m_basicDuration;
-    float           m_basicTime;
+    float       m_turretDuration;
+    float       m_turretTime;
+    float       m_basicDuration;
+    float       m_basicTime;
+    float       m_ultimateDuration;
+    float       m_ultimateTime;
 
     void        updateSnowman();
     void        deleteSnowman();
+    void        updateDash();
+    void        updateKalasnikov();
 };
 
 #endif
