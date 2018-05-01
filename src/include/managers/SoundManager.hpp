@@ -40,11 +40,12 @@ enum class SoundID{
 };
 
 struct Vector3 {
-	float x;
-	float y;
-	float z;
+    float x;
+    float y;
+    float z;
 };
 
+class InputManager;
 class SoundEvent;
 
 class SoundManager{
@@ -53,35 +54,50 @@ public:
     SoundManager();
     ~SoundManager();
 
-    void createSoundEvent(const char* eventPath, const char* name);
-    void playSound(const char* name, float p_volume = 0.5f);
-    void pauseAll();
-    void unPauseAll();
+    void    createSoundEvent(const char* eventPath, const char* name, bool p_isEffectSound = true);
+    void    playSound(const char* name, bool p_isEffectSound = true);
+    void    pauseAll();
+    void    unPauseAll();
 
-    void setVolume(float p_vol);
-    void update();
+    void    update();
 
-    void loadBanks();
-    void loadBank(SoundID p_bank);
-    void loadEvents(SoundID p_bank);
+    void    loadBanks();
+    void    loadBank(SoundID p_bank);
+    void    loadEvents(SoundID p_bank);
 
-    void modifyParameter(const char* name, float num, const char* parameter);
+    void    modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound = true);
+
+    void    setMusicVolume(float p_volume);
+    void    increaseMusicVolume();
+    void    decreaseMusicVolume();
+
+    void    setEffectVolume(float p_volume);
+    void    increaseEffectVolume();
+    void    decreaseEffectVolume();
 
 private:
-    FMOD_RESULT               m_Result;
-    FMOD::Studio::System*     m_system;
-    FMOD::System*             m_lowLevelSystem;
+    InputManager*    m_inputManager;
+
+    FMOD_RESULT             m_Result;
+    FMOD::Studio::System*   m_system;
+    FMOD::System*           m_lowLevelSystem;
     
-    FMOD::Studio::Bank*       m_masterBank;
-    FMOD::Studio::Bank*       m_stringsBank;
-    FMOD::Studio::Bank*       m_musicBank;
+    FMOD::Studio::Bank*     m_masterBank;
+    FMOD::Studio::Bank*     m_stringsBank;
+    FMOD::Studio::Bank*     m_musicBank;
 
-    //FMOD::Studio::EventDescription*     m_musicEvent;
+    bool                    m_waitRelease;
+    float                   m_musicVolume;
+    float                   m_effectVolume;
+    bool                    m_soundMute;
 
-    std::map<const char*, SoundEvent*>           m_soundEvents;
+    std::map<const char*, SoundEvent*>           m_musicEvents;
+    std::map<const char*, SoundEvent*>           m_effectEvents;
     std::map<const char*, SoundEvent*>::iterator m_iterator;
 
     std::vector<SoundEvent*>    m_mutedSounds;
+
+    void    updateSounds();
 };
 
 class SoundEvent{
