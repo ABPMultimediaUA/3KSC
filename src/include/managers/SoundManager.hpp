@@ -69,6 +69,7 @@ public:
     void    loadEvents(SoundID p_bank);
 
     void    modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound = true);
+    bool    isPlaying(const char* p_name);
 
     void    setMusicVolume(float p_volume);
     void    increaseMusicVolume();
@@ -77,11 +78,6 @@ public:
     void    setEffectVolume(float p_volume);
     void    increaseEffectVolume();
     void    decreaseEffectVolume();
-
-    void    setSoundEffectPlaying(){ m_soundEffectPlaying = false; };
-    bool    isSoundPlaying(){ return m_soundEffectPlaying; };
-
-    static FMOD_RESULT F_CALLBACK endSound_callback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD_STUDIO_EVENTINSTANCE *event, void *parameters);
 
 private:
     InputManager*           m_inputManager;
