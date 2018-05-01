@@ -153,7 +153,7 @@ void AIPlup::update(){
         b2Vec2 t_destination;
         if(t_closestPlayer!=0){
             if(m_position.x > t_closestPlayer->getX()){
-                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
+                //t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
             }
             else{
                 t_destination = m_pathfinding->getClosestWaypoint(m_position, 1); // Find waypoint to the right

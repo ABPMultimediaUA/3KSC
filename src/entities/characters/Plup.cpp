@@ -60,6 +60,7 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name,
     if (m_NPC){
         toggleAI();
         m_AI = new AIPlup(this);
+    }
 }
 
 Plup::~Plup(){}
