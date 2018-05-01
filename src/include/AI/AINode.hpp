@@ -27,15 +27,16 @@
 class AINode{
     private:                            // v----------------v  0  1  2   3   4
         int      m_type;                // Type of comparison (>, <, ==, >=, <=)
-        float    m_comparison_value;
-        float*   m_data;
+        
     public:
         AINode* m_true_children;
         AINode* m_false_children;
-        AINode(int p_type, float p_comparison_value, float *p_data, std::string action = "");
+        AINode(int p_type, float p_comparison_value, float *p_data, int action);
         ~AINode();
         AINode* makeDecision(AINode* node);
-        std::string    m_action;
+        int      m_action;
+        float    m_comparison_value;
+        float*   m_data;
 };
 
 #endif

@@ -47,10 +47,5 @@ void AISparky::update(){
 
 // Builds the tree containing Sparky's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
 void AISparky::buildTree(){
-    std::ifstream t_file("assets/ai/example.json");
-    nlohmann::json t_json;
-    t_file >> t_json;
-    auto nodes = t_json["nodes"];
 
-    std::cout << nodes[0]["name"] << " <- This is data from a json file" << std::endl;
 }

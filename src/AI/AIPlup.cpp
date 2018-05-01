@@ -42,6 +42,7 @@ void AIPlup::update(){
     int m_index = 1;
     m_specialUpRange = 0.0;
     m_specialSideRange = 0.0;
+    m_distanceToPortal = 0.0f;
     /*************************************************************/
     /****************      Get Plup's life        ****************/
     /*************************************************************/
@@ -145,9 +146,10 @@ void AIPlup::update(){
     /*************************************************************/
     /*******        MAKE DECISION ABOUT WHAT TO DO        ********/
     /*************************************************************/
-    std::string t_action = m_PLUP_root->makeDecision(m_PLUP_root)->m_action;
-    
-    if (t_action == "move"){
+    int t_action;
+    t_action = m_nodes[0]->makeDecision(m_nodes[0])->m_action;
+
+    if (t_action == 6){
         b2Vec2 t_destination;
         if(t_closestPlayer!=0){
             if(m_position.x > t_closestPlayer->getX()){
@@ -164,25 +166,26 @@ void AIPlup::update(){
             t_currentPlayer->moveToPath(t_destination_float);
         }
     }
-    else if (t_action == "basic_attack"){
+    else if (t_action == 3){
         t_currentPlayer->basicAttack();
     }
-    else if (t_action == "special_attack_up"){
+    else if (t_action == 0){
         m_inputManager->setAction(Action::SpecialAttackUp, m_index);
     }
-    else if (t_action == "special_attack_side"){
+    else if (t_action == 2){
         //m_inputManager->setAction(Action::SpecialAttackSide, m_index);
     }
-    else if (t_action == "special_attack_down"){
+    else if (t_action == 1){
         // m_inputManager->setAction(Action::SpecialAttackDown, m_index);
         t_currentPlayer->specialAttackDown();
     }
-    else if (t_action == "block"){
+    else if (t_action == 4){
         m_inputManager->setAction(Action::Block, m_index);
     }
     else{
        //std::cout<<"NOTHING?"<<std::endl;
     }
+    
 }
 
 // Builds the tree containing Plup's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
@@ -194,90 +197,103 @@ void AIPlup::buildTree(){
     auto nodes = t_json["nodes"];
 
     // Initialize
-    int t_comparison_type = -1;
-    float t_value = -1;
-    float* t_data = -1;
-    int t_node_type = 0;
-    std::string t_action = "";
-    int t_true_child = -1;
-    int t_false_child = -1;
+    int t_comparison_type;
+    float t_value;
+    float* t_data;
+    int t_node_type;
+    int t_action;
+    int t_true_child;
+    int t_false_child;
+    m_nodes = new AINode*[53];
     
     // Iterate through every node
     for(int i=0; nodes[i]!=nullptr; i++){
+        t_comparison_type = -1;
+        t_value = -1.0f;
+        t_data = 0;
+        t_action = -1;
+
         if(nodes[i]["type"] == "comparison"){   // Comparison
             t_node_type = 0;
         }
         else{                                   // Action
             t_node_type = 1;
         }
-
+        
         // Determine which variable to use to create the node
         if(t_node_type == 0){
             t_comparison_type = nodes[i]["data"]["comparison_type"];
             if(nodes[i]["name"] == "portal_active"){
-                t_data = m_distanceToPortal;
+                t_data = &m_distanceToPortal;
             }
             else if(nodes[i]["name"] == "on_portal"){
-                t_data = m_distanceToPortal;
+                t_data = &m_distanceToPortal;
             }
             else if(nodes[i]["name"] == "enemy_close"){
-                t_data = m_distanceToEnemy;
+                t_data = &m_distanceToEnemy;
             }
             else if(nodes[i]["name"] == "life_above_first_threshold"){
-                t_data = m_HP;
+                t_data = &m_HP;
+            }
+            else if(nodes[i]["name"] == "life_above_second_threshold"){
+                t_data = &m_HP;
+            }
+            else if(nodes[i]["name"] == "life_under_second_threshold"){
+                t_data = &m_HP;
             }
             else if(nodes[i]["name"] == "mana_above_first_threshold"){
-                t_data = m_MP;
+                t_data = &m_MP;
             }
             else if(nodes[i]["name"] == "snowman_placed"){
-                t_data = m_PLUP_snowman_placed;
+                t_data = &m_PLUP_snowman_placed;
             }
             else if(nodes[i]["name"] == "special_up_range"){
-                t_data = m_specialUpRange;
+                t_data = &m_specialUpRange;
             }
             else if(nodes[i]["name"] == "mana_above_second_threshold"){
-                t_data = m_MP;
+                t_data = &m_MP;
             }
             else if(nodes[i]["name"] == "special_side_range"){
-                t_data = m_specialSideRange;
+                t_data = &m_specialSideRange;
             }
             else if(nodes[i]["name"] == "mana_above_third_threshold"){
-                t_data = m_MP;
+                t_data = &m_MP;
             }
             else if(nodes[i]["name"] == "basic_attack_range"){
-                t_data = m_distanceToEnemy;
+                t_data = &m_distanceToEnemy;
             }
             else if(nodes[i]["name"] == "time_above_first_threshold"){
-                t_data = m_time;
+                t_data = &m_time;
             }
             else if(nodes[i]["name"] == "time_above_second_threshold"){
-                t_data = m_time;
+                t_data = &m_time;
             }
             else if(nodes[i]["name"] == "item_close"){
-                t_data = m_distanceToItem;
+                t_data = &m_distanceToItem;
             }
             else if(nodes[i]["name"] == "pick_up_range"){
-                t_data = m_distanceToItem;
+                t_data = &m_distanceToItem;
             }
             t_value = nodes[i]["data"]["value"];
         }
         else{
             t_action = nodes[i]["data"]["value"];
         }
-
         // Create AINode   
         m_nodes[i] = new AINode(t_comparison_type, t_value, t_data, t_action);
     }
 
     // Set child nodes
     for(int i=0; nodes[i]!=nullptr; i++){
-        if(m_nodes[i]["children"] != nullptr){
-            if(m_nodes[i]["children"][0] != nullptr){
-                t_true_child = m_nodes[i]["children"][0];
+        t_true_child = -1;
+        t_false_child = -1;
+        if(nodes[i]["data"]["children"] != nullptr){
+            if(nodes[i]["data"]["children"][0] != nullptr){
+                t_true_child = nodes[i]["data"]["children"][0];
                 m_nodes[i]->m_true_children = m_nodes[t_true_child];
             }
-            if(m_nodes[i]["children"][1] != nullptr){
-                t_false_child = m_nodes[i]["children"][1];
+            if(nodes[i]["data"]["children"][1] != nullptr){
+                t_false_child = nodes[i]["data"]["children"][1];
                 m_nodes[i]->m_false_children = m_nodes[t_false_child];
             }
         }
