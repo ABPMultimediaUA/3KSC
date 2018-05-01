@@ -99,7 +99,7 @@ void Arena::spawnPlayers(){
     m_portal -> moveTo(positionPortal2);
 
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
-    m_players[m_playerCount++] = new Sparky(  "Player 2", m_spawnPositions[1], false);
+    m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
     //m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
 
     if(m_debugMode){

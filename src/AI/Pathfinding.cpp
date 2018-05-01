@@ -105,7 +105,7 @@ b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
     Waypoint *t_closestWaypoint = 0;
     b2Vec2 t_return;
 
-    if(p_direction == 0){   // Direction is left
+    if(p_direction == 0){   // Direction is left 
         for(int i=0; i<m_waypoints.size(); i++){
             
             if(m_waypoints.at(i)->m_position[0] < p_position.x){ // If waypoint is to the left

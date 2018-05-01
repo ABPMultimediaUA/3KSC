@@ -50,6 +50,7 @@ Plup::Plup(char* p_name, float p_position[3], bool p_debugMode, bool p_online) :
     m_basicTime      = 0;
 
     if (m_NPC){
+        toggleAI();
         m_AI = new AIPlup(this);
     }
 }
