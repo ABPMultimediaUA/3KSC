@@ -25,9 +25,12 @@
 #include <fmod/fmod_studio.hpp>
 #include <fmod/fmod_common.h>
 #include <fmod/fmod_errors.h>
+
 #include <string>
 #include <vector>
 #include <map>
+
+#define FMOD_STUDIO_EVENT_CALLBACK_STOPPED 0x00000020
 
 enum class SoundID{
     S_KIRA = 0,
@@ -75,8 +78,13 @@ public:
     void    increaseEffectVolume();
     void    decreaseEffectVolume();
 
+    void    setSoundEffectPlaying(){ m_soundEffectPlaying = false; };
+    bool    isSoundPlaying(){ return m_soundEffectPlaying; };
+
+    static FMOD_RESULT F_CALLBACK endSound_callback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD_STUDIO_EVENTINSTANCE *event, void *parameters);
+
 private:
-    InputManager*    m_inputManager;
+    InputManager*           m_inputManager;
 
     FMOD_RESULT             m_Result;
     FMOD::Studio::System*   m_system;
@@ -86,7 +94,7 @@ private:
     FMOD::Studio::Bank*     m_stringsBank;
     FMOD::Studio::Bank*     m_musicBank;
 
-    bool                    m_waitRelease;
+    bool                    m_soundEffectPlaying;
     float                   m_musicVolume;
     float                   m_effectVolume;
     bool                    m_soundMute;

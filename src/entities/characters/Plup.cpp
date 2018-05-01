@@ -59,15 +59,7 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name,
 
     m_soundManager->loadBank(SoundID::S_PLUP);
     m_soundManager->loadEvents(SoundID::S_PLUP);
-    //m_soundManager->createSoundEvent("event:/characters/plup/death"     , "p_death"       );
-    //m_soundManager->createSoundEvent("event:/characters/plup/kill"      , "p_kill"        );
-    //m_soundManager->createSoundEvent("event:/characters/plup/random"    , "p_random"      );
-    //m_soundManager->createSoundEvent("event:/characters/plup/special"   , "p_special"     );
-    //m_soundManager->createSoundEvent("event:/characters/plup/taunt"     , "p_taunt"       );
-    //m_soundManager->createSoundEvent("event:/characters/plup/ultimate"  , "p_ultimate"    );
     
-    m_soundManager->modifyParameter("p_random", 0.90, "Prob");
-
     if(m_NPC)
         m_AI = new AIPlup(this);
 }
@@ -83,8 +75,6 @@ bool Plup::basicAttack(){
     float t_currentTime = m_inputManager->getMasterClock();
     if(t_currentTime >= m_basicTime){
         Character* t_currentPlayer;
-
-        m_soundManager->playSound("p_random");
 
         for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
@@ -180,6 +170,8 @@ void Plup::updatePlayer(){
 
     if(m_kalasnikov)
         updateKalasnikov();
+
+    randomSounds();
 }
 
 void Plup::updateSnowman(){
@@ -241,4 +233,13 @@ void Plup::updateKalasnikov(){
         }
     }else
         m_kalasnikov = false;
+}
+
+void Plup::randomSounds(){
+    //if(!m_soundManager->isSoundPlaying()){
+        //float t_prob = ((float)rand() / (float)RAND_MAX);
+        //std::cout << "RANDOM: " << t_prob << std::endl;
+        m_soundManager->modifyParameter("p_random", 0.35, "Prob");
+        m_soundManager->playSound("p_random");
+    //}
 }
