@@ -31,6 +31,8 @@
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/Client.hpp"
 
+#include "../include/extra/Inputs.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -69,20 +71,11 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
 //Destructor
 InGameState::~InGameState(){
-    delete m_physicsManager;
-    m_physicsManager = nullptr;
-    
-    delete m_soundManager;
-    m_soundManager = nullptr;
-    
     // delete m_UIManager;
     // m_UIManager = nullptr;
     
     delete m_arena;
     m_arena = nullptr;
-    
-    delete m_pathfinding;
-    m_pathfinding = nullptr;
 
     delete m_client;
     m_client = nullptr;
@@ -92,7 +85,7 @@ void InGameState::input(){}
 
 void InGameState::update(){
     m_inputManager->updateMasterClock();
-    m_soundManager->update(false);
+    m_soundManager->update();
     m_engineManager->updateFrameDeltaTime(m_deltaTime);
 
     if(m_onlineMode)
@@ -113,7 +106,7 @@ void InGameState::update(){
             t_currentPlayer->input();
             t_currentPlayer->update();
         }
-    }
+    } 
 }
 
 void InGameState::render(){
@@ -156,7 +149,6 @@ void InGameState::createArena(const char* p_fileCgm){
         }
          //Create camera
         else if(t_name == "c"){
-
             float t_position[3];
             t_position[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -171,18 +163,16 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         //music
         else if(t_name == "mu"){
-
             if(t_elements[1].compare("SoundID::S_FOSFOS_STADIUM") == 0)
-                    m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
+                m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
 
             const char* t_path = t_elements[2].c_str();
             const char* t_name = t_elements[3].c_str();
-            m_soundManager->createSoundEvent(t_path, t_name);
-            //m_soundManager->playSound(t_name);
+            m_soundManager->loadEvents(SoundID::S_FOSFOS_STADIUM);
+            m_soundManager->playSound(t_name, false);
         }
         //create waypoints
         else if(t_name == "w"){
-    
             float t_position[3];
             t_position[0] = strtof((t_elements[1]).c_str(), 0);
             t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -192,7 +182,6 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         //connets the waypoints
         else if(t_name == "wp"){
-
             float t_id1 = strtof((t_elements[1]).c_str(), 0);
             float t_id2 = strtof((t_elements[2]).c_str(), 0);
 
@@ -200,7 +189,6 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         //spawn positions from players
         else if(t_name == "sp"){
-       
             float t_spawnPositions[4][3];
             t_spawnPositions[0][0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_spawnPositions[0][1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -221,7 +209,6 @@ void InGameState::createArena(const char* p_fileCgm){
             m_arena->setSpawnPositions(t_spawnPositions);
         }
         else if(t_name == "rp"){
-
             float t_respawnPosition[3];
             t_respawnPosition[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_respawnPosition[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -230,7 +217,6 @@ void InGameState::createArena(const char* p_fileCgm){
             m_arena->setRespawnPositions(t_respawnPosition);
         }
         else if(t_name == "si"){
-
             float t_itemRange[3];
             t_itemRange[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_itemRange[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -239,7 +225,6 @@ void InGameState::createArena(const char* p_fileCgm){
             m_arena->setItemRange(t_itemRange);
         }
         else if(t_name == "sk"){
-
             const char* t_skyPath[6]; 
             t_skyPath[0] = t_elements[1].c_str(); 
             t_skyPath[1] = t_elements[2].c_str(); 

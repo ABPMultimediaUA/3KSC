@@ -27,7 +27,7 @@
 #include "../../include/extra/Actions.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
-//#include "../../include/managers/SoundManager.hpp"
+#include "../../include/managers/SoundManager.hpp"
 #include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.obj", p_online){
@@ -57,6 +57,9 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online) : Character(p_name,
     m_knockbackDown     = 0.25f;
     m_knockbackUlti     = 2.0f;
 
+    m_soundManager->loadBank(SoundID::S_PLUP);
+    m_soundManager->loadEvents(SoundID::S_PLUP);
+    
     if (m_NPC){
         toggleAI();
         m_AI = new AIPlup(this);
@@ -75,9 +78,9 @@ bool Plup::basicAttack(){
     if(t_currentTime >= m_basicTime){
         Character* t_currentPlayer;
 
-        for (int i = 0; i < m_playerCount; i++){
+        for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
-            if (i == m_playerIndex)
+            if(i == m_playerIndex)
                 continue;
 
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
@@ -119,6 +122,7 @@ bool Plup::specialAttackDown(){
         m_snowman = new Snowman(m_attackPosition, m_playerIndex, m_damageDown, m_knockbackDown);
         m_snowmanPlaced = true;
         m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
+        m_soundManager->playSound("p_special");
     }
     return false;
 }
@@ -138,8 +142,10 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
+    m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
+        m_soundManager->playSound("p_ultimate");
 
         Character* t_currentPlayer;
         for(int i = 0; i < m_playerCount; i++){
@@ -152,6 +158,7 @@ bool Plup::ultimateAttack(){
         }
         m_ultimateTime = m_inputManager->getMasterClock() + m_ultimateDuration;
         m_ultimateCharged = false;
+
     }
 
     return false;
@@ -169,6 +176,8 @@ void Plup::updatePlayer(){
 
     if(m_kalasnikov)
         updateKalasnikov();
+
+    randomSounds();
 }
 
 void Plup::updateSnowman(){
@@ -230,4 +239,13 @@ void Plup::updateKalasnikov(){
         }
     }else
         m_kalasnikov = false;
+}
+
+void Plup::randomSounds(){
+    if(!m_soundManager->isPlaying("p_random")){
+        float t_prob = ((float)rand() / (float)RAND_MAX);
+        //std::cout << "RANDOM: " << t_prob << std::endl;
+        m_soundManager->modifyParameter("p_random", t_prob, "Prob");
+        m_soundManager->playSound("p_random");
+    }
 }

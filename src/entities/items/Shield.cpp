@@ -34,7 +34,6 @@ Shield::Shield(float p_position[3])
 
 //Destructor
 Shield::~Shield(){
-    delete m_physicsManager;
     delete m_arena;
 }
 

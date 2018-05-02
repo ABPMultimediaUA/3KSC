@@ -23,7 +23,6 @@
 #ifndef CHARACTER
 #define CHARACTER
 
-class SoundManager;
 class AICharacter;
 
 #include <SFML/System.hpp>
@@ -98,7 +97,6 @@ public:
     int             getValidation();
 
 protected:
-    SoundManager*   m_soundManager;
     static int      m_playerCount;
     int             m_playerIndex;
     bool            m_NPC;
