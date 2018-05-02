@@ -26,11 +26,7 @@
 class EngineManager;
 class PhysicsManager;
 class InputManager;
-class Debug;
-
-//#include "../Model.hpp"
-//#include "../Texture.hpp"
-//#include "../Hitbox.hpp"
+//class Debug;
 
 class Entity {
 public:
@@ -54,13 +50,15 @@ public:
     void        updatePosition();
     static int  getEntityCount();
 
+    /*
     void        createDebug();
     void        updateDebug();
+    */
 
 protected:
-    static EngineManager*   m_engineManager;
-    static PhysicsManager*  m_physicsManager;
-    static InputManager*    m_inputManager;
+    EngineManager*   m_engineManager;
+    PhysicsManager*  m_physicsManager;
+    InputManager*    m_inputManager;
 
     static int              m_entityCount;
     int                     m_id; 
@@ -74,7 +72,7 @@ protected:
     
     bool                    m_debugMode;
     int                     m_totalFixtures;
-    Debug*                  m_entityDebug[4];
+    //Debug*                  m_entityDebug[4];
 };
 
 #endif

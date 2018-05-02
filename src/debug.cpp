@@ -23,7 +23,7 @@
 #include "include/debug.hpp"
 #include "include/managers/EngineManager.hpp"
 #include <iostream>
-
+/*
 Debug::Debug(b2Body* p_body, int p_num) : scene::ISceneNode(EngineManager::instance().getSceneManager()->getRootSceneNode(), EngineManager::instance().getSceneManager(), 500) {
     m_Material.Wireframe = true;
     m_Material.Lighting  = false;
@@ -109,3 +109,4 @@ void Debug::update(){
         m_Vertices[i] = video::S3DVertex(m_posVertex[i][0], m_posVertex[i][1],0, 0,0,0, m_color, 0, 0);
     }
 }
+*/

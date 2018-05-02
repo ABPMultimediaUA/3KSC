@@ -25,6 +25,9 @@
 // #include <stdio.h>
 #include <iostream>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "include/ChaoticEngine/manager/stb_image.h"
+
 int main(){    
     Game game;
 

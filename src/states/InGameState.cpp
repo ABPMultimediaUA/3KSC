@@ -48,7 +48,9 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_pathfinding       = &Pathfinding::instance();
     m_deltaTime         = 0;
 
+    std::cout << "CARGAMOS LA ARENA" << std::endl;
     createArena("assets/Fusfus_Stadium.cgm");
+    std::cout << "ARENA CARGADA!" << std::endl;
 
     //Online stuff
     m_onlineMode = p_onlineMode;
@@ -152,11 +154,12 @@ void InGameState::createArena(const char* p_fileCgm){
 
             const char* t_path = t_elements[1].c_str();
             //load Arena
+            std::cout << "NEW ARENA()" << std::endl;
             m_arena = new Arena(t_position, t_scale, t_path);
+            std::cout << "NEW ARENA() TERMINADO" << std::endl;
         }
          //Create camera
         else if(t_name == "c"){
-
             float t_position[3];
             t_position[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -171,7 +174,6 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         //music
         else if(t_name == "mu"){
-
             if(t_elements[1].compare("SoundID::S_FOSFOS_STADIUM") == 0)
                     m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
 
@@ -182,7 +184,6 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         //create waypoints
         else if(t_name == "w"){
-    
             float t_position[3];
             t_position[0] = strtof((t_elements[1]).c_str(), 0);
             t_position[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -192,7 +193,6 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         //connets the waypoints
         else if(t_name == "wp"){
-
             float t_id1 = strtof((t_elements[1]).c_str(), 0);
             float t_id2 = strtof((t_elements[2]).c_str(), 0);
 
@@ -221,7 +221,6 @@ void InGameState::createArena(const char* p_fileCgm){
             m_arena->setSpawnPositions(t_spawnPositions);
         }
         else if(t_name == "rp"){
-
             float t_respawnPosition[3];
             t_respawnPosition[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_respawnPosition[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -230,7 +229,6 @@ void InGameState::createArena(const char* p_fileCgm){
             m_arena->setRespawnPositions(t_respawnPosition);
         }
         else if(t_name == "si"){
-
             float t_itemRange[3];
             t_itemRange[0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_itemRange[1] = strtof((t_elements[2]).c_str(), 0) * m_scale;
@@ -239,7 +237,6 @@ void InGameState::createArena(const char* p_fileCgm){
             m_arena->setItemRange(t_itemRange);
         }
         else if(t_name == "sk"){
-
             const char* t_skyPath[6]; 
             t_skyPath[0] = t_elements[1].c_str(); 
             t_skyPath[1] = t_elements[2].c_str(); 

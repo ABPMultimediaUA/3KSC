@@ -38,6 +38,7 @@ Game::Game(){
     }
 
     m_inputManager = &InputManager::instance();
+    
 }
 
 //Destructor
@@ -65,7 +66,7 @@ void Game::nextState(){
 
 //Main loop of the game
 void Game::run(){
-    auto t_now = std::chrono::high_resolution_clock::now();
+    auto t_now      = std::chrono::high_resolution_clock::now();
     auto t_elapsed  = std::chrono::high_resolution_clock::now() - t_now;
 
     while(true){

@@ -21,12 +21,12 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-#include "../../../include/ChaoticEngine/include/fachada/CEWindow.hpp"
-#include "../../../include/ChaoticEngine/include/fachada/CEScene.hpp"
-#include "../../../include/ChaoticEngine/include/fachada/CESceneCamera.hpp"
-#include "../../../include/ChaoticEngine/include/fachada/CESceneLight.hpp"
-#include "../../../include/ChaoticEngine/include/fachada/CESceneMesh.hpp"
-#include "../../../include/ChaoticEngine/include/fachada/CEShader.hpp"
+#include "../ChaoticEngine/fachada/CEWindow.hpp"
+#include "../ChaoticEngine/fachada/CEScene.hpp"
+#include "../ChaoticEngine/fachada/CESceneCamera.hpp"
+#include "../ChaoticEngine/fachada/CESceneLight.hpp"
+#include "../ChaoticEngine/fachada/CESceneMesh.hpp"
+#include "../ChaoticEngine/fachada/CEShader.hpp"
 
 #include <vector>
 #include "../entities/Entity.hpp"
@@ -41,7 +41,7 @@ private:
 
     unsigned int    m_prevTime;
     unsigned int    m_nowTime;
-    unsigned float  m_frameDeltaTime;
+    float   m_frameDeltaTime;
 
     float   m_resetPosition[6];
     float   m_cameraPosition[6];
@@ -83,11 +83,11 @@ public:
 
     // sf::RenderWindow* getWindow();
     float getFrameDeltaTime();
-    irr::scene::ISceneManager* getSceneManager();
+    //irr::scene::ISceneManager* getSceneManager();
     CESceneMesh* getEntityNode(int p_id);
 
-    irr::video::IVideoDriver* getVideoDriver();
-    irr::IrrlichtDevice* getDevice();
+    //irr::video::IVideoDriver* getVideoDriver();
+    //irr::IrrlichtDevice* getDevice();
 
     bool isWindowActive();
 

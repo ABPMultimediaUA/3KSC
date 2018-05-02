@@ -24,7 +24,6 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-using namespace irr;
 
 //Returns the only instance of this class
 EngineManager& EngineManager::instance(){
@@ -44,7 +43,9 @@ EngineManager::~EngineManager(){}
 bool EngineManager::createWindow(bool p_fullscreen){
     CEWindow* m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
     CEScene*  m_scene  = new CEScene();
-    
+
+    std::cout << "&m_scene: " << m_scene << std::endl;
+
     return true;
 }
 
@@ -156,14 +157,18 @@ void EngineManager::deleteEntity(int p_id){
 
 //Loads a 3D model
 void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL){
+    std::cout << "LOAD 3D MODEL" << std::endl;
+    std::cout << "&m_scene: " << m_scene << std::endl;
+
     CESceneMesh* t_mesh = m_scene->createMesh(p_modelURL);
 
     if(t_mesh){
         t_mesh->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
-        t_node->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
+        t_mesh->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
 
         m_entityNodes.push_back(t_mesh);
     }
+    std::cout << "LOAD 3D MODEL -- TERMINADO" << std::endl;
 }
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
@@ -193,7 +198,7 @@ void EngineManager::moveEntity(Entity* p_entity){
 void EngineManager::setRotation(int p_id, float p_degrees){
     CESceneMesh* t_node  = m_entityNodes.at(p_id);
     
-    t_node->setRotation((0.0f, p_degrees, 0.0f));
+    t_node->setRotation(0.0f, p_degrees, 0.0f);
 }
 
 void EngineManager::scale(int p_id, float p_scale[3]){
@@ -204,13 +209,13 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    window->processInput();
-    window->clear(0.5f, 0.0f, 0.0f, 1.0f);
+    m_window->processInput();
+    m_window->clear(0.5f, 0.0f, 0.0f, 1.0f);
 
-    scene->draw();
+    m_scene->draw();
 
-    window->swapBuffers();
-    window->pollEvents();
+    m_window->swapBuffers();
+    m_window->pollEvents();
 }
 
 float EngineManager::getFrameDeltaTime(){
@@ -235,7 +240,7 @@ IrrlichtDevice* EngineManager::getDevice(){
 }
 */
 bool EngineManager::isWindowActive(){
-    return m_device->isWindowActive();
+    return m_window->isOpen();
 }
 
 void EngineManager::loadCharacter(){

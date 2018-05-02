@@ -5,7 +5,7 @@
             <value>taunt</value>
         </property>
         <property name="outputFormat">
-            <value>0</value>
+            <value>1</value>
         </property>
         <relationship name="folder">
             <destination>{f047c644-5f85-4234-b698-2fb59a3e0014}</destination>
@@ -56,11 +56,18 @@
     <object class="EventAutomatableProperties" id="{53a78cae-0dc4-4f9b-a563-02965b1745b5}"/>
     <object class="MarkerTrack" id="{e1917ee1-ca8b-4659-b0f2-831cbacec7b2}"/>
     <object class="GroupTrack" id="{077539b3-9f82-4ca6-9725-c466b5aea3b3}">
+        <relationship name="modules">
+            <destination>{6cd6cef1-16c0-4e89-9315-23447593424d}</destination>
+        </relationship>
         <relationship name="mixerGroup">
             <destination>{19944b24-cbe1-4d8f-b9d2-3f1bcd5a4c71}</destination>
         </relationship>
     </object>
-    <object class="Timeline" id="{b48680d7-89c4-4274-9ac8-ac0f426cdf97}"/>
+    <object class="Timeline" id="{b48680d7-89c4-4274-9ac8-ac0f426cdf97}">
+        <relationship name="modules">
+            <destination>{6cd6cef1-16c0-4e89-9315-23447593424d}</destination>
+        </relationship>
+    </object>
     <object class="EventMixerMaster" id="{6d941147-9a73-4d2a-814b-9d0bc18e1139}">
         <relationship name="effectChain">
             <destination>{e442c72c-e298-42de-bef9-2894dedcb4d5}</destination>
@@ -78,6 +85,15 @@
         </relationship>
     </object>
     <object class="MixerBusPanner" id="{6a9f0a72-9d1e-4c2e-a64f-6aa429490f81}"/>
+    <object class="MultiSound" id="{6cd6cef1-16c0-4e89-9315-23447593424d}">
+        <property name="length">
+            <value>2.2000000000000002</value>
+        </property>
+        <relationship name="sounds">
+            <destination>{3f890338-5668-40fd-a469-1c9e2bde4441}</destination>
+            <destination>{82d18be5-606b-450d-9d6b-615dabca6287}</destination>
+        </relationship>
+    </object>
     <object class="EventMixerGroup" id="{19944b24-cbe1-4d8f-b9d2-3f1bcd5a4c71}">
         <property name="name">
             <value>Audio 1</value>
@@ -99,6 +115,16 @@
     </object>
     <object class="MixerBusPanner" id="{ee5d4a2b-500e-4bc5-b487-7363a3c7daf4}"/>
     <object class="MixerBusFader" id="{ed71512d-6f67-4e12-9fed-c53bcd47a577}"/>
+    <object class="SingleSound" id="{3f890338-5668-40fd-a469-1c9e2bde4441}">
+        <relationship name="audioFile">
+            <destination>{f94a6f00-c8f1-4e65-a080-ed104b194104}</destination>
+        </relationship>
+    </object>
+    <object class="SingleSound" id="{82d18be5-606b-450d-9d6b-615dabca6287}">
+        <relationship name="audioFile">
+            <destination>{3cdc65e6-5d0f-4440-a518-435134dd52c8}</destination>
+        </relationship>
+    </object>
     <object class="MixerBusEffectChain" id="{b3ad41db-3986-4a2d-b72b-5e66197ffd06}">
         <relationship name="effects">
             <destination>{e88468b5-4eb8-40e6-9b43-e9b49b1478a8}</destination>

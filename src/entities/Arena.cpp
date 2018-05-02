@@ -41,7 +41,6 @@
 Arena* Arena::m_instance = 0;
 
 Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entity(p_position, p_scale, p_modelURL, 1){
-
     m_currentItems    = 0;
     //m_items         = new Item*[m_maxItemsOnScreen];
     m_instance        = this;

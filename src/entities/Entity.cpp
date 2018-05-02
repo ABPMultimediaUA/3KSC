@@ -24,19 +24,19 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
-#include "../include/debug.hpp"
+//#include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
 
-EngineManager*  Entity::m_engineManager     = &EngineManager::instance();
-PhysicsManager* Entity::m_physicsManager    = &PhysicsManager::instance();
-InputManager*   Entity::m_inputManager      = &InputManager::instance();
 
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
+    m_engineManager     = &EngineManager::instance();
+    m_physicsManager    = &PhysicsManager::instance();
+    m_inputManager      = &InputManager::instance();
     m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
 
@@ -75,8 +75,8 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     }
 
     m_debugMode = true;
-    if(m_debugMode)
-        createDebug();
+    //if(m_debugMode)
+    //    createDebug();
 }
 
 Entity::~Entity(){
@@ -92,8 +92,8 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(){
-    if(m_debugMode)
-        updateDebug();
+    //if(m_debugMode)
+    //    updateDebug();
 
     //Set to the entity the new position of the body
     m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
@@ -173,7 +173,7 @@ void Entity::setX(float p_position){
 void Entity::setY(float p_position){
     moveTo(getX(), p_position);
 }
-
+/*
 void Entity::createDebug(){
     m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
 
@@ -188,3 +188,4 @@ void Entity::updateDebug(){
         m_entityDebug[i]->update();
     }
 }
+*/
