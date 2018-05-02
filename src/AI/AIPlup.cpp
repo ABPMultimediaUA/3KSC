@@ -162,8 +162,6 @@ void AIPlup::update(){
     /*************************************************************/
     int t_action;
     t_action = m_nodes[0]->makeDecision(m_nodes[0])->m_action;
-    std::cout<<"action: "<<t_action<<std::endl;
-    std::cout<<"distance to enemy: "<<m_distanceToEnemy<<std::endl;
     if (t_action == 6){
         b2Vec2 t_destination;
         if(t_closestPlayer!=0){
@@ -177,10 +175,6 @@ void AIPlup::update(){
             float t_destination_float[2];
             t_destination_float[0] = t_destination.x;
             t_destination_float[1] = t_destination.y;
-            std::cout<<"target X: "<<t_destination_float[0]<<std::endl;
-            std::cout<<"target Y: "<<t_destination_float[1]<<std::endl;
-            std::cout<<"self X: "<<m_position.x<<std::endl;
-            std::cout<<"self Y: "<<m_position.y<<std::endl;
             t_currentPlayer->moveToPath(t_destination_float);
         }
     }
