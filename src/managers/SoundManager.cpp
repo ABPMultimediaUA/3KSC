@@ -156,10 +156,12 @@ void SoundManager::loadEvents(SoundID p_bank){
             createSoundEvent("event:/characters/sparky/special"   , "s_special"     );
             createSoundEvent("event:/characters/sparky/taunt"     , "s_taunt"       );
             createSoundEvent("event:/characters/sparky/ultimate"  , "s_ultimate"    );
+
             break;
 
         case SoundID::S_FOSFOS_STADIUM:
             createSoundEvent("event:/music/fosfosStadium"    , "fos_music"    , false);
+            createSoundEvent("event:/music/fosfosAmbient"    , "fos_ambient"         );
             break;
     }
 }

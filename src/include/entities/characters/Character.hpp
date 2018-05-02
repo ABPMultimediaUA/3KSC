@@ -84,6 +84,8 @@ public:
     virtual bool    specialAttackDown();
     virtual bool    specialAttackSide();
     virtual bool    ultimateAttack();
+    virtual bool    tauntSound();
+    virtual void    deathSound();
     bool            toggleAI();
 
     virtual int     getCurrentSnowmen();

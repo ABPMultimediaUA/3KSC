@@ -151,7 +151,8 @@ void Character::mapActions(){
     m_actions[8]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
     m_actions[9]    = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
     m_actions[10]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
-    m_actions[11]   = {Action::Count              , 0                             , false     , false};
+    m_actions[11]   = {Action::Taunt              , &Character::tauntSound        , true      , false};
+    m_actions[12]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
@@ -159,9 +160,7 @@ void Character::mapActions(){
 void Character::receiveAttack(int p_damage, bool p_block, float p_knockPower, int p_knockSide, bool p_checked){
     if(m_online && !p_checked){
         if(m_client->getPlayer() == m_playerIndex)
-        {
             m_client->attacked(p_damage, p_block, p_knockPower, p_knockSide);
-        }
         else return;  //ignorar ataques que no sean de tu jugador
     }
 
@@ -252,6 +251,7 @@ void Character::die(){
     m_stunned   = false;
     m_shielded = false;
 
+    deathSound();
     removeWings();
 
     if(m_lives >= 0)
@@ -532,14 +532,12 @@ bool Character::pick(){
 }
 
 bool Character::basicAttack(){}
-
 bool Character::specialAttackUp(){}
-
 bool Character::specialAttackDown(){}
-
 bool Character::specialAttackSide(){}
-
 bool Character::ultimateAttack(){}
+bool Character::tauntSound(){}
+void Character::deathSound(){}
 
 bool Character::toggleAI(){
     m_AIEnabled = !m_AIEnabled;

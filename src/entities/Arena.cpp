@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 
 #include "../include/entities/characters/Plup.hpp"
 #include "../include/entities/characters/Sparky.hpp"
@@ -166,6 +167,8 @@ void Arena::update(float p_delta){
             m_items.erase(m_items.begin()+i);
     }
 
+    if(!m_soundManager->isPlaying("fos_ambient"))
+        m_soundManager->playSound("fos_ambient");
     //if(m_portalState)
     //    m_portal->update(p_delta);
 

@@ -57,14 +57,8 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     if(m_NPC)
         m_AI = new AISparky(this);
 
-    /*m_soundManager->loadBank(SoundID::S_SPARKY);
-    m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "death"       );
-    m_soundManager->createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
-    m_soundManager->createSoundEvent("event:/characters/rawr/random"    , "random"      );
-    m_soundManager->createSoundEvent("event:/characters/rawr/special"   , "special"     );
-    m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
-    m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );*/
-    //m_soundManager->modifyParameter("random", 0.95, "Prob");
+    m_soundManager->loadBank(SoundID::S_SPARKY);
+    m_soundManager->loadEvents(SoundID::S_SPARKY);
 
 }
 
@@ -78,11 +72,6 @@ bool Sparky::jump(){
 bool Sparky::basicAttack(){
     if(!m_ultimateMode){
         Character* t_currentPlayer;
-        
-        /*float t_prob = ((float)rand() / (float)RAND_MAX);
-        //std::cout << "RANDOM: " << t_prob << std::endl;
-        m_soundManager->modifyParameter("random", t_prob, "Prob");
-        m_soundManager->playSound("random");*/
 
         for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
@@ -140,12 +129,11 @@ bool Sparky::specialAttackSide(){
 }
 
 bool Sparky::ultimateAttack(){
-    //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
-    //m_soundManager->playSound("ultimate");
     if(m_ultimateCharged){
         m_ultimateMode = true;
         m_ultimateAmmo = 10;
         m_ultimateCharged = false;
+        m_soundManager->playSound("s_ultimate");
     }
 
     return false;
@@ -160,6 +148,8 @@ void Sparky::updatePlayer(){
 
     if(m_ultimateMode)
         updateUltimate();
+
+    randomSounds();
 }
 
 void Sparky::updateJump(){
@@ -207,4 +197,22 @@ void Sparky::updateUltimate(){
         }
     }else
         m_ultimateMode    = false;
+}
+
+void Sparky::randomSounds(){
+    if(!m_soundManager->isPlaying("s_random")){
+        float t_prob = ((float)rand() / (float)RAND_MAX);
+        m_soundManager->modifyParameter("s_random", t_prob, "Prob");
+        m_soundManager->playSound("s_random");
+    }
+}
+
+bool Sparky::tauntSound(){
+    if(!m_soundManager->isPlaying("s_taunt"))
+        m_soundManager->playSound("s_taunt");
+    return false;
+}
+
+void Sparky::deathSound(){
+    m_soundManager->playSound("s_death");
 }
