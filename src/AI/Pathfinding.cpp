@@ -40,7 +40,7 @@ void Pathfinding::init(std::vector<Waypoint*> p_waypoints){
 
 // Returns position of the closest waypoint connected to the waypoint we last standed in
 b2Vec2 Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint){
-    PhysicsManager physicsManager = PhysicsManager::instance();
+    m_physicsManager = &PhysicsManager::instance();
     float t_closestDistance = 0.0f;
     Waypoint *t_closestWaypoint;
     bool t_direction;
@@ -58,7 +58,7 @@ b2Vec2 Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint)
             if(p_lastWaypoint->isConnected(m_waypoints[i])){
                 if(m_waypoints[i]->m_position[0] < p_p1.x){ // If waypoint is to the left
                     b2Vec2 t_p2 = b2Vec2(m_waypoints[i]->m_position[0], m_waypoints[i]->m_position[1]);
-                    float t_distanceToWaypoint = physicsManager.getDistanceBetween(p_p1, t_p2);
+                    float t_distanceToWaypoint = m_physicsManager->getDistanceBetween(p_p1, t_p2);
 
                     // Find closest waypoint
                     if(t_closestDistance == 0){ // No waypoint is chosen. Choose this one
@@ -78,7 +78,7 @@ b2Vec2 Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint)
             if(p_lastWaypoint->isConnected(m_waypoints[i])){
                 if(!(m_waypoints[i]->m_position[0] < p_p1.x)){ // If waypoint is to the right
                     b2Vec2 t_p2 = b2Vec2(m_waypoints[i]->m_position[0], m_waypoints[i]->m_position[1]);
-                    float t_distanceToWaypoint = physicsManager.getDistanceBetween(p_p1, t_p2);
+                    float t_distanceToWaypoint = m_physicsManager->getDistanceBetween(p_p1, t_p2);
 
                     // Find closest waypoint
                     if(t_closestDistance == 0){ // No waypoint is chosen. Choose this one
@@ -100,7 +100,7 @@ b2Vec2 Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint)
 
 // Returns position of the closest waypoint to a position (connected or disconnected) given a direction
 b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
-    PhysicsManager physicsManager = PhysicsManager::instance();
+    m_physicsManager = &PhysicsManager::instance();
     float t_closestDistance = 0.0f;
     Waypoint *t_closestWaypoint = 0;
     b2Vec2 t_return;
@@ -110,7 +110,7 @@ b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
             
             if(m_waypoints.at(i)->m_position[0] < p_position.x){ // If waypoint is to the left
                 b2Vec2 t_p2 = b2Vec2(m_waypoints.at(i)->m_position[0], m_waypoints.at(i)->m_position[1]);
-                float t_distanceToWaypoint = physicsManager.getDistanceBetween(p_position, t_p2);
+                float t_distanceToWaypoint = m_physicsManager->getDistanceBetween(p_position, t_p2);
 
                 // Find closest waypoint
                 if(t_closestDistance == 0.0f){ // No waypoint is chosen. Choose this one
@@ -129,7 +129,7 @@ b2Vec2 Pathfinding::getClosestWaypoint(b2Vec2 p_position, bool p_direction){
             
             if(m_waypoints.at(i)->m_position[0] >= p_position.x){ // If waypoint is to the right
                 b2Vec2 t_p2 = b2Vec2(m_waypoints.at(i)->m_position[0], m_waypoints.at(i)->m_position[1]);
-                float t_distanceToWaypoint = physicsManager.getDistanceBetween(p_position, t_p2);
+                float t_distanceToWaypoint = m_physicsManager->getDistanceBetween(p_position, t_p2);
 
                 // Find closest waypoint
                 if(t_closestDistance == 0.0f){ // No waypoint is chosen. Choose this one

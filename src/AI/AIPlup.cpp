@@ -43,11 +43,23 @@ void AIPlup::update(){
     m_specialUpRange = 0.0;
     m_specialSideRange = 0.0;
     m_distanceToPortal = 0.0f;
+
+    /*************************************************************/
+    /****************      Get Portal state       ****************/
+    /*************************************************************/
+    m_portalActive = m_arena->portalIsActive();
+
+    /*************************************************************/
+    /****************   Get distance to Portal    ****************/
+    /*************************************************************/
+    if(m_portalActive){
+        m_distanceToPortal = m_physicsManager->getDistanceBetween(m_position,b2Vec2(m_arena->getPortalPosition()[0],m_arena->getPortalPosition()[1]));
+    }
+
     /*************************************************************/
     /****************      Get Plup's life        ****************/
     /*************************************************************/
     m_HP = (float)m_arena->getPlayer(m_index)->getHP();
-
 
     /*************************************************************/
     /****************      Get Plup's mana        ****************/
@@ -136,7 +148,9 @@ void AIPlup::update(){
     /*************************************************************/
     /*******        Check if there is an item close       ********/
     /*************************************************************/
-    m_distanceToItem = 0.0; // TODO: Raycast to items only
+    b2Vec2 t_closestItemPosition;
+    t_closestItemPosition = m_arena->getClosestItemPosition(m_position);
+    m_distanceToItem = m_physicsManager->getDistanceBetween(t_closestItemPosition, m_position);
 
     /*************************************************************/
     /*******             Get closest character            ********/
@@ -148,12 +162,13 @@ void AIPlup::update(){
     /*************************************************************/
     int t_action;
     t_action = m_nodes[0]->makeDecision(m_nodes[0])->m_action;
-
+    std::cout<<"action: "<<t_action<<std::endl;
+    std::cout<<"distance to enemy: "<<m_distanceToEnemy<<std::endl;
     if (t_action == 6){
         b2Vec2 t_destination;
         if(t_closestPlayer!=0){
             if(m_position.x > t_closestPlayer->getX()){
-                //t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
             }
             else{
                 t_destination = m_pathfinding->getClosestWaypoint(m_position, 1); // Find waypoint to the right
@@ -162,7 +177,10 @@ void AIPlup::update(){
             float t_destination_float[2];
             t_destination_float[0] = t_destination.x;
             t_destination_float[1] = t_destination.y;
-
+            std::cout<<"target X: "<<t_destination_float[0]<<std::endl;
+            std::cout<<"target Y: "<<t_destination_float[1]<<std::endl;
+            std::cout<<"self X: "<<m_position.x<<std::endl;
+            std::cout<<"self Y: "<<m_position.y<<std::endl;
             t_currentPlayer->moveToPath(t_destination_float);
         }
     }
@@ -185,7 +203,6 @@ void AIPlup::update(){
     else{
        //std::cout<<"NOTHING?"<<std::endl;
     }
-    
 }
 
 // Builds the tree containing Plup's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
