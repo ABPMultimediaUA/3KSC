@@ -51,6 +51,7 @@ class AICharacter{
         b2Vec2          m_position;             // Vector containing player position
         float           m_distanceToEnemy;      // Determines if an enemy is close
         float           m_distanceToPortal;     // Determines if an enemy is close
+        float           m_portalActive;         // Determines if portal is active
         float           m_distanceToItem;       // Determines if an item is close
         float           m_specialUpRange;       // Determines if an enemy is in range of special ability up
         float           m_specialSideRange;     // Determines if an enemy is in range of special ability side

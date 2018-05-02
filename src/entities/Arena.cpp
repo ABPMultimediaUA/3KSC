@@ -241,3 +241,36 @@ void Arena::pleaseKill(int p_playerIndex){
     //delete m_players[p_playerIndex];
     //m_players[p_playerIndex] = 0;
 }
+
+bool Arena::portalIsActive(){
+    return m_portalState;
+}
+
+float* Arena::getPortalPosition(){
+    return m_portal->getPosition();
+}
+
+// Gets position of closest item to target position
+b2Vec2 Arena::getClosestItemPosition(b2Vec2 p_position){
+    m_physicsManager = &PhysicsManager::instance();
+    float t_closestDistance = 0.0f;
+    b2Vec2 t_return = b2Vec2(0.0f,0.0f);
+
+    for(int i=0; i<m_items.size(); i++){
+        if(m_items.at(i)!=nullptr){
+            b2Vec2 t_p2 = b2Vec2(m_items.at(i)->getPosition()[0], m_items.at(i)->getPosition()[1]);
+            float t_distanceToItem = m_physicsManager->getDistanceBetween(p_position, t_p2);
+
+            // Find closest waypoint
+            if(t_closestDistance == 0.0f){ // No waypoint is chosen. Choose this one
+                t_closestDistance = t_distanceToItem;
+                t_return = t_p2;
+            }
+            else if(t_distanceToItem < t_closestDistance){
+                t_closestDistance = t_distanceToItem;
+                t_return = t_p2;
+            }
+        }
+    }
+    return t_return;
+}

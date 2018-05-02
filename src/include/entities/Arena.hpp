@@ -30,6 +30,7 @@ class Item;
 #include "characters/Character.hpp"
 #include <SFML/System/Clock.hpp>
 #include "../include/entities/items/Portal.hpp"
+#include <Box2D/Common/b2Math.h>
 //#include "Skybox.hpp"
 //#include "Texture.hpp"
 //#include "WaterLily.hpp"
@@ -57,9 +58,12 @@ public:
     void            portalSpawner();
     void            spawnPortal();
     void            hidePortal();
+    bool            portalIsActive();
+    float*          getPortalPosition();
     bool            spawnRandomItem();
     void            onlineUpdate();
     void            spawnItemAt(int p_type, int x, int y);
+    b2Vec2          getClosestItemPosition(b2Vec2 p_position);
     void            setOnline(bool p_state);
     bool            getOnline();
     void            setRespawnPositions(float p_respawnPosition[3]){ for(int i = 0; i < 3; i++) m_respawnPosition[i] = p_respawnPosition[i]; }
@@ -78,7 +82,6 @@ private:
     //Texture*          m_background;
     float               m_time;
     //Item**            m_items;
-
     std::vector<Item*>  m_items;
     float               m_offsetSpawnTime;
     float               m_nextSpawnTime;
@@ -89,6 +92,7 @@ private:
     int                 m_lastItemType = 0;
     int                 m_spawningPortalTime;
     Portal*             m_portal;
+    PhysicsManager*     m_physicsManager;
 
     int                 m_playerCount;
     Character**         m_players;
