@@ -197,15 +197,13 @@ void InputManager::updateOnlineInput(int p_player){
     bool t_actions[12];
     bool t_flag = false;
     uint i;
-    for(i = 0; i < 12; i++)
-    {
+    for(i = 0; i < 12; i++){
         if(m_playerActions[p_player][i])
             t_actions[i] = true;
         else
             t_actions[i] = false;
 
-        if(t_actions[i] != m_lastActions[i])
-        {
+        if(t_actions[i] != m_lastActions[i]){
             m_lastActions[i] = t_actions[i];
             t_flag = true;
         }

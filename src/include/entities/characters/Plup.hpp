@@ -65,6 +65,7 @@ private:
     void        deleteSnowman();
     void        updateDash();
     void        updateKalasnikov();
+    void        randomSounds();
 };
 
 #endif

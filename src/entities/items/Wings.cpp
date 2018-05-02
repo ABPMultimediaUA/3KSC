@@ -34,7 +34,6 @@ Wings::Wings(float p_position[3])
 
 //Destructor
 Wings::~Wings(){
-    delete m_physicsManager;
     delete m_arena;
 }
 
