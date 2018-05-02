@@ -63,7 +63,7 @@ SoundManager::SoundManager(){
 
     loadBanks();
 
-    m_musicVolume   = 0.0f;
+    m_musicVolume   = 0.25f;
     m_effectVolume  = 0.5f;
     m_soundMute     = false;
     m_soundEffectPlaying = false;

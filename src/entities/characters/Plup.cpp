@@ -120,6 +120,7 @@ bool Plup::specialAttackDown(){
         m_snowman = new Snowman(m_attackPosition, m_playerIndex, m_damageDown, m_knockbackDown);
         m_snowmanPlaced = true;
         m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
+        m_soundManager->playSound("p_special");
     }
     return false;
 }
@@ -139,8 +140,10 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
+    m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
+        m_soundManager->playSound("p_ultimate");
 
         Character* t_currentPlayer;
         for(int i = 0; i < m_playerCount; i++){
@@ -153,6 +156,7 @@ bool Plup::ultimateAttack(){
         }
         m_ultimateTime = m_inputManager->getMasterClock() + m_ultimateDuration;
         m_ultimateCharged = false;
+
     }
 
     return false;
