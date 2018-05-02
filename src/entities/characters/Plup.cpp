@@ -244,8 +244,18 @@ void Plup::updateKalasnikov(){
 void Plup::randomSounds(){
     if(!m_soundManager->isPlaying("p_random")){
         float t_prob = ((float)rand() / (float)RAND_MAX);
-        //std::cout << "RANDOM: " << t_prob << std::endl;
         m_soundManager->modifyParameter("p_random", t_prob, "Prob");
         m_soundManager->playSound("p_random");
     }
+}
+
+bool Plup::tauntSound(){
+    if(!m_soundManager->isPlaying("p_taunt"))
+        m_soundManager->playSound("p_taunt");
+    
+    return false;
+}
+
+void Plup::deathSound(){
+    m_soundManager->playSound("p_death");
 }

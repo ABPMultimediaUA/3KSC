@@ -76,9 +76,10 @@ public:
 
 private: 
     static Arena*           m_instance;
+    PhysicsManager*     m_physicsManager;
     
     static const char*  m_modelURLs[3];
-	static const char*  m_skyboxURLs[3][6];
+    static const char*  m_skyboxURLs[3][6];
     //Texture*          m_background;
     float               m_time;
     //Item**            m_items;
@@ -92,7 +93,6 @@ private:
     int                 m_lastItemType = 0;
     int                 m_spawningPortalTime;
     Portal*             m_portal;
-    PhysicsManager*     m_physicsManager;
 
     int                 m_playerCount;
     Character**         m_players;

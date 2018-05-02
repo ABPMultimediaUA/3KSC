@@ -307,6 +307,7 @@ void InputManager::playerInputKeyboard(int p_player){
     m_playerActions[p_player][(int) Action::UltimateAttack]     = isKeyPressed(Key::Z);
 
     m_playerActions[p_player][(int) Action::ToggleAI]           = isKeyPressed(Key::O);
+    m_playerActions[p_player][(int) Action::Taunt]              = isKeyPressed(Key::T);
 }
 
 //Updates player actions (for NPC)
