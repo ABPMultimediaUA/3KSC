@@ -12,6 +12,8 @@ public:
 	virtual void beginDraw() = 0;
 	virtual void endDraw() = 0;
 
+	glm::mat4	getModelMatrix()	{ return m_modelMatrix;	};
+
 protected:
 	static std::stack<glm::mat4> m_matrixStack;
 

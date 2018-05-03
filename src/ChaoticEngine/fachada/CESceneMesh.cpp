@@ -5,7 +5,6 @@
 #include "../../include/ChaoticEngine/fachada/CESceneMesh.hpp"
 
 CESceneMesh::CESceneMesh(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram){
-	std::cout << "CESceneMesh -> " << p_path << std::endl;
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();
 	m_translate = new CETransform(); 

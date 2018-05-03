@@ -18,9 +18,6 @@ CEScene::CEScene(){
 	m_resourceManager = new CEResourceManager();
 
 	m_shaderProgram = new CEShaderProgram("src/ChaoticEngine/shader/CEvertex.vert", "src/ChaoticEngine/shader/CEfragment.frag");
-	m_shaderProgram->getShaderProgram();
-	std::cout << m_shaderProgram << std::endl;
-	
 }
 
 CEScene::~CEScene(){
@@ -57,12 +54,10 @@ CESceneLight* CEScene::createLight(){
 }
 
 CESceneMesh* CEScene::createMesh(const char* p_path){
-	std::cout << "createMesh -> " << p_path << std::endl;
-	std::cout << m_shaderProgram << std::endl;
-	m_shaderProgram->getShaderProgram();
+	std::cout << "Cargamos malla: " << p_path << std::endl;
 	CESceneMesh* CEmesh = new CESceneMesh(m_root, p_path, m_shaderProgram->getShaderProgram());
 
-	std::cout << "createMesh terminado" << std::endl;
+	std::cout << "Malla cargada!"<< std::endl;
 	return CEmesh;	
 }
 

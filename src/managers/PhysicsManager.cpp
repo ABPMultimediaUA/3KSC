@@ -38,6 +38,7 @@ PhysicsManager::PhysicsManager(){
     m_engineManager = &EngineManager::instance();
 
     b2Vec2 gravity(0.0f, -4.9f);
+    //b2Vec2 gravity(0.0f, 0.0f);
 
     m_world = new b2World(gravity);
 

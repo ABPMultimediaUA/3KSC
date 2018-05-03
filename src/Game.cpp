@@ -31,14 +31,13 @@
 //Constructor
 Game::Game(){
     m_engineManager = &EngineManager::instance();
+    m_inputManager  = &InputManager::instance();
+    
     const int FPS = 40;
     m_nanoFrames = 1000000000/FPS;
-    if(m_engineManager->createWindow(false)){
-        m_state = new InGameState(this, false);
-    }
-
-    m_inputManager = &InputManager::instance();
     
+    m_engineManager->createWindow(false);
+    m_state = new InGameState(this, false);
 }
 
 //Destructor

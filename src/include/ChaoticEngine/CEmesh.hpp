@@ -17,8 +17,6 @@ public:
 	void beginDraw() override;
 	void endDraw()   override;
 
-	glm::mat4	getModelMatrix()	{ return m_modelMatrix;	};
-
 private:
 	CEResourceMesh* m_mesh;
 	GLuint m_shaderProgram;

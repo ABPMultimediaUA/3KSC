@@ -12,7 +12,7 @@ CESceneCamera::CESceneCamera(CESceneNode* p_parent, bool p_isActive){
 	m_camera 	= new CECamera();
 	
 	m_rotate->rotate(0, 0, 0);
-	m_translate->translate(0, 0, 2.0f);
+	m_translate->translate(0, 0, 20.0f);
 
 	CESceneNode* t_nodeRotate 	 = new CESceneNode(p_parent);
 	CESceneNode* t_nodeTranslate = new CESceneNode(t_nodeRotate);
@@ -40,14 +40,17 @@ void CESceneCamera::activateCamera(){
 
 void CESceneCamera::setPerspective(float p_angle, float p_aspect, float p_near, float p_far){
 	m_camera->setPerspective(p_angle, p_aspect, p_near, p_far);
+	m_camera->setProjectionMatrix();
 }
 
 void CESceneCamera::setParallel(float p_left, float p_right, float p_bottom, float p_top, float p_near, float p_far){
 	m_camera->setParallel(p_left, p_right, p_bottom, p_top, p_near, p_far);
+	m_camera->setProjectionMatrix();
 }
 
 void CESceneCamera::lookAt(float p_x, float p_y, float p_z){
 	m_camera->setTarjet(p_x, p_y, p_z);
+	m_camera->setProjectionMatrix();
 }
 
 glm::mat4 CESceneCamera::getViewMatrix(){
@@ -61,18 +64,29 @@ glm::mat4 CESceneCamera::getViewMatrix(){
 
 void CESceneCamera::setRotation(float p_x, float p_y, float p_z){
 	m_rotate->rotate(p_x, p_y, p_z);
+	m_camera->setViewMatrix(this->getViewMatrix());
 }
 
 void CESceneCamera::setPosition(float p_x, float p_y, float p_z){
 	m_translate->translate(p_x, p_y, p_z);
+	m_camera->setViewMatrix(this->getViewMatrix());
 }
 
 void CESceneCamera::setAbsoluteRotation(float p_x, float p_y, float p_z){
 	m_rotate->loadIdentity();
 	m_rotate->rotate(p_x, p_y, p_z);
+	m_camera->setViewMatrix(this->getViewMatrix());
 }
 
 void CESceneCamera::setAbsolutePosition(float p_x, float p_y, float p_z){
 	m_translate->loadIdentity();
-	m_translate->translate(p_x, p_y, p_z);	
+	m_translate->translate(p_x, p_y, p_z);
+	m_camera->setViewMatrix(this->getViewMatrix());
+}
+
+void CESceneCamera::getPosition(){
+	glm::mat4 t_matrix = m_translate->getModelMatrix();
+	t_matrix = glm::inverse(t_matrix);
+	glm::vec3 t_pos = (glm::vec3)t_matrix[3];
+	std::cout << "(" << t_pos.x << ", " << t_pos.y << ", " << t_pos.z << ")" << std::endl;
 }

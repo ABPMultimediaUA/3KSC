@@ -370,6 +370,8 @@ void Character::update(){
         die();
 
     checkAlive();
+
+    std::cout << getX() << ", " << getY() << std::endl;
 }
 
 //Returns the type of the player

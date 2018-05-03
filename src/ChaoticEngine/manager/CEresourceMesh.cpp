@@ -23,7 +23,6 @@ bool CEResourceMesh::loadFile(const char* p_name){
 
 	std::string path = p_name;
 	m_directory = path.substr(0, path.find_last_of('/'));
-    std::cout<<"m_directory: "<< m_directory<<std::endl;
 
 	processNode(scene->mRootNode, scene);
 	return true;

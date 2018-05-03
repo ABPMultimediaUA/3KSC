@@ -48,14 +48,12 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_pathfinding       = &Pathfinding::instance();
     m_deltaTime         = 0;
 
-    std::cout << "CARGAMOS LA ARENA" << std::endl;
     createArena("assets/Fusfus_Stadium.cgm");
-    std::cout << "ARENA CARGADA!" << std::endl;
 
     //Online stuff
     m_onlineMode = p_onlineMode;
 
-    if (m_onlineMode){
+    if(m_onlineMode){
         m_client = &Client::instance();
         m_client->start();
         m_inputManager->onlineMode();
@@ -65,8 +63,6 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
        // m_arena->spawnItems();
         m_arena->spawnPlayers();
     }
-
-    m_engineManager->timeStamp();
 }
 
 //Destructor
@@ -154,9 +150,7 @@ void InGameState::createArena(const char* p_fileCgm){
 
             const char* t_path = t_elements[1].c_str();
             //load Arena
-            std::cout << "NEW ARENA()" << std::endl;
             m_arena = new Arena(t_position, t_scale, t_path);
-            std::cout << "NEW ARENA() TERMINADO" << std::endl;
         }
          //Create camera
         else if(t_name == "c"){
@@ -171,11 +165,15 @@ void InGameState::createArena(const char* p_fileCgm){
             t_target[2] = strtof((t_elements[6]).c_str(), 0) * m_scale;
 
             m_engineManager->createCamera(t_position, t_target);
+            t_position[0] = 0;
+            t_position[1] = 0;
+            t_position[2] = 0;
+            m_engineManager->createLight(t_position);
         }
         //music
         else if(t_name == "mu"){
             if(t_elements[1].compare("SoundID::S_FOSFOS_STADIUM") == 0)
-                    m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
+                m_soundManager->loadBank(SoundID::S_FOSFOS_STADIUM);
 
             const char* t_path = t_elements[2].c_str();
             const char* t_name = t_elements[3].c_str();
@@ -200,7 +198,6 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         //spawn positions from players
         else if(t_name == "sp"){
-       
             float t_spawnPositions[4][3];
             t_spawnPositions[0][0] = strtof((t_elements[1]).c_str(), 0) * m_scale;
             t_spawnPositions[0][1] = strtof((t_elements[2]).c_str(), 0) * m_scale;

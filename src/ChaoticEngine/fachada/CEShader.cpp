@@ -19,10 +19,8 @@ CEShaderProgram::~CEShaderProgram(){}
 
 void CEShaderProgram::loadShader(){
 	m_shaderProgram = m_shader->LoadShader(m_pathVertex, m_pathFragment);
-	std::cout << "m_shaderProgram: " << m_shaderProgram << std::endl;
 }
 
 GLuint CEShaderProgram::getShaderProgram(){
-	std::cout << "getShaderProgram() = " << m_shaderProgram << std::endl;
 	return m_shaderProgram;
 }

@@ -37,6 +37,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_engineManager     = &EngineManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_inputManager      = &InputManager::instance();
+
     m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
 
@@ -44,6 +45,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
         m_position[i] = p_position[i];
         m_lastPosition[i] = p_position[i];
     }
+    
     m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
     moveTo(p_position);
 

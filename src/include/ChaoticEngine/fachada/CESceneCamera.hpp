@@ -28,6 +28,9 @@ public:
 	void		setAbsoluteRotation(float p_x, float p_y, float p_z);
 	void		setAbsolutePosition(float p_x, float p_y, float p_z);
 	
+	void 		getPosition();
+
+	
 private:
 	CECamera*		m_camera;
 	CETransform*	m_rotate;

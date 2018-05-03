@@ -40,13 +40,18 @@ EngineManager::EngineManager(){
 EngineManager::~EngineManager(){}
 
 //Creates the game window
-bool EngineManager::createWindow(bool p_fullscreen){
-    CEWindow* m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
-    CEScene*  m_scene  = new CEScene();
+void EngineManager::createWindow(bool p_fullscreen){
+    m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
+    m_scene  = new CEScene();
+}
 
-    std::cout << "&m_scene: " << m_scene << std::endl;
+bool EngineManager::isWindowActive(){
+    return m_window->isOpen();
+}
 
-    return true;
+//Returns whether the device is running or not
+bool EngineManager::running(){
+    return m_window->isOpen();
 }
 
 //Creates a camera
@@ -128,21 +133,17 @@ void EngineManager::updateCamera(){
     }*/
 }
 
-//Returns whether the device is running or not
-bool EngineManager::running(){
-    return m_window->isOpen();
+void EngineManager::createLight(float p_lightPosition[3]){
+    CESceneLight* t_light = m_scene->createLight();
+    if(t_light){
+        t_light->setAbsolutePosition(p_lightPosition[0],p_lightPosition[1],p_lightPosition[2]);
+    }
 }
 
 //Drops the device
 void EngineManager::stop(){
     m_scene->release();
     m_window->close();
-}
-
-//Sets m_prevTime for the first time
-void EngineManager::timeStamp(){
-    std::cout << "NO TENEMOS TIMESTAMP" << std::endl;
-    //m_prevTime = getDevice()->getTimer()->getTime();
 }
 
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
@@ -157,23 +158,20 @@ void EngineManager::deleteEntity(int p_id){
 
 //Loads a 3D model
 void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL){
-    std::cout << "LOAD 3D MODEL" << std::endl;
-    std::cout << "&m_scene: " << m_scene << std::endl;
-
     CESceneMesh* t_mesh = m_scene->createMesh(p_modelURL);
 
     if(t_mesh){
         t_mesh->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
         t_mesh->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
+        std::cout << "Posit: " << p_position[0] << ", " << p_position[1] << ", " << p_position[2] << std::endl;
+        std::cout << "Scale: " << p_scale[0] << ", " << p_scale[1] << ", " << p_scale[2] << std::endl;
 
         m_entityNodes.push_back(t_mesh);
     }
-    std::cout << "LOAD 3D MODEL -- TERMINADO" << std::endl;
 }
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
     std::cout << "AUN NO TENEMOS SKYBOOOOX! (COMING SOON!)" << std::endl;
-    
     /*m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
     scene::ISceneNode* t_skybox = m_scene->addSkyBoxSceneNode(
@@ -221,53 +219,13 @@ void EngineManager::drawScene(){
 float EngineManager::getFrameDeltaTime(){
     return (float)m_frameDeltaTime;
 }
-/*
-irr::scene::ISceneManager* EngineManager::getSceneManager(){
-    return m_scene;
-}
-*/
+
 CESceneMesh* EngineManager::getEntityNode(int p_id){
     return m_entityNodes.at(p_id);
 }
-/*
-irr::video::IVideoDriver* EngineManager::getVideoDriver(){
-    return m_vDriver;
-}
-*/
-/*
-IrrlichtDevice* EngineManager::getDevice(){
-    return m_device;
-}
-*/
-bool EngineManager::isWindowActive(){
-    return m_window->isOpen();
-}
 
-void EngineManager::loadCharacter(){
-}
-
-void EngineManager::loadObject(){
-
-}
-
-void EngineManager::putCharacter(){
-
-}
-
-void EngineManager::putObject(){
-
-}
-
-void EngineManager::drawArena(){
-
-}
-
-void EngineManager::drawCharacter(){
-
-}
-
-void EngineManager::drawObject(){
-
+void EngineManager::getEntityPosition(int p_id){
+    m_entityNodes.at(p_id)->getPosition();
 }
 
 void EngineManager::parseOBJ(const char* p_filename){
@@ -344,21 +302,4 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
         "PosMax: " << p_maxX << "," << p_maxY << "," << p_maxZ << "\n" <<
         "---------------------------------\n";
     */
-}
-
-
-int EngineManager::getTotalVertex(){
-    return m_totalVertex;
-}
-
-std::vector<float> EngineManager::getTotalVertexX(){
-    return m_VertexX;
-}
-
-std::vector<float> EngineManager::getTotalVertexY(){
-    return m_VertexY;
-}
-
-std::vector<float> EngineManager::getTotalVertexZ(){
-    return m_VertexZ;
 }
