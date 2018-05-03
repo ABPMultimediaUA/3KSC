@@ -123,12 +123,12 @@ void SoundManager::loadEvents(SoundID p_bank){
             break;
         
         case SoundID::S_MIYAGI:
-            createSoundEvent("event:/characters/miyagi/death"     , "m_death"       );
-            createSoundEvent("event:/characters/miyagi/kill"      , "m_kill"        );
-            createSoundEvent("event:/characters/miyagi/random"    , "m_random"      );
-            createSoundEvent("event:/characters/miyagi/special"   , "m_special"     );
-            createSoundEvent("event:/characters/miyagi/taunt"     , "m_taunt"       );
-            createSoundEvent("event:/characters/miyagi/ultimate"  , "m_ultimate"    );
+            createSoundEvent("event:/characters/miyagi/death"   , "m_death"       );
+            createSoundEvent("event:/characters/miyagi/kill"    , "m_kill"        );
+            createSoundEvent("event:/characters/miyagi/random"  , "m_random"      );
+            createSoundEvent("event:/characters/miyagi/special" , "m_special"     );
+            createSoundEvent("event:/characters/miyagi/taunt"   , "m_taunt"       );
+            createSoundEvent("event:/characters/miyagi/ultimate", "m_ultimate"    );
             break;
         
         case SoundID::S_PLUP:
@@ -138,6 +138,7 @@ void SoundManager::loadEvents(SoundID p_bank){
             createSoundEvent("event:/characters/plup/special"   , "p_special"     );
             createSoundEvent("event:/characters/plup/taunt"     , "p_taunt"       );
             createSoundEvent("event:/characters/plup/ultimate"  , "p_ultimate"    );
+            createSoundEvent("event:/characters/plup/atak"      , "p_atak"        );
             break;
         
         case SoundID::S_RAWR:
@@ -150,12 +151,13 @@ void SoundManager::loadEvents(SoundID p_bank){
             break;
         
         case SoundID::S_SPARKY:
-            createSoundEvent("event:/characters/sparky/death"     , "s_death"       );
-            createSoundEvent("event:/characters/sparky/kill"      , "s_kill"        );
-            createSoundEvent("event:/characters/sparky/random"    , "s_random"      );
-            createSoundEvent("event:/characters/sparky/special"   , "s_special"     );
-            createSoundEvent("event:/characters/sparky/taunt"     , "s_taunt"       );
-            createSoundEvent("event:/characters/sparky/ultimate"  , "s_ultimate"    );
+            createSoundEvent("event:/characters/sparky/death"   , "s_death"       );
+            createSoundEvent("event:/characters/sparky/kill"    , "s_kill"        );
+            createSoundEvent("event:/characters/sparky/random"  , "s_random"      );
+            createSoundEvent("event:/characters/sparky/special" , "s_special"     );
+            createSoundEvent("event:/characters/sparky/taunt"   , "s_taunt"       );
+            createSoundEvent("event:/characters/sparky/ultimate", "s_ultimate"    );
+            createSoundEvent("event:/characters/sparky/atak"    , "s_atak"        );
 
             break;
 
@@ -200,6 +202,22 @@ void SoundManager::playSound(const char* name, bool p_isEffectSound){
 
     //m_musicEvents.at(name)->start();
 }
+/*
+bool SoundManager::isPlaying(SoundID p_bank){
+    bool isPlaying = true;
+
+    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+        if(strcmp(m_iterator->first, p_name) == 0){
+            FMOD_STUDIO_PLAYBACK_STATE t_playbackState;
+            m_iterator->second->getEventInstance()->getPlaybackState(&t_playbackState);
+            if(t_playbackState == FMOD_STUDIO_PLAYBACK_STOPPED)
+                return false;
+            break;
+        }
+    }
+
+    return isPlaying;
+}*/
 
 bool SoundManager::isPlaying(const char* p_name){
     bool isPlaying = true;

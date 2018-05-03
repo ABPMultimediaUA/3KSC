@@ -105,6 +105,11 @@ bool Plup::basicAttack(){
 //Range attack
 bool Plup::specialAttackUp(){
     if(useMP(15)){
+        if(!m_soundManager->isPlaying("p_atak")){
+            m_soundManager->modifyParameter("p_atak", 0.5, "Atak");
+            m_soundManager->playSound("p_atak");
+        }
+
         m_kalasnikov = true;
         m_kalasnikovAmmo = 5;
     }
@@ -122,7 +127,10 @@ bool Plup::specialAttackDown(){
         m_snowman = new Snowman(m_attackPosition, m_playerIndex, m_damageDown, m_knockbackDown);
         m_snowmanPlaced = true;
         m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
-        m_soundManager->playSound("p_special");
+        if(!m_soundManager->isPlaying("p_atak")){
+            m_soundManager->modifyParameter("p_atak", 0.7, "Atak");
+            m_soundManager->playSound("p_atak");
+        }
     }
     return false;
 }
@@ -131,6 +139,10 @@ bool Plup::specialAttackDown(){
 bool Plup::specialAttackSide(){
     if(m_onGround && !m_dashing && useMP(20)){
         //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
+        if(!m_soundManager->isPlaying("p_atak")){
+            m_soundManager->modifyParameter("p_atak", 0.3, "Atak");
+            m_soundManager->playSound("p_atak");
+        }
         m_dashTime = m_inputManager->getMasterClock() + m_dashDuration;
         m_dashing = true;
 
