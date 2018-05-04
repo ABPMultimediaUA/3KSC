@@ -95,6 +95,8 @@ bool Sparky::basicAttack(){
 
 bool Sparky::specialAttackUp(){
     if(useMP(10)){
+        m_soundManager->modifyParameter("s_atak", 0.5, "Atak");
+        m_soundManager->playSound("s_atak");
         m_physicsManager->sparkyJump(getId());
         m_jumpingTime = m_inputManager->getMasterClock() + m_jumpingDuration;
         m_sparkyJumping = true;
@@ -104,8 +106,11 @@ bool Sparky::specialAttackUp(){
 }
 
 bool Sparky::specialAttackDown(){
-    if(useMP(20) && !m_ultimateMode)   
+    if(useMP(20) && !m_ultimateMode){
+        m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
+        m_soundManager->playSound("s_atak");
         m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
+    }
 
     return false;
 }
@@ -123,16 +128,21 @@ bool Sparky::specialAttackSide(){
         //Create attack and increase projectile count
         m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 0);
         m_punchLaunched = true;
+
+        m_soundManager->modifyParameter("s_atak", 0.3, "Atak");
+        m_soundManager->playSound("s_atak");
     }
 
     return false;
 }
 
 bool Sparky::ultimateAttack(){
+    m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
         m_ultimateAmmo = 10;
         m_ultimateCharged = false;
+        m_soundManager->modifyParameter("s_ultimate", 0, "Prob");
         m_soundManager->playSound("s_ultimate");
     }
 
@@ -195,8 +205,10 @@ void Sparky::updateUltimate(){
             m_ultimateBullet     = nullptr;
             m_ultiBulletLaunched = false;
         }
-    }else
+    }else{
+        m_soundManager->modifyParameter("s_ultimate", 1.0, "Prob");
         m_ultimateMode    = false;
+    }
 }
 
 void Sparky::randomSounds(){
@@ -208,8 +220,8 @@ void Sparky::randomSounds(){
 }
 
 bool Sparky::tauntSound(){
-    if(!m_soundManager->isPlaying("s_taunt"))
-        m_soundManager->playSound("s_taunt");
+    m_soundManager->playSound("s_taunt");
+    
     return false;
 }
 

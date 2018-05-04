@@ -169,7 +169,7 @@ void InGameState::createArena(const char* p_fileCgm){
             const char* t_path = t_elements[2].c_str();
             const char* t_name = t_elements[3].c_str();
             m_soundManager->loadEvents(SoundID::S_FOSFOS_STADIUM);
-            m_soundManager->playSound(t_name, false);
+            m_soundManager->playMusic(t_name);
         }
         //create waypoints
         else if(t_name == "w"){
