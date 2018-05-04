@@ -70,7 +70,7 @@ public:
     void    loadEvents(SoundID p_bank);
 
     void    modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound = true);
-    bool    isPlaying(const char* p_name);
+    bool    isPlaying(const char* p_name, bool p_checkUltimate = true);
     void    stopAll();
 
     void    setMusicVolume(float p_volume);

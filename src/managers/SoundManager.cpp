@@ -204,19 +204,34 @@ void SoundManager::playMusic(const char* name){
     }
 }
 
-bool SoundManager::isPlaying(const char* p_name){
-    bool isPlaying = true;
-    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
-        if(strcmp(m_iterator->first, p_name) == 0){
-            FMOD_STUDIO_PLAYBACK_STATE t_playbackState;
-            m_iterator->second->getEventInstance()->getPlaybackState(&t_playbackState);
-            if(t_playbackState == FMOD_STUDIO_PLAYBACK_STOPPED)
-                isPlaying = false;
-            break;
+bool SoundManager::isPlaying(const char* p_name, bool p_checkUltimate){
+    bool t_isPlaying = true;
+    bool t_ultimate = false;
+    if(p_checkUltimate){
+        switch(p_name[0]){
+            case 'p':
+                t_ultimate = this->isPlaying("p_ultimate", false);
+                break;
+
+            case 's':
+                t_ultimate = this->isPlaying("s_ultimate", false);
+                break;
         }
     }
 
-    return isPlaying;
+    if(!t_ultimate){
+        for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+            if(strcmp(m_iterator->first, p_name) == 0){
+                FMOD_STUDIO_PLAYBACK_STATE t_playbackState;
+                m_iterator->second->getEventInstance()->getPlaybackState(&t_playbackState);
+                if(t_playbackState == FMOD_STUDIO_PLAYBACK_STOPPED)
+                    t_isPlaying = false;
+                break;
+            }
+        }
+    }
+
+    return t_isPlaying;
 }
 
 void SoundManager::pauseAll(){
