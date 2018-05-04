@@ -181,53 +181,37 @@ void SoundManager::createSoundEvent(const char* eventPath, const char* name, boo
         m_musicEvents.insert(std::pair<const char*, SoundEvent*>(name, t_soundEvent));
 }
 
-void SoundManager::playSound(const char* name, bool p_isEffectSound){
-    if(p_isEffectSound){
-        for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
-            if(strcmp(m_iterator->first, name) == 0){
-                m_iterator->second->setVolume(m_effectVolume);
-                m_iterator->second->start();
-                break;
-            }
-        }
-    }else{
-        for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
-            if(strcmp(m_iterator->first, name) == 0){
-                m_iterator->second->setVolume(m_musicVolume);
-                m_iterator->second->start();
-                break;
-            }
-        }
-    }
-
-    //m_musicEvents.at(name)->start();
-}
-/*
-bool SoundManager::isPlaying(SoundID p_bank){
-    bool isPlaying = true;
+void SoundManager::playSound(const char* name){
+    if(strcmp(name+2, "ultimate") == 0)
+        stopAll();
 
     for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
-        if(strcmp(m_iterator->first, p_name) == 0){
-            FMOD_STUDIO_PLAYBACK_STATE t_playbackState;
-            m_iterator->second->getEventInstance()->getPlaybackState(&t_playbackState);
-            if(t_playbackState == FMOD_STUDIO_PLAYBACK_STOPPED)
-                return false;
+        if(strcmp(m_iterator->first, name) == 0){
+            m_iterator->second->setVolume(m_effectVolume);
+            m_iterator->second->start();
             break;
         }
     }
+}
 
-    return isPlaying;
-}*/
+void SoundManager::playMusic(const char* name){
+    for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
+        if(strcmp(m_iterator->first, name) == 0){
+            m_iterator->second->setVolume(m_musicVolume);
+            m_iterator->second->start();
+            break;
+        }
+    }
+}
 
 bool SoundManager::isPlaying(const char* p_name){
     bool isPlaying = true;
-
     for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
         if(strcmp(m_iterator->first, p_name) == 0){
             FMOD_STUDIO_PLAYBACK_STATE t_playbackState;
             m_iterator->second->getEventInstance()->getPlaybackState(&t_playbackState);
             if(t_playbackState == FMOD_STUDIO_PLAYBACK_STOPPED)
-                return false;
+                isPlaying = false;
             break;
         }
     }
@@ -259,6 +243,13 @@ void SoundManager::unPauseAll(){
         m_mutedSounds.at(i)->unPause();
     }
     m_mutedSounds.clear();
+}
+
+void SoundManager::stopAll(){
+    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+        if(strcmp(m_iterator->first, "fos_ambient") != 0)
+            m_iterator->second->stop();
+    }
 }
 
 void SoundManager::modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound){
@@ -351,6 +342,10 @@ SoundEvent::SoundEvent(FMOD::Studio::EventDescription* p_eventDescription){
 
 void SoundEvent::start(){
     ERRCHECK(m_soundInstance->start());
+}
+
+void SoundEvent::stop(){
+    ERRCHECK(m_soundInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE));
 }
 
 void SoundEvent::pause(){

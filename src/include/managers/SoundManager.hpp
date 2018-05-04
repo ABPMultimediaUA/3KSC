@@ -58,7 +58,8 @@ public:
     ~SoundManager();
 
     void    createSoundEvent(const char* eventPath, const char* name, bool p_isEffectSound = true);
-    void    playSound(const char* name, bool p_isEffectSound = true);
+    void    playSound(const char* name);
+    void    playMusic(const char* name);
     void    pauseAll();
     void    unPauseAll();
 
@@ -70,6 +71,7 @@ public:
 
     void    modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound = true);
     bool    isPlaying(const char* p_name);
+    void    stopAll();
 
     void    setMusicVolume(float p_volume);
     void    increaseMusicVolume();

@@ -75,14 +75,12 @@ public:
 
 
 private: 
-    static Arena*           m_instance;
+    static Arena*       m_instance;
     PhysicsManager*     m_physicsManager;
     
     static const char*  m_modelURLs[3];
     static const char*  m_skyboxURLs[3][6];
-    //Texture*          m_background;
     float               m_time;
-    //Item**            m_items;
     std::vector<Item*>  m_items;
     float               m_offsetSpawnTime;
     float               m_nextSpawnTime;
@@ -107,10 +105,7 @@ private:
     bool                m_portalState;
     sf::Clock*          m_portalClock;
 
-    //WaterLily*   m_waterLilys;
-    //Branch*      m_branches;
-    //Platform*    m_platforms;
-    //GravityZone* m_gravityZones;
+    float               m_musicIntensity[4];
 };
 
 #endif

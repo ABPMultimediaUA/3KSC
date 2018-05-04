@@ -54,6 +54,11 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_spawningPortalTime    = 10;
     m_portalClock           = new sf::Clock();
     m_portalState           = false;
+
+    m_musicIntensity[0] = 0.8;
+    m_musicIntensity[1] = 0.6;
+    m_musicIntensity[2] = 0.4;
+    m_musicIntensity[3] = 0.0;
 }
 
 Arena::~Arena(){
@@ -92,6 +97,8 @@ void Arena::spawnPlayers(){
 
     //float positionPortal[3] = {0, 0.5, 0};
     //m_portal = new Portal(positionPortal);
+    std::cout << "PLAYER COUNT " << m_playerCount << std::endl;
+    m_soundManager->modifyParameter("fos_music", m_musicIntensity[m_playerCount], "Intensity", false);
 }
 
 void Arena::addPlayer(bool p_bool){
