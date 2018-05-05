@@ -44,6 +44,7 @@ void CEsubMesh::subDraw(GLuint p_shaderProgram){
 
 	// Draw mesh
 	glBindVertexArray(m_VAO);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 

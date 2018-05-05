@@ -163,8 +163,8 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
     if(t_mesh){
         t_mesh->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
         t_mesh->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
-        std::cout << "Posit: " << p_position[0] << ", " << p_position[1] << ", " << p_position[2] << std::endl;
-        std::cout << "Scale: " << p_scale[0] << ", " << p_scale[1] << ", " << p_scale[2] << std::endl;
+        //std::cout << "Posit: " << p_position[0] << ", " << p_position[1] << ", " << p_position[2] << std::endl;
+        //std::cout << "Scale: " << p_scale[0] << ", " << p_scale[1] << ", " << p_scale[2] << std::endl;
 
         m_entityNodes.push_back(t_mesh);
     }
@@ -302,4 +302,8 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
         "PosMax: " << p_maxX << "," << p_maxY << "," << p_maxZ << "\n" <<
         "---------------------------------\n";
     */
+}
+
+void EngineManager::createDebugQuad(float p_vertex[4][2]){
+    CESceneQuad* t_quad = m_scene->createQuad(p_vertex);
 }

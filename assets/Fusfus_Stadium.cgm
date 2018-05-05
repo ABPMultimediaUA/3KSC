@@ -36,7 +36,7 @@ wp 5 8
 wp 6 9
 
 # sp se usa para delimitar las posiciones de spawn de cada uno de los 4 jugadores: posx posy posz
-sp -14 2 0 14 2 0 -7 5.5 0 7 5.5 0
+sp 0 0 0 14 2 0 -7 5.5 0 7 5.5 0
 
 # rp se usa para marcar la posicion de respawn de los jugadores cuando mueren: posx posy posz
 rp 0 17 0

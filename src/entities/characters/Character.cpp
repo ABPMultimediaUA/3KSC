@@ -371,7 +371,7 @@ void Character::update(){
 
     checkAlive();
 
-    std::cout << getX() << ", " << getY() << std::endl;
+    //std::cout << getX() << ", " << getY() << std::endl;
 }
 
 //Returns the type of the player

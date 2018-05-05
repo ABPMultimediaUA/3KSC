@@ -6,6 +6,7 @@
 #include "../../include/ChaoticEngine/fachada/CESceneCamera.hpp"
 #include "../../include/ChaoticEngine/fachada/CESceneLight.hpp"
 #include "../../include/ChaoticEngine/fachada/CESceneMesh.hpp"
+#include "../../include/ChaoticEngine/fachada/CESceneQuad.hpp"
 #include "../../include/ChaoticEngine/fachada/CEShader.hpp"
 #include "../../include/ChaoticEngine/CEtransform.hpp"
 
@@ -59,6 +60,13 @@ CESceneMesh* CEScene::createMesh(const char* p_path){
 
 	std::cout << "Malla cargada!"<< std::endl;
 	return CEmesh;	
+}
+
+CESceneQuad* CEScene::createQuad(float p_vertex[4][2]){
+	std::cout << "Cremos Quad" << std::endl;
+	CESceneQuad* CEquad = new CESceneQuad(m_root, p_vertex, m_shaderProgram->getShaderProgram());
+
+	return CEquad;	
 }
 
 void CEScene::setActiveCamera(CESceneCamera* p_camera){

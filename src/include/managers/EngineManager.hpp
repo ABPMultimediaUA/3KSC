@@ -26,6 +26,7 @@
 #include "../ChaoticEngine/fachada/CESceneCamera.hpp"
 #include "../ChaoticEngine/fachada/CESceneLight.hpp"
 #include "../ChaoticEngine/fachada/CESceneMesh.hpp"
+#include "../ChaoticEngine/fachada/CESceneQuad.hpp"
 #include "../ChaoticEngine/fachada/CEShader.hpp"
 
 #include <vector>
@@ -94,6 +95,8 @@ public:
     std::vector<float>  getTotalVertexX()   {    return m_VertexX;      };
     std::vector<float>  getTotalVertexY()   {    return m_VertexY;      };
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
+
+    void                createDebugQuad(float p_vertex[4][2]);
 
 };
 
