@@ -447,6 +447,7 @@ void Character::setUltimateCharged(){
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
     // Move
+    m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
     if(p_position[0] > this->getX()){
         this->right();
     }
@@ -455,12 +456,11 @@ bool Character::moveToPath(float p_position[2]){
     }
 
     // Jump if enemy is above
-    if(p_position[1] > (this->getY() + 15.0f)){
+    if(p_position[1] > (this->getY() + 1.5f)){
         if(m_flagAIJump){
-            m_inputManager->setAction(Action::Jump, m_playerIndex);
+            jump();
         }
     }
-
     return false;
 }
 
@@ -499,6 +499,7 @@ int Character::getValidation(){
 /* ****************************** ACTIONS ****************************** */
 bool Character::left(){
     lookLeft();
+    std::cout<<m_frameDeltaTime<<std::endl;
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
     return false;

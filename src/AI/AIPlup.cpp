@@ -39,7 +39,6 @@ AIPlup::~AIPlup(){}
 
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
-    int m_index = 1;
     m_specialUpRange = 0.0;
     m_specialSideRange = 0.0;
     m_distanceToPortal = 0.0f;
