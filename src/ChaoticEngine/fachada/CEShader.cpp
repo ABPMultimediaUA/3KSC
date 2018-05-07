@@ -7,20 +7,20 @@
 CEShaderProgram::CEShaderProgram(const char* p_pathVertex, const char* p_pathFragment){
 	m_shader = new CEShader();
 
-	m_pathVertex 	= p_pathVertex;
-	m_pathFragment 	= p_pathFragment;
-
-	m_shaderProgram = 0;
-
-	loadShader();
+	loadShader(p_pathVertex, p_pathFragment);
+	useShaderProgram(m_shaderProgram[0]);
 }
 
 CEShaderProgram::~CEShaderProgram(){}
 
-void CEShaderProgram::loadShader(){
-	m_shaderProgram = m_shader->LoadShader(m_pathVertex, m_pathFragment);
+void CEShaderProgram::loadShader(const char* p_pathVertex, const char* p_pathFragment){
+	m_shaderProgram.push_back(m_shader->LoadShader(p_pathVertex, p_pathFragment));
 }
 
-GLuint CEShaderProgram::getShaderProgram(){
-	return m_shaderProgram;
+GLuint CEShaderProgram::getShaderProgram(int p_id){
+	return m_shaderProgram[p_id];
+}
+
+void CEShaderProgram::useShaderProgram(GLuint p_shaderProgram){
+	m_shader->useShader(p_shaderProgram);
 }

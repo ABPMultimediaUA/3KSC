@@ -97,9 +97,15 @@ void Entity::updatePosition(){
     //if(m_debugMode)
     //    updateDebug();
 
+    m_lastPosition[0] = m_position[0];
+    m_lastPosition[1] = m_position[1];
+
     //Set to the entity the new position of the body
     m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
     m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
+
+    //float t_vertex[][2] = {{m_position[0]+0.5,m_position[1]+0.5},{m_position[0]+0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[1]+0.5}};
+    //m_engineManager->createDebugQuad(t_vertex);
 
     m_engineManager->moveEntity(this);
 }
@@ -145,9 +151,18 @@ int Entity::getId(){
     return m_id;
 }
 
+float* Entity::getElapsedPosition(){
+    m_elapsed[0] = m_position[0] - m_lastPosition[0];
+    m_elapsed[1] = m_position[1] - m_lastPosition[1];
+    m_elapsed[2] = m_position[2] - m_lastPosition[2];
+
+    return m_elapsed;
+}
+
 float* Entity::getPosition(){
     return m_position;
 }
+
 float Entity::getX(){
     return m_physicsManager->getBody(m_id)->GetPosition().x;
 }

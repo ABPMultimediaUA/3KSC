@@ -3,6 +3,7 @@
 #define CE_SHADER
 
 #include <glew.h>
+#include <vector>
 
 class CEShader;
 
@@ -11,16 +12,14 @@ public:
 	CEShaderProgram(const char*	p_pathVertex, const char* p_pathFragment);
 	~CEShaderProgram();
 
-	void	loadShader();
+	void	loadShader(const char* p_pathVertex, const char* p_pathFragment);
 
-	GLuint	getShaderProgram();
+	GLuint	getShaderProgram(int p_id);
+	void	useShaderProgram(GLuint p_shaderProgram);
 
 private:
-	CEShader*	m_shader;
-	GLuint		m_shaderProgram;
-
-	const char*	m_pathVertex;
-	const char*	m_pathFragment;
+	CEShader*			m_shader;
+	std::vector<GLuint>	m_shaderProgram;
 };
 
 #endif

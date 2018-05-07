@@ -85,7 +85,9 @@ GLuint CEShader::LoadShader(const char *vertex_path, const char *fragment_path) 
     glDeleteShader(vertShader);
     glDeleteShader(fragShader);
 
-    glUseProgram(program);
-
     return program;
+}
+
+void CEShader::useShader(GLuint p_shader){
+    glUseProgram(p_shader);
 }

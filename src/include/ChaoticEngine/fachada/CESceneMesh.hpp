@@ -14,8 +14,6 @@ public:
 	CESceneMesh(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram);
 	~CESceneMesh();
 
-	void	processInput(GLFWwindow* p_window);
-
 	void 	setScale(float p_x, float p_y, float p_z);
 	void 	setRotation(float p_x, float p_y, float p_z);
 	void 	setPosition(float p_x, float p_y, float p_z);

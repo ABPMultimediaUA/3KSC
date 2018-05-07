@@ -133,8 +133,8 @@ void EngineManager::updateCamera(){
     }*/
 }
 
-void EngineManager::createLight(float p_lightPosition[3]){
-    CESceneLight* t_light = m_scene->createLight();
+void EngineManager::createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation){
+    CESceneLight* t_light = m_scene->createLight(p_lightIntensity, p_lightAtenuation);
     if(t_light){
         t_light->setAbsolutePosition(p_lightPosition[0],p_lightPosition[1],p_lightPosition[2]);
     }
@@ -188,21 +188,25 @@ void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
 }
 
 void EngineManager::moveEntity(Entity* p_entity){
-    float* t_position = p_entity->getPosition();
-
+    /*
+    float* t_position = p_entity->getElapsedPosition();
     m_entityNodes.at(p_entity->getId())->setPosition(t_position[0], t_position[1], t_position[2]);
+    */
+
+    float* t_position = p_entity->getPosition();
+    m_entityNodes.at(p_entity->getId())->setAbsolutePosition(t_position[0], t_position[1], t_position[2]);
 }
 
 void EngineManager::setRotation(int p_id, float p_degrees){
     CESceneMesh* t_node  = m_entityNodes.at(p_id);
     
-    t_node->setRotation(0.0f, p_degrees, 0.0f);
+    t_node->setAbsoluteRotation(0.0f, p_degrees, 0.0f);
 }
 
 void EngineManager::scale(int p_id, float p_scale[3]){
     CESceneMesh* t_node  = m_entityNodes.at(p_id);
 
-    t_node->setScale(p_scale[0], p_scale[1], p_scale[2]);
+    t_node->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
 }
 
 //Scene render function

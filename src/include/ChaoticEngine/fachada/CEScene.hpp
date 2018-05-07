@@ -19,7 +19,7 @@ public:
 	~CEScene();
 
 	CESceneCamera*	createCamera(bool p_isActive = false);
-	CESceneLight*	createLight();
+	CESceneLight*	createLight(float p_lightIntensity[3], float p_lightAtenuation);
 	CESceneMesh*	createMesh(const char* p_path);
 	CESceneQuad*	createQuad(float p_vertex[4][2]);
 

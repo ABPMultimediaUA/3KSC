@@ -45,7 +45,8 @@ class InGameState : public State{
         Client*         m_client;
 
         bool            m_onlineMode;
-        float           m_scale;            
+        float           m_scale;
+
     public:
         InGameState(Game* p_game, bool p_onlineMode = false);
         ~InGameState();

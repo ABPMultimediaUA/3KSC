@@ -41,6 +41,7 @@ public:
     bool        checkCloseness(float* p_point, float p_range);
     int         getId();
     float*      getPosition();
+    float*      getElapsedPosition();
     float       getX();
     float       getY();
     float       getZ();
@@ -62,12 +63,12 @@ protected:
 
     static int              m_entityCount;
     int                     m_id; 
+    
     float                   m_position[3]; // [0] for x, [1] for y, [2] for z
     float                   m_lastPosition[3]; // [0] for x, [1] for y, [2] for z
+    float                   m_elapsed[3];
+
     const char*             m_modelURL;
-    //Model*                m_model;
-    //Texture*              m_texture;
-    //Hitbox*               m_hitbox;
     float                   m_weight;
     
     bool                    m_debugMode;

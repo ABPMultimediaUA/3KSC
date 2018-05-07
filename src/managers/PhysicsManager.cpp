@@ -31,7 +31,7 @@ PhysicsManager& PhysicsManager::instance(){
     static PhysicsManager instance;
     return instance;
 }
-  //at global scope
+//at global scope
 
 //Constructor
 PhysicsManager::PhysicsManager(){
@@ -167,9 +167,6 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
             t_dimY = (abs(t_minY) + t_maxY) * t_factor;
 
         t_polygonShape->SetAsBox(t_dimX / 2, t_dimY / 2, b2Vec2((t_minX * t_factor) + t_dimX / 2, (t_minY * t_factor) + t_dimY / 2), 0);
-
-        float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
-        m_engineManager->createDebugQuad(t_vertex);
         
         b2FixtureDef* t_fixtureDef = new b2FixtureDef();
         t_fixtureDef->shape = t_polygonShape;
@@ -178,6 +175,9 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
         t_fixtureDef->filter.groupIndex   = 1;
 
         t_body->CreateFixture(t_fixtureDef);
+
+        float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
+        m_engineManager->createDebugQuad(t_vertex);
     }
 }
 

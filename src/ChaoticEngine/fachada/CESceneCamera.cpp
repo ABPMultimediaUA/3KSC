@@ -51,6 +51,7 @@ void CESceneCamera::setParallel(float p_left, float p_right, float p_bottom, flo
 void CESceneCamera::lookAt(float p_x, float p_y, float p_z){
 	m_camera->setTarjet(p_x, p_y, p_z);
 	m_camera->setProjectionMatrix();
+	m_camera->setViewMatrix(this->getViewMatrix());
 }
 
 glm::mat4 CESceneCamera::getViewMatrix(){

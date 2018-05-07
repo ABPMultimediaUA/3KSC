@@ -165,10 +165,22 @@ void InGameState::createArena(const char* p_fileCgm){
             t_target[2] = strtof((t_elements[6]).c_str(), 0) * m_scale;
 
             m_engineManager->createCamera(t_position, t_target);
-            t_position[0] = 0;
-            t_position[1] = 0;
-            t_position[2] = 0;
-            m_engineManager->createLight(t_position);
+        }
+        //light
+        else if(t_name == "l"){
+            float t_position[3];
+            t_position[0] = strtof((t_elements[1]).c_str(), 0);
+            t_position[1] = strtof((t_elements[2]).c_str(), 0);
+            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+
+            float t_intensities[3];
+            t_intensities[0] = strtof((t_elements[4]).c_str(), 0);
+            t_intensities[1] = strtof((t_elements[5]).c_str(), 0);
+            t_intensities[2] = strtof((t_elements[6]).c_str(), 0);
+
+            float t_atenuation = strtof((t_elements[7]).c_str(), 0);
+
+            m_engineManager->createLight(t_position, t_intensities, t_atenuation);
         }
         //music
         else if(t_name == "mu"){

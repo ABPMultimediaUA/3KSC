@@ -4,7 +4,10 @@
 m assets/models/arenas/Fusfus_stadium/Estadio_Fusfus.obj 1 0 0 0
 
 # c se utiliza para la camara: posx posy posz(de la camara) posx posy posz(del target)
-c 0 10 -22 0 5 5
+c 0 10 -12.5 0 -5 100
+
+# l se utiliza para la luz: posX posY posZ | intensidad -> vec3 float (1 blanco - 0 negro) | atenuacion (0.0f - 1.0f)
+l 0 -100 100 0.8 0.8 0.8 0
 
 # mu se utiliza para el sonido: Id para cargar un banco de musica, ruta de la musica, nombre para el sonido
 mu SoundID::S_FOSFOS_STADIUM event:/music/fosfosStadium fos_music
@@ -36,13 +39,13 @@ wp 5 8
 wp 6 9
 
 # sp se usa para delimitar las posiciones de spawn de cada uno de los 4 jugadores: posx posy posz
-sp 0 0 0 14 2 0 -7 5.5 0 7 5.5 0
+sp -12 -2 0 12 2 0 -7 5.5 0 7 5.5 0
 
 # rp se usa para marcar la posicion de respawn de los jugadores cuando mueren: posx posy posz
 rp 0 17 0
 
 # si se usa para marcar el rango donde pueden aparecer los objetos y su altura: posxMin posxMax posy
-si -14.5 14.5 17
+si -12.5 12.5 17
 
 # sk se utiliza para marcar las imagenes usadas en el skybox: lista de urls de las imagenes
 sk assets/skyboxes/fusfus_skybox/cloudtop_up.tga assets/skyboxes/fusfus_skybox/cloudtop_dn.tga assets/skyboxes/fusfus_skybox/cloudtop_lt.tga assets/skyboxes/fusfus_skybox/cloudtop_rf.tga assets/skyboxes/fusfus_skybox/cloudtop_ft.tga assets/skyboxes/fusfus_skybox/cloudtop_bk.tga

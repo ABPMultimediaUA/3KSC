@@ -72,7 +72,7 @@ public:
     void                resetCamera();
     void                updateCamera();
 
-    void                createLight(float p_lightPosition[3]);
+    void                createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
 
     void                deleteEntity(int p_id);
     void                load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);

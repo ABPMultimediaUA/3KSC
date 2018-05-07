@@ -8,7 +8,8 @@ class CEShader{
 public:
 	CEShader();
 	virtual ~CEShader();
-    GLuint LoadShader(const char *vertex_path, const char *fragment_path);
+    GLuint 	LoadShader(const char *vertex_path, const char *fragment_path);
+    void	useShader(GLuint p_shader);
 
 private:
 	std::string readFile(const char *filePath);

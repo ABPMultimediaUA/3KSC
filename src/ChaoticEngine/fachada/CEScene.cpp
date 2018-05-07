@@ -19,6 +19,12 @@ CEScene::CEScene(){
 	m_resourceManager = new CEResourceManager();
 
 	m_shaderProgram = new CEShaderProgram("src/ChaoticEngine/shader/CEvertex.vert", "src/ChaoticEngine/shader/CEfragment.frag");
+	//Shader for the debug quads
+	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertQuad.vert", "src/ChaoticEngine/shader/CEfragQuad.frag");
+
+	//PARA AÑADIR MAS SHADER
+	//m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertex.vert", "src/ChaoticEngine/shader/CEfragment.frag");
+
 }
 
 CEScene::~CEScene(){
@@ -44,11 +50,11 @@ CESceneCamera* CEScene::createCamera(bool p_isActive){
 	return CEcamera;
 }
 
-CESceneLight* CEScene::createLight(){
-	glm::vec3 	intensities = glm::vec3(1, 1, 1);
-	float 		attenuation = 0.0f;
+CESceneLight* CEScene::createLight(float p_lightIntensity[3], float p_lightAtenuation){
+	glm::vec3 	intensities = glm::vec3(p_lightIntensity[0], p_lightIntensity[1], p_lightIntensity[2]);
+	float 		attenuation = p_lightAtenuation;
 
-	CESceneLight* CElight = new CESceneLight(m_root, intensities, attenuation, m_shaderProgram->getShaderProgram());
+	CESceneLight* CElight = new CESceneLight(m_root, intensities, attenuation, m_shaderProgram->getShaderProgram(0));
 	m_lights.push_back(CElight);
 
 	return CElight;	
@@ -56,7 +62,7 @@ CESceneLight* CEScene::createLight(){
 
 CESceneMesh* CEScene::createMesh(const char* p_path){
 	std::cout << "Cargamos malla: " << p_path << std::endl;
-	CESceneMesh* CEmesh = new CESceneMesh(m_root, p_path, m_shaderProgram->getShaderProgram());
+	CESceneMesh* CEmesh = new CESceneMesh(m_root, p_path, m_shaderProgram->getShaderProgram(0));
 
 	std::cout << "Malla cargada!"<< std::endl;
 	return CEmesh;	
@@ -64,7 +70,7 @@ CESceneMesh* CEScene::createMesh(const char* p_path){
 
 CESceneQuad* CEScene::createQuad(float p_vertex[4][2]){
 	std::cout << "Cremos Quad" << std::endl;
-	CESceneQuad* CEquad = new CESceneQuad(m_root, p_vertex, m_shaderProgram->getShaderProgram());
+	CESceneQuad* CEquad = new CESceneQuad(m_root, p_vertex, m_shaderProgram->getShaderProgram(1));
 
 	return CEquad;	
 }

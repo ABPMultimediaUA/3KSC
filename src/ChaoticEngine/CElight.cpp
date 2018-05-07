@@ -22,6 +22,8 @@ void CELight::setAtenuation(float p_attenuation){
 }
 
 void CELight::beginDraw(){
+    glUseProgram(m_shaderProgram);
+    
 	glm::mat4 t_modelView = m_viewMatrix * m_modelMatrix;
 	t_modelView = glm::inverse(t_modelView);
 	glm::vec3 t_pos = (glm::vec3)t_modelView[3];
