@@ -26,6 +26,7 @@
 class EngineManager;
 class PhysicsManager;
 class InputManager;
+class SoundManager;
 //class Debug;
 
 class Entity {
@@ -60,6 +61,7 @@ protected:
     EngineManager*   m_engineManager;
     PhysicsManager*  m_physicsManager;
     InputManager*    m_inputManager;
+    SoundManager*    m_soundManager;
 
     static int              m_entityCount;
     int                     m_id; 

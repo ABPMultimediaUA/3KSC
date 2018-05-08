@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 //#include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
@@ -37,6 +38,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_engineManager     = &EngineManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_inputManager      = &InputManager::instance();
+    m_soundManager      = &SoundManager::instance();
 
     m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};

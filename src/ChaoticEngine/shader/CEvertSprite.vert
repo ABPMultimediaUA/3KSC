@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 // Atributos
 layout (location = 0) in vec4 Vertex;
 
