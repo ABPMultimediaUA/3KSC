@@ -92,7 +92,7 @@ Arena* Arena::getInstance(){
 
 void Arena::spawnPlayers(){
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
-    m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);    
+    //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
     //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
 
     //float positionPortal[3] = {0, 0.5, 0};
@@ -199,7 +199,7 @@ bool Arena::spawnRandomItem(){
     int range = m_spawnItemRange[1] - m_spawnItemRange[0] + 1;
     int randx = m_spawnItemRange[0] + (rand() % range);
     int random = rand()%(3-0 + 1) + 0;
-    spawnItemAt(random, randx, m_spawnItemRange[2]);
+    //spawnItemAt(random, randx, m_spawnItemRange[2]);
     return true;
 }
 

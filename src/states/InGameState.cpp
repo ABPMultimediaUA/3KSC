@@ -55,7 +55,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     //Online stuff
     m_onlineMode = p_onlineMode;
 
-    if (m_onlineMode){
+    if(m_onlineMode){
         m_client = &Client::instance();
         m_client->start();
         m_inputManager->onlineMode();
@@ -66,7 +66,11 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
         m_arena->spawnPlayers();
     }
 
-    m_engineManager->timeStamp();
+    m_time  = 0;
+    m_FPS   = 0;
+    
+    float p_vertex[4][2];
+    m_engineManager->createSprite("assets/awesome.bin", p_vertex);
 }
 
 //Destructor
@@ -106,7 +110,19 @@ void InGameState::update(){
             t_currentPlayer->input();
             t_currentPlayer->update();
         }
-    } 
+    }
+    //calculateFPS();
+}
+
+void InGameState::calculateFPS(){
+    //std::cout << m_engineManager->getElapsedTime() << std::endl;
+    m_time += m_engineManager->getElapsedTime();
+    m_FPS++;
+    if(m_time >= 1.0){
+        std::cout << m_FPS << std::endl;
+        m_time  = 0;
+        m_FPS   = 0;
+    }
 }
 
 void InGameState::render(){
@@ -160,6 +176,22 @@ void InGameState::createArena(const char* p_fileCgm){
             t_target[2] = strtof((t_elements[6]).c_str(), 0) * m_scale;
 
             m_engineManager->createCamera(t_position, t_target);
+        }
+        //light
+        else if(t_name == "l"){
+            float t_position[3];
+            t_position[0] = strtof((t_elements[1]).c_str(), 0);
+            t_position[1] = strtof((t_elements[2]).c_str(), 0);
+            t_position[2] = strtof((t_elements[3]).c_str(), 0);
+
+            float t_intensities[3];
+            t_intensities[0] = strtof((t_elements[4]).c_str(), 0);
+            t_intensities[1] = strtof((t_elements[5]).c_str(), 0);
+            t_intensities[2] = strtof((t_elements[6]).c_str(), 0);
+
+            float t_atenuation = strtof((t_elements[7]).c_str(), 0);
+
+            m_engineManager->createLight(t_position, t_intensities, t_atenuation);
         }
         //music
         else if(t_name == "mu"){

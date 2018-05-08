@@ -24,21 +24,20 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
-#include "../include/managers/SoundManager.hpp"
-#include "../include/debug.hpp"
+//#include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
 #include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
 
-EngineManager*  Entity::m_engineManager     = &EngineManager::instance();
-PhysicsManager* Entity::m_physicsManager    = &PhysicsManager::instance();
-InputManager*   Entity::m_inputManager      = &InputManager::instance();
-SoundManager*   Entity::m_soundManager      = &SoundManager::instance();
 
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
+    m_engineManager     = &EngineManager::instance();
+    m_physicsManager    = &PhysicsManager::instance();
+    m_inputManager      = &InputManager::instance();
+
     m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
 
@@ -46,6 +45,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
         m_position[i] = p_position[i];
         m_lastPosition[i] = p_position[i];
     }
+    
     m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
     moveTo(p_position);
 
@@ -76,9 +76,9 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
     }
 
-    m_debugMode = false;
-    if(m_debugMode)
-        createDebug();
+    m_debugMode = true;
+    //if(m_debugMode)
+    //    createDebug();
 }
 
 Entity::~Entity(){
@@ -94,12 +94,18 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(){
-    if(m_debugMode)
-        updateDebug();
+    //if(m_debugMode)
+    //    updateDebug();
+
+    m_lastPosition[0] = m_position[0];
+    m_lastPosition[1] = m_position[1];
 
     //Set to the entity the new position of the body
     m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
     m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
+
+    //float t_vertex[][2] = {{m_position[0]+0.5,m_position[1]+0.5},{m_position[0]+0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[1]+0.5}};
+    //m_engineManager->createDebugQuad(t_vertex);
 
     m_engineManager->moveEntity(this);
 }
@@ -145,9 +151,18 @@ int Entity::getId(){
     return m_id;
 }
 
+float* Entity::getElapsedPosition(){
+    m_elapsed[0] = m_position[0] - m_lastPosition[0];
+    m_elapsed[1] = m_position[1] - m_lastPosition[1];
+    m_elapsed[2] = m_position[2] - m_lastPosition[2];
+
+    return m_elapsed;
+}
+
 float* Entity::getPosition(){
     return m_position;
 }
+
 float Entity::getX(){
     return m_physicsManager->getBody(m_id)->GetPosition().x;
 }
@@ -175,7 +190,7 @@ void Entity::setX(float p_position){
 void Entity::setY(float p_position){
     moveTo(getX(), p_position);
 }
-
+/*
 void Entity::createDebug(){
     m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
 
@@ -190,3 +205,4 @@ void Entity::updateDebug(){
         m_entityDebug[i]->update();
     }
 }
+*/
