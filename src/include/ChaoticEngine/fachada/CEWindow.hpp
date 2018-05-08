@@ -21,12 +21,18 @@ public:
 	void 		processInput();
 
 	GLFWwindow* getWindow();
+	double		getTimer();
+	double		getElapsedTime();
+
 
 	/*  CALLBACKS  */
 	static void windows_size_callback(GLFWwindow* p_window, int p_width, int p_height);
 
 private:
 	GLFWwindow*	m_window;
+
+	double 		m_time;
+	double 		m_lastTime;
 
 	void 		enableCulling();
 	void 		enableZBuffer();

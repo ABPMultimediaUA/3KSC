@@ -221,7 +221,7 @@ void EngineManager::drawScene(){
 }
 
 float EngineManager::getFrameDeltaTime(){
-    return (float)m_frameDeltaTime;
+    return (float)m_frameDeltaTime * 5;
 }
 
 CESceneMesh* EngineManager::getEntityNode(int p_id){
@@ -310,4 +310,17 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
 
 void EngineManager::createDebugQuad(float p_vertex[4][2]){
     CESceneQuad* t_quad = m_scene->createQuad(p_vertex);
+}
+
+void EngineManager::createSprite(const char* p_url, float p_vertex[4][2]){
+    CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_vertex);
+}
+
+
+double EngineManager::getTime(){
+    return m_window->getTimer();
+}
+
+double EngineManager::getElapsedTime(){
+    return m_window->getElapsedTime();
 }

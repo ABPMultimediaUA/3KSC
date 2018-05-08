@@ -31,6 +31,9 @@ CEWindow::CEWindow(int p_width, int p_height, const char* p_title, bool p_fullsc
 
 	enableCulling();
 	enableZBuffer();
+
+	m_time		= glfwGetTime();
+	m_lastTime	= 0;
 }
 
 CEWindow::~CEWindow(){}
@@ -79,6 +82,16 @@ GLFWwindow* CEWindow::getWindow(){
 	return m_window;
 }
 
+double CEWindow::getTimer(){
+	return glfwGetTime();
+}
+
+double CEWindow::getElapsedTime(){
+	m_lastTime = m_time;
+	m_time = glfwGetTime();
+
+	return (m_time-m_lastTime);
+}
 
 /*  CALLBACKS  */
 void CEWindow::windows_size_callback(GLFWwindow* p_window, int p_width, int p_height){

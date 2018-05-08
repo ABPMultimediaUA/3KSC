@@ -27,6 +27,7 @@
 #include "../ChaoticEngine/fachada/CESceneLight.hpp"
 #include "../ChaoticEngine/fachada/CESceneMesh.hpp"
 #include "../ChaoticEngine/fachada/CESceneQuad.hpp"
+#include "../ChaoticEngine/fachada/CESceneSprite.hpp"
 #include "../ChaoticEngine/fachada/CEShader.hpp"
 
 #include <vector>
@@ -97,6 +98,10 @@ public:
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
 
     void                createDebugQuad(float p_vertex[4][2]);
+    void                createSprite(const char* p_url, float p_vertex[4][2]);
+    double              getTime();
+    double              getElapsedTime();
+
 
 };
 

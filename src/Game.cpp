@@ -33,7 +33,7 @@ Game::Game(){
     m_engineManager = &EngineManager::instance();
     m_inputManager  = &InputManager::instance();
     
-    const int FPS = 40;
+    const int FPS = 170;
     m_nanoFrames = 1000000000/FPS;
     
     m_engineManager->createWindow(false);
@@ -75,7 +75,7 @@ void Game::run(){
         t_elapsed = std::chrono::high_resolution_clock::now() - t_now;
         m_elapsedTotal += std::chrono::duration_cast<std::chrono::nanoseconds>(t_elapsed).count();
 
-        while (m_elapsedTotal  > m_nanoFrames){
+        while(m_elapsedTotal > m_nanoFrames){
             fixedUpdate(m_elapsedTotal);
             m_elapsedTotal  -= m_nanoFrames;
         }

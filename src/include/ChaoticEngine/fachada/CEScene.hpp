@@ -11,6 +11,7 @@ class CESceneCamera;
 class CESceneLight;
 class CESceneMesh;
 class CESceneQuad;
+class CESceneSprite;
 class CEShaderProgram;
 
 class CEScene{
@@ -22,6 +23,7 @@ public:
 	CESceneLight*	createLight(float p_lightIntensity[3], float p_lightAtenuation);
 	CESceneMesh*	createMesh(const char* p_path);
 	CESceneQuad*	createQuad(float p_vertex[4][2]);
+	CESceneSprite*	createSprite(const char* p_path, float p_vertex[4][2]);
 
 	void			setActiveCamera(CESceneCamera* p_camera);
 

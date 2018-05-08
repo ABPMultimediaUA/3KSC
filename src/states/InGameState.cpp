@@ -63,6 +63,12 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
        // m_arena->spawnItems();
         m_arena->spawnPlayers();
     }
+
+    m_time  = 0;
+    m_FPS   = 0;
+    
+    float p_vertex[4][2];
+    m_engineManager->createSprite("assets/awesome.bin", p_vertex);
 }
 
 //Destructor
@@ -111,6 +117,18 @@ void InGameState::update(){
             t_currentPlayer->input();
             t_currentPlayer->update();
         }
+    }
+    //calculateFPS();
+}
+
+void InGameState::calculateFPS(){
+    //std::cout << m_engineManager->getElapsedTime() << std::endl;
+    m_time += m_engineManager->getElapsedTime();
+    m_FPS++;
+    if(m_time >= 1.0){
+        std::cout << m_FPS << std::endl;
+        m_time  = 0;
+        m_FPS   = 0;
     }
 }
 

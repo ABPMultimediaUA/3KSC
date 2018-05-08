@@ -25,6 +25,7 @@ private:
 		"jpg", "tex", //Textures
 		"jpeg", "tex",
 		"png", "tex",
+		"bin", "tex",
 		"obj", "mesh", //Meshes
 		"3ds", "mesh",
 		"max", "mesh"
