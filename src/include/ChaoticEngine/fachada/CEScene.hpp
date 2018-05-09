@@ -13,6 +13,7 @@ class CESceneMesh;
 class CESceneQuad;
 class CESceneSprite;
 class CESceneParticleSystem;
+class CESceneSkybox;
 class CEShaderProgram;
 
 class CEScene{
@@ -26,7 +27,7 @@ public:
 	CESceneQuad*			createQuad(float p_vertex[4][2]);
 	CESceneSprite*			createSprite(const char* p_path, float p_width, float p_height);
 	CESceneParticleSystem*	createParticleSystem(const char* p_path, int p_amount);
-
+	CESceneSkybox*			createSkybox(const char* p_path[6]);
 
 	void			setActiveCamera(CESceneCamera* p_camera);
 

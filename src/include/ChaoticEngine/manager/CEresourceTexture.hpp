@@ -26,12 +26,22 @@ public:
 	std::string getTextureDirectory(){return m_directory;}
 	void setTextureDirectory(std::string p_directory){m_directory = p_directory;}
 
+	unsigned char* getTextureData(){return m_textureData;}
+	void glBuffersTexture();
+	void freeTextureData(unsigned char* p_data);
+
+	int getTextureWidth(){return m_width;}
+	int getTextureHeight(){return m_height;}
+	int getTextureNrComponents(){return m_nrComponents;}
+
 private:
 
 	GLint m_textureId;
     std::string m_type;
     std::string m_path;
     std::string m_directory;
+    int m_width, m_height, m_nrComponents;
+    unsigned char* m_textureData;
 	GLint TextureFromFile(const char* p_path);
 };
 

@@ -29,6 +29,7 @@
 #include "../ChaoticEngine/fachada/CESceneQuad.hpp"
 #include "../ChaoticEngine/fachada/CESceneSprite.hpp"
 #include "../ChaoticEngine/fachada/CESceneParticleSystem.hpp"
+#include "../ChaoticEngine/fachada/CESceneSkybox.hpp"
 #include "../ChaoticEngine/fachada/CEShader.hpp"
 
 #include <vector>

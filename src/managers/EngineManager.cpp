@@ -171,20 +171,9 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
 }
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
-    std::cout << "AUN NO TENEMOS SKYBOOOOX! (COMING SOON!)" << std::endl;
-    /*m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+    //CESceneSkybox* t_skybox = m_scene->createSkybox(p_skyboxURLs);
 
-    scene::ISceneNode* t_skybox = m_scene->addSkyBoxSceneNode(
-        m_vDriver->getTexture(p_skyboxURLs[0]),
-        m_vDriver->getTexture(p_skyboxURLs[1]),
-        m_vDriver->getTexture(p_skyboxURLs[2]),
-        m_vDriver->getTexture(p_skyboxURLs[3]),
-        m_vDriver->getTexture(p_skyboxURLs[4]),
-        m_vDriver->getTexture(p_skyboxURLs[5]));
-
-    m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
-
-    //m_entityNodes.push_back(t_skybox);*/
+    //m_entityNodes.push_back(t_skybox);
 }
 
 void EngineManager::moveEntity(Entity* p_entity){

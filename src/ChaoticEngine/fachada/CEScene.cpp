@@ -9,6 +9,7 @@
 #include "../../include/ChaoticEngine/fachada/CESceneQuad.hpp"
 #include "../../include/ChaoticEngine/fachada/CESceneSprite.hpp"
 #include "../../include/ChaoticEngine/fachada/CESceneParticleSystem.hpp"
+#include "../../include/ChaoticEngine/fachada/CESceneSkybox.hpp"
 #include "../../include/ChaoticEngine/fachada/CEShader.hpp"
 #include "../../include/ChaoticEngine/CEtransform.hpp"
 
@@ -28,6 +29,8 @@ CEScene::CEScene(){
 	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertSprite.vert", "src/ChaoticEngine/shader/CEfragSprite.frag");
 	//[ 3 ] - Shader for the particle system
 	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertParticle.vert", "src/ChaoticEngine/shader/CEfragParticle.frag");
+	//[ 4 ] - Shader for the skybox
+	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertSkybox.vert", "src/ChaoticEngine/shader/CEfragSkybox.frag");
 }
 
 CEScene::~CEScene(){
@@ -86,6 +89,12 @@ CESceneParticleSystem* CEScene::createParticleSystem(const char* p_path, int p_a
 	CESceneParticleSystem* CEemitter = new CESceneParticleSystem(m_root, p_path, p_amount, m_shaderProgram->getShaderProgram(3));
 
 	return CEemitter;
+}
+
+CESceneSkybox* CEScene::createSkybox(const char* p_path[6]){
+	CESceneSkybox* CEskybox = new CESceneSkybox(m_root, p_path, m_shaderProgram->getShaderProgram(4));
+
+	return CEskybox;
 }
 
 void CEScene::setActiveCamera(CESceneCamera* p_camera){
