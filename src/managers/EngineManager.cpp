@@ -312,8 +312,8 @@ void EngineManager::createDebugQuad(float p_vertex[4][2]){
     CESceneQuad* t_quad = m_scene->createQuad(p_vertex);
 }
 
-void EngineManager::createSprite(const char* p_url, float p_vertex[4][2]){
-    CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_vertex);
+void EngineManager::createSprite(const char* p_url, float p_width, float p_height){
+    CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_width, p_height);
 }
 
 

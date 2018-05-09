@@ -69,8 +69,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_time  = 0;
     m_FPS   = 0;
     
-    float p_vertex[4][2];
-    m_engineManager->createSprite("assets/awesome.bin", p_vertex);
+    m_engineManager->createSprite("assets/awesome.bin", 10.0f, 10.0f);
 }
 
 //Destructor

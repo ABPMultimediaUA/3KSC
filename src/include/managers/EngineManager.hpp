@@ -98,7 +98,7 @@ public:
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
 
     void                createDebugQuad(float p_vertex[4][2]);
-    void                createSprite(const char* p_url, float p_vertex[4][2]);
+    void                createSprite(const char* p_url, float p_width, float p_height);
     double              getTime();
     double              getElapsedTime();
 

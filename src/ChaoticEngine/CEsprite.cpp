@@ -6,34 +6,48 @@
 #include "../include/ChaoticEngine/CEsprite.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
-CESprite::CESprite(const char* p_urlSource, GLuint p_shaderProgram) : CEEntity(){
+CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram) : CEEntity(){
     m_shaderProgram = p_shaderProgram;
 
     loadResource(p_urlSource);
 
+    m_width   = p_width ;
+    m_height  = p_height;
+
+    float t_minX = m_width/2 * -1;
+    float t_maxX = m_width/2;
+    float t_minY = m_height/2 * -1;
+    float t_maxY = m_height/2;
+
     GLfloat t_vertices[] = { 
         // Pos      // Tex
-        0.0f, 10.0f, 0.0f, 1.0f,
-        10.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 
+        t_minX, t_minY, 0.0f, 0.0f, 
+        t_minX, t_maxY, 0.0f, 1.0f,
+        t_maxX, t_maxY, 1.0f, 1.0f,
+        t_maxX, t_minY, 1.0f, 0.0f
+    };
 
-        0.0f, 10.0f, 0.0f, 1.0f,
-        10.0f, 10.0f, 1.0f, 1.0f,
-        10.0f, 0.0f, 1.0f, 0.0f
+    unsigned int m_indices[] = {
+        0, 1, 3,  // First Triangle
+        1, 2, 3   // Second Triangle
     };
 
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
+    glGenBuffers(1, &m_EBO);
 
     glBindVertexArray(m_VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertices), t_vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_indices), m_indices, GL_STATIC_DRAW);
     
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glBindVertexArray(0);
     
@@ -59,7 +73,8 @@ void CESprite::beginDraw(){
     glBindTexture(GL_TEXTURE_2D, m_texture->getTextureId());
 
     glBindVertexArray(m_VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
