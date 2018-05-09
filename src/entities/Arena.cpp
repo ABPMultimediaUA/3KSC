@@ -24,6 +24,7 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 
 #include "../include/entities/characters/Plup.hpp"
 #include "../include/entities/characters/Sparky.hpp"
@@ -53,10 +54,15 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_spawningPortalTime    = 10;
     m_portalClock           = new sf::Clock();
     m_portalState           = false;
+
+    m_musicIntensity[0] = 0.8;
+    m_musicIntensity[1] = 0.6;
+    m_musicIntensity[2] = 0.4;
+    m_musicIntensity[3] = 0.0;
 }
 
 Arena::~Arena(){
-    for (int i = 0; i < m_playerCount; i++){
+    for(int i = 0; i < m_playerCount; i++){
         delete m_players[i];
         m_players = nullptr;
     }
@@ -64,17 +70,17 @@ Arena::~Arena(){
     delete[] m_players;
     m_players = nullptr;
 
-    if (m_portal){
+    if(m_portal){
         delete m_portal;
         m_portal = nullptr;
     }
 
-    if (m_clock){
+    if(m_clock){
         delete m_clock;
         m_clock = nullptr;
     }
 
-    if (m_portalClock){
+    if(m_portalClock){
         delete m_portalClock;
         m_portalClock = nullptr;
     }
@@ -91,6 +97,8 @@ void Arena::spawnPlayers(){
 
     //float positionPortal[3] = {0, 0.5, 0};
     //m_portal = new Portal(positionPortal);
+    std::cout << "PLAYER COUNT " << m_playerCount << std::endl;
+    m_soundManager->modifyParameter("fos_music", m_musicIntensity[m_playerCount], "Intensity", false);
 }
 
 void Arena::addPlayer(bool p_bool){
@@ -166,6 +174,8 @@ void Arena::update(float p_delta){
             m_items.erase(m_items.begin()+i);
     }
 
+    if(!m_soundManager->isPlaying("fos_ambient"))
+        m_soundManager->playSound("fos_ambient");
     //if(m_portalState)
     //    m_portal->update(p_delta);
 
@@ -239,4 +249,37 @@ bool Arena::getOnline(){
 void Arena::pleaseKill(int p_playerIndex){
     //delete m_players[p_playerIndex];
     //m_players[p_playerIndex] = 0;
+}
+
+bool Arena::portalIsActive(){
+    return m_portalState;
+}
+
+float* Arena::getPortalPosition(){
+    return m_portal->getPosition();
+}
+
+// Gets position of closest item to target position
+b2Vec2 Arena::getClosestItemPosition(b2Vec2 p_position){
+    m_physicsManager = &PhysicsManager::instance();
+    float t_closestDistance = 0.0f;
+    b2Vec2 t_return = b2Vec2(0.0f,0.0f);
+
+    for(int i=0; i<m_items.size(); i++){
+        if(m_items.at(i)!=nullptr){
+            b2Vec2 t_p2 = b2Vec2(m_items.at(i)->getPosition()[0], m_items.at(i)->getPosition()[1]);
+            float t_distanceToItem = m_physicsManager->getDistanceBetween(p_position, t_p2);
+
+            // Find closest waypoint
+            if(t_closestDistance == 0.0f){ // No waypoint is chosen. Choose this one
+                t_closestDistance = t_distanceToItem;
+                t_return = t_p2;
+            }
+            else if(t_distanceToItem < t_closestDistance){
+                t_closestDistance = t_distanceToItem;
+                t_return = t_p2;
+            }
+        }
+    }
+    return t_return;
 }

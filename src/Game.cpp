@@ -42,12 +42,6 @@ Game::Game(){
 
 //Destructor
 Game::~Game(){
-    delete m_engineManager;
-    m_engineManager = nullptr;
-
-    delete m_inputManager;
-    m_inputManager = nullptr;
-
     delete m_state;
     m_state = nullptr;
 }

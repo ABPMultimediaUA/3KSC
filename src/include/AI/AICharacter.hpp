@@ -32,10 +32,11 @@ class AINode;
 
 #include <Box2D/Common/b2Math.h> 
 #include <string>
+#include <json.hpp>
 
 class AICharacter{
     protected:
-        AINode*         m_root;                 // Root of player tree
+        AINode**        m_nodes;                // Root of player tree
         PhysicsManager* m_physicsManager;
         InputManager*   m_inputManager;
         Arena*          m_arena;
@@ -49,9 +50,12 @@ class AICharacter{
         float           m_y;                    // Player Y coordinate
         b2Vec2          m_position;             // Vector containing player position
         float           m_distanceToEnemy;      // Determines if an enemy is close
+        float           m_distanceToPortal;     // Determines if an enemy is close
+        float           m_portalActive;         // Determines if portal is active
         float           m_distanceToItem;       // Determines if an item is close
         float           m_specialUpRange;       // Determines if an enemy is in range of special ability up
         float           m_specialSideRange;     // Determines if an enemy is in range of special ability side
+        float           m_time;                 // Time that has passed since the last change of action
         
         std::string     readFile(const char* p_url);
     public:

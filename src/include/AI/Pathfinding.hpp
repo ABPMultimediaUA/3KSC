@@ -26,9 +26,11 @@
 #include <Box2D/Common/b2Math.h>
 
 class Waypoint;
+class PhysicsManager;
 
 class Pathfinding{
-    private:                                       
+    private:   
+        PhysicsManager*         m_physicsManager;                                    
     public:
         std::vector<Waypoint*>  m_waypoints;
 

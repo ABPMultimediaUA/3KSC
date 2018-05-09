@@ -53,8 +53,8 @@ InputManager::InputManager(){
     //Devices initialization
     autoassignDevices();
 
-    //m_inputDevices[0]   = -1;
-    //m_inputDevices[1]   = -2;
+    //m_inputDevices[0]   = -2;
+    //m_inputDevices[1]   = -1;
     //m_inputDevices[2]   = -2;
     //m_inputDevices[3]   = -2;
 
@@ -197,15 +197,13 @@ void InputManager::updateOnlineInput(int p_player){
     bool t_actions[12];
     bool t_flag = false;
     uint i;
-    for(i = 0; i < 12; i++)
-    {
+    for(i = 0; i < 12; i++){
         if(m_playerActions[p_player][i])
             t_actions[i] = true;
         else
             t_actions[i] = false;
 
-        if(t_actions[i] != m_lastActions[i])
-        {
+        if(t_actions[i] != m_lastActions[i]){
             m_lastActions[i] = t_actions[i];
             t_flag = true;
         }
@@ -309,6 +307,7 @@ void InputManager::playerInputKeyboard(int p_player){
     m_playerActions[p_player][(int) Action::UltimateAttack]     = isKeyPressed(Key::Z);
 
     m_playerActions[p_player][(int) Action::ToggleAI]           = isKeyPressed(Key::O);
+    m_playerActions[p_player][(int) Action::Taunt]              = isKeyPressed(Key::T);
 }
 
 //Updates player actions (for NPC)

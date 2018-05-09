@@ -57,14 +57,8 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     if(m_NPC)
         m_AI = new AISparky(this);
 
-    /*m_soundManager->loadBank(SoundID::S_SPARKY);
-    m_soundManager->createSoundEvent("event:/characters/rawr/death"     , "death"       );
-    m_soundManager->createSoundEvent("event:/characters/rawr/kill"      , "kill"        );
-    m_soundManager->createSoundEvent("event:/characters/rawr/random"    , "random"      );
-    m_soundManager->createSoundEvent("event:/characters/rawr/special"   , "special"     );
-    m_soundManager->createSoundEvent("event:/characters/rawr/taunt"     , "taunt"       );
-    m_soundManager->createSoundEvent("event:/characters/rawr/ultimate"  , "ultimate"    );*/
-    //m_soundManager->modifyParameter("random", 0.95, "Prob");
+    m_soundManager->loadBank(SoundID::S_SPARKY);
+    m_soundManager->loadEvents(SoundID::S_SPARKY);
 
 }
 
@@ -78,11 +72,6 @@ bool Sparky::jump(){
 bool Sparky::basicAttack(){
     if(!m_ultimateMode){
         Character* t_currentPlayer;
-        
-        /*float t_prob = ((float)rand() / (float)RAND_MAX);
-        //std::cout << "RANDOM: " << t_prob << std::endl;
-        m_soundManager->modifyParameter("random", t_prob, "Prob");
-        m_soundManager->playSound("random");*/
 
         for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
@@ -106,6 +95,8 @@ bool Sparky::basicAttack(){
 
 bool Sparky::specialAttackUp(){
     if(useMP(10)){
+        m_soundManager->modifyParameter("s_atak", 0.5, "Atak");
+        m_soundManager->playSound("s_atak");
         m_physicsManager->sparkyJump(getId());
         m_jumpingTime = m_inputManager->getMasterClock() + m_jumpingDuration;
         m_sparkyJumping = true;
@@ -115,8 +106,11 @@ bool Sparky::specialAttackUp(){
 }
 
 bool Sparky::specialAttackDown(){
-    if(useMP(20) && !m_ultimateMode)   
+    if(useMP(20) && !m_ultimateMode){
+        m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
+        m_soundManager->playSound("s_atak");
         m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
+    }
 
     return false;
 }
@@ -134,18 +128,22 @@ bool Sparky::specialAttackSide(){
         //Create attack and increase projectile count
         m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 0);
         m_punchLaunched = true;
+
+        m_soundManager->modifyParameter("s_atak", 0.3, "Atak");
+        m_soundManager->playSound("s_atak");
     }
 
     return false;
 }
 
 bool Sparky::ultimateAttack(){
-    //m_soundManager->modifyParameter("ultimate", 0.95, "Prob");
-    //m_soundManager->playSound("ultimate");
+    m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
         m_ultimateAmmo = 10;
         m_ultimateCharged = false;
+        m_soundManager->modifyParameter("s_ultimate", 0, "Prob");
+        m_soundManager->playSound("s_ultimate");
     }
 
     return false;
@@ -160,6 +158,8 @@ void Sparky::updatePlayer(){
 
     if(m_ultimateMode)
         updateUltimate();
+
+    randomSounds();
 }
 
 void Sparky::updateJump(){
@@ -205,6 +205,26 @@ void Sparky::updateUltimate(){
             m_ultimateBullet     = nullptr;
             m_ultiBulletLaunched = false;
         }
-    }else
+    }else{
+        m_soundManager->modifyParameter("s_ultimate", 1.0, "Prob");
         m_ultimateMode    = false;
+    }
+}
+
+void Sparky::randomSounds(){
+    if(!m_soundManager->isPlaying("s_random")){
+        float t_prob = ((float)rand() / (float)RAND_MAX);
+        m_soundManager->modifyParameter("s_random", t_prob, "Prob");
+        m_soundManager->playSound("s_random");
+    }
+}
+
+bool Sparky::tauntSound(){
+    m_soundManager->playSound("s_taunt");
+    
+    return false;
+}
+
+void Sparky::deathSound(){
+    m_soundManager->playSound("s_death");
 }

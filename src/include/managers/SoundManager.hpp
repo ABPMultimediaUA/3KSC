@@ -25,8 +25,12 @@
 #include <fmod/fmod_studio.hpp>
 #include <fmod/fmod_common.h>
 #include <fmod/fmod_errors.h>
+
 #include <string>
+#include <vector>
 #include <map>
+
+#define FMOD_STUDIO_EVENT_CALLBACK_STOPPED 0x00000020
 
 enum class SoundID{
     S_KIRA = 0,
@@ -39,11 +43,12 @@ enum class SoundID{
 };
 
 struct Vector3 {
-	float x;
-	float y;
-	float z;
+    float x;
+    float y;
+    float z;
 };
 
+class InputManager;
 class SoundEvent;
 
 class SoundManager{
@@ -52,32 +57,53 @@ public:
     SoundManager();
     ~SoundManager();
 
-    void createSoundEvent(const char* eventPath, const char* name);
-    void playSound(const char* name);
+    void    createSoundEvent(const char* eventPath, const char* name, bool p_isEffectSound = true);
+    void    playSound(const char* name);
+    void    playMusic(const char* name);
+    void    pauseAll();
+    void    unPauseAll();
 
+    void    update();
 
-    void setVolume(float p_vol);
-    void update(bool p_paused);
+    void    loadBanks();
+    void    loadBank(SoundID p_bank);
+    void    loadEvents(SoundID p_bank);
 
-    void loadBanks();
-    void loadBank(SoundID p_bank);
-    void loadEvents(SoundID p_bank);
+    void    modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound = true);
+    bool    isPlaying(const char* p_name, bool p_checkUltimate = true);
+    void    stopAll();
 
-    void getEvents();
-    void modifyParameter(const char* name, float num, const char* parameter);
+    void    setMusicVolume(float p_volume);
+    void    increaseMusicVolume();
+    void    decreaseMusicVolume();
+
+    void    setEffectVolume(float p_volume);
+    void    increaseEffectVolume();
+    void    decreaseEffectVolume();
 
 private:
-    FMOD_RESULT               m_Result;
-    FMOD::Studio::System*     m_system;
-    FMOD::System*             m_lowLevelSystem;
+    InputManager*           m_inputManager;
+
+    FMOD_RESULT             m_Result;
+    FMOD::Studio::System*   m_system;
+    FMOD::System*           m_lowLevelSystem;
     
-    FMOD::Studio::Bank*       m_masterBank;
-    FMOD::Studio::Bank*       m_stringsBank;
-    FMOD::Studio::Bank*       m_musicBank;
+    FMOD::Studio::Bank*     m_masterBank;
+    FMOD::Studio::Bank*     m_stringsBank;
+    FMOD::Studio::Bank*     m_musicBank;
 
-    //FMOD::Studio::EventDescription*     m_musicEvent;
+    bool                    m_soundEffectPlaying;
+    float                   m_musicVolume;
+    float                   m_effectVolume;
+    bool                    m_soundMute;
 
-    std::map<const char*, SoundEvent*> m_soundEvents;
+    std::map<const char*, SoundEvent*>           m_musicEvents;
+    std::map<const char*, SoundEvent*>           m_effectEvents;
+    std::map<const char*, SoundEvent*>::iterator m_iterator;
+
+    std::vector<SoundEvent*>    m_mutedSounds;
+
+    void    updateSounds();
 };
 
 class SoundEvent{
@@ -88,11 +114,13 @@ public:
     void start();
     void stop();
     void pause();
-    void setVolume(float p_vol);
+    void unPause();
+    void setVolume(float p_volume);
     bool isPlaying();
 
     void modifyParameter(float num, const char* parameter);
 
+    FMOD::Studio::EventInstance*    getEventInstance();
 
 protected:
     FMOD::Studio::EventInstance*    m_soundInstance;

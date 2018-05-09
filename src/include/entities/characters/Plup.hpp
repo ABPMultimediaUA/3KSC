@@ -32,14 +32,16 @@ class Plup: public Character {
 public:
     Plup(char* p_name, float p_position[3], bool p_online = false);
     ~Plup();
-    bool        jump();
-    bool        basicAttack();
-    bool        specialAttackUp();
-    bool        specialAttackDown();
-    bool        specialAttackSide();
-    bool        ultimateAttack();
-    void        updatePlayer();
-    int         getCurrentSnowmen();
+    bool    jump();
+    bool    basicAttack();
+    bool    specialAttackUp();
+    bool    specialAttackDown();
+    bool    specialAttackSide();
+    bool    ultimateAttack();
+    void    updatePlayer();
+    int     getCurrentSnowmen();
+    bool    tauntSound();
+    void    deathSound();
 
 
 private:
@@ -65,6 +67,7 @@ private:
     void        deleteSnowman();
     void        updateDash();
     void        updateKalasnikov();
+    void        randomSounds();
 };
 
 #endif

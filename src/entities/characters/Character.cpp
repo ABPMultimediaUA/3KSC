@@ -26,7 +26,6 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
-#include "../../include/managers/SoundManager.hpp"
 #include "../../include/managers/UIManager.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
@@ -47,7 +46,6 @@ int Character::m_playerCount = 0;
 Arena*          m_arena             = 0;
 
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online) : Entity(p_position, 0.5f, p_modelURL){
-    m_soundManager          = &SoundManager::instance();
     m_arena                 = Arena::getInstance();
     m_client                = &Client::instance();
     
@@ -123,7 +121,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
 }
 
 Character::~Character(){
-    if (m_AI){
+    if(m_AI){
         delete m_AI;
         m_AI = nullptr;
     }
@@ -153,7 +151,8 @@ void Character::mapActions(){
     m_actions[8]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
     m_actions[9]    = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
     m_actions[10]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
-    m_actions[11]   = {Action::Count              , 0                             , false     , false};
+    m_actions[11]   = {Action::Taunt              , &Character::tauntSound        , true      , false};
+    m_actions[12]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
@@ -161,9 +160,7 @@ void Character::mapActions(){
 void Character::receiveAttack(int p_damage, bool p_block, float p_knockPower, int p_knockSide, bool p_checked){
     if(m_online && !p_checked){
         if(m_client->getPlayer() == m_playerIndex)
-        {
             m_client->attacked(p_damage, p_block, p_knockPower, p_knockSide);
-        }
         else return;  //ignorar ataques que no sean de tu jugador
     }
 
@@ -254,6 +251,7 @@ void Character::die(){
     m_stunned   = false;
     m_shielded = false;
 
+    deathSound();
     removeWings();
 
     if(m_lives >= 0)
@@ -451,17 +449,20 @@ void Character::setUltimateCharged(){
 bool Character::moveToPath(float p_position[2]){
     m_flagAIJump = !m_flagAIJump;
     // Move
-    if(p_position[0] > this->getX())
+    m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
+    if(p_position[0] > this->getX()){
         this->right();
-    else
+    }
+    else{
         this->left();
-
-    // Jump if enemy is above
-    if(p_position[1] > (this->getY() + 15.0f)){
-        if(m_flagAIJump)
-            m_inputManager->setAction(Action::Jump, m_playerIndex);
     }
 
+    // Jump if enemy is above
+    if(p_position[1] > (this->getY() + 1.5f)){
+        if(m_flagAIJump){
+            jump();
+        }
+    }
     return false;
 }
 
@@ -500,6 +501,7 @@ int Character::getValidation(){
 /* ****************************** ACTIONS ****************************** */
 bool Character::left(){
     lookLeft();
+    std::cout<<m_frameDeltaTime<<std::endl;
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
     return false;
@@ -533,14 +535,12 @@ bool Character::pick(){
 }
 
 bool Character::basicAttack(){}
-
 bool Character::specialAttackUp(){}
-
 bool Character::specialAttackDown(){}
-
 bool Character::specialAttackSide(){}
-
 bool Character::ultimateAttack(){}
+bool Character::tauntSound(){}
+void Character::deathSound(){}
 
 bool Character::toggleAI(){
     m_AIEnabled = !m_AIEnabled;

@@ -31,6 +31,8 @@
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/Client.hpp"
 
+#include "../include/extra/Inputs.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -73,20 +75,11 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
 //Destructor
 InGameState::~InGameState(){
-    delete m_physicsManager;
-    m_physicsManager = nullptr;
-    
-    delete m_soundManager;
-    m_soundManager = nullptr;
-    
     // delete m_UIManager;
     // m_UIManager = nullptr;
     
     delete m_arena;
     m_arena = nullptr;
-    
-    delete m_pathfinding;
-    m_pathfinding = nullptr;
 
     delete m_client;
     m_client = nullptr;
@@ -96,7 +89,7 @@ void InGameState::input(){}
 
 void InGameState::update(){
     m_inputManager->updateMasterClock();
-    m_soundManager->update(false);
+    m_soundManager->update();
     m_engineManager->updateFrameDeltaTime(m_deltaTime);
 
     if(m_onlineMode)
@@ -207,8 +200,8 @@ void InGameState::createArena(const char* p_fileCgm){
 
             const char* t_path = t_elements[2].c_str();
             const char* t_name = t_elements[3].c_str();
-            m_soundManager->createSoundEvent(t_path, t_name);
-            //m_soundManager->playSound(t_name);
+            m_soundManager->loadEvents(SoundID::S_FOSFOS_STADIUM);
+            m_soundManager->playMusic(t_name);
         }
         //create waypoints
         else if(t_name == "w"){

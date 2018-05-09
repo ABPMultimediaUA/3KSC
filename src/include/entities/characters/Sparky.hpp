@@ -37,6 +37,8 @@ public:
     bool    ultimateAttack();
     void    updatePlayer();
     void    updateJump();
+    bool    tauntSound();
+    void    deathSound();
 
 private:
     float           m_jumpingDuration;
@@ -55,6 +57,7 @@ private:
     
     void    updatePunch();
     void    updateUltimate();
+    void    randomSounds();
 
 };
 

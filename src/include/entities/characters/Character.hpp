@@ -23,7 +23,6 @@
 #ifndef CHARACTER
 #define CHARACTER
 
-class SoundManager;
 class AICharacter;
 
 #include <SFML/System.hpp>
@@ -85,6 +84,8 @@ public:
     virtual bool    specialAttackDown();
     virtual bool    specialAttackSide();
     virtual bool    ultimateAttack();
+    virtual bool    tauntSound();
+    virtual void    deathSound();
     bool            toggleAI();
 
     virtual int     getCurrentSnowmen();
@@ -98,7 +99,6 @@ public:
     int             getValidation();
 
 protected:
-    SoundManager*   m_soundManager;
     static int      m_playerCount;
     int             m_playerIndex;
     bool            m_NPC;
