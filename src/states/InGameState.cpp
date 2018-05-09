@@ -69,7 +69,9 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_time  = 0;
     m_FPS   = 0;
     
-    m_engineManager->createSprite("assets/awesome.bin", 10.0f, 10.0f);
+    //m_engineManager->createSprite("assets/awesome.bin", 10.0f, 10.0f);
+    //IF PARTICLE SYSTEM, ACTIVATE THE UPDATE IN THE UPDATE LOOP OF INGAMESTATE
+    //m_engineManager->createParticleSystem("assets/awesome.bin", 1000);
 }
 
 //Destructor
@@ -110,6 +112,8 @@ void InGameState::update(){
             t_currentPlayer->update();
         }
     }
+    //m_engineManager->updateParticleSystem();
+
     //calculateFPS();
 }
 

@@ -316,6 +316,13 @@ void EngineManager::createSprite(const char* p_url, float p_width, float p_heigh
     CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_width, p_height);
 }
 
+void EngineManager::createParticleSystem(const char* p_url, int p_amount){
+    m_system = m_scene->createParticleSystem(p_url, p_amount);
+}
+
+void EngineManager::updateParticleSystem(){
+    m_system->update();
+}
 
 double EngineManager::getTime(){
     return m_window->getTimer();
