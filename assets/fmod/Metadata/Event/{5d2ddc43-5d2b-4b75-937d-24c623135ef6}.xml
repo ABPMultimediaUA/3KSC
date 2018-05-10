@@ -74,6 +74,7 @@
             <destination>{3072ed0a-1543-44e9-984e-e6fdddc7f01a}</destination>
         </relationship>
     </object>
+<<<<<<< HEAD
     <object class="GroupTrack" id="{5cfb36eb-0b84-49ea-98be-d6bf5227b572}">
         <relationship name="modules">
             <destination>{337230a3-a5ad-45a2-8c35-fdef7b1fe7ad}</destination>
@@ -98,6 +99,11 @@
     <object class="ParameterProxy" id="{c8d165bc-be82-4d4c-94b2-4b9e007c52d1}">
         <relationship name="preset">
             <destination>{1ee2dfed-1d13-4c9e-ba29-d0ac90bd2193}</destination>
+=======
+    <object class="Timeline" id="{4802aabb-a79b-48ab-9f1a-f6056758b196}">
+        <relationship name="modules">
+            <destination>{d2ba8fa1-a5c5-4197-809f-4e0476777d2b}</destination>
+>>>>>>> ChaoticEngine
         </relationship>
     </object>
     <object class="EventMixerMaster" id="{66715beb-d761-48a7-915e-c75bbd80c416}">
@@ -119,7 +125,11 @@
     <object class="MixerBusPanner" id="{9c4bcb48-2a33-4f2a-a75e-273572ff50f6}"/>
     <object class="MultiSound" id="{d2ba8fa1-a5c5-4197-809f-4e0476777d2b}">
         <property name="length">
+<<<<<<< HEAD
             <value>3.3500000000000001</value>
+=======
+            <value>3.4000000000000004</value>
+>>>>>>> ChaoticEngine
         </property>
         <relationship name="sounds">
             <destination>{8d46d79b-e6eb-48bd-b7c0-e16876db8165}</destination>

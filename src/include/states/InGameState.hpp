@@ -45,7 +45,11 @@ class InGameState : public State{
         Client*         m_client;
 
         bool            m_onlineMode;
-        float           m_scale;            
+        float           m_scale;
+
+        double  m_time;
+        int     m_FPS;
+
     public:
         InGameState(Game* p_game, bool p_onlineMode = false);
         ~InGameState();
@@ -54,6 +58,9 @@ class InGameState : public State{
         void    render();
         void    nextState();
         void    createArena(const char* p_fileCgm);
+
+        void    calculateFPS();
+
 };
 
 #endif

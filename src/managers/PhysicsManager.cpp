@@ -31,13 +31,14 @@ PhysicsManager& PhysicsManager::instance(){
     static PhysicsManager instance;
     return instance;
 }
-  //at global scope
+//at global scope
 
 //Constructor
 PhysicsManager::PhysicsManager(){
     m_engineManager = &EngineManager::instance();
 
     b2Vec2 gravity(0.0f, -4.9f);
+    //b2Vec2 gravity(0.0f, 0.0f);
 
     m_world = new b2World(gravity);
 
@@ -145,11 +146,11 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     float t_factor = 1;
 
     for(int i = 0; i < m_engineManager->getTotalVertex(); i++){
-        t_minX = m_engineManager->getTotalVertexX().at(i*2);
-        t_maxX = m_engineManager->getTotalVertexX().at((i*2)+1);
+        t_minX = m_engineManager->getTotalVertexX()[i*2];
+        t_maxX = m_engineManager->getTotalVertexX()[(i*2)+1];
 
-        t_minY = m_engineManager->getTotalVertexY().at(i*2);
-        t_maxY = m_engineManager->getTotalVertexY().at((i*2)+1);
+        t_minY = m_engineManager->getTotalVertexY()[i*2];
+        t_maxY = m_engineManager->getTotalVertexY()[(i*2)+1];
 
         if(t_minX >= 0 && t_maxX > 0)
             t_dimX = (t_maxX - t_minX) * t_factor;
@@ -174,6 +175,9 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
         t_fixtureDef->filter.groupIndex   = 1;
 
         t_body->CreateFixture(t_fixtureDef);
+
+        float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
+        m_engineManager->createDebugQuad(t_vertex);
     }
 }
 

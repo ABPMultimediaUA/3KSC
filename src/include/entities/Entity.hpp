@@ -27,11 +27,7 @@ class EngineManager;
 class PhysicsManager;
 class InputManager;
 class SoundManager;
-class Debug;
-
-//#include "../Model.hpp"
-//#include "../Texture.hpp"
-//#include "../Hitbox.hpp"
+//class Debug;
 
 class Entity {
 public:
@@ -46,6 +42,7 @@ public:
     bool        checkCloseness(float* p_point, float p_range);
     int         getId();
     float*      getPosition();
+    float*      getElapsedPosition();
     float       getX();
     float       getY();
     float       getZ();
@@ -55,28 +52,30 @@ public:
     void        updatePosition();
     static int  getEntityCount();
 
+    /*
     void        createDebug();
     void        updateDebug();
+    */
 
 protected:
-    static EngineManager*   m_engineManager;
-    static PhysicsManager*  m_physicsManager;
-    static InputManager*    m_inputManager;
-    static SoundManager*    m_soundManager;
+    EngineManager*   m_engineManager;
+    PhysicsManager*  m_physicsManager;
+    InputManager*    m_inputManager;
+    SoundManager*    m_soundManager;
 
     static int              m_entityCount;
     int                     m_id; 
+    
     float                   m_position[3]; // [0] for x, [1] for y, [2] for z
     float                   m_lastPosition[3]; // [0] for x, [1] for y, [2] for z
+    float                   m_elapsed[3];
+
     const char*             m_modelURL;
-    //Model*                m_model;
-    //Texture*              m_texture;
-    //Hitbox*               m_hitbox;
     float                   m_weight;
     
     bool                    m_debugMode;
     int                     m_totalFixtures;
-    Debug*                  m_entityDebug[4];
+    //Debug*                  m_entityDebug[4];
 };
 
 #endif

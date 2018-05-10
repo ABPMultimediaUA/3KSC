@@ -26,9 +26,7 @@
 #include <Box2D.h>
 #include <irrlicht.h>
 #include <vector>
-
-using namespace irr;
-
+/*
 class Debug : public scene::ISceneNode{
 public:
     Debug(b2Body* p_body, int p_num);
@@ -50,5 +48,5 @@ private:
     b2Shape*            m_shape;
     float               m_posVertex[4][2];
 };
-
+*/
 #endif 

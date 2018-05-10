@@ -21,29 +21,37 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-#include <irrlicht.h>
-//#include <SFML/Graphics/RenderWindow.hpp>
+#include "../ChaoticEngine/fachada/CEWindow.hpp"
+#include "../ChaoticEngine/fachada/CEScene.hpp"
+#include "../ChaoticEngine/fachada/CESceneCamera.hpp"
+#include "../ChaoticEngine/fachada/CESceneLight.hpp"
+#include "../ChaoticEngine/fachada/CESceneMesh.hpp"
+#include "../ChaoticEngine/fachada/CESceneQuad.hpp"
+#include "../ChaoticEngine/fachada/CESceneSprite.hpp"
+#include "../ChaoticEngine/fachada/CESceneParticleSystem.hpp"
+#include "../ChaoticEngine/fachada/CESceneSkybox.hpp"
+#include "../ChaoticEngine/fachada/CEShader.hpp"
+
 #include <vector>
 #include "../entities/Entity.hpp"
 
-class EngineManager : public irr::IEventReceiver{
+class EngineManager{
 private:
-    std::vector<irr::scene::ISceneNode*>    m_entityNodes;
-    irr::IrrlichtDevice*                    m_device;
-    irr::video::IVideoDriver*               m_vDriver;
-    irr::scene::ISceneManager*              m_scene;
+    std::vector<CESceneMesh*>   m_entityNodes;
+    CEWindow*       m_window;
+    CEScene*        m_scene;
 
-    irr::scene::ICameraSceneNode* m_cameraNode;
+    CESceneCamera*          m_cameraNode;
+    CESceneParticleSystem*  m_system;
 
-    irr::u32        m_prevTime;
-    irr::u32        m_nowTime;
-    irr::f32        m_frameDeltaTime;
+    unsigned int    m_nowTime;
+    float           m_frameDeltaTime;
 
-    float   m_resetPosition[6];
-    float   m_cameraPosition[6];
-    float   m_newCameraPosition[6];
-    bool    m_moveCamera;
-    float   m_amountTime;
+    float           m_resetPosition[6];
+    float           m_cameraPosition[6];
+    float           m_newCameraPosition[6];
+    bool            m_moveCamera;
+    float           m_amountTime;
 
     //Vectors for reading the vertex of the batllefields
     int                     m_totalVertex;
@@ -56,57 +64,50 @@ public:
     EngineManager();
     ~EngineManager();
 
-    bool createWindow(bool p_fullscreen = true);
-    bool running();
-    void stop();
+    void                createWindow(bool p_fullscreen = true);
+    bool                isWindowActive();
+    bool                running();
+    void                stop();
 
-    virtual bool OnEvent(const irr::SEvent& p_event); 
-    void timeStamp();
-    float updateFrameDeltaTime(float p_delta);
+    float               updateFrameDeltaTime(float p_delta);
 
-    void createCamera(float p_cameraPosition[3], float p_tarjet[3]);
-    void moveCamera(float p_posX, float p_posY, float p_posZ);
-    void resetCamera();
-    void updateCamera();
+    void                createCamera(float p_cameraPosition[3], float p_tarjet[3]);
+    void                moveCamera(float p_posX, float p_posY, float p_posZ);
+    void                resetCamera();
+    void                updateCamera();
 
-    void createEntity(int p_id, float p_position[3]);
-    void deleteEntity(int p_id);
-    void load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
-    void loadSkybox(const char* p_skyboxURLs[6]); 
-    void moveEntity(Entity* p_entity);
-    void setRotation(int p_id, float p_degrees);
-    void scale(int p_id, float p_scale[3]);
+    void                createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
+
+    void                deleteEntity(int p_id);
+    void                load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
+    void                loadSkybox(const char* p_skyboxURLs[6]); 
+    void                moveEntity(Entity* p_entity);
+    void                setRotation(int p_id, float p_degrees);
+    void                scale(int p_id, float p_scale[3]);
     
-    void drawScene();
+    void                drawScene();
 
-    // sf::RenderWindow* getWindow();
-    float getFrameDeltaTime();
-    irr::scene::ISceneManager* getSceneManager();
-    irr::scene::ISceneNode* getEntityNode(int p_id);
+    float               getFrameDeltaTime();
+    CESceneMesh*        getEntityNode(int p_id);
+    void                getEntityPosition(int p_id);
 
-    irr::video::IVideoDriver* getVideoDriver();
-    irr::IrrlichtDevice* getDevice();
+    void                parseOBJ(const char* p_filename);
+    void                compareMaxAndMin(float p_value, float &p_max, float &p_min);
+    void                pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ);
 
-    bool isWindowActive();
+    int                 getTotalVertex()    {    return m_totalVertex;  };
+    std::vector<float>  getTotalVertexX()   {    return m_VertexX;      };
+    std::vector<float>  getTotalVertexY()   {    return m_VertexY;      };
+    std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
 
-    void loadCharacter();
-    void loadObject();
+    void                createDebugQuad(float p_vertex[4][2]);
+    void                createSprite(const char* p_url, float p_width, float p_height);
+    void                createParticleSystem(const char* p_url, int p_amount);
+    void                updateParticleSystem();
 
-    void putCharacter();
-    void putObject();
+    double              getTime();
+    double              getElapsedTime();
 
-    void drawArena();
-    void drawCharacter();
-    void drawObject();
-
-    void parseOBJ(const char* p_filename);
-    void compareMaxAndMin(float p_value, float &p_max, float &p_min);
-    void pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ);
-
-    int                getTotalVertex(); 
-    std::vector<float> getTotalVertexX();
-    std::vector<float> getTotalVertexY();
-    std::vector<float> getTotalVertexZ();
 
 };
 

@@ -140,7 +140,7 @@ protected:
     ActionMapping*  m_actions;
     void            mapActions();
 
-    Debug*          m_playerDebug;
+    //Debug*          m_playerDebug;
     bool            m_debugMode;
 
     float           m_jumpDuration;
