@@ -1,18 +1,20 @@
  
-#ifndef CE_SCENE_SPRITE
-#define CE_SCENE_SPRITE
+#ifndef CE_SCENE_PARTICLE_SYSTEM
+#define CE_SCENE_PARTICLE_SYSTEM
 
 #include <glew.h>
 #include <glfw3.h>
 
-#include "../CEsprite.hpp"
+#include "../CEparticlesystem.hpp"
 #include "../CEtransform.hpp"
 #include "../CEscenenode.hpp"
 
-class CESceneSprite{
+class CESceneParticleSystem{
 public:
-	CESceneSprite(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram);
-	~CESceneSprite();
+	CESceneParticleSystem(CESceneNode* p_parent, const char* p_path, int p_amount, GLuint p_shaderProgram);
+	~CESceneParticleSystem();
+
+	void	update();
 
 	void 	setScale(float p_x, float p_y, float p_z);
 	void 	setRotation(float p_x, float p_y, float p_z);
@@ -23,10 +25,11 @@ public:
 	void 	setAbsolutePosition(float p_x, float p_y, float p_z);
 
 private:
-	CESprite*		m_sprite;
 	CETransform*	m_rotate;
 	CETransform*	m_scale;
 	CETransform*	m_translate;
+	
+	CEParticleSystem*		m_system;
 
 };
 

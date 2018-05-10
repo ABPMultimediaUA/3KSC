@@ -8,6 +8,8 @@
 #include "../../include/ChaoticEngine/fachada/CESceneMesh.hpp"
 #include "../../include/ChaoticEngine/fachada/CESceneQuad.hpp"
 #include "../../include/ChaoticEngine/fachada/CESceneSprite.hpp"
+#include "../../include/ChaoticEngine/fachada/CESceneParticleSystem.hpp"
+#include "../../include/ChaoticEngine/fachada/CESceneSkybox.hpp"
 #include "../../include/ChaoticEngine/fachada/CEShader.hpp"
 #include "../../include/ChaoticEngine/CEtransform.hpp"
 
@@ -25,6 +27,10 @@ CEScene::CEScene(){
 	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertQuad.vert", "src/ChaoticEngine/shader/CEfragQuad.frag");
 	//[ 2 ] - Shader for the sprites
 	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertSprite.vert", "src/ChaoticEngine/shader/CEfragSprite.frag");
+	//[ 3 ] - Shader for the particle system
+	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertParticle.vert", "src/ChaoticEngine/shader/CEfragParticle.frag");
+	//[ 4 ] - Shader for the skybox
+	m_shaderProgram->loadShader("src/ChaoticEngine/shader/CEvertSkybox.vert", "src/ChaoticEngine/shader/CEfragSkybox.frag");
 }
 
 CEScene::~CEScene(){
@@ -61,26 +67,34 @@ CESceneLight* CEScene::createLight(float p_lightIntensity[3], float p_lightAtenu
 }
 
 CESceneMesh* CEScene::createMesh(const char* p_path){
-	std::cout << "Cargamos malla: " << p_path << std::endl;
+	//std::cout << "Cargamos malla: " << p_path << std::endl;
 	CESceneMesh* CEmesh = new CESceneMesh(m_root, p_path, m_shaderProgram->getShaderProgram(0));
 
-	std::cout << "Malla cargada!"<< std::endl;
 	return CEmesh;	
 }
 
 CESceneQuad* CEScene::createQuad(float p_vertex[4][2]){
-	std::cout << "Cremos Quad" << std::endl;
 	CESceneQuad* CEquad = new CESceneQuad(m_root, p_vertex, m_shaderProgram->getShaderProgram(1));
 
 	return CEquad;	
 }
 
-CESceneSprite* CEScene::createSprite(const char* p_path, float p_vertex[4][2]){
-	std::cout << "Cargamos Sprite" << std::endl;
-	CESceneSprite* CEsprite = new CESceneSprite(m_root, p_path, p_vertex, m_shaderProgram->getShaderProgram(2));
-	std::cout << "Sprite cargado!" << std::endl;
+CESceneSprite* CEScene::createSprite(const char* p_path, float p_width, float p_height){
+	CESceneSprite* CEsprite = new CESceneSprite(m_root, p_path, p_width, p_height, m_shaderProgram->getShaderProgram(2));
 
 	return CEsprite;
+}
+
+CESceneParticleSystem* CEScene::createParticleSystem(const char* p_path, int p_amount){
+	CESceneParticleSystem* CEemitter = new CESceneParticleSystem(m_root, p_path, p_amount, m_shaderProgram->getShaderProgram(3));
+
+	return CEemitter;
+}
+
+CESceneSkybox* CEScene::createSkybox(const char* p_path[6]){
+	CESceneSkybox* CEskybox = new CESceneSkybox(m_root, p_path, m_shaderProgram->getShaderProgram(4));
+
+	return CEskybox;
 }
 
 void CEScene::setActiveCamera(CESceneCamera* p_camera){
@@ -98,4 +112,8 @@ void CEScene::release(){
 
 	delete m_resourceManager;
 	delete m_root;
+}
+
+void CEScene::remove(CESceneNode* p_node){
+	m_root->removeChild(p_node);
 }

@@ -36,7 +36,8 @@ private:
     CEWindow*       m_window;
     CEScene*        m_scene;
 
-    CESceneCamera*  m_cameraNode;
+    CESceneCamera*          m_cameraNode;
+    CESceneParticleSystem*  m_system;
 
     unsigned int    m_nowTime;
     float           m_frameDeltaTime;
@@ -99,7 +100,10 @@ public:
     
 
     void                createDebugQuad(float p_vertex[4][2]);
-    void                createSprite(const char* p_url, float p_vertex[4][2]);
+    void                createSprite(const char* p_url, float p_width, float p_height);
+    void                createParticleSystem(const char* p_url, int p_amount);
+    void                updateParticleSystem();
+
     double              getTime();
     double              getElapsedTime();
 

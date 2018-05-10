@@ -48,4 +48,4 @@ rp 0 17 0
 si -12.5 12.5 17
 
 # sk se utiliza para marcar las imagenes usadas en el skybox: lista de urls de las imagenes
-sk assets/skyboxes/fusfus_skybox/cloudtop_up.tga assets/skyboxes/fusfus_skybox/cloudtop_dn.tga assets/skyboxes/fusfus_skybox/cloudtop_lt.tga assets/skyboxes/fusfus_skybox/cloudtop_rf.tga assets/skyboxes/fusfus_skybox/cloudtop_ft.tga assets/skyboxes/fusfus_skybox/cloudtop_bk.tga
+sk assets/skyboxes/fusfus_skybox/stratosphere_ft.tga assets/skyboxes/fusfus_skybox/stratosphere_bk.tga assets/skyboxes/fusfus_skybox/stratosphere_up.tga assets/skyboxes/fusfus_skybox/stratosphere_dn.tga assets/skyboxes/fusfus_skybox/stratosphere_rt.tga assets/skyboxes/fusfus_skybox/stratosphere_lf.tga

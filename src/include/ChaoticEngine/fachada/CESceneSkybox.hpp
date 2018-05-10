@@ -1,18 +1,18 @@
  
-#ifndef CE_SCENE_SPRITE
-#define CE_SCENE_SPRITE
+#ifndef CE_SCENE_SKYBOX
+#define CE_SCENE_SKYBOX
 
 #include <glew.h>
 #include <glfw3.h>
 
-#include "../CEsprite.hpp"
+#include "../CEskybox.hpp"
 #include "../CEtransform.hpp"
 #include "../CEscenenode.hpp"
 
-class CESceneSprite{
+class CESceneSkybox{
 public:
-	CESceneSprite(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram);
-	~CESceneSprite();
+	CESceneSkybox(CESceneNode* p_parent, const char* p_path[6], GLuint p_shaderProgram);
+	~CESceneSkybox();
 
 	void 	setScale(float p_x, float p_y, float p_z);
 	void 	setRotation(float p_x, float p_y, float p_z);
@@ -23,7 +23,7 @@ public:
 	void 	setAbsolutePosition(float p_x, float p_y, float p_z);
 
 private:
-	CESprite*		m_sprite;
+	CESkybox* 		m_skybox;
 	CETransform*	m_rotate;
 	CETransform*	m_scale;
 	CETransform*	m_translate;

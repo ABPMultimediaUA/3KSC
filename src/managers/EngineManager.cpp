@@ -175,8 +175,9 @@ float EngineManager::updateFrameDeltaTime(float p_delta){
 }
 
 void EngineManager::deleteEntity(int p_id){
-    std::cout << "IMPLEMENTAR DELETE EN MESH EN NUETRO MOTOR" << std::endl;
+    //std::cout << "IMPLEMENTAR DELETE EN MESH EN NUETRO MOTOR" << std::endl;
     //m_entityNodes.at(p_id)->remove();
+    m_scene->remove(m_entityNodes.at(p_id)->getTopNode());
 }
 
 //Loads a 3D model
@@ -194,20 +195,9 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
 }
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
-    std::cout << "AUN NO TENEMOS SKYBOOOOX! (COMING SOON!)" << std::endl;
-    /*m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+    //CESceneSkybox* t_skybox = m_scene->createSkybox(p_skyboxURLs);
 
-    scene::ISceneNode* t_skybox = m_scene->addSkyBoxSceneNode(
-        m_vDriver->getTexture(p_skyboxURLs[0]),
-        m_vDriver->getTexture(p_skyboxURLs[1]),
-        m_vDriver->getTexture(p_skyboxURLs[2]),
-        m_vDriver->getTexture(p_skyboxURLs[3]),
-        m_vDriver->getTexture(p_skyboxURLs[4]),
-        m_vDriver->getTexture(p_skyboxURLs[5]));
-
-    m_vDriver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, true);
-
-    //m_entityNodes.push_back(t_skybox);*/
+    //m_entityNodes.push_back(t_skybox);
 }
 
 void EngineManager::moveEntity(Entity* p_entity){
@@ -234,7 +224,7 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_window->processInput();
+    //m_window->processInput();
     m_window->clear(0.5f, 0.0f, 0.0f, 1.0f);
 
     m_scene->draw();
@@ -335,10 +325,17 @@ void EngineManager::createDebugQuad(float p_vertex[4][2]){
     CESceneQuad* t_quad = m_scene->createQuad(p_vertex);
 }
 
-void EngineManager::createSprite(const char* p_url, float p_vertex[4][2]){
-    CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_vertex);
+void EngineManager::createSprite(const char* p_url, float p_width, float p_height){
+    CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_width, p_height);
 }
 
+void EngineManager::createParticleSystem(const char* p_url, int p_amount){
+    m_system = m_scene->createParticleSystem(p_url, p_amount);
+}
+
+void EngineManager::updateParticleSystem(){
+    m_system->update();
+}
 
 double EngineManager::getTime(){
     return m_window->getTimer();

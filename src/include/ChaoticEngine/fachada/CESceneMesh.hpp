@@ -24,11 +24,15 @@ public:
 
 	void	getPosition();
 
+	CESceneNode* getTopNode(){return m_nodeRotate;}
+
 private:
 	CEMesh*			m_mesh;
 	CETransform*	m_rotate;
 	CETransform*	m_scale;
 	CETransform*	m_translate;
+
+	CESceneNode* 	m_nodeRotate;
 
 };
 
