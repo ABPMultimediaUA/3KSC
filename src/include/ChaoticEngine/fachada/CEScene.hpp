@@ -33,6 +33,7 @@ public:
 
 	void 			draw();
 	void			release();
+	void			remove(CESceneNode* p_node);
 
 private:
 	CESceneNode*		m_root;

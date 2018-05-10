@@ -113,3 +113,7 @@ void CEScene::release(){
 	delete m_resourceManager;
 	delete m_root;
 }
+
+void CEScene::remove(CESceneNode* p_node){
+	m_root->removeChild(p_node);
+}

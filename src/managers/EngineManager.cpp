@@ -152,8 +152,9 @@ float EngineManager::updateFrameDeltaTime(float p_delta){
 }
 
 void EngineManager::deleteEntity(int p_id){
-    std::cout << "IMPLEMENTAR DELETE EN MESH EN NUETRO MOTOR" << std::endl;
+    //std::cout << "IMPLEMENTAR DELETE EN MESH EN NUETRO MOTOR" << std::endl;
     //m_entityNodes.at(p_id)->remove();
+    m_scene->remove(m_entityNodes.at(p_id)->getTopNode());
 }
 
 //Loads a 3D model
