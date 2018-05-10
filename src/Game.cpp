@@ -21,6 +21,7 @@
 #include "include/Game.hpp"
 #include "include/managers/EngineManager.hpp"
 #include "include/managers/InputManager.hpp"
+#include "include/states/MenuState.hpp"
 #include "include/states/InGameState.hpp"
 
 #include <iostream>
@@ -28,22 +29,44 @@
 #include <sys/time.h>
 #include <chrono>
 
+//Instance initialization
+Game* Game::m_instance = nullptr;
+
 //Constructor
 Game::Game(){
-    m_engineManager = &EngineManager::instance();
-    m_inputManager  = &InputManager::instance();
+    Game::m_instance    = this;
+    m_engineManager     = &EngineManager::instance();
+    m_inputManager      = &InputManager::instance();
     
     const int FPS = 170;
     m_nanoFrames = 1000000000/FPS;
+
+    m_resolutionPreset  = 2;
+    m_fullscreen        = false;
+
+    m_volBGM            = 20;
+    m_volFX             = 20;
+    m_volVoices         = 20;
+
+    for (int i = 0; i < 4; i++){
+        m_enabledPlayers[i] = false;
+        m_chosenPlayers[i]  = 6;
+    }
+
+    m_rounds            = 2;
+    m_lives             = 3;
+    m_timeLimit         = -1;
     
-    m_engineManager->createWindow(false);
+    m_engineManager->createWindow(m_resolutionPreset, false);
+    // m_state = new MenuState(this);
     m_state = new InGameState(this, false);
 }
 
 //Destructor
 Game::~Game(){
-    delete m_state;
-    m_state = nullptr;
+    std::cout << "~Game" << std::endl;
+    if (m_state)    { delete m_state;   m_state = nullptr; }
+    Game::m_instance = nullptr;
 }
 
 //Changes to an specified state

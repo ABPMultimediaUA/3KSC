@@ -4,7 +4,7 @@ HDRDIR	:= $(SRCDIR)include/
 LIBDIR  := lib/
 INCDIR  := include/
 OBJDIR	:= obj/
-SUBDIRS := $(OBJDIR)entities $(OBJDIR)entities/characters $(OBJDIR)entities/items $(OBJDIR)managers $(OBJDIR)AI $(OBJDIR)states $(OBJDIR)ChaoticEngine $(OBJDIR)ChaoticEngine/manager $(OBJDIR)ChaoticEngine/fachada
+SUBDIRS := $(OBJDIR)entities $(OBJDIR)entities/characters $(OBJDIR)entities/items $(OBJDIR)managers $(OBJDIR)AI $(OBJDIR)states $(OBJDIR)menu_screens $(OBJDIR)ChaoticEngine $(OBJDIR)ChaoticEngine/manager $(OBJDIR)ChaoticEngine/fachada
 
 #Files
 SOURCES := $(shell find $(SRCDIR) -name '*.cpp')
@@ -15,7 +15,7 @@ BINARY 	:= 3KSC
 CC		:= g++
 LDFLAGS := -Wl,-rpath=$(LIBDIR)
 
-INCLUDE := -I$(HDRDIR) -I$(INCDIR) -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)nlohmann -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod -I$(INCDIR)OpenGL -I$(INCDIR)glm
+INCLUDE := -I$(HDRDIR) -I$(INCDIR) -I$(INCDIR)ChaoticEngine -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)nlohmann -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod -I$(INCDIR)OpenGL -I$(INCDIR)glm
 LIBS	:= -L$(LIBDIR) -lIrrlicht -lGL -lGLEW -lglfw -lassimp -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL -lassimp
 FAST	:= -j4
 
@@ -25,7 +25,7 @@ $(BINARY): $(OBJECTS)
 
 #Make objects
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
-	make setup
+	$(MAKE) setup
 	$(CC) -o $@ -c $^ $(INCLUDE)
 
 #Create object directories
@@ -40,22 +40,22 @@ clean:
 
 #Makes binary (previous clean)
 cleanc:
-	make clean
-	make $(FAST)
+	$(MAKE) clean
+	$(MAKE) $(FAST)
 
 #Runs after compiling
 run:
-	make $(FAST)
+	$(MAKE) $(FAST)
 	./$(BINARY)
 
 #Cleans, compiles and runs
 cleanr:
-	make cleanc
+	$(MAKE) cleanc
 	./$(BINARY)
 
 #Compile the program with 4 threads
 fast:
-	make $(FAST)
+	$(MAKE) $(FAST)
 
 #Prints sources, objects and headers lists
 info:
@@ -64,3 +64,4 @@ info:
 	$(info $(SOURCES))
 	$(info $(INCLUDE))
 	$(info $(LIBS))
+	$(info $(MAKE))

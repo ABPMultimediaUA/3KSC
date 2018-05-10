@@ -1,6 +1,6 @@
 /*
     3KSC: A fighting game
-    Copyright (C) 2018  Chaotic Games
+    Copyright (C);
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,20 +18,31 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef MENU_ACTIONS
-#define MENU_ACTIONS
+#ifndef ONLINE_MODE_SCREEN
+#define ONLINE_MODE_SCREEN
 
-    enum class MenuAction{
-        Up = 0,
-        Down,
-        Left,
-        Right,
-        Select,
-        Back,
-        Save,
-        Settings,
+#include "MenuScreen.hpp"
 
-        Count
-    };
+class OnlineModeScreen : public MenuScreen{
+    private:
+        OnlineModeScreen(MenuState* p_menu);
+        
+        MenuNode*   m_createNode;
+        MenuNode*   m_joinNode;
 
-#endif      
+        sf::Sprite* m_create;
+        sf::Sprite* m_join;
+
+        void clipElements()         override;
+        void setElementsOrigins()   override;
+        void placeElements()        override;
+        void initializeNodes()      override;
+
+    public:
+        static OnlineModeScreen& instance();
+        ~OnlineModeScreen();
+
+        void render()               override;
+};
+
+#endif

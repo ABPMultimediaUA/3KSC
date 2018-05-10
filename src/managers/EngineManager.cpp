@@ -18,8 +18,10 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#include <CE.hpp>
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/extra/ResolutionPresets.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -40,13 +42,30 @@ EngineManager::EngineManager(){
 EngineManager::~EngineManager(){}
 
 //Creates the game window
-void EngineManager::createWindow(bool p_fullscreen){
+void EngineManager::createWindow(int p_resolutionPreset, bool p_fullscreen){
+    int t_width     = g_resolutionPresets[p_resolutionPreset].width,
+        t_height    = g_resolutionPresets[p_resolutionPreset].height;
+
+    // m_window = new CEWindow(t_width, t_height, "3KSC", p_fullscreen);
     m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
     m_scene  = new CEScene();
 }
 
+CEPosition EngineManager::getWindowPosition(){
+    return m_window->getPosition();
+}
+
+CESize EngineManager::getWindowSize(){
+    return m_window->getSize();
+}
+
 bool EngineManager::isWindowActive(){
     return m_window->isOpen();
+}
+
+//Hides or shows the cursor
+void EngineManager::setCursorVisible(bool p_visible){
+    m_window->setCursorVisible(p_visible);
 }
 
 //Returns whether the device is running or not

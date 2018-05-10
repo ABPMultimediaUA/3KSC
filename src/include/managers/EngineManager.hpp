@@ -21,17 +21,13 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-#include "../ChaoticEngine/fachada/CEWindow.hpp"
-#include "../ChaoticEngine/fachada/CEScene.hpp"
-#include "../ChaoticEngine/fachada/CESceneCamera.hpp"
-#include "../ChaoticEngine/fachada/CESceneLight.hpp"
-#include "../ChaoticEngine/fachada/CESceneMesh.hpp"
-#include "../ChaoticEngine/fachada/CESceneQuad.hpp"
-#include "../ChaoticEngine/fachada/CESceneSprite.hpp"
-#include "../ChaoticEngine/fachada/CESceneParticleSystem.hpp"
-#include "../ChaoticEngine/fachada/CESceneSkybox.hpp"
-#include "../ChaoticEngine/fachada/CEShader.hpp"
+class CEWindow;
+class CEScene;
+class CESceneCamera;
+class CESceneMesh;
+class CESceneParticleSystem;
 
+#include <CETypes.hpp>
 #include <vector>
 #include "../entities/Entity.hpp"
 
@@ -64,28 +60,31 @@ public:
     EngineManager();
     ~EngineManager();
 
-    void                createWindow(bool p_fullscreen = true);
-    bool                isWindowActive();
-    bool                running();
-    void                stop();
+    void        createWindow(int p_resolutionPreset, bool p_fullscreen = true);
+    CEPosition  getWindowPosition();
+    CESize      getWindowSize(); 
+    bool        isWindowActive();
+    void        setCursorVisible(bool p_visible = true);
+    bool        running();
+    void        stop();
 
-    float               updateFrameDeltaTime(float p_delta);
+    float       updateFrameDeltaTime(float p_delta);
 
-    void                createCamera(float p_cameraPosition[3], float p_tarjet[3]);
-    void                moveCamera(float p_posX, float p_posY, float p_posZ);
-    void                resetCamera();
-    void                updateCamera();
+    void        createCamera(float p_cameraPosition[3], float p_tarjet[3]);
+    void        moveCamera(float p_posX, float p_posY, float p_posZ);
+    void        resetCamera();
+    void        updateCamera();
 
-    void                createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
+    void        createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
 
-    void                deleteEntity(int p_id);
-    void                load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
-    void                loadSkybox(const char* p_skyboxURLs[6]); 
-    void                moveEntity(Entity* p_entity);
-    void                setRotation(int p_id, float p_degrees);
-    void                scale(int p_id, float p_scale[3]);
+    void        deleteEntity(int p_id);
+    void        load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
+    void        loadSkybox(const char* p_skyboxURLs[6]); 
+    void        moveEntity(Entity* p_entity);
+    void        setRotation(int p_id, float p_degrees);
+    void        scale(int p_id, float p_scale[3]);
     
-    void                drawScene();
+    void        drawScene();
 
     float               getFrameDeltaTime();
     CESceneMesh*        getEntityNode(int p_id);
