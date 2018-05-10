@@ -8,7 +8,6 @@
 //Constructor
 CEResourceMesh::CEResourceMesh() : CEResource(){}
 
-
 //Destructor
 CEResourceMesh::~CEResourceMesh(){}
 
@@ -121,6 +120,7 @@ std::vector<CEResourceTexture*> CEResourceMesh::loadMaterialTextures(aiMaterial 
         p_mat->GetTexture(p_type, i, &str);
         std::string t_path = m_directory + '/' + str.C_Str();
         CEResourceTexture* t_texture = static_cast<CEResourceTexture*>(t_manager->getResource(t_path.c_str()));
+        t_texture->glBuffersTexture();
         t_texture->setTextureType(p_typeName);
         t_texture->setTexturePath(str.C_Str());
         t_textures.push_back(t_texture);
