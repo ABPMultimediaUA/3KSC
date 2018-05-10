@@ -18,8 +18,12 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#include <CE.hpp>
+
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/extra/ResolutionPresets.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -40,32 +44,51 @@ EngineManager::EngineManager(){
 EngineManager::~EngineManager(){}
 
 //Creates the game window
-void EngineManager::createWindow(bool p_fullscreen){
+void EngineManager::createWindow(int p_resolutionPreset, bool p_fullscreen){
+    int t_width     = g_resolutionPresets[p_resolutionPreset].width,
+        t_height    = g_resolutionPresets[p_resolutionPreset].height;
+
+    // m_window = new CEWindow(t_width, t_height, "3KSC", p_fullscreen);
     m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
     m_scene  = new CEScene();
 }
 
-bool EngineManager::isWindowActive(){
-    return m_window->isOpen();
+CEPosition EngineManager::getWindowPosition(){
+    return m_window->getPosition();
 }
 
-//Returns whether the device is running or not
+CESize EngineManager::getWindowSize(){
+    return m_window->getSize();
+}
+
+
+//Returns whether the windo is running or not
 bool EngineManager::running(){
     return m_window->isOpen();
 }
 
+//Returns whether the window has focus or not
+bool EngineManager::isWindowActive(){
+    return m_window->hasFocus();
+}
+
+//Hides or shows the cursor
+void EngineManager::setCursorVisible(bool p_visible){
+    m_window->setCursorVisible(p_visible);
+}
+
 //Creates a camera
-void EngineManager::createCamera(float p_cameraPosition[3], float p_tarjet[3]){
+void EngineManager::createCamera(float p_cameraPosition[3], float p_target[3]){
     m_cameraNode = m_scene->createCamera(true);
     if(m_cameraNode){
         m_resetPosition[0] = m_cameraPosition[0] = p_cameraPosition[0];
         m_resetPosition[1] = m_cameraPosition[1] = p_cameraPosition[1];
         m_resetPosition[2] = m_cameraPosition[2] = p_cameraPosition[2];
-        m_resetPosition[3] = m_cameraPosition[3] = p_tarjet[0];
-        m_resetPosition[4] = m_cameraPosition[4] = p_tarjet[1];
-        m_resetPosition[5] = m_cameraPosition[5] = p_tarjet[2];
+        m_resetPosition[3] = m_cameraPosition[3] = p_target[0];
+        m_resetPosition[4] = m_cameraPosition[4] = p_target[1];
+        m_resetPosition[5] = m_cameraPosition[5] = p_target[2];
         m_cameraNode->setAbsolutePosition(p_cameraPosition[0],p_cameraPosition[1],p_cameraPosition[2]);
-        m_cameraNode->lookAt(p_tarjet[0],p_tarjet[1],p_tarjet[2]);
+        m_cameraNode->lookAt(p_target[0],p_target[1],p_target[2]);
     }
 }
 

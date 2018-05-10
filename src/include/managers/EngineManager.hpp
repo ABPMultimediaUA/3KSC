@@ -21,15 +21,12 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-#include "../ChaoticEngine/fachada/CEWindow.hpp"
-#include "../ChaoticEngine/fachada/CEScene.hpp"
-#include "../ChaoticEngine/fachada/CESceneCamera.hpp"
-#include "../ChaoticEngine/fachada/CESceneLight.hpp"
-#include "../ChaoticEngine/fachada/CESceneMesh.hpp"
-#include "../ChaoticEngine/fachada/CESceneQuad.hpp"
-#include "../ChaoticEngine/fachada/CESceneSprite.hpp"
-#include "../ChaoticEngine/fachada/CEShader.hpp"
+class CEWindow;
+class CEScene;
+class CESceneCamera;
+class CESceneMesh;
 
+#include <CETypes.hpp>
 #include <vector>
 #include "../entities/Entity.hpp"
 
@@ -61,41 +58,45 @@ public:
     EngineManager();
     ~EngineManager();
 
-    void                createWindow(bool p_fullscreen = true);
-    bool                isWindowActive();
-    bool                running();
-    void                stop();
+    void        createWindow(int p_resolutionPreset = 1, bool p_fullscreen = true);
+    CEPosition  getWindowPosition();
+    CESize      getWindowSize(); 
+    bool        running();
+    bool        isWindowActive();
+    void        setCursorVisible(bool p_visible = true);
+    void        stop();
 
-    float               updateFrameDeltaTime(float p_delta);
+    float       updateFrameDeltaTime(float p_delta);
 
-    void                createCamera(float p_cameraPosition[3], float p_tarjet[3]);
-    void                moveCamera(float p_posX, float p_posY, float p_posZ);
-    void                resetCamera();
-    void                updateCamera();
+    void        createCamera(float p_cameraPosition[3], float p_target[3]);
+    void        moveCamera(float p_posX, float p_posY, float p_posZ);
+    void        resetCamera();
+    void        updateCamera();
 
-    void                createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
+    void        createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
 
-    void                deleteEntity(int p_id);
-    void                load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
-    void                loadSkybox(const char* p_skyboxURLs[6]); 
-    void                moveEntity(Entity* p_entity);
-    void                setRotation(int p_id, float p_degrees);
-    void                scale(int p_id, float p_scale[3]);
+    void        deleteEntity(int p_id);
+    void        load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
+    void        loadSkybox(const char* p_skyboxURLs[6]); 
+    void        moveEntity(Entity* p_entity);
+    void        setRotation(int p_id, float p_degrees);
+    void        scale(int p_id, float p_scale[3]);
     
-    void                drawScene();
+    void        drawScene();
 
-    float               getFrameDeltaTime();
-    CESceneMesh*        getEntityNode(int p_id);
-    void                getEntityPosition(int p_id);
+    float           getFrameDeltaTime();
+    CESceneMesh*    getEntityNode(int p_id);
+    void            getEntityPosition(int p_id);
 
-    void                parseOBJ(const char* p_filename);
-    void                compareMaxAndMin(float p_value, float &p_max, float &p_min);
-    void                pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ);
+    void        parseOBJ(const char* p_filename);
+    void        compareMaxAndMin(float p_value, float &p_max, float &p_min);
+    void        pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ);
 
     int                 getTotalVertex()    {    return m_totalVertex;  };
     std::vector<float>  getTotalVertexX()   {    return m_VertexX;      };
     std::vector<float>  getTotalVertexY()   {    return m_VertexY;      };
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
+    
 
     void                createDebugQuad(float p_vertex[4][2]);
     void                createSprite(const char* p_url, float p_vertex[4][2]);

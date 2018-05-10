@@ -18,20 +18,24 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef MENU_ACTIONS
-#define MENU_ACTIONS
+#ifndef RESOLUTION_PRESETS
+#define RESOLUTION_PRESETS
 
-    enum class MenuAction{
-        Up = 0,
-        Down,
-        Left,
-        Right,
-        Select,
-        Back,
-        Save,
-        Settings,
+#include <string>
 
-        Count
-    };
+struct ResolutionPreset{
+    int         width;
+    int         height;
+    std::string resolutionString;
+};
 
-#endif      
+static ResolutionPreset g_resolutionPresets[] = {
+      //Width       //Height        //String    
+    { 800           , 600           , "800x600"     },
+    { 1024          , 768           , "1024x768"    },
+    { 1280          , 720           , "1280x720"    },
+    { 1366          , 768           , "1366x768"    },
+    { 1920          , 1080          , "1920x1080"   }
+};
+
+#endif

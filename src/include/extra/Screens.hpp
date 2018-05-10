@@ -18,18 +18,20 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef MENU_ACTIONS
-#define MENU_ACTIONS
+#ifndef SCREENS
+#define SCREENS
 
-    enum class MenuAction{
-        Up = 0,
-        Down,
-        Left,
-        Right,
-        Select,
-        Back,
-        Save,
-        Settings,
+    enum class Screen{
+        Undefined = -1,
+        Main = 0,
+        CharacterLocal,
+        CharacterOnline,
+        BattleSettings,
+        Map,
+        OnlineMode,
+        OnlineCreate,
+        OnlineJoin,
+        GameSettings,
 
         Count
     };

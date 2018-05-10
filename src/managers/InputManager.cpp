@@ -20,8 +20,7 @@
 
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/EngineManager.hpp"
-// #include "../include/extra/Inputs.hpp"
-// #include "../include/extra/Actions.hpp"
+#include <SFML/Window/Mouse.hpp>
 #include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
@@ -37,10 +36,6 @@ InputManager::InputManager(){
 
     m_masterTime = m_masterClock.getElapsedTime().asSeconds();
     m_bindings = 0;
-
-    //Event handling
-    m_window    = new sf::Window();
-    m_event     = new sf::Event();
 
     //Key list
     sf::Keyboard::Key t_keys[101] = {sf::Keyboard::A, sf::Keyboard::B, sf::Keyboard::C, sf::Keyboard::D, sf::Keyboard::E, sf::Keyboard::F, sf::Keyboard::G, sf::Keyboard::H, sf::Keyboard::I, sf::Keyboard::J, sf::Keyboard::K, sf::Keyboard::L, sf::Keyboard::M, sf::Keyboard::N, sf::Keyboard::O, sf::Keyboard::P, sf::Keyboard::Q, sf::Keyboard::R, sf::Keyboard::S, sf::Keyboard::T, sf::Keyboard::U, sf::Keyboard::V, sf::Keyboard::W, sf::Keyboard::X, sf::Keyboard::Y, sf::Keyboard::Z, sf::Keyboard::Num0, sf::Keyboard::Num1, sf::Keyboard::Num2, sf::Keyboard::Num3, sf::Keyboard::Num4, sf::Keyboard::Num5, sf::Keyboard::Num6, sf::Keyboard::Num7, sf::Keyboard::Num8, sf::Keyboard::Num9, sf::Keyboard::Escape, sf::Keyboard::LControl, sf::Keyboard::LShift, sf::Keyboard::LAlt, sf::Keyboard::LSystem , sf::Keyboard::RControl, sf::Keyboard::RShift, sf::Keyboard::RAlt, sf::Keyboard::RSystem , sf::Keyboard::Menu, sf::Keyboard::LBracket, sf::Keyboard::RBracket, sf::Keyboard::SemiColon , sf::Keyboard::Comma, sf::Keyboard::Period, sf::Keyboard::Quote, sf::Keyboard::Slash, sf::Keyboard::BackSlash, sf::Keyboard::Tilde, sf::Keyboard::Equal, sf::Keyboard::Dash, sf::Keyboard::Space, sf::Keyboard::Return, sf::Keyboard::BackSpace, sf::Keyboard::Tab, sf::Keyboard::PageUp, sf::Keyboard::PageDown, sf::Keyboard::End, sf::Keyboard::Home, sf::Keyboard::Insert, sf::Keyboard::Delete, sf::Keyboard::Add, sf::Keyboard::Subtract, sf::Keyboard::Multiply, sf::Keyboard::Divide, sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Numpad0, sf::Keyboard::Numpad1, sf::Keyboard::Numpad2, sf::Keyboard::Numpad3, sf::Keyboard::Numpad4, sf::Keyboard::Numpad5, sf::Keyboard::Numpad6, sf::Keyboard::Numpad7, sf::Keyboard::Numpad8, sf::Keyboard::Numpad9, sf::Keyboard::F1, sf::Keyboard::F2, sf::Keyboard::F3, sf::Keyboard::F4, sf::Keyboard::F5, sf::Keyboard::F6, sf::Keyboard::F7, sf::Keyboard::F8, sf::Keyboard::F9, sf::Keyboard::F10, sf::Keyboard::F11, sf::Keyboard::F12, sf::Keyboard::F13, sf::Keyboard::F14, sf::Keyboard::F15, sf::Keyboard::Pause};
@@ -68,31 +63,6 @@ InputManager::InputManager(){
 
 //Destructor
 InputManager::~InputManager(){}
-
-//Catches events and returns true if an event happened
-bool InputManager::eventHandler(){
-    bool t_eventReceived = false;
-
-    while (m_window->pollEvent(*m_event)){
-        switch (m_event->type){
-            //New Joystick connected
-            case sf::Event::JoystickConnected:{
-
-                t_eventReceived = true;
-                break;
-            }
-
-            //Lost Joystick connection
-            case sf::Event::JoystickDisconnected:{
-
-                t_eventReceived = true;
-                break;
-            }
-        }
-    }
-
-    return t_eventReceived;
-}
 
 //Checks which devices are connected and assigns devices for everyone
 void InputManager::autoassignDevices(){
@@ -126,6 +96,22 @@ void InputManager::onKeyPressed(int p_key){
 bool InputManager::isKeyPressed(Key p_key){
     bool t_result = sf::Keyboard::isKeyPressed(m_keys[(int) p_key]);
     return t_result;
+}
+
+//Returns whether mouse button p_button is pressed or not
+bool InputManager::isMousePressed(){
+    return sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+}
+
+//Returns the X coordinate of the mouse (relative to window)
+int InputManager::getMouseX(){
+    return sf::Mouse::getPosition().x - m_engineManager->getWindowPosition().x;
+}
+
+//Returns the X coordinate of the mouse (relative to window)
+int InputManager::getMouseY(){
+    return sf::Mouse::getPosition().y - m_engineManager->getWindowPosition().y;
 }
 
 //Checks if controller with index p_index is connected
@@ -193,6 +179,19 @@ int InputManager::getInputDevice(int p_player){
     return m_inputDevices[p_player];
 }
 
+//Returns the number of players with assigned input device
+int InputManager::getDeviceCount(){
+    int t_result = 0;
+
+    for (int i = 0; i < 4; i++){
+        if (m_inputDevices[i] != -2 && m_inputDevices[i] != -3){
+            t_result++;
+        }
+    }
+
+    return t_result;
+}
+
 void InputManager::updateOnlineInput(int p_player){
     bool t_actions[12];
     bool t_flag = false;
@@ -226,6 +225,66 @@ void InputManager::resetMasterClock(){
 
 float InputManager::getMasterClock(){
     return m_masterTime;
+}
+
+
+
+
+
+
+
+
+
+
+/* ****************************** MENU ACTIONS ****************************** */
+//Calls functions to update menu actions booleans
+void InputManager::updateMenuActions(){
+    switch(m_inputDevices[0]){
+        case 0: case 1: case 2: case 3: {menuInputJoystick();   break;}
+        case -1:                        {menuInputKeyboard();   break;}
+        case -3:                        {menuInputOnline();     break;}
+    }
+}
+
+//Updates menu actions (Joystick input)
+void InputManager::menuInputJoystick(){
+    if(!m_engineManager->isWindowActive()) return;
+
+    //Update joysticks state first
+    updateJoysticks();
+
+    m_menuActions[(int) MenuAction::Up]         = getAxisPosition(0, Axis::Y) <= -75 || getAxisPosition(0, Axis::PovY) == -100;
+    m_menuActions[(int) MenuAction::Down]       = getAxisPosition(0, Axis::Y) >=  75 || getAxisPosition(0, Axis::PovY) ==  100;
+    m_menuActions[(int) MenuAction::Left]       = getAxisPosition(0, Axis::X) <= -75 || getAxisPosition(0, Axis::PovX) == -100;
+    m_menuActions[(int) MenuAction::Right]      = getAxisPosition(0, Axis::X) >=  75 || getAxisPosition(0, Axis::PovX) ==  100;
+    m_menuActions[(int) MenuAction::Select]     = isButtonPressed(0, Button::A);
+    m_menuActions[(int) MenuAction::Back]       = isButtonPressed(0, Button::B);
+    m_menuActions[(int) MenuAction::Save]       = isButtonPressed(0, Button::Start);
+    m_menuActions[(int) MenuAction::Settings]   = isButtonPressed(0, Button::Y);
+}
+
+//Updates menu actions (Keyboard input)
+void InputManager::menuInputKeyboard(){
+    if(!m_engineManager->isWindowActive()) return;
+
+    m_menuActions[(int) MenuAction::Up]         = isKeyPressed(Key::Up);
+    m_menuActions[(int) MenuAction::Down]       = isKeyPressed(Key::Down);
+    m_menuActions[(int) MenuAction::Left]       = isKeyPressed(Key::Left);
+    m_menuActions[(int) MenuAction::Right]      = isKeyPressed(Key::Right);
+    m_menuActions[(int) MenuAction::Select]     = isKeyPressed(Key::Return);
+    m_menuActions[(int) MenuAction::Back]       = isKeyPressed(Key::Escape);
+    m_menuActions[(int) MenuAction::Save]       = isKeyPressed(Key::Return);
+    m_menuActions[(int) MenuAction::Settings]   = isKeyPressed(Key::Tab);
+}
+
+//Updates menu actions (for online players)
+void InputManager::menuInputOnline(){
+
+}
+
+//Returns true if the asked action's input is enabled
+bool InputManager::checkMenuAction(MenuAction p_action){
+    return m_menuActions[(int) p_action];
 }
 
 

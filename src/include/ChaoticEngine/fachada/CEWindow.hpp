@@ -2,6 +2,8 @@
 #ifndef CE_WINDOW
 #define CE_WINDOW
 
+#include <CETypes.hpp>
+
 //OpenGL
 #include <glew.h>
 #include <glfw3.h>
@@ -13,7 +15,9 @@ public:
 	~CEWindow();
 
 	bool 		isOpen();
+    bool        hasFocus();
 	
+    void        setCursorVisible(bool p_visible = true);
 	void 		close();
 	void 		clear(float p_red = 0, float p_green = 0, float p_blue = 0, float p_alpha = 0);
 	void		swapBuffers();
@@ -21,6 +25,8 @@ public:
 	void 		processInput();
 
 	GLFWwindow* getWindow();
+    CEPosition  getPosition();
+    CESize      getSize();
 	double		getTimer();
 	double		getElapsedTime();
 

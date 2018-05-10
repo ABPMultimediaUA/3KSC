@@ -27,6 +27,8 @@ class State;
 
 class Game{
     private:
+        static Game*    m_instance;
+
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
         State*          m_state;
@@ -34,14 +36,67 @@ class Game{
         long long       m_elapsedTotal;
         long long       m_nanoFrames;
 
+        //Video settings
+        int             m_resolutionPreset;
+        bool            m_fullscreen;
+
+        //Audio settings
+        int             m_volBGM;
+        int             m_volFX;
+        int             m_volVoices;
+
+        //Character settings
+        bool            m_enabledPlayers[4];
+        int             m_chosenPlayers[4];
+
+        //Battle settings
+        int             m_rounds;
+        int             m_lives;
+        int             m_timeLimit;
+        int             m_map;
+
     public:
         Game();
         ~Game();
+        static Game* getInstance() { return m_instance; }
+
         void setState(State* p_state);
         void nextState();
+
         void run();
         void fixedUpdate(long long p_delta);
+
+        //Getters
+        int         getResolutionPreset()           { return m_resolutionPreset; }
+        bool        isFullscreen()                  { return m_fullscreen; }
+
+        int         getVolBGM()                     { return m_volBGM; }
+        int         getVolFX()                      { return m_volFX; }
+        int         getVolVoices()                  { return m_volVoices; }
+
+        bool        isPlayerEnabled(int p_player)   { return m_enabledPlayers[p_player]; }
+        int         getChosenPlayer(int p_player)   { return m_chosenPlayers[p_player]; }
+
+        int         getRounds()                     { return m_rounds; }
+        int         getLives()                      { return m_lives; }
+        int         getTimeLimit()                  { return m_timeLimit; }
+        int         getMap()                        { return m_map; }
         
+        //Setters
+        void        setResolutionPreset(int p_preset);
+        void        changeVideoMode();
+
+        void        setVolBGM(int p_vol)            { m_volBGM = p_vol; }
+        void        setVolFX(int p_vol)             { m_volFX = p_vol; }
+        void        setVolVoices(int p_vol)         { m_volVoices = p_vol; }
+
+        void        setPlayerEnabled(int p_player, bool p_enabled = true)   { m_enabledPlayers[p_player] = p_enabled; }
+        void        setChosenPlayer(int p_player, int p_character)          { m_chosenPlayers[p_player] = p_character; }
+        
+        void        setRounds(int p_rounds)         { m_rounds = p_rounds; }
+        void        setLives(int p_lives)           { m_lives = p_lives; }
+        void        setTimeLimit(int p_timeLimit)   { m_timeLimit = p_timeLimit; }
+        void        setMap(int p_map)               { m_map = p_map;}      
 };
 
 #endif

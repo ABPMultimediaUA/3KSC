@@ -22,39 +22,73 @@
 #include "include/managers/EngineManager.hpp"
 #include "include/managers/InputManager.hpp"
 #include "include/states/InGameState.hpp"
+#include "include/states/MenuState.hpp"
 
 #include <iostream>
 #include <stdio.h>
 #include <sys/time.h>
 #include <chrono>
 
+//Instance initialization
+Game* Game::m_instance = nullptr;
+
 //Constructor
 Game::Game(){
+    Game::m_instance    = this;
     m_engineManager = &EngineManager::instance();
     m_inputManager  = &InputManager::instance();
     
     const int FPS = 170;
     m_nanoFrames = 1000000000/FPS;
-    
-    m_engineManager->createWindow(false);
-    m_state = new InGameState(this, false);
+
+    m_resolutionPreset  = 2;
+    m_fullscreen        = false;
+
+    m_volBGM            = 20;
+    m_volFX             = 20;
+    m_volVoices         = 20;
+
+    for (int i = 0; i < 4; i++){
+        m_enabledPlayers[i] = false;
+        m_chosenPlayers[i]  = 6;
+    }
+
+    m_rounds            = 2;
+    m_lives             = 3;
+    m_timeLimit         = -1;
+
+    m_engineManager->createWindow(m_resolutionPreset, false);
+    m_inputManager  = &InputManager::instance();
+    // m_state         = new MenuState(this);
+    m_state         = new InGameState(this);
 }
 
 //Destructor
 Game::~Game(){
-    delete m_state;
-    m_state = nullptr;
+    std::cout << "~Game" << std::endl;
+    if (m_state)    { delete m_state;   m_state = nullptr; }
+    Game::m_instance = nullptr;
 }
 
 //Changes to an specified state
 void Game::setState(State* p_state){
-    delete m_state;
+    if(m_state){
+        delete m_state;
+    }
+    
     m_state = p_state;
 }
 
 //Changes to the next stage
 void Game::nextState(){
     m_state->nextState();
+}
+
+void Game::fixedUpdate(long long p_delta){
+    m_state->setDeltaTime(p_delta);
+    m_state->input();
+    m_state->update();
+    m_state->render();
 }
 
 //Main loop of the game
@@ -78,9 +112,16 @@ void Game::run(){
     }
 }
 
-void Game::fixedUpdate(long long p_delta){
-    m_state->setDeltaTime(p_delta);
-    m_state->input();
-    m_state->update();
-    m_state->render();
+//Changes game resolution
+void Game::setResolutionPreset(int p_preset){
+    m_resolutionPreset = p_preset;
+
+    //TODO: Change window resolution
+}
+
+//Toggles Windowed/Fullscreen mode
+void Game::changeVideoMode(){
+    m_fullscreen = !m_fullscreen;
+
+    //TODO: Change window video mode
 }
