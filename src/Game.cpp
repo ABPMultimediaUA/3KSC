@@ -40,6 +40,7 @@ Game::Game(){
     
     const int FPS = 170;
     m_nanoFrames = 1000000000/FPS;
+    m_elapsedTotal = 0;
 
     m_resolutionPreset  = 2;
     m_fullscreen        = false;
@@ -95,9 +96,10 @@ void Game::run(){
             fixedUpdate(m_elapsedTotal);
             m_elapsedTotal  -= m_nanoFrames;
             m_engineManager->swapBuffers();
-            // std::cout << "NO Stop!"  <<std::endl;
+            // std::cout << m_elapsedTotal << "\t\t" << m_nanoFrames << std::endl;
         // }
 
+        // std::cout << "Main loop!"  <<std::endl;
 
         t_now = std::chrono::high_resolution_clock::now();
     }
