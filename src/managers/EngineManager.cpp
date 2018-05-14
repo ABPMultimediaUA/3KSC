@@ -168,7 +168,7 @@ void EngineManager::updateCamera(){
 }
 
 void EngineManager::createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation){
-    CESceneLight* t_light = m_scene->createLight(p_lightIntensity, p_lightAtenuation);
+    CESceneLight* t_light = m_scene->createLight(p_lightIntensity, p_lightAtenuation, p_lightPosition);
     if(t_light){
         t_light->setAbsolutePosition(p_lightPosition[0],p_lightPosition[1],p_lightPosition[2]);
     }

@@ -45,18 +45,6 @@ void CESceneLight::processInput(GLFWwindow* p_window){
 		setPosition(-0.1,0,0);
 }
 
-void CESceneLight::setIntensities(float p_x, float p_y, float p_z){
-	m_light->setIntensities(glm::vec3(p_x, p_y, p_z));
-}
-
-void CESceneLight::setAtenuation(float p_attenuation){
-	m_light->setAtenuation(p_attenuation);
-}
-
-void CESceneLight::setRotation(float p_x, float p_y, float p_z){
-	m_rotate->rotate(p_x, p_y, p_z);
-}
-
 void CESceneLight::setPosition(float p_x, float p_y, float p_z){
 	m_translate->translate(p_x, p_y, p_z);
 }
@@ -69,11 +57,4 @@ void CESceneLight::setAbsoluteRotation(float p_x, float p_y, float p_z){
 void CESceneLight::setAbsolutePosition(float p_x, float p_y, float p_z){
 	m_translate->loadIdentity();
 	m_translate->translate(p_x, p_y, p_z);	
-}
-
-void CESceneLight::getPosition(){
-	glm::mat4 t_matrix = m_translate->getMatrix();
-	t_matrix = glm::inverse(t_matrix);
-	glm::vec3 t_pos = (glm::vec3)t_matrix[3];
-	std::cout << "(" << t_pos.x << ", " << t_pos.y << ", " << t_pos.z << ")" << std::endl;
 }

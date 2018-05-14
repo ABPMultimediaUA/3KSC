@@ -14,7 +14,7 @@ public:
 	CEWindow(int p_width, int p_height, const char* p_title, bool p_fullscreen);
 	~CEWindow();
 
-	bool 		isOpen();	
+	bool 		isOpen();
 	void 		close();
     void        setCursorVisible(bool p_visible = true);
 	void 		clear(float p_red = 0, float p_green = 0, float p_blue = 0, float p_alpha = 0);

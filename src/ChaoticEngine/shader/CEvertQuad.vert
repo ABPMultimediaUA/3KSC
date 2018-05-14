@@ -1,15 +1,15 @@
+
 #version 330 core
 
-// Atributos
 layout (location = 0) in vec3 VertexPosition;
 
-// Salida para el fragment
+uniform mat4 MVP;
+uniform vec3 color;
+
 out vec4 vertexColor;
 
-uniform mat4 MVP;
-
-void main()
-{
+void main(){
+    vertexColor = vec4(color, 1.0);
+    
     gl_Position = MVP * vec4(VertexPosition, 1.0f);
-    vertexColor = vec4(1.0, 0.0, 0.0, 1.0);
 }

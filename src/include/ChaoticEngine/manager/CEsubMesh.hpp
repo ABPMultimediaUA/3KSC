@@ -4,7 +4,6 @@
 #include <vector>
 #include <glew.h> 
 #include <glm.hpp>
-#include <gtc/type_ptr.hpp>
 
 #include "CEresourceTexture.hpp"
 

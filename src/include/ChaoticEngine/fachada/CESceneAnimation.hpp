@@ -1,20 +1,22 @@
  
-#ifndef CE_SCENE_MESH
-#define CE_SCENE_MESH
+#ifndef CE_SCENE_ANIMATION
+#define CE_SCENE_ANIMATION
 
 #include <glew.h>
 #include <glfw3.h>
 
-#include "../CEmesh.hpp"
+#include "../CEanimatedMesh.hpp"
 #include "../CEtransform.hpp"
 #include "../CEscenenode.hpp"
 
-class CESceneMesh{
+class CESceneAnimation{
 public:
-	CESceneMesh(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram);
-	~CESceneMesh();
+	CESceneAnimation(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram);
+	~CESceneAnimation();
 
 	void 	processInput(GLFWwindow* p_window);
+	void 	loadAnimation(const char* p_path);
+	void 	changeCurrentAnimation(int p_current);
 
 	void 	setScale(float p_x, float p_y, float p_z);
 	void 	setRotation(float p_x, float p_y, float p_z);
@@ -24,13 +26,13 @@ public:
 	void 	setAbsoluteRotation(float p_x, float p_y, float p_z);
 	void 	setAbsolutePosition(float p_x, float p_y, float p_z);
 
-	glm::vec3	getPosition() { return glm::vec3(glm::inverse(m_mesh->getMVP())[3]); }
+	glm::vec3	getPosition() { return glm::vec3(glm::inverse(m_animation->getMVP())[3]); }
 
 	CESceneNode* getTopNode()	{ return m_nodeRotate; }
 	CESceneNode* getNode()		{ return m_nodeMesh; }
 
 private:
-	CEMesh*			m_mesh;
+	CEAnimatedMesh*	m_animation;
 	CETransform*	m_rotate;
 	CETransform*	m_scale;
 	CETransform*	m_translate;

@@ -28,8 +28,7 @@ public:
 	void		setAbsoluteRotation(float p_x, float p_y, float p_z);
 	void		setAbsolutePosition(float p_x, float p_y, float p_z);
 	
-	void 		getPosition();
-
+	glm::vec3	getPosition() { return glm::vec3(glm::inverse(m_camera->getMVP())[3]); }
 	
 private:
 	CECamera*		m_camera;

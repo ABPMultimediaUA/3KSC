@@ -19,10 +19,21 @@ struct Particle {
 class CEParticleSystem : public CEEntity{
 public:
     CEParticleSystem(const char* p_path, int p_amount, GLuint p_shaderProgram);
-    void update(GLfloat dt = 0.025f, GLuint newParticles = 20, glm::vec2 offset = glm::vec2(0.75f, 1.25f));
+    void update(GLfloat dt = 0.025f);
     void beginDraw();
     void endDraw();
     void loadResource(const char* p_urlSource);
+
+    void setAmount(int p_amount);
+    int  getAmount()  { return m_amount; }  
+
+    void setNewParticles(int p_newParticles)    { m_newParticles = p_newParticles; }
+    int  getNewParticles()  { return m_newParticles; }
+
+    void setParticleLife(int p_particleLife)    { m_particleLife = p_particleLife; }
+    int  getParticleLife()  { return m_particleLife; }
+
+    glm::vec3 getPosition()  { return glm::vec3(glm::inverse(m_MVP)[3]); }
 
 private:
     std::vector<Particle>   m_particles;
@@ -33,9 +44,15 @@ private:
     GLuint                  m_VBO;
     GLuint                  m_EBO;
 
+    int                     m_newParticles;
+    float                   m_particleLife;
+
+    glm::mat4   m_MVP;
+    glm::vec3   m_position;
+
     void 	init();
     GLuint 	firstUnusedParticle();
-    void 	respawnParticle(Particle &particle, glm::vec2 offset);
+    void 	respawnParticle(Particle &particle);
 };
 
 #endif

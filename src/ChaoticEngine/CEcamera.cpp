@@ -59,6 +59,8 @@ void CECamera::setViewMatrix(glm::mat4 p_viewMatrix){
 		m_viewMatrix = p_viewMatrix;
 }
 
-void CECamera::beginDraw(){}
+void CECamera::beginDraw(){
+	m_MVP = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+}
 
 void CECamera::endDraw(){}

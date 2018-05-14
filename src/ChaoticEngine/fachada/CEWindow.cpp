@@ -45,15 +45,12 @@ void CEWindow::enableCulling(){
 }
 
 void CEWindow::enableZBuffer(){
-	glEnable(GL_DEPTH_TEST);	
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
 }
 
 bool CEWindow::isOpen(){
-	// if(glfwWindowShouldClose(m_window) == GL_FALSE)
-	// 	return true;
-	
-	// return false;
-    return !glfwWindowShouldClose(m_window);
+	return !glfwWindowShouldClose(m_window);
 }
 
 void CEWindow::close(){
@@ -61,14 +58,14 @@ void CEWindow::close(){
 	glfwTerminate();
 }
 
-void CEWindow::setCursorVisible(bool p_visible){
-    if (p_visible){
-        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-
-    else{
-        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    }
+void CEWindow::setCursorVisible(bool p_visible){ 
+    if (p_visible){ 
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+    } 
+ 
+    else{ 
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); 
+    } 
 }
 
 void CEWindow::clear(float p_red, float p_green, float p_blue, float p_alpha){
