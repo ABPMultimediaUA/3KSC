@@ -88,16 +88,17 @@ public:
 
     float               getFrameDeltaTime();
     CESceneMesh*        getEntityNode(int p_id);
+    CEScene*            getScene()          { return m_scene; }
     void                getEntityPosition(int p_id);
 
     void                parseOBJ(const char* p_filename);
     void                compareMaxAndMin(float p_value, float &p_max, float &p_min);
     void                pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ);
 
-    int                 getTotalVertex()    {    return m_totalVertex;  };
-    std::vector<float>  getTotalVertexX()   {    return m_VertexX;      };
-    std::vector<float>  getTotalVertexY()   {    return m_VertexY;      };
-    std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
+    int                 getTotalVertex()    {    return m_totalVertex;  }
+    std::vector<float>  getTotalVertexX()   {    return m_VertexX;      }
+    std::vector<float>  getTotalVertexY()   {    return m_VertexY;      }
+    std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      }
 
     void                createDebugQuad(float p_vertex[4][2]);
     void                createSprite(const char* p_url, float p_width, float p_height);
