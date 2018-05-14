@@ -41,7 +41,8 @@ EngineManager::~EngineManager(){}
 
 //Creates the game window
 void EngineManager::createWindow(bool p_fullscreen){
-    m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
+    //m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
+    m_window = new CEWindow(1024, 768, "3KSC", p_fullscreen);
     m_scene  = new CEScene();
 }
 
