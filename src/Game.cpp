@@ -85,20 +85,25 @@ void Game::run(){
     auto t_now      = std::chrono::high_resolution_clock::now();
     auto t_elapsed  = std::chrono::high_resolution_clock::now() - t_now;
 
-    while(true){
-        if(!m_engineManager->running())
-            break;
-
+    while(m_engineManager->running()){
         t_elapsed = std::chrono::high_resolution_clock::now() - t_now;
         m_elapsedTotal += std::chrono::duration_cast<std::chrono::nanoseconds>(t_elapsed).count();
 
-        while(m_elapsedTotal > m_nanoFrames){
+        m_engineManager->pollEvents();
+
+        // while(m_elapsedTotal > m_nanoFrames){
             fixedUpdate(m_elapsedTotal);
             m_elapsedTotal  -= m_nanoFrames;
-        }
+            m_engineManager->swapBuffers();
+            // std::cout << "NO Stop!"  <<std::endl;
+        // }
+
 
         t_now = std::chrono::high_resolution_clock::now();
     }
+
+    std::cout << "Stop!"  <<std::endl;
+    m_engineManager->stop();
 }
 
 void Game::fixedUpdate(long long p_delta){

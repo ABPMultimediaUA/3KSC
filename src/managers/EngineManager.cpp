@@ -73,6 +73,21 @@ bool EngineManager::running(){
     return m_window->isOpen();
 }
 
+void EngineManager::swapBuffers(){
+    m_window->swapBuffers();
+}
+
+void EngineManager::pollEvents(){
+    m_window->pollEvents();
+}
+
+
+//Drops the device
+void EngineManager::stop(){
+    m_scene->release();
+    m_window->close();
+}
+
 //Creates a camera
 void EngineManager::createCamera(float p_cameraPosition[3], float p_tarjet[3]){
     m_cameraNode = m_scene->createCamera(true);
@@ -159,12 +174,6 @@ void EngineManager::createLight(float p_lightPosition[3], float p_lightIntensity
     }
 }
 
-//Drops the device
-void EngineManager::stop(){
-    m_scene->release();
-    m_window->close();
-}
-
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
 float EngineManager::updateFrameDeltaTime(float p_delta){
     m_frameDeltaTime = p_delta;
@@ -225,8 +234,8 @@ void EngineManager::drawScene(){
 
     m_scene->draw();
 
-    m_window->swapBuffers();
-    m_window->pollEvents();
+    // m_window->swapBuffers();
+    // m_window->pollEvents();
 }
 
 float EngineManager::getFrameDeltaTime(){

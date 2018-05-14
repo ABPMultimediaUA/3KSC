@@ -49,10 +49,11 @@ void CEWindow::enableZBuffer(){
 }
 
 bool CEWindow::isOpen(){
-	if(glfwWindowShouldClose(m_window) == GL_FALSE)
-		return true;
+	// if(glfwWindowShouldClose(m_window) == GL_FALSE)
+	// 	return true;
 	
-	return false;
+	// return false;
+    return !glfwWindowShouldClose(m_window);
 }
 
 void CEWindow::close(){

@@ -66,6 +66,8 @@ public:
     bool        isWindowActive();
     void        setCursorVisible(bool p_visible = true);
     bool        running();
+    void        swapBuffers();
+    void        pollEvents();
     void        stop();
 
     float       updateFrameDeltaTime(float p_delta);
