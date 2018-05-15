@@ -24,6 +24,7 @@
 #include "../include/entities/items/Portal.hpp"
 
 void ContactManager::BeginContact(b2Contact* p_contact){
+
 	void* dataA = p_contact->GetFixtureA()->GetUserData();
 	void* dataB = p_contact->GetFixtureB()->GetUserData();
 	checkCollision(dataB, dataA);

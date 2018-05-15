@@ -46,8 +46,10 @@ public:
     float       getX();
     float       getY();
     float       getZ();
+    float       getVX();
     void        setX(float p_position);
     void        setY(float p_position);
+    void        setVX(float x);
     void        rotate(float degrees);
     void        updatePosition();
     static int  getEntityCount();

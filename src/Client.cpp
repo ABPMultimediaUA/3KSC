@@ -244,7 +244,8 @@ void Client::readMessage(std::string p_message){
 			return;
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setY(std::stof(t_parsed[2]));
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setX(std::stof(t_parsed[1]));
-		//int mns = std::stoi(t_parsed[3]);
+		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setVX(std::stof(t_parsed[4]));
+		//int mns = std::stoi(t_parsed[5]);
 		bool t_actions[12];
 		for(uint i = 0; i<12; i++)
 		{
@@ -275,7 +276,7 @@ int Client::getPlayer(){
 void Client::sendAction(bool p_actions[12]){
 	float t_xPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getX();
 	float t_yPos = Arena::getInstance()->getPlayer(m_yourPlayer)->getY();
-	
+	float t_VX = Arena::getInstance()->getPlayer(m_yourPlayer)->getVX();
 	std::string t_actions;
 	for(uint i = 0; i < 12; i++)
 	{
@@ -285,7 +286,7 @@ void Client::sendAction(bool p_actions[12]){
 			t_actions = t_actions + "0";
 	}
     std::string t_toSend 	= m_yourPlayerString + ":" + std::to_string(t_xPos) + ":" + std::to_string(t_yPos) 
-							+ ":" + t_actions;
+							+ ":" + t_actions + ":" + std::to_string(t_VX);
     char const *t_toSendChar = t_toSend.c_str();
 	send(t_toSendChar);
 	if(m_debug)

@@ -37,7 +37,7 @@ Game::Game(){
     m_nanoFrames = 1000000000/FPS;
     
     m_engineManager->createWindow(false);
-    m_state = new InGameState(this, false);
+    m_state = new InGameState(this, true);
 }
 
 //Destructor

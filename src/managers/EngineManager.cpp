@@ -46,7 +46,10 @@ void EngineManager::createWindow(bool p_fullscreen){
 }
 
 bool EngineManager::isWindowActive(){
-    return m_window->isOpen();
+   // return m_window->isOpen();
+   if(glfwGetWindowAttrib(m_window->getWindow(), GLFW_FOCUSED))
+        return true;
+    return false;
 }
 
 //Returns whether the device is running or not

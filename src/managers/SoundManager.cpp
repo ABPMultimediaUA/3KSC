@@ -41,9 +41,9 @@ SoundManager& SoundManager::instance(){
 }
 
 void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line){
-    /*if(result == 70)
+    if(result == 70)
         return;
-    else*/
+    else
     if(result != FMOD_OK){
         std::cerr << file << "(" << line << "): FMOD error " << result << " - " << FMOD_ErrorString(result) << std::endl;
         exit(-1);

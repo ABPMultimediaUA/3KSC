@@ -169,6 +169,16 @@ float Entity::getX(){
     return m_physicsManager->getBody(m_id)->GetPosition().x;
 }
 
+float Entity::getVX(){
+    return m_physicsManager->getBody(m_id)->GetLinearVelocity().x;
+}
+
+void Entity::setVX(float x){
+    std::cout<<"setting X ="<<x<<std::endl;
+    m_physicsManager->move(getId(), x, 0);
+}
+
+
 float Entity::getY(){
     return m_physicsManager->getBody(m_id)->GetPosition().y;
 }
@@ -186,6 +196,7 @@ void Entity::rotate(float p_degrees){
 }
 
 void Entity::setX(float p_position){
+    std::cout<<getX()<< " / "<<p_position<<std::endl;
     moveTo(p_position, getY());
 }
 
