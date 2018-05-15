@@ -229,15 +229,12 @@ void Client::readMessage(std::string p_message){
 			t_block = false;
 		else
 			t_block = true;
-		float t_knockPower = std::stoi(t_parsed[3]);
+		float t_knockPower = std::stof(t_parsed[3]);
 		int t_knockback = std::stoi(t_parsed[4]);
 		int t_player = std::stoi(t_parsed[5]);
-		 Arena::getInstance()->getPlayer(t_player)->setX(std::stoi(t_parsed[6]));
-	//	 Arena::getInstance()->getPlayer(t_player)->setY(std::stoi(t_parsed[7]));
-		 Arena::getInstance()->getPlayer(t_player)->setVX(std::stoi(t_parsed[8]));
-		//  std::cout<<"Posicion x"<<std::stoi(t_parsed[6])<<std::endl;
-		//  std::cout<<"Posicion y"<<std::stoi(t_parsed[7])<<std::endl;
-
+		Arena::getInstance()->getPlayer(t_player)->setX(std::stof(t_parsed[6]));
+		Arena::getInstance()->getPlayer(t_player)->setY(std::stof(t_parsed[7]));
+		Arena::getInstance()->getPlayer(t_player)->setVX(std::stof(t_parsed[8]));
 		Arena::getInstance()->getPlayer(t_player)->receiveAttack(t_dmg, t_block, t_knockPower, t_knockback,true);
 	}
 	else{
@@ -246,7 +243,6 @@ void Client::readMessage(std::string p_message){
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setY(std::stof(t_parsed[2]));
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setX(std::stof(t_parsed[1]));
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setVX(std::stof(t_parsed[4]));
-		//int mns = std::stoi(t_parsed[5]);
 		bool t_actions[12];
 		for(uint i = 0; i<12; i++)
 		{

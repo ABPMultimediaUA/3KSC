@@ -84,11 +84,11 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
     t_fixtureDef->density  = 750.0f;
     t_fixtureDef->friction = 1.0f;
     t_fixtureDef->isSensor = false;
-    t_fixtureDef->restitution = 0;
     switch(p_type){
         case Box::Player:
             t_fixtureDef->filter.categoryBits = CATEGORY_PLAYER;
             t_fixtureDef->filter.maskBits     = CATEGORY_ITEM | CATEGORY_GROUND;
+            t_fixtureDef->restitution = 0;
             break;
 
         case Box::Item:
