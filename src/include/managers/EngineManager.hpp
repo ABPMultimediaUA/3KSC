@@ -76,11 +76,12 @@ public:
     void                resetCamera();
     void                updateCamera();
 
-    void                createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
+    void                createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]);
+    void                createPointLight(float p_lightPosition[3], float p_lightAtenuation);
 
     void                deleteEntity(int p_id);
     void                load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
-    void                loadSkybox(const char* p_skyboxURLs[6]); 
+    void                loadSkybox(const char* p_skyboxURLs[6], float t_scale); 
     void                moveEntity(Entity* p_entity);
     void                setRotation(int p_id, float p_degrees);
     void                scale(int p_id, float p_scale[3]);

@@ -176,8 +176,8 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
 
         t_body->CreateFixture(t_fixtureDef);
 
-        float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
-        m_engineManager->createDebugQuad(t_vertex);
+        //float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
+        //m_engineManager->createDebugQuad(t_vertex);
     }
 }
 

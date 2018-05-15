@@ -4,11 +4,11 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneSkybox.hpp"
 
-CESceneSkybox::CESceneSkybox(CESceneNode* p_parent, const char* p_path[6], GLuint p_shaderProgram){
+CESceneSkybox::CESceneSkybox(CESceneNode* p_parent, const char* p_path[6], float p_scale, GLuint p_shaderProgram){
 	m_rotate    = new CETransform();
 	m_scale	 	= new CETransform();
 	m_translate = new CETransform(); 
-	m_skybox	= new CESkybox(p_shaderProgram);
+	m_skybox	= new CESkybox(p_scale, p_shaderProgram);
 	
 	m_rotate->rotate(0, 0, 0);
 	m_scale->scale(1,1,1);

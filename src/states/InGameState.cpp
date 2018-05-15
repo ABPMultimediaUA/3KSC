@@ -181,20 +181,28 @@ void InGameState::createArena(const char* p_fileCgm){
             m_engineManager->createCamera(t_position, t_target);
         }
         //light
-        else if(t_name == "l"){
+        else if(t_name == "gl"){
             float t_position[3];
             t_position[0] = strtof((t_elements[1]).c_str(), 0);
             t_position[1] = strtof((t_elements[2]).c_str(), 0);
             t_position[2] = strtof((t_elements[3]).c_str(), 0);
 
-            float t_intensities[3];
-            t_intensities[0] = strtof((t_elements[4]).c_str(), 0);
-            t_intensities[1] = strtof((t_elements[5]).c_str(), 0);
-            t_intensities[2] = strtof((t_elements[6]).c_str(), 0);
+            float t_direction[3];
+            t_direction[0] = strtof((t_elements[4]).c_str(), 0);
+            t_direction[1] = strtof((t_elements[5]).c_str(), 0);
+            t_direction[2] = strtof((t_elements[6]).c_str(), 0);
 
-            float t_atenuation = strtof((t_elements[7]).c_str(), 0);
+            m_engineManager->createGlobalLight(t_position, t_direction);
+        }
+        else if(t_name == "pl"){
+            float t_position[3];
+            t_position[0] = strtof((t_elements[1]).c_str(), 0);
+            t_position[1] = strtof((t_elements[2]).c_str(), 0);
+            t_position[2] = strtof((t_elements[3]).c_str(), 0);
 
-            m_engineManager->createLight(t_position, t_intensities, t_atenuation);
+            float t_atenuation = strtof((t_elements[3]).c_str(), 0);
+
+            m_engineManager->createPointLight(t_position, t_atenuation);
         }
         //music
         else if(t_name == "mu"){
@@ -261,14 +269,16 @@ void InGameState::createArena(const char* p_fileCgm){
         }
         else if(t_name == "sk"){
             const char* t_skyPath[6]; 
-            t_skyPath[0] = t_elements[1].c_str(); 
-            t_skyPath[1] = t_elements[2].c_str(); 
-            t_skyPath[2] = t_elements[3].c_str(); 
-            t_skyPath[3] = t_elements[4].c_str(); 
-            t_skyPath[4] = t_elements[5].c_str(); 
-            t_skyPath[5] = t_elements[6].c_str();     
+            float t_scale = strtof((t_elements[1]).c_str(), 0);
+            
+            t_skyPath[0] = t_elements[2].c_str(); 
+            t_skyPath[1] = t_elements[3].c_str(); 
+            t_skyPath[2] = t_elements[4].c_str(); 
+            t_skyPath[3] = t_elements[5].c_str(); 
+            t_skyPath[4] = t_elements[6].c_str(); 
+            t_skyPath[5] = t_elements[7].c_str(); 
 
-            m_engineManager->loadSkybox(t_skyPath);
+            m_engineManager->loadSkybox(t_skyPath, t_scale);
         }
     }
 }

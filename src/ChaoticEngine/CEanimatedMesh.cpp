@@ -2,11 +2,13 @@
 #include <gtc/type_ptr.hpp>
 #include <iomanip>
 #include <iostream>
+#include <glew.h>
+#include <glfw3.h>
 
-#include "../include/ChaoticEngine/CEmesh.hpp"
+#include "../include/ChaoticEngine/CEanimatedMesh.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
-void showMat(glm::mat4 p_matrix){   
+/*void showMat(glm::mat4 p_matrix){   
     std::cout << std::fixed;
     std::cout << std::setprecision(6);
 
@@ -17,15 +19,18 @@ void showMat(glm::mat4 p_matrix){
         std::cout << std::endl;
     }
     std::cout << std::endl;
-}
+}*/
 
-CEMesh::CEMesh(GLuint p_shaderProgram) : CEEntity(){
+CEAnimatedMesh::CEAnimatedMesh(GLuint p_shaderProgram) : CEEntity(){
     m_shaderProgram = p_shaderProgram;
+    m_lastTime = glfwGetTime();
+    m_currentFrame = 0;
+    m_frameTime = 0.041666f;//24 fps
 }
 
-CEMesh::~CEMesh(){}
+CEAnimatedMesh::~CEAnimatedMesh(){}
 
-void CEMesh::beginDraw(){
+void CEAnimatedMesh::beginDraw(){
     glUseProgram(m_shaderProgram);
     
 	//PRECALCULAMOS LAS MATRICES Y LAS PASAMOS AL SHADER
@@ -45,15 +50,34 @@ void CEMesh::beginDraw(){
 
     //showMat(m_modelMatrix);
 
-    if(m_mesh != NULL)
-        m_mesh->draw(m_shaderProgram);
+    double t_time = glfwGetTime();
+    m_frameTime = 1.0; //así ira a 1 fps (quitar para aumentar a 25 fps)
+
+    if (t_time - m_lastTime >= m_frameTime){ 
+        m_currentFrame++;
+        m_lastTime += m_frameTime;
+    }
+    if(m_currentFrame > m_currentAnimation->getNumFrames() - 1){
+        m_currentFrame = 0;
+    }
+    
+    if(m_currentAnimation != NULL){
+        m_currentAnimation->draw(m_shaderProgram, m_currentFrame);
+    }
 }
 
-void CEMesh::endDraw(){}
+void CEAnimatedMesh::endDraw(){}
 
-void CEMesh::loadResource(const char* p_urlSource){
+void CEAnimatedMesh::loadResource(const char* p_urlSource){
     CEResourceManager* t_manager = CEResourceManager::instance();
-    CEResourceMesh* t_resource = (CEResourceMesh*)&t_manager->getResource(p_urlSource);
+    CEResourceAnimation* t_resource = (CEResourceAnimation*)&t_manager->getResource(p_urlSource);
     if(t_resource != NULL)
-        m_mesh = t_resource;
+        m_animations.push_back(t_resource);
+}
+
+void CEAnimatedMesh::setCurrentAnimation(int p_current){
+    if(p_current < m_animations.size()){
+        m_currentAnimation = m_animations[p_current];
+        m_currentFrame = 0;
+    }
 }

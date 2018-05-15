@@ -1,20 +1,18 @@
  
-#ifndef CE_SCENE_MESH
-#define CE_SCENE_MESH
+#ifndef CE_SCENE_BILLBOARD
+#define CE_SCENE_BILLBOARD
 
 #include <glew.h>
 #include <glfw3.h>
 
-#include "../CEmesh.hpp"
+#include "../CEsprite.hpp"
 #include "../CEtransform.hpp"
 #include "../CEscenenode.hpp"
 
-class CESceneMesh{
+class CESceneBillboard{
 public:
-	CESceneMesh(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram);
-	~CESceneMesh();
-
-	void 	processInput(GLFWwindow* p_window);
+	CESceneBillboard(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram);
+	~CESceneBillboard();
 
 	void 	setScale(float p_x, float p_y, float p_z);
 	void 	setRotation(float p_x, float p_y, float p_z);
@@ -24,19 +22,11 @@ public:
 	void 	setAbsoluteRotation(float p_x, float p_y, float p_z);
 	void 	setAbsolutePosition(float p_x, float p_y, float p_z);
 
-	glm::vec3	getPosition() { return glm::vec3(glm::inverse(m_mesh->getMVP())[3]); }
-
-	CESceneNode* getTopNode()	{ return m_nodeRotate; }
-	CESceneNode* getNode()		{ return m_nodeMesh; }
-
 private:
-	CEMesh*			m_mesh;
+	CESprite*		m_sprite;
 	CETransform*	m_rotate;
 	CETransform*	m_scale;
 	CETransform*	m_translate;
-
-	CESceneNode* 	m_nodeRotate;
-	CESceneNode*	m_nodeMesh;
 
 };
 
