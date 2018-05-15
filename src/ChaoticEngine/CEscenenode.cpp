@@ -25,10 +25,10 @@ void CESceneNode::addChild(CESceneNode* p_child){
 /*Removes a child, and all the childs of his child.*/
 bool CESceneNode::removeChild(CESceneNode* p_child){
 	for(int i = 0; i < m_childs.size(); i++){
-		if(m_childs.at(i) == p_child){
-			m_childs.at(i)->removeAllChilds();
-			m_childs.at(i) = 0;
-			delete m_childs.at(i);
+		if(m_childs[i] == p_child){
+			m_childs[i]->removeAllChilds();
+			m_childs[i] = 0;
+			delete m_childs[i];
 			m_childs.erase(m_childs.begin()+(i));
 			return true;
 		}
@@ -39,9 +39,9 @@ bool CESceneNode::removeChild(CESceneNode* p_child){
 /*Removes all childs of the father and all the childs of his childs*/
 void CESceneNode::removeAllChilds(){
 	for(int i = 0; i < m_childs.size(); i++){
-		m_childs.at(i)->removeAllChilds();
-		m_childs.at(i) = 0;
-		delete m_childs.at(i);
+		m_childs[i]->removeAllChilds();
+		m_childs[i] = 0;
+		delete m_childs[i];
 	}
 	m_childs.clear();
 }
@@ -66,7 +66,7 @@ void CESceneNode::draw(){
 	m_entity->beginDraw();
 	
 	for(int i = 0; i < m_childs.size(); i++){
-		m_childs.at(i)->draw();
+		m_childs[i]->draw();
 	}
 
 	m_entity->endDraw();

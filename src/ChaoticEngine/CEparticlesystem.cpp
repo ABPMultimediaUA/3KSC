@@ -10,6 +10,9 @@ CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, GLuint p_sh
     m_shaderProgram = p_shaderProgram;
     m_amount = p_amount;
 
+    m_newParticles = 20;
+    m_particleLife = 1.0f;
+
     loadResource(p_path);
     init();
 }
@@ -17,10 +20,10 @@ CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, GLuint p_sh
 void CEParticleSystem::init(){
     GLfloat t_vertices[] = { 
         // Pos      // Tex
-        -0.5f, -0.5f, 0.0f, 0.0f, 
-        -0.5f,  0.5f, 0.0f, 1.0f,
-         0.5f,  0.5f, 1.0f, 1.0f,
-         0.5f, -0.5f, 1.0f, 0.0f
+        -0.5f, -0.5f, 0.05f, 0.05f, 
+        -0.5f,  0.5f, 0.05f, 0.95f,
+         0.5f,  0.5f, 0.95f, 0.95f,
+         0.5f, -0.5f, 0.95f, 0.05f
     };
 
     unsigned int m_indices[] = {
@@ -56,6 +59,9 @@ void CEParticleSystem::init(){
 void CEParticleSystem::beginDraw(){
     glUseProgram(m_shaderProgram);
 
+    m_MVP = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+    m_position = getPosition();
+
     for(Particle particle : m_particles){
         if(particle.Life > 0.0f){
             glm::mat4 t_projection = glm::ortho(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
@@ -78,11 +84,11 @@ void CEParticleSystem::beginDraw(){
 
 void CEParticleSystem::endDraw(){}
 
-void CEParticleSystem::update(GLfloat dt, GLuint newParticles, glm::vec2 offset){
+void CEParticleSystem::update(GLfloat dt){
     //Add new particles 
-    for(GLuint i = 0; i < newParticles; i++){
+    for(GLuint i = 0; i < m_newParticles; i++){
         GLuint unusedParticle = firstUnusedParticle();
-        respawnParticle(m_particles[unusedParticle], offset);
+        respawnParticle(m_particles[unusedParticle]);
     }
     //Update all particles
     for(GLuint i = 0; i < m_amount; i++){
@@ -117,26 +123,34 @@ GLuint CEParticleSystem::firstUnusedParticle(){
     return 0;
 }
 
-void CEParticleSystem::respawnParticle(Particle &particle, glm::vec2 offset){
-    GLfloat random = ((rand() % 100) - 50) / 10.0f;
-    GLfloat rColor = 0.5 + ((rand() % 100) / 100.0f);
+void CEParticleSystem::respawnParticle(Particle &particle){
+    GLfloat random = ((rand() % 5) - 1);
     
-    glm::vec2 Position = glm::vec2(0.0f,0.0f);
-    glm::vec2 Velocity = glm::vec2(0.0f,-5.0f);
-    
-    //particle.Position   = Position + random + offset;
-    particle.Position   = Position;
-    particle.Color      = glm::vec4(rColor, rColor, rColor, 1.0f);
-    particle.Life       = 1.0f;
-    particle.Velocity   = Velocity * 1.0f;
+    particle.Position   = glm::vec2(m_position.x, m_position.y);
+    //particle.Velocity   = glm::vec2(random,-5.0f);
+    particle.Velocity   = glm::vec2(5.0f, random);
+    particle.Color      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    particle.Life       = m_particleLife;
 }
 
 void CEParticleSystem::loadResource(const char* p_urlSource){
     std::cout << p_urlSource << std::endl;
     CEResourceManager* t_manager = CEResourceManager::instance();
-    CEResource* t_resource = t_manager->getResource(p_urlSource);
+    CEResourceTexture* t_resource = (CEResourceTexture*)&t_manager->getResource(p_urlSource);
     if(t_resource != 0){
-        m_texture = (CEResourceTexture*)t_resource;
+        m_texture = t_resource;
         m_texture->glBuffersTexture();
     }
 }
+
+void CEParticleSystem::setAmount(int p_amount){
+    m_amount = p_amount; 
+
+    m_particles.clear();
+
+    //Create m_amount default particle instances
+    for(GLuint i = 0; i < m_amount; i++)
+        m_particles.push_back(Particle());    
+}
+
+

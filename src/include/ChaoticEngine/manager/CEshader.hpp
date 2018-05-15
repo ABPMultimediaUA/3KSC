@@ -13,6 +13,8 @@ public:
 
 private:
 	std::string readFile(const char *filePath);
+	std::string	getFileError(const char* p_file);
+
 };
 
 #endif

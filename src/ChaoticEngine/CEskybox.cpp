@@ -5,8 +5,8 @@
 #include "../include/ChaoticEngine/CEskybox.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
-CESkybox::CESkybox(GLuint p_shaderProgram): CEEntity(){
-    float x = 5.0f;
+CESkybox::CESkybox(float p_scale, GLuint p_shaderProgram): CEEntity(){
+    float x = p_scale;
     float skyboxVertices[] = {
         // positions          
         -x,  x, -x,
@@ -77,6 +77,7 @@ void CESkybox::beginDraw(){
 
     // skybox cube
     glBindVertexArray(m_skyboxVAO);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureID);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
@@ -103,7 +104,7 @@ void CESkybox::loadCubemap(const char* p_texturesPath[6]){
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
     for (unsigned int i = 0; i < 6; i++){
-        CEResourceTexture* t_texture = static_cast<CEResourceTexture*>(t_manager->getResource(p_texturesPath[i]));
+        CEResourceTexture* t_texture = (CEResourceTexture*)&t_manager->getResource(p_texturesPath[i]);
         unsigned char* data = t_texture->getTextureData(); 
         if(data){
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, t_texture->getTextureWidth(), t_texture->getTextureHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, data);

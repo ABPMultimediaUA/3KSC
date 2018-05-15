@@ -24,7 +24,6 @@
 #define DEBUG
 
 #include <Box2D.h>
-#include <irrlicht.h>
 #include <vector>
 /*
 class Debug : public scene::ISceneNode{

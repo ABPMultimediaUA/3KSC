@@ -12,7 +12,7 @@ CESceneCamera::CESceneCamera(CESceneNode* p_parent, bool p_isActive){
 	m_camera 	= new CECamera();
 	
 	m_rotate->rotate(0, 0, 0);
-	m_translate->translate(0, 0, 20.0f);
+	m_translate->translate(0, 0, 0.0f);
 
 	CESceneNode* t_nodeRotate 	 = new CESceneNode(p_parent);
 	CESceneNode* t_nodeTranslate = new CESceneNode(t_nodeRotate);
@@ -83,11 +83,4 @@ void CESceneCamera::setAbsolutePosition(float p_x, float p_y, float p_z){
 	m_translate->loadIdentity();
 	m_translate->translate(p_x, p_y, p_z);
 	m_camera->setViewMatrix(this->getViewMatrix());
-}
-
-void CESceneCamera::getPosition(){
-	glm::mat4 t_matrix = m_translate->getModelMatrix();
-	t_matrix = glm::inverse(t_matrix);
-	glm::vec3 t_pos = (glm::vec3)t_matrix[3];
-	std::cout << "(" << t_pos.x << ", " << t_pos.y << ", " << t_pos.z << ")" << std::endl;
 }

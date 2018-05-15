@@ -9,7 +9,7 @@
 
 class CESkybox : public CEEntity{
 public:
-	CESkybox(GLuint p_shaderProgram);
+	CESkybox(float p_scale, GLuint p_shaderProgram);
 	virtual ~CESkybox();
 
 	void 	beginDraw() override;

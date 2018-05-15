@@ -69,6 +69,9 @@ void CESprite::beginDraw(){
     glm::vec3 t_color = glm::vec3(1.0f, 1.0f, 1.0f);
     glUniform3f(glGetUniformLocation(m_shaderProgram, "spriteColor"), t_color.x, t_color.y, t_color.z);
 
+    glEnable (GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_texture->getTextureId());
 
@@ -82,9 +85,9 @@ void CESprite::endDraw(){}
 
 void CESprite::loadResource(const char* p_urlSource){
     CEResourceManager* t_manager = CEResourceManager::instance();
-    CEResource* t_resource = t_manager->getResource(p_urlSource);
+    CEResourceTexture* t_resource = (CEResourceTexture*)&t_manager->getResource(p_urlSource);
     if(t_resource != NULL){
-        m_texture = (CEResourceTexture*)t_resource;
+        m_texture = t_resource;
         m_texture->glBuffersTexture();
     }
 }

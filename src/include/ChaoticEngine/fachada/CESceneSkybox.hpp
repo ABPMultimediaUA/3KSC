@@ -11,7 +11,7 @@
 
 class CESceneSkybox{
 public:
-	CESceneSkybox(CESceneNode* p_parent, const char* p_path[6], GLuint p_shaderProgram);
+	CESceneSkybox(CESceneNode* p_parent, const char* p_path[6], float p_scale, GLuint p_shaderProgram);
 	~CESceneSkybox();
 
 	void 	setScale(float p_x, float p_y, float p_z);
