@@ -174,7 +174,6 @@ float Entity::getVX(){
 }
 
 void Entity::setVX(float x){
-    std::cout<<"setting X ="<<x<<std::endl;
     m_physicsManager->move(getId(), x, 0);
 }
 
@@ -196,13 +195,15 @@ void Entity::rotate(float p_degrees){
 }
 
 void Entity::setX(float p_position){
-    std::cout<<getX()<< " / "<<p_position<<std::endl;
+   // std::cout<<getX()<< " / "<<p_position<<std::endl;
     moveTo(p_position, getY());
 }
 
 void Entity::setY(float p_position){
+        std::cout<<getY()<< " / "<<p_position<<std::endl;
     moveTo(getX(), p_position);
 }
+
 /*
 void Entity::createDebug(){
     m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
