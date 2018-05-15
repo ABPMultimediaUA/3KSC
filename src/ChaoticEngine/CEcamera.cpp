@@ -6,7 +6,7 @@
 //Por defecto crea una camara con perspectiva
 CECamera::CECamera() : CEEntity(){
 	//setParallel(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
-	setPerspective(90.0f, 1.0f, 0.1f, 100.0f);
+	setPerspective(360.0f, 1.0f, 0.1f, 1000.0f);
 	m_tarjet = glm::vec3(0,0,0);
 }
 
@@ -59,6 +59,8 @@ void CECamera::setViewMatrix(glm::mat4 p_viewMatrix){
 		m_viewMatrix = p_viewMatrix;
 }
 
-void CECamera::beginDraw(){}
+void CECamera::beginDraw(){
+	m_MVP = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+}
 
 void CECamera::endDraw(){}

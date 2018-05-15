@@ -9,14 +9,27 @@ CEWindow::CEWindow(int p_width, int p_height, const char* p_title, bool p_fullsc
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    m_window = glfwCreateWindow(p_width, p_height, p_title, NULL, NULL);
-	if (m_window == NULL){
+    if(p_fullscreen){
+    	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    	const GLFWvidmode* mode    = glfwGetVideoMode(monitor);
+
+		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+    	m_window = glfwCreateWindow(mode->width, mode->height, p_title, monitor, NULL);
+    }
+    else
+    	m_window = glfwCreateWindow(p_width, p_height, p_title, NULL, NULL);
+
+	if(m_window == NULL){
 	    std::cout << "Failed to create GLFW window" << std::endl;
 	    glfwTerminate();
 	}
 	glfwMakeContextCurrent(m_window);
 	
-	// start GLEW extension handler
+	//start GLEW extension handler
 	glewExperimental = GL_TRUE;
 	GLenum err = glewInit();
 	if(GLEW_OK != err){
@@ -45,19 +58,27 @@ void CEWindow::enableCulling(){
 }
 
 void CEWindow::enableZBuffer(){
-	glEnable(GL_DEPTH_TEST);	
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
 }
 
 bool CEWindow::isOpen(){
-	if(glfwWindowShouldClose(m_window) == GL_FALSE)
-		return true;
-	
-	return false;
+	return !glfwWindowShouldClose(m_window);
 }
 
 void CEWindow::close(){
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
+}
+
+void CEWindow::setCursorVisible(bool p_visible){ 
+    if (p_visible){ 
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); 
+    } 
+ 
+    else{ 
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); 
+    } 
 }
 
 void CEWindow::clear(float p_red, float p_green, float p_blue, float p_alpha){
@@ -80,6 +101,18 @@ void CEWindow::processInput(){
 
 GLFWwindow* CEWindow::getWindow(){
 	return m_window;
+}
+
+CEPosition CEWindow::getPosition(){
+    CEPosition t_position;
+    glfwGetWindowPos(m_window, &t_position.x, &t_position.y);
+    return t_position;
+}
+
+CESize CEWindow::getSize(){
+    CESize t_size;
+    glfwGetWindowSize(m_window, &t_size.width, &t_size.height);
+    return t_size;
 }
 
 double CEWindow::getTimer(){

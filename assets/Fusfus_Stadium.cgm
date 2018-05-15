@@ -4,10 +4,14 @@
 m assets/models/arenas/Fusfus_stadium/Estadio_Fusfus.obj 1 0 0 0
 
 # c se utiliza para la camara: posx posy posz(de la camara) posx posy posz(del target)
-c 0 10 -12.5 0 -5 100
+c 0 10 -14 0 0 100
 
-# l se utiliza para la luz: posX posY posZ | intensidad -> vec3 float (1 blanco - 0 negro) | atenuacion (0.0f - 1.0f)
-l 0 -100 100 0.8 0.8 0.8 0
+#gl Global light
+gl 0 10 0 -5 -2 -0
+
+# pl se utiliza para la luz: posX posY posZ | atenuacion (0.0f - 1.0f)
+pl 0 -10 100 0
+pl 0 10 10 0
 
 # mu se utiliza para el sonido: Id para cargar un banco de musica, ruta de la musica, nombre para el sonido
 mu SoundID::S_FOSFOS_STADIUM event:/music/fosfosStadium fos_music
@@ -48,4 +52,4 @@ rp 0 17 0
 si -12.5 12.5 17
 
 # sk se utiliza para marcar las imagenes usadas en el skybox: lista de urls de las imagenes
-sk assets/skyboxes/fusfus_skybox/stratosphere_ft.tga assets/skyboxes/fusfus_skybox/stratosphere_bk.tga assets/skyboxes/fusfus_skybox/stratosphere_up.tga assets/skyboxes/fusfus_skybox/stratosphere_dn.tga assets/skyboxes/fusfus_skybox/stratosphere_rt.tga assets/skyboxes/fusfus_skybox/stratosphere_lf.tga
+sk 85 assets/skyboxes/fusfus_skybox/stratosphere_ft.tga assets/skyboxes/fusfus_skybox/stratosphere_bk.tga assets/skyboxes/fusfus_skybox/stratosphere_up.tga assets/skyboxes/fusfus_skybox/stratosphere_dn.tga assets/skyboxes/fusfus_skybox/stratosphere_rt.tga assets/skyboxes/fusfus_skybox/stratosphere_lf.tga

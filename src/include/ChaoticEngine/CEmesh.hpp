@@ -17,9 +17,13 @@ public:
 	void beginDraw() override;
 	void endDraw()   override;
 
+	glm::mat4 getMVP()	{ return m_MVP; }
+
 private:
 	CEResourceMesh* m_mesh;
 	GLuint m_shaderProgram;
+
+	glm::mat4	m_MVP;
 };
 
 #endif

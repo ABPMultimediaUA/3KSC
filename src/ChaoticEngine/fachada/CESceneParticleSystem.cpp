@@ -38,6 +38,20 @@ CESceneParticleSystem::~CESceneParticleSystem(){
 	m_scale = nullptr;
 }
 
+void CESceneParticleSystem::processInput(GLFWwindow* p_window){
+	if(glfwGetKey(p_window, GLFW_KEY_R) == GLFW_PRESS)
+		setRotation(0,3,0);
+	if(glfwGetKey(p_window, GLFW_KEY_W) == GLFW_PRESS)
+		setPosition(0,1,0);
+	if(glfwGetKey(p_window, GLFW_KEY_S) == GLFW_PRESS)
+		setPosition(0,-1,0);
+	if(glfwGetKey(p_window, GLFW_KEY_D) == GLFW_PRESS)
+		setPosition(1,0,0);
+	if(glfwGetKey(p_window, GLFW_KEY_A) == GLFW_PRESS)
+		setPosition(-1,0,0);
+}
+
+
 void CESceneParticleSystem::update(){
 	m_system->update();
 }

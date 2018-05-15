@@ -14,6 +14,8 @@ public:
 	CESceneParticleSystem(CESceneNode* p_parent, const char* p_path, int p_amount, GLuint p_shaderProgram);
 	~CESceneParticleSystem();
 
+	void	processInput(GLFWwindow* p_window);
+
 	void	update();
 
 	void 	setScale(float p_x, float p_y, float p_z);
@@ -23,6 +25,17 @@ public:
 	void 	setAbsoluteScale(float p_x, float p_y, float p_z);
 	void 	setAbsoluteRotation(float p_x, float p_y, float p_z);
 	void 	setAbsolutePosition(float p_x, float p_y, float p_z);
+
+	glm::vec3	getPosition()	{ return m_system->getPosition(); }
+
+	void 	setAmount(int p_amount) { m_system->setAmount(p_amount); }
+    int  	getAmount()  { return m_system->getAmount(); }  
+
+    void 	setNewParticles(int p_newParticles)    { m_system->setNewParticles(p_newParticles); }
+    int  	getNewParticles()  { return m_system->getNewParticles(); }
+
+    void 	setParticleLife(int p_particleLife)    {m_system->setParticleLife(p_particleLife); }
+    int  	getParticleLife()  { return m_system->getParticleLife(); }
 
 private:
 	CETransform*	m_rotate;

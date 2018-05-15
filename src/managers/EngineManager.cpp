@@ -41,7 +41,8 @@ EngineManager::~EngineManager(){}
 
 //Creates the game window
 void EngineManager::createWindow(bool p_fullscreen){
-    m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
+    //m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
+    m_window = new CEWindow(1024, 768, "3KSC", p_fullscreen);
     m_scene  = new CEScene();
 }
 
@@ -136,8 +137,15 @@ void EngineManager::updateCamera(){
     }*/
 }
 
-void EngineManager::createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation){
-    CESceneLight* t_light = m_scene->createLight(p_lightIntensity, p_lightAtenuation);
+void EngineManager::createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]){
+    CESceneLight* t_light = m_scene->createDirectionalLight(p_lightDirection);
+    if(t_light){
+        t_light->setAbsolutePosition(p_lightPosition[0],p_lightPosition[1],p_lightPosition[2]);
+    }
+}
+
+void EngineManager::createPointLight(float p_lightPosition[3], float p_lightAtenuation){
+    CESceneLight* t_light = m_scene->createPointLight(p_lightAtenuation);
     if(t_light){
         t_light->setAbsolutePosition(p_lightPosition[0],p_lightPosition[1],p_lightPosition[2]);
     }
@@ -174,20 +182,15 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
     }
 }
 
-void EngineManager::loadSkybox(const char* p_skyboxURLs[6]){
-    //CESceneSkybox* t_skybox = m_scene->createSkybox(p_skyboxURLs);
+void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
+    CESceneSkybox* t_skybox = m_scene->createSkybox(p_skyboxURLs, t_scale);
 
     //m_entityNodes.push_back(t_skybox);
 }
 
 void EngineManager::moveEntity(Entity* p_entity){
-    /*
-    float* t_position = p_entity->getElapsedPosition();
-    m_entityNodes.at(p_entity->getId())->setPosition(t_position[0], t_position[1], t_position[2]);
-    */
-
     float* t_position = p_entity->getPosition();
-    m_entityNodes.at(p_entity->getId())->setAbsolutePosition(t_position[0], t_position[1], t_position[2]);
+    m_entityNodes.at(p_entity->getId())->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
 }
 
 void EngineManager::setRotation(int p_id, float p_degrees){

@@ -45,7 +45,7 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_currentItems    = 0;
     //m_items         = new Item*[m_maxItemsOnScreen];
     m_instance        = this;
-    m_offsetSpawnTime = 10.0;
+    m_offsetSpawnTime = 7.5;
     m_nextSpawnTime   = m_inputManager->getMasterClock() + m_offsetSpawnTime;
     m_playerCount     = 0;
     m_players         = new Character*[4];
@@ -92,7 +92,7 @@ Arena* Arena::getInstance(){
 
 void Arena::spawnPlayers(){
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
-    //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
+    m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
     //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
 
     //float positionPortal[3] = {0, 0.5, 0};
@@ -199,7 +199,7 @@ bool Arena::spawnRandomItem(){
     int range = m_spawnItemRange[1] - m_spawnItemRange[0] + 1;
     int randx = m_spawnItemRange[0] + (rand() % range);
     int random = rand()%(3-0 + 1) + 0;
-    //spawnItemAt(random, randx, m_spawnItemRange[2]);
+    spawnItemAt(random, randx, m_spawnItemRange[2]);
     return true;
 }
 
@@ -227,6 +227,7 @@ void Arena::onlineUpdate(){
 }
 
 void Arena::spawnItemAt(int p_type, int x, int y){
+    std::cout << "SPAWN" << std::endl;
     float t_position[3] = {x, y, 0};
     switch (p_type){
         case 0:     { m_items.push_back(new Shield(t_position));     }   break;
