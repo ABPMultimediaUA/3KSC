@@ -297,6 +297,7 @@ void Character::input(){
     m_inputManager->updatePlayerActions(m_playerIndex);
     
     //For movement
+    
     m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
     //Block
@@ -334,6 +335,7 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
+
     //Update AI if exists and is enabled
     if(m_AI && m_AIEnabled)
         m_AI->update();

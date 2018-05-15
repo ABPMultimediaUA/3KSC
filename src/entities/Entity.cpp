@@ -169,6 +169,15 @@ float Entity::getX(){
     return m_physicsManager->getBody(m_id)->GetPosition().x;
 }
 
+float Entity::getVX(){
+    return m_physicsManager->getBody(m_id)->GetLinearVelocity().x;
+}
+
+void Entity::setVX(float x){
+    m_physicsManager->move(getId(), x, 0);
+}
+
+
 float Entity::getY(){
     return m_physicsManager->getBody(m_id)->GetPosition().y;
 }
@@ -192,6 +201,7 @@ void Entity::setX(float p_position){
 void Entity::setY(float p_position){
     moveTo(getX(), p_position);
 }
+
 /*
 void Entity::createDebug(){
     m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);

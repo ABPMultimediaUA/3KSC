@@ -52,6 +52,7 @@ InputManager::InputManager(){
 
     //Devices initialization
     autoassignDevices();
+    m_isOnline = false;
 
     //m_inputDevices[0]   = -2;
     //m_inputDevices[1]   = -1;
@@ -197,7 +198,7 @@ void InputManager::updateOnlineInput(int p_player){
     bool t_actions[12];
     bool t_flag = false;
     uint i;
-    for(i = 0; i < 12; i++){
+    for(i = 0; i < 10; i++){
         if(m_playerActions[p_player][i])
             t_actions[i] = true;
         else
@@ -246,9 +247,9 @@ void InputManager::updatePlayerActions(int p_player){
         case -2:                        {playerInputNPC(p_player);          break;}
         case -3:                        {playerInputOnline(p_player);       break;}
     }
-
     if(m_isOnline && p_player == m_client->getPlayer()){
         updateOnlineInput(p_player);
+        m_isOnline = true;
     }
 }
 

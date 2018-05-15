@@ -73,7 +73,7 @@ private:
     Client*                 m_client;
     int                     m_onlinePlayer;
     bool                    m_lastActions[11] = {false};
-    bool                    m_isOnline = false;
+    bool                    m_isOnline;
     float                   m_masterTime;
     sf::Clock               m_masterClock;
 

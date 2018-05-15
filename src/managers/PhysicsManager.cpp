@@ -84,11 +84,11 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
     t_fixtureDef->density  = 750.0f;
     t_fixtureDef->friction = 1.0f;
     t_fixtureDef->isSensor = false;
-
     switch(p_type){
         case Box::Player:
             t_fixtureDef->filter.categoryBits = CATEGORY_PLAYER;
             t_fixtureDef->filter.maskBits     = CATEGORY_ITEM | CATEGORY_GROUND;
+            t_fixtureDef->restitution = 0;
             break;
 
         case Box::Item:
@@ -114,9 +114,8 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
 
 void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     b2Body* t_body = getBody(p_id);
-
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(0.5, 0.5, b2Vec2(0,-1), 0);
+    t_polygonShape->SetAsBox(0.5, 1, b2Vec2(0,-0.1), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
@@ -124,7 +123,7 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
     t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
     t_fixtureDef->filter.groupIndex   = -1;
-
+    t_fixtureDef->restitution = 0;
     //Attach the shape to the body
     t_body->CreateFixture(t_fixtureDef);
 
@@ -173,6 +172,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
         t_fixtureDef->filter.categoryBits = CATEGORY_GROUND;
         t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_ITEM;
         t_fixtureDef->filter.groupIndex   = 1;
+          t_fixtureDef->restitution = 0;
 
         t_body->CreateFixture(t_fixtureDef);
 
@@ -197,6 +197,7 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
     t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
     t_fixtureDef->filter.groupIndex   = 1;
+      t_fixtureDef->restitution = 0;
 
     //Attach the shape to the body
     m_portalFixture = t_body->CreateFixture(t_fixtureDef);
