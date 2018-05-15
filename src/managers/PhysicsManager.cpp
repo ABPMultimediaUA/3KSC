@@ -114,9 +114,8 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
 
 void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     b2Body* t_body = getBody(p_id);
-
     b2PolygonShape* t_polygonShape = new b2PolygonShape();
-    t_polygonShape->SetAsBox(1, 1, b2Vec2(0,-0.1), 0);
+    t_polygonShape->SetAsBox(0.5, 1, b2Vec2(0,-0.1), 0);
     
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
