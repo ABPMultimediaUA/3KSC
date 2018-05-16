@@ -295,8 +295,8 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
     m_VertexZ.push_back(p_minZ);
     m_VertexZ.push_back(p_maxZ);
 
-    /*
-    std::cout <<
+    
+   /* std::cout <<
         "Objeto: " << m_totalVertex << "\n" <<
         "PosMin: " << p_minX << "," << p_minY << "," << p_minZ << "\n" <<
         "PosMax: " << p_maxX << "," << p_maxY << "," << p_maxZ << "\n" <<

@@ -154,7 +154,6 @@ void InGameState::createArena(const char* p_fileCgm){
 
         //models, scale and position
         if(t_name == "m"){
-//TODO hacer que se puedan cargar varios modelos en la arena
             float t_scale = strtof((t_elements[2]).c_str(), 0);
             m_scale = t_scale;
             float t_position[3];
