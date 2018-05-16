@@ -26,19 +26,6 @@
 class MapScreen : public MenuScreen{
     private:
         MapScreen(MenuState* p_menu);
-        
-        MenuNode*   m_FusfusNode;
-        MenuNode*   m_SakuraNode;
-        MenuNode*   m_KawaiisakiNode;
-
-        sf::Sprite* m_Fusfus;
-        sf::Sprite* m_Sakura;
-        sf::Sprite* m_Kawaiisaki;
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
 
     public:
         static MapScreen& instance();

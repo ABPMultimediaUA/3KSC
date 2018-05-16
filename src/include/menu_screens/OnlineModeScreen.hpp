@@ -26,17 +26,6 @@
 class OnlineModeScreen : public MenuScreen{
     private:
         OnlineModeScreen(MenuState* p_menu);
-        
-        MenuNode*   m_createNode;
-        MenuNode*   m_joinNode;
-
-        sf::Sprite* m_create;
-        sf::Sprite* m_join;
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
 
     public:
         static OnlineModeScreen& instance();

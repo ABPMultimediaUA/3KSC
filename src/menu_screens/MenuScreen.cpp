@@ -36,6 +36,12 @@ struct MenuActionMapping{
     bool        enabled;                    //Enabled or not
 };
 
+//Maps a string to a Screen
+struct ScreenMapping{
+    std::string string;
+    Screen      screen;
+};
+
 //Constructor
 MenuScreen::MenuScreen(MenuState* p_menu){
     m_menu              = p_menu;
@@ -44,18 +50,13 @@ MenuScreen::MenuScreen(MenuState* p_menu){
 
     m_prev              = Screen::Undefined;
     m_next              = Screen::Undefined;
-    m_settingsScreen    = Screen::Undefined;
-
-    m_selectedRect      = new sf::RectangleShape();
+    m_settings          = Screen::Undefined;
 }
 
 MenuScreen::~MenuScreen(){
     std::cout << "~MenuScreen\n" << std::endl;
 
     m_selectedNode = nullptr;
-    if (m_selectedRect) { delete m_selectedRect;    m_selectedRect = nullptr;   }
-    if(m_controlsBG)    { delete m_controlsBG;      m_controlsBG = nullptr;     }
-    if(m_controls)      { delete m_controls;        m_controls = nullptr;       }
 
     for (MenuNode* t_node : m_nodes)            { delete t_node;    }   m_nodes.clear();
     for (CESceneSprite* t_sprite : m_sprites)   { delete t_sprite;  }   m_sprites.clear();
@@ -68,7 +69,7 @@ void MenuScreen::createFromFile(const char* p_url){
     std::string     t_tag;
 
     //Loop through file
-    while(std::getLine(t_file, t_line)){
+    while(std::getline(t_file, t_line)){
         //Ignore empty lines and comments
         if (t_line == "" || t_line == "#") continue;
 
@@ -85,8 +86,9 @@ void MenuScreen::createFromFile(const char* p_url){
             float t_height      = strtof(t_elements[4].c_str(), nullptr);
 
             CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
-            MenuNode* t_node        = new MenuNode(t_sprite);      
+            MenuNode* t_node        = new MenuNode(t_sprite); 
             m_nodes.push_back(t_node);
+            m_sprites.push_back(t_sprite);
         }
 
         //Menu nodes horizontal links
@@ -108,20 +110,57 @@ void MenuScreen::createFromFile(const char* p_url){
         //Menu nodes target links
         else if (t_tag == "ntl"){
             int t_index = (int) strtof(t_elements[1].c_str(), nullptr);
+            ScreenMapping* t_iterator = m_menu->m_screenMaps;
 
-            if      (t_elements[2] == "Title"           )   { m_nodes[t_index]->target = Screen::Title;             }
-            else if (t_elements[2] == "Main"            )   { m_nodes[t_index]->target = Screen::Main;              }
-            else if (t_elements[2] == "CharacterLocal"  )   { m_nodes[t_index]->target = Screen::CharacterLocal;    }
-            else if (t_elements[2] == "CharacterOnline" )   { m_nodes[t_index]->target = Screen::CharacterOnline;   }
-            else if (t_elements[2] == "BattleSettings"  )   { m_nodes[t_index]->target = Screen::BattleSettings;    }
-            else if (t_elements[2] == "Map"             )   { m_nodes[t_index]->target = Screen::Map;               }
-            else if (t_elements[2] == "OnlineMode"      )   { m_nodes[t_index]->target = Screen::OnlineMode;        }
-            else if (t_elements[2] == "OnlineCreate"    )   { m_nodes[t_index]->target = Screen::OnlineCreate;      }
-            else if (t_elements[2] == "OnlineJoin"      )   { m_nodes[t_index]->target = Screen::OnlineJoin;        }
-            else if (t_elements[2] == "GameSettings"    )   { m_nodes[t_index]->target = Screen::GameSettings;      }
+            //Check if the string is equal to a type of Screen
+            while(t_iterator->screen != Screen::Undefined){
+                if (t_elements[2] == t_iterator->string){
+                    m_nodes[t_index]->target = t_iterator->screen;
+                    break;
+                }
+
+                ++t_iterator;
+            }
         }
-    }     
+
+        //Previous, nexts and settings screens
+        else if (t_tag == "ps" || t_tag == "ns" || t_tag == "ss"){
+            ScreenMapping* t_iterator = m_menu->m_screenMaps;
+
+            //Check if the string is equal to a type of Screen
+            while(t_iterator->screen != Screen::Undefined){
+                if (t_elements[1] == t_iterator->string){
+                    
+                    //Check which type of link is (previous, next or settings)
+                    if      (t_tag == "ps"  ) { m_prev      = t_iterator->screen;   }
+                    else if (t_tag == "ns"  ) { m_next      = t_iterator->screen;   }
+                    else if (t_tag == "ss"  ) { m_settings  = t_iterator->screen;   }
+
+                    break;
+                }
+
+                ++t_iterator;
+            }
+        }
+    }
+
+    m_selectedNode = m_nodes[0];     
 }
+
+//Shows all elements in the screen
+void MenuScreen::showElements(){
+    for (CESceneSprite* t_sprite : m_sprites){
+        t_sprite->setVisible(true);
+    }
+}
+
+//Hides all elements in the screen
+void MenuScreen::hideElements(){
+    for (CESceneSprite* t_sprite : m_sprites){
+        t_sprite->setVisible(false);
+    }
+}
+
 
 float MenuScreen::getViewportWidth(float p_factor){
     return m_engineManager->getWindowSize().width * p_factor;
@@ -131,35 +170,8 @@ float MenuScreen::getViewportHeight(float p_factor){
     return m_engineManager->getWindowSize().height * p_factor;
 }
 
-void MenuScreen::stylizeText(sf::Text* p_text, const sf::Color& p_color){
-    p_text->setFillColor(p_color);
-    p_text->setOutlineThickness(2);
-    p_text->setOutlineColor(sf::Color::White);
-}
-
 void MenuScreen::createControlsBar(int p_variant){
-    //Create background for controls
-    m_controlsBG = new sf::RectangleShape(sf::Vector2f(getViewportWidth(), 70));
-    m_controlsBG->setPosition(0, getViewportHeight() - 70);
-    m_controlsBG->setFillColor(sf::Color::Black);
-
-    m_controls = new sf::Sprite(*(m_menu->m_spritesheet));
-
-    //Create base texture rectangle and then modify it
-    sf::IntRect t_textureRect(0, 1260, 1024, 50);
-
-    //If there's no controller, move rectangle down (keyboard section)
-    if (!m_inputManager->isConnected(0)){
-        t_textureRect.top += 250;
-    }
-
-    //Pick the right variant
-    t_textureRect.top += p_variant * 50;
-
-    //Apply texture rectangle and place sprite
-    m_controls->setTextureRect(t_textureRect);
-    setOriginIndex(m_controls, 6);
-    m_controls->setPosition(10, getViewportHeight() - 10);
+   
 }
 
 //Calls action functions when they are active
@@ -208,14 +220,10 @@ void MenuScreen::input(){
 
 void MenuScreen::update(){
     doActions();
-
-    if (m_selectedRect && m_selectedNode){
-        m_selectedRect->setPosition(m_selectedNode->element->getPosition());
-    }
 }
 
 void MenuScreen::render(){
-
+    
 }
 
 
@@ -267,5 +275,5 @@ void MenuScreen::save(){
 }
 
 void MenuScreen::settings(){
-    m_menu->setScreen(m_settingsScreen);
+    m_menu->setScreen(m_settings);
 }

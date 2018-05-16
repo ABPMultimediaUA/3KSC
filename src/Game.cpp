@@ -42,7 +42,7 @@ Game::Game(){
     m_nanoFrames = 1000000000/FPS;
     m_elapsedTotal = 0;
 
-    m_resolutionPreset  = 2;
+    m_resolutionPreset  = 1;
     m_fullscreen        = false;
 
     m_volBGM            = 20;
@@ -59,8 +59,8 @@ Game::Game(){
     m_timeLimit         = -1;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
-    // m_state = new MenuState(this);
-    m_state = new InGameState(this, false);
+    m_state = new MenuState(this);
+    // m_state = new InGameState(this, false);
 }
 
 //Destructor

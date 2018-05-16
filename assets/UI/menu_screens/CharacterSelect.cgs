@@ -1,9 +1,9 @@
-# Menu Main screen
+# Menu Character screen
 
 # n is used for menu nodes [INDEX SPRITE_URL WIDTH HEIGHT]
-n 0 assets/UI/menu_screens/Main/Local.png 1024 140
+n 0 assets/UI/menu_screens/Main/Quit.png 1024 280
 n 1 assets/UI/menu_screens/Main/Online.png 1024 140
-n 2 assets/UI/menu_screens/Main/Quit.png 1024 140
+n 2 assets/UI/menu_screens/Main/Local.png 1024 140
 
 # nhl is used to link menu nodes horizontally [INDEX RIGHT_NODE]
 nhl 0 1
@@ -17,5 +17,5 @@ ntl 0 CharacterLocal
 ntl 1 OnlineMode
 
 # ps is used to link previous screen, ns for next screen, and ss for settings screen
-ps Title
-ss GameSettings
+ps Main
+ss BattleSettings

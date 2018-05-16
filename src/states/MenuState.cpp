@@ -23,6 +23,7 @@
 #include "../include/Game.hpp"
 
 #include "../include/menu_screens/MenuScreen.hpp"
+#include "../include/menu_screens/TitleScreen.hpp"
 #include "../include/menu_screens/MainScreen.hpp"
 #include "../include/menu_screens/CharacterLocalScreen.hpp"
 #include "../include/menu_screens/CharacterOnlineScreen.hpp"
@@ -37,6 +38,7 @@
 #include "../include/managers/EngineManager.hpp"
 
 #include <iostream>
+#include <string>
 
 //Struct containing menu actions and its properties
 struct MenuActionMapping{
@@ -44,6 +46,12 @@ struct MenuActionMapping{
     void        (MenuScreen::*function)();  //Function for the action
     bool        onlyOnce;                   //Wait for input release?
     bool        enabled;                    //Enabled or not
+};
+
+//Maps a string to a Screen
+struct ScreenMapping{
+    std::string string;
+    Screen      screen;
 };
 
 //Instance initialization
@@ -57,28 +65,20 @@ MenuState::MenuState(Game* p_game){
     // m_window        = m_engineManager->getWindow();
     
     mapActions();
-
-    createTexture();
-    loadSpritesheet();
-    loadFont();
+    mapScreens();
     
     initializeScreens();
 
     m_waitRelease   = false;
     m_keepWaiting   = false;
-
-    m_currentScreen = m_screens[0];
 }
 
 //Destructor
 MenuState::~MenuState(){
     std::cout << "~MenuState" << std::endl;
-    
-    if (m_sprite)       { delete m_sprite;      m_sprite = nullptr;         }
-    if (m_texture)      { delete m_texture;     m_texture = nullptr;        }
-    if (m_spritesheet)  { delete m_spritesheet; m_spritesheet = nullptr;    }
-    if (m_font)         { delete m_font;        m_font = nullptr;           }
-    if (m_actions)      { delete[] m_actions;   m_actions = nullptr;        }
+
+    if (m_actions)      { delete[] m_actions;       m_actions = nullptr;        }
+    if (m_screenMaps)   { delete[] m_screenMaps;    m_screenMaps = nullptr;     }
     m_instance = nullptr;
 }
 
@@ -96,7 +96,10 @@ void MenuState::nextState(){
 //Changes to specified screen
 void MenuState::setScreen(Screen p_screen){
     if (p_screen != Screen::Undefined){
+        m_currentScreen->hideElements();
         m_currentScreen = m_screens[(int) p_screen];
+        m_currentScreen->showElements();
+
 
         //Hide cursor in character select
         if (p_screen == Screen::CharacterLocal || p_screen == Screen::CharacterOnline){
@@ -108,46 +111,25 @@ void MenuState::setScreen(Screen p_screen){
     }
 }
 
-//Creates the texture to render to
-void MenuState::createTexture(){
-    m_texture = new sf::RenderTexture();
-
-    if (!m_texture->create(1280, 720)){
-        std::cerr << "Error creating 2D render target!" << std::endl;
-    }
-
-    m_sprite = new sf::Sprite();
-}
-
-//Loads the common spritesheet for all menu screens
-void MenuState::loadSpritesheet(){
-    m_spritesheet = new sf::Texture();
-
-    if (!m_spritesheet->loadFromFile("assets/UI/Spritesheet_menus.png")){
-        std::cerr << "Error loading menus spritesheet!" << std::endl;
-    }
-}
-
-//Loads the font for menus
-void MenuState::loadFont(){
-    m_font = new sf::Font();
-
-    if (!m_font->loadFromFile("assets/fonts/QK Star.ttf")){
-        std::cerr << "Error loading menus font!" << std::endl;
-    }
-}
-
 //Creates the instance of each menu screen
 void MenuState::initializeScreens(){
-    m_screens[0]    = &MainScreen::instance();
-    m_screens[1]    = &CharacterLocalScreen::instance();
-    m_screens[2]    = &CharacterOnlineScreen::instance();
-    m_screens[3]    = &BattleSettingsScreen::instance();
-    m_screens[4]    = &MapScreen::instance();
-    m_screens[5]    = &OnlineModeScreen::instance();
-    m_screens[6]    = &OnlineCreateScreen::instance();
-    m_screens[7]    = &OnlineJoinScreen::instance();
-    m_screens[8]    = &GameSettingsScreen::instance();
+    m_screens[0]    = &TitleScreen::instance();
+    m_screens[1]    = &MainScreen::instance();
+    m_screens[2]    = &CharacterLocalScreen::instance();
+    m_screens[3]    = &CharacterOnlineScreen::instance();
+    m_screens[4]    = &BattleSettingsScreen::instance();
+    m_screens[5]    = &MapScreen::instance();
+    m_screens[6]    = &OnlineModeScreen::instance();
+    m_screens[7]    = &OnlineCreateScreen::instance();
+    m_screens[8]    = &OnlineJoinScreen::instance();
+    m_screens[9]    = &GameSettingsScreen::instance();
+
+    for (int i = 0; i < 10; i++){
+        m_screens[i]->hideElements();
+    }
+
+    m_currentScreen = m_screens[1];
+    m_currentScreen->showElements();
 }
 
 //Initializes actions mapping
@@ -165,6 +147,23 @@ void MenuState::mapActions(){
     m_actions[8]    = {MenuAction::Count    , nullptr                   , false     , false};
 }
 
+//Initializes actions mapping
+void MenuState::mapScreens(){
+    m_screenMaps = new ScreenMapping[(int) Screen::Count + 1];
+                            //String              //Screen
+    m_screenMaps[0]     = { "Title"             , Screen::Title             };
+    m_screenMaps[1]     = { "Main"              , Screen::Main              };
+    m_screenMaps[2]     = { "CharacterLocal"    , Screen::CharacterLocal    };
+    m_screenMaps[3]     = { "CharacterOnline"   , Screen::CharacterOnline   };
+    m_screenMaps[4]     = { "BattleSettings"    , Screen::BattleSettings    };
+    m_screenMaps[5]     = { "Map"               , Screen::Map               };
+    m_screenMaps[6]     = { "OnlineMode"        , Screen::OnlineMode        };
+    m_screenMaps[7]     = { "OnlineCreate"      , Screen::OnlineCreate      };
+    m_screenMaps[8]     = { "OnlineJoin"        , Screen::OnlineJoin        };
+    m_screenMaps[9]     = { "GameSettings"      , Screen::GameSettings      };
+    m_screenMaps[10]    = { ""                  , Screen::Undefined         };
+}
+
 void MenuState::input(){
     m_currentScreen->input();
 }
@@ -176,12 +175,4 @@ void MenuState::update(){
 void MenuState::render(){
     //Update texture contents
     m_currentScreen->render();
-
-    //Put texture in sprite
-    m_sprite->setTexture(m_texture->getTexture());
-
-    //Render the sprite
-    // m_window->clear();
-    // m_window->draw(*m_sprite);
-    // m_window->display();
 }

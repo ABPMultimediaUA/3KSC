@@ -28,6 +28,9 @@ public:
 	void	getNext();
 	void	getLast();
 
+    bool    getVisible()                { return m_visible;         }
+    void    setVisible(bool p_visible)  { m_visible = p_visible;    }
+
 private:
 	GLuint m_shaderProgram;
     GLuint m_VAO;
@@ -42,6 +45,8 @@ private:
 
     float m_width;
 	float m_height;
+
+    bool m_visible = true;
 };
 
 #endif

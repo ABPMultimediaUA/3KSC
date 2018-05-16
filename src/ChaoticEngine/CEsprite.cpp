@@ -58,13 +58,15 @@ CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuin
 CESprite::~CESprite(){}
 
 void CESprite::beginDraw(){
+    if (!m_visible) return;
+
     glUseProgram(m_shaderProgram);
     
 
     //PRECALCULAMOS LAS MATRICES Y LAS PASAMOS AL SHADER
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix));
     
-    glm::mat4 t_projection = glm::ortho(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
+    glm::mat4 t_projection = glm::ortho(512.0f, -512.0f, -384.0f, 384.0f, -15.0f, 100.0f);
     m_MVP = t_projection * m_viewMatrix * m_modelMatrix;
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
     //glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));

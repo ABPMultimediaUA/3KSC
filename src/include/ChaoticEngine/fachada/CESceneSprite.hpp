@@ -30,6 +30,8 @@ public:
 	float 	getWidth() 				    {	return m_sprite->getWidth();    }
    	void 	setWidth(float p_width)	    {	m_sprite->setWidth(p_width);    }
 	void 	setHeight(float p_height)	{   m_sprite->setHeight(p_height);  }
+    bool    getVisible()                { return m_sprite->getVisible();    }
+    void    setVisible(bool p_visible)  { m_sprite->setVisible(p_visible);  }
 
 	void 	addTexture(const char* p_urlSource) { m_sprite->loadResource(p_urlSource); }
 

@@ -89,6 +89,7 @@ public:
     void        scale(int p_id, float p_scale[3]);
     
     void        drawScene();
+    void        drawScene2D();
 
     float               getFrameDeltaTime();
     CESceneMesh*        getEntityNode(int p_id);

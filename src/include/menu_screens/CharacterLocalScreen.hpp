@@ -22,9 +22,6 @@
 #define CHARACTER_LOCAL_SCREEN
 
 class Game;
-class CursorNode;
-class TokenNode;
-class CharBarNode;
 
 #include "MenuScreen.hpp"
 #include <vector>
@@ -35,42 +32,12 @@ class CharacterLocalScreen : public MenuScreen{
         
         Game*           m_game;
 
-        // CharBarNode**   m_charNodes;
-        // TokenNode**     m_tokenNodes;
-        // bool            m_dragging[4];
-
-        std::vector<CursorNode>      m_cursorNodes;
-        std::vector<TokenNode>       m_tokenNodes;
-        std::vector<CharBarNode>     m_charNodes;
-        
-        sf::Sprite**    m_backgrounds;
-        sf::Sprite**    m_faces;
-        sf::Sprite**    m_checkboxes;
-        sf::Text**      m_names;
-        
-        sf::Sprite**    m_charactersBar;
-        sf::Sprite**    m_tokens;
-        sf::Sprite**    m_cursors;
-
-        sf::Texture*    m_charSpritesheet;
-
         int             m_localPlayers;
         bool            m_enabledPlayers[4];
 
-        //They clip the background/name/face of the specified character for a certain player
-        void clipBackground(int p_player, int p_character)  { m_backgrounds[p_player]->setTextureRect(sf::IntRect(200 * (p_character), 200, 200, 200)); }
-        void clipToken(int p_player, int p_character)       { m_tokens[p_player]->setTextureRect(sf::IntRect(64 * p_character, 400, 64,  64)); }
-        void clipFace(int p_player, int p_character)        { m_faces[p_player]->setTextureRect(sf::IntRect(200 * p_character,   0, 200, 200)); }
-        
-        void loadCharSpritesheet();
         void chooseCharacter(int p_player, int p_character);
         void enablePlayer(int p_player, bool p_playable = true);
         void disablePlayer(int p_player);
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
 
     public:
         static CharacterLocalScreen& instance();

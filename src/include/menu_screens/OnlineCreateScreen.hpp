@@ -26,15 +26,6 @@
 class OnlineCreateScreen : public MenuScreen{
     private:
         OnlineCreateScreen(MenuState* p_menu);
-        
-        sf::Sprite* m_yourIP;
-        sf::Sprite* m_IPBox;
-        sf::Text*   m_IP;
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
 
     public:
         static OnlineCreateScreen& instance();

@@ -26,15 +26,6 @@
 class OnlineJoinScreen : public MenuScreen{
     private:
         OnlineJoinScreen(MenuState* p_menu);
-        
-        sf::Sprite* m_enterIP;
-        sf::Sprite* m_IPBox;
-        sf::Text*   m_IP;
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
 
     public:
         static OnlineJoinScreen& instance();

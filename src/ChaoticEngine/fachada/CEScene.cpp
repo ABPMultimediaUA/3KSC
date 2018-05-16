@@ -172,6 +172,10 @@ void CEScene::draw(){
 	m_root->draw();
 }
 
+void CEScene::draw2D(){
+	m_root->draw();
+}
+
 void CEScene::release(){
 	m_root->removeAllChilds();
 	m_resourceManager->deleteResources();

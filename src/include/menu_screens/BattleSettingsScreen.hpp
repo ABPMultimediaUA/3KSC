@@ -31,24 +31,6 @@ class BattleSettingsScreen : public MenuScreen{
         
         Game*                   m_game;
 
-        MenuNode*               m_roundsNode;
-        MenuNode*               m_livesNode;
-        MenuNode*               m_timeLimitNode;
-
-        sf::Sprite*             m_rounds;
-        sf::Sprite*             m_lives;
-        sf::Sprite*             m_timeLimit;
-
-        sf::Text*               m_roundsText;
-        sf::Text*               m_livesText;
-        sf::Text*               m_timeLimitText;
-
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
-
     public:
         static BattleSettingsScreen& instance();
         ~BattleSettingsScreen();

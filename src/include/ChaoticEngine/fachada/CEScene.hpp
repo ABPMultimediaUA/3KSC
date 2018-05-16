@@ -38,6 +38,7 @@ public:
 	void 	calculateLights();
 
 	void 	draw();
+    void    draw2D();
 	void 	release();
 	void 	remove(CESceneNode* p_node);
 

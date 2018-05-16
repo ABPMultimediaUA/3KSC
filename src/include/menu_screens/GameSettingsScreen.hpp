@@ -31,32 +31,9 @@ class GameSettingsScreen : public MenuScreen{
         
         Game*                   m_game;
 
-        MenuNode*               m_resolutionNode;
-        MenuNode*               m_videoModeNode;
-        MenuNode*               m_BGMNode;
-        MenuNode*               m_FXNode;
-        MenuNode*               m_voicesNode;
-
-        sf::Sprite*             m_resolution;
-        sf::Sprite*             m_videoMode;
-        sf::Sprite*             m_BGM;
-        sf::Sprite*             m_FX;
-        sf::Sprite*             m_voices;
-
-        sf::Text*               m_resolutionText;
-        sf::Text*               m_videoModeText;
-        sf::RectangleShape**    m_barsBGM;
-        sf::RectangleShape**    m_barsFX;
-        sf::RectangleShape**    m_barsVoices;
-
         int                     m_volBGM;
         int                     m_volFX;
         int                     m_volVoices;
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
 
     public:
         static GameSettingsScreen& instance();

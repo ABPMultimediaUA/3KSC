@@ -24,10 +24,11 @@
 class EngineManager;
 class MenuScreen;
 struct MenuActionMapping;
+struct ScreenMapping;
 
 #include "State.hpp"
 #include "../extra/Screens.hpp"
-#include <SFML/Graphics.hpp>
+// #include <SFML/Graphics.hpp>
 
 class MenuState : public State{
     friend class MenuScreen;
@@ -47,16 +48,13 @@ class MenuState : public State{
         MenuScreen*         m_screens[(int) Screen::Count];
         MenuScreen*         m_currentScreen;
 
-        // sf::RenderWindow*   m_window;                   //Window to render the sprite 
-        sf::Sprite*         m_sprite;                   //Sprite to hold the texture
-        sf::RenderTexture*  m_texture;                  //Texture to draw elements to 
-        sf::Texture*        m_spritesheet;              //Spritesheet with all menu textures
-        sf::Font*           m_font;                     //Font (for changing texts like settings)
-
         void initializeScreens();
 
         MenuActionMapping*  m_actions;
+        ScreenMapping*      m_screenMaps;
+
         void mapActions();
+        void mapScreens();
 
         bool m_waitRelease;
         bool m_keepWaiting;
@@ -68,10 +66,6 @@ class MenuState : public State{
 
         void    nextState();
         void    setScreen(Screen p_screen);
-
-        void    createTexture();
-        void    loadSpritesheet();
-        void    loadFont();
         
         void    input();
         void    update();

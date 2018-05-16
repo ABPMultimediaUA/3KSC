@@ -1,6 +1,6 @@
 /*
     3KSC: A fighting game
-    Copyright (C);
+    Copyright (C) 2018  Chaotic Games
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,28 +18,40 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef CHARACTER_ONLINE_SCREEN
-#define CHARACTER_ONLINE_SCREEN
+#include "../include/menu_screens/TitleScreen.hpp"
 
-class Game;
+//Returns the only instance of this class
+TitleScreen& TitleScreen::instance(){
+    static TitleScreen instance(MenuState::getInstance());
+    return instance;
+}
 
-#include "MenuScreen.hpp"
+//Constructor
+TitleScreen::TitleScreen(MenuState* p_menu)
+    : MenuScreen(p_menu){
+    
+}
 
-class CharacterOnlineScreen : public MenuScreen{
-    private:
-        CharacterOnlineScreen(MenuState* p_menu);
-        
-        Game*           m_game;
+//Destructor
+TitleScreen::~TitleScreen(){
+    std::cout << "~TitleScreen" << std::endl;
+}
 
-    public:
-        static CharacterOnlineScreen& instance();
-        ~CharacterOnlineScreen();
+//Draws to the screen
+void TitleScreen::render(){
+    
+}
 
-        void input();
-        void update();
-        void render();
 
-        void select()               override;
-};
 
-#endif
+
+
+
+
+
+
+
+/* ****************************** ACTIONS ****************************** */
+void TitleScreen::select(){
+    save();
+}

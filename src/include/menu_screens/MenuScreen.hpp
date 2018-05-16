@@ -55,8 +55,6 @@ struct MenuNode{
 class MenuScreen{
     protected:
         MenuScreen(MenuState* p_menu);
-        
-        void createFromFile(const char* p_url);
 
         MenuState*          m_menu;
         EngineManager*      m_engineManager;
@@ -67,55 +65,26 @@ class MenuScreen{
 
         std::vector<CESceneSprite*> m_sprites;
 
-        // sf::Transformable*  m_selected;
-        sf::RectangleShape* m_selectedRect;
-
-        sf::RectangleShape* m_controlsBG;
-        sf::Sprite*         m_controls;
-
         Screen              m_prev;             //Previous screen
         Screen              m_next;             //Next screen (save)
-        Screen              m_settingsScreen;   //Settings screen for that menu
+        Screen              m_settings;        //Settings screen for that menu
 
-        //Receives a pointer to element and an index in range [0-8].
-        // Sets the transform origin to one of the common 9 points.
-        template <class T>
-        void setOriginIndex(T* p_element, int p_index){
-            float t_x = 0, t_y = 0;
+
+        void createFromFile(const char* p_url);
         
-            t_x = p_element->getGlobalBounds().width    * (0.5 * (p_index % 3));
-            t_y = p_element->getGlobalBounds().height   * (0.5 * (p_index / 3));
-
-            p_element->setOrigin(t_x, t_y);
-        }
-
         //Return the width/height of the viewport. Optionally, they can return part of it.
         float getViewportWidth(float p_factor = 1);
         float getViewportHeight(float p_factor = 1);
-
-        virtual void clipElements()         {}
-        virtual void setElementsOrigins()   {}
-        virtual void placeElements()        {}
-        virtual void initializeNodes()      {}
         
-        virtual void createSelectionRect(){
-            sf::FloatRect t_bbox = m_selectedNode->element->getGlobalBounds();            
-
-            m_selectedRect->setSize(sf::Vector2f(t_bbox.width, t_bbox.height));
-            setOriginIndex(m_selectedRect, 4);
-            m_selectedRect->setPosition(m_selectedNode->element->getPosition());
-            m_selectedRect->setFillColor(sf::Color::Transparent);
-            m_selectedRect->setOutlineThickness(6);
-            m_selectedRect->setOutlineColor(sf::Color(209, 45, 58));
-        }
-
-        void stylizeText(sf::Text* p_text, const sf::Color& p_color = sf::Color(255, 128, 0));
         void createControlsBar(int p_variant);
 
         virtual void doActions();
 
     public:
         virtual ~MenuScreen();
+
+        void showElements();
+        void hideElements();
 
         void setPrev(Screen p_prev)                 { m_prev = p_prev; }
 

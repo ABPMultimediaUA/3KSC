@@ -26,27 +26,13 @@
 class TitleScreen : public MenuScreen{
     private:
         TitleScreen(MenuState* p_menu);
-        
-        MenuNode*       m_playLocalNode;
-        MenuNode*       m_playOnlineNode;
-        MenuNode*       m_quitNode;
-
-        sf::Sprite*     m_title;
-        sf::Sprite*     m_settings;
-        sf::Sprite*     m_playLocal;
-        sf::Sprite*     m_playOnline;
-        sf::Sprite*     m_quit;
-
-        void clipElements()         override;
-        void setElementsOrigins()   override;
-        void placeElements()        override;
-        void initializeNodes()      override;
 
     public:
         static TitleScreen& instance();
         ~TitleScreen();
 
         void render()               override;
+        void select()               override;
 };
 
 #endif
