@@ -26,6 +26,7 @@ class CEScene;
 class CESceneCamera;
 class CESceneMesh;
 class CESceneParticleSystem;
+class CESceneSprite;
 
 #include <CETypes.hpp>
 #include <vector>
@@ -77,7 +78,8 @@ public:
     void        resetCamera();
     void        updateCamera();
 
-    void        createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation);
+    void        createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]);
+    void        createPointLight(float p_lightPosition[3], float p_lightAtenuation);
 
     void        deleteEntity(int p_id);
     void        load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
@@ -103,7 +105,7 @@ public:
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      }
 
     void                createDebugQuad(float p_vertex[4][2]);
-    void                createSprite(const char* p_url, float p_width, float p_height);
+    CESceneSprite*      createSprite(const char* p_url, float p_width, float p_height);
     void                createParticleSystem(const char* p_url, int p_amount);
     void                updateParticleSystem();
 

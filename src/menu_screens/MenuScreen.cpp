@@ -22,7 +22,11 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/extra/MenuActions.hpp"
+
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 //Struct containing menu actions and its properties
 struct MenuActionMapping{
@@ -52,6 +56,71 @@ MenuScreen::~MenuScreen(){
     if (m_selectedRect) { delete m_selectedRect;    m_selectedRect = nullptr;   }
     if(m_controlsBG)    { delete m_controlsBG;      m_controlsBG = nullptr;     }
     if(m_controls)      { delete m_controls;        m_controls = nullptr;       }
+
+    for (MenuNode* t_node : m_nodes)            { delete t_node;    }   m_nodes.clear();
+    for (CESceneSprite* t_sprite : m_sprites)   { delete t_sprite;  }   m_sprites.clear();
+}
+
+//Reads a CGS file and creates the screen from it
+void MenuScreen::createFromFile(const char* p_url){
+    std::ifstream   t_file(p_url);
+    std::string     t_line;
+    std::string     t_tag;
+
+    //Loop through file
+    while(std::getLine(t_file, t_line)){
+        //Ignore empty lines and comments
+        if (t_line == "" || t_line == "#") continue;
+
+        //Separate string by spaces
+        std::istringstream          t_tokens(t_line);
+        std::vector<std::string>    t_elements(std::istream_iterator<std::string>{t_tokens}, std::istream_iterator<std::string>());
+
+        t_tag = t_elements[0].c_str();
+
+        //Menu nodes
+        if (t_tag == "n"){
+            const char* t_url   = t_elements[2].c_str();
+            float t_width       = strtof(t_elements[3].c_str(), nullptr);
+            float t_height      = strtof(t_elements[4].c_str(), nullptr);
+
+            CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
+            MenuNode* t_node        = new MenuNode(t_sprite);      
+            m_nodes.push_back(t_node);
+        }
+
+        //Menu nodes horizontal links
+        else if (t_tag == "nhl"){
+            int t_nodeA = (int) strtof(t_elements[1].c_str(), nullptr);
+            int t_nodeB = (int) strtof(t_elements[2].c_str(), nullptr);
+
+            m_nodes[t_nodeA]->setRight(m_nodes[t_nodeB]);
+        }
+
+        //Menu nodes vertical links
+        else if (t_tag == "nvl"){
+            int t_nodeA = (int) strtof(t_elements[1].c_str(), nullptr);
+            int t_nodeB = (int) strtof(t_elements[2].c_str(), nullptr);
+
+            m_nodes[t_nodeA]->setDown(m_nodes[t_nodeB]);            
+        }
+
+        //Menu nodes target links
+        else if (t_tag == "ntl"){
+            int t_index = (int) strtof(t_elements[1].c_str(), nullptr);
+
+            if      (t_elements[2] == "Title"           )   { m_nodes[t_index]->target = Screen::Title;             }
+            else if (t_elements[2] == "Main"            )   { m_nodes[t_index]->target = Screen::Main;              }
+            else if (t_elements[2] == "CharacterLocal"  )   { m_nodes[t_index]->target = Screen::CharacterLocal;    }
+            else if (t_elements[2] == "CharacterOnline" )   { m_nodes[t_index]->target = Screen::CharacterOnline;   }
+            else if (t_elements[2] == "BattleSettings"  )   { m_nodes[t_index]->target = Screen::BattleSettings;    }
+            else if (t_elements[2] == "Map"             )   { m_nodes[t_index]->target = Screen::Map;               }
+            else if (t_elements[2] == "OnlineMode"      )   { m_nodes[t_index]->target = Screen::OnlineMode;        }
+            else if (t_elements[2] == "OnlineCreate"    )   { m_nodes[t_index]->target = Screen::OnlineCreate;      }
+            else if (t_elements[2] == "OnlineJoin"      )   { m_nodes[t_index]->target = Screen::OnlineJoin;        }
+            else if (t_elements[2] == "GameSettings"    )   { m_nodes[t_index]->target = Screen::GameSettings;      }
+        }
+    }     
 }
 
 float MenuScreen::getViewportWidth(float p_factor){

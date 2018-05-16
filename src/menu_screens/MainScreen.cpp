@@ -45,6 +45,8 @@ MainScreen::MainScreen(MenuState* p_menu)
     m_settingsScreen = Screen::GameSettings;
 
     createControlsBar(1);
+
+    createFromFile("assets/UI/menu_screens/Main.cgs");
 }
 
 //Destructor

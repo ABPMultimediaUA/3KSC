@@ -24,7 +24,8 @@ public:
 	~CEScene();
 
 	CESceneCamera*			createCamera(bool p_isActive = false);
-	CESceneLight*			createLight(float p_lightIntensity[3], float p_lightAtenuation, float p_position[3]);
+	CESceneLight*			createDirectionalLight(float p_direction[3]);
+	CESceneLight*			createPointLight(float p_lightAtenuation);
 	CESceneMesh*			createMesh(const char* p_path);
 	CESceneAnimation*		createAnimatedMesh(const char* p_path);
 	CESceneQuad*			createQuad(float p_vertex[4][2]);
@@ -46,6 +47,7 @@ private:
 	CEShaderProgram* 	m_shaderProgram;
 
 	CESceneCamera*		m_activeCamera;
+	CESceneLight* 		m_directionalLight;
 
 	std::vector<CESceneCamera*>	m_cameras;
 	std::vector<CESceneLight*>	m_lights;

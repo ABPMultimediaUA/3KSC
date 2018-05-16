@@ -23,7 +23,8 @@
 
     enum class Screen{
         Undefined = -1,
-        Main = 0,
+        Title = 0,
+        Main,
         CharacterLocal,
         CharacterOnline,
         BattleSettings,

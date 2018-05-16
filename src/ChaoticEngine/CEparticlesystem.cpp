@@ -10,8 +10,8 @@ CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, GLuint p_sh
     m_shaderProgram = p_shaderProgram;
     m_amount = p_amount;
 
-    m_newParticles = 20;
-    m_particleLife = 1.0f;
+    m_newParticles = 100;
+    m_particleLife = 2.0f;
 
     loadResource(p_path);
     init();
@@ -20,10 +20,10 @@ CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, GLuint p_sh
 void CEParticleSystem::init(){
     GLfloat t_vertices[] = { 
         // Pos      // Tex
-        -0.5f, -0.5f, 0.05f, 0.05f, 
-        -0.5f,  0.5f, 0.05f, 0.95f,
-         0.5f,  0.5f, 0.95f, 0.95f,
-         0.5f, -0.5f, 0.95f, 0.05f
+        -0.5f, -0.5f, 0.07f, 0.07f, 
+        -0.5f,  0.5f, 0.07f, 0.93f,
+         0.5f,  0.5f, 0.93f, 0.93f,
+         0.5f, -0.5f, 0.93f, 0.07f
     };
 
     unsigned int m_indices[] = {
@@ -62,6 +62,9 @@ void CEParticleSystem::beginDraw(){
     m_MVP = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
     m_position = getPosition();
 
+    glEnable (GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
     for(Particle particle : m_particles){
         if(particle.Life > 0.0f){
             glm::mat4 t_projection = glm::ortho(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
@@ -75,7 +78,7 @@ void CEParticleSystem::beginDraw(){
             glBindTexture(GL_TEXTURE_2D, m_texture->getTextureId());
 
             glBindVertexArray(m_VAO);
-            //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             glBindVertexArray(0);
         }
@@ -124,17 +127,20 @@ GLuint CEParticleSystem::firstUnusedParticle(){
 }
 
 void CEParticleSystem::respawnParticle(Particle &particle){
-    GLfloat random = ((rand() % 5) - 1);
     
+    GLfloat random = ((rand() % 180) - 5) / 18.0f; 
+    GLfloat randvel = ((rand() % 1) - 0.5) / 0.1f; 
+    GLfloat randlife = ((rand() % 3) - 0.5f / 0.3f);
+    if(randlife < 0)
+        randlife *= -1; 
+     
     particle.Position   = glm::vec2(m_position.x, m_position.y);
-    //particle.Velocity   = glm::vec2(random,-5.0f);
-    particle.Velocity   = glm::vec2(5.0f, random);
-    particle.Color      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    particle.Life       = m_particleLife;
+    particle.Color      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); 
+    particle.Life       = randlife; 
+    particle.Velocity   = glm::vec2(random,randvel);
 }
 
 void CEParticleSystem::loadResource(const char* p_urlSource){
-    std::cout << p_urlSource << std::endl;
     CEResourceManager* t_manager = CEResourceManager::instance();
     CEResourceTexture* t_resource = (CEResourceTexture*)&t_manager->getResource(p_urlSource);
     if(t_resource != 0){

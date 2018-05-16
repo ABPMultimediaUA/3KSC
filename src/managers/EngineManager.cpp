@@ -167,8 +167,15 @@ void EngineManager::updateCamera(){
     }*/
 }
 
-void EngineManager::createLight(float p_lightPosition[3], float p_lightIntensity[3], float p_lightAtenuation){
-    CESceneLight* t_light = m_scene->createLight(p_lightIntensity, p_lightAtenuation, p_lightPosition);
+void EngineManager::createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]){
+    CESceneLight* t_light = m_scene->createDirectionalLight(p_lightDirection);
+    if(t_light){
+        t_light->setAbsolutePosition(p_lightPosition[0],p_lightPosition[1],p_lightPosition[2]);
+    }
+}
+
+void EngineManager::createPointLight(float p_lightPosition[3], float p_lightAtenuation){
+    CESceneLight* t_light = m_scene->createPointLight(p_lightAtenuation);
     if(t_light){
         t_light->setAbsolutePosition(p_lightPosition[0],p_lightPosition[1],p_lightPosition[2]);
     }
@@ -330,8 +337,8 @@ void EngineManager::createDebugQuad(float p_vertex[4][2]){
     CESceneQuad* t_quad = m_scene->createQuad(p_vertex);
 }
 
-void EngineManager::createSprite(const char* p_url, float p_width, float p_height){
-    CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_width, p_height);
+CESceneSprite* EngineManager::createSprite(const char* p_url, float p_width, float p_height){
+    return m_scene->createSprite(p_url, p_width, p_height);
 }
 
 void EngineManager::createParticleSystem(const char* p_url, int p_amount){

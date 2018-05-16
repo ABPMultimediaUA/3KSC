@@ -22,6 +22,8 @@
 #define MENU_SCREEN
 
 #include "../states/MenuState.hpp"
+#include <CESceneSprite.hpp>
+#include <vector>
 
 class EngineManager;
 class InputManager;
@@ -33,12 +35,12 @@ struct MenuNode{
     MenuNode*           left;
     MenuNode*           right;
     Screen              target;
-    sf::Sprite*         element;
+    CESceneSprite*      element;
 
     //Methods
-    MenuNode(Screen p_target, sf::Sprite* p_element){
+    MenuNode(CESceneSprite* p_element){
         up = down = left = right = nullptr;
-        target      = p_target;
+        target      = Screen::Undefined;
         element     = p_element;
     }
     ~MenuNode(){}
@@ -46,18 +48,24 @@ struct MenuNode{
     void    setUp(MenuNode* p_node)     { this->up      = p_node;    p_node->down   = this; }
     void    setDown(MenuNode* p_node)   { this->down    = p_node;    p_node->up     = this; }
     void    setLeft(MenuNode* p_node)   { this->left    = p_node;    p_node->right  = this; }
-    void    setRight(MenuNode* p_node)  { this->right   = p_node;    p_node->left   = this; } 
+    void    setRight(MenuNode* p_node)  { this->right   = p_node;    p_node->left   = this; }
+    void    setTarget(Screen p_screen)  { this->target  = p_screen;                         }
 };
 
 class MenuScreen{
     protected:
         MenuScreen(MenuState* p_menu);
+        
+        void createFromFile(const char* p_url);
 
         MenuState*          m_menu;
         EngineManager*      m_engineManager;
         InputManager*       m_inputManager;
         
-        MenuNode*           m_selectedNode;
+        std::vector<MenuNode*>  m_nodes;  
+        MenuNode*               m_selectedNode;
+
+        std::vector<CESceneSprite*> m_sprites;
 
         // sf::Transformable*  m_selected;
         sf::RectangleShape* m_selectedRect;

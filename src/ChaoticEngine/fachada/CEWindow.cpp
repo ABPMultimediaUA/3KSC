@@ -9,14 +9,27 @@ CEWindow::CEWindow(int p_width, int p_height, const char* p_title, bool p_fullsc
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    m_window = glfwCreateWindow(p_width, p_height, p_title, NULL, NULL);
-	if (m_window == NULL){
+    if(p_fullscreen){
+    	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    	const GLFWvidmode* mode    = glfwGetVideoMode(monitor);
+
+		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+    	m_window = glfwCreateWindow(mode->width, mode->height, p_title, monitor, NULL);
+    }
+    else
+    	m_window = glfwCreateWindow(p_width, p_height, p_title, NULL, NULL);
+
+	if(m_window == NULL){
 	    std::cout << "Failed to create GLFW window" << std::endl;
 	    glfwTerminate();
 	}
 	glfwMakeContextCurrent(m_window);
 	
-	// start GLEW extension handler
+	//start GLEW extension handler
 	glewExperimental = GL_TRUE;
 	GLenum err = glewInit();
 	if(GLEW_OK != err){

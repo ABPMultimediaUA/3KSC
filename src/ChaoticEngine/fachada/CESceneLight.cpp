@@ -3,14 +3,30 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneLight.hpp"
 
-CESceneLight::CESceneLight(CESceneNode* p_parent, glm::vec3 p_intensities, float p_attenuation, GLuint p_shaderProgram, bool p_isActive){
-	m_intensities = p_intensities;
-	m_attenuation = p_attenuation;
+CESceneLight::CESceneLight(CESceneNode* p_parent, float p_attenuation, GLuint p_shaderProgram, bool p_isActive){
 	m_isActive	  = p_isActive;
 
 	m_rotate    = new CETransform();
 	m_translate = new CETransform();
-	m_light 	= new CELight(p_intensities, p_attenuation, p_shaderProgram);
+	m_light 	= new CELight(p_attenuation, p_shaderProgram);
+	
+	m_rotate->rotate(0, 0, 0);
+	m_translate->translate(0, 0, 0);
+
+	CESceneNode* t_nodeRotate 	 = new CESceneNode(p_parent);
+	CESceneNode* t_nodeTranslate = new CESceneNode(t_nodeRotate);
+	CESceneNode* t_nodeLight 	 = new CESceneNode(t_nodeTranslate);
+	t_nodeRotate->setEntity(m_rotate);
+	t_nodeTranslate->setEntity(m_translate);
+	t_nodeLight->setEntity(m_light);
+}
+
+CESceneLight::CESceneLight(CESceneNode* p_parent, glm::vec3 p_direction, GLuint p_shaderProgram, bool p_isActive){
+	m_isActive	  = p_isActive;
+
+	m_rotate    = new CETransform();
+	m_translate = new CETransform();
+	m_light 	= new CELight(p_direction, p_shaderProgram);
 	
 	m_rotate->rotate(0, 0, 0);
 	m_translate->translate(0, 0, 0);
@@ -34,15 +50,8 @@ CESceneLight::~CESceneLight(){
 	m_rotate = nullptr;
 }
 
-void CESceneLight::processInput(GLFWwindow* p_window){
-	if(glfwGetKey(p_window, GLFW_KEY_UP) == GLFW_PRESS)
-		setPosition(0,0.1,0);
-	if(glfwGetKey(p_window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		setPosition(0,-0.1,0);
-	if(glfwGetKey(p_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		setPosition(0.1,0,0);
-	if(glfwGetKey(p_window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		setPosition(-0.1,0,0);
+void CESceneLight::setRotation(float p_x, float p_y, float p_z){
+	m_rotate->rotate(p_x, p_y, p_z);
 }
 
 void CESceneLight::setPosition(float p_x, float p_y, float p_z){

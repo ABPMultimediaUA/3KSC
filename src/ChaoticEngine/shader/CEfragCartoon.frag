@@ -20,12 +20,11 @@ in vec3 Position;
 in vec3 Normal;
 in vec2 TexCoords;
 
-const vec3	ambinet = vec3(0.90, 0.0, 0.20);
 const int	levels = 5;
 const float scaleFactor = 1.0 / levels;
 
 void main(){
-	vec3 color= texture(colorTexture, TexCoords).rgb;
+	vec3 color = texture(colorTexture, TexCoords).rgb;
 
 	vec3 Kd = vec3(0.30,0.80,0.10);
 	

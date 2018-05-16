@@ -15,7 +15,7 @@ BINARY 	:= 3KSC
 CC		:= g++
 LDFLAGS := -Wl,-rpath=$(LIBDIR)
 
-INCLUDE := -I$(HDRDIR) -I$(INCDIR) -I$(INCDIR)ChaoticEngine -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)nlohmann -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod -I$(INCDIR)OpenGL -I$(INCDIR)glm
+INCLUDE := -I$(HDRDIR) -I$(HDRDIR)ChaoticEngine/fachada -I$(INCDIR) -I$(INCDIR)ChaoticEngine -I$(INCDIR)irrlicht -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)nlohmann -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod -I$(INCDIR)OpenGL -I$(INCDIR)glm
 LIBS	:= -L$(LIBDIR) -lIrrlicht -lGL -lGLEW -lglfw -lassimp -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL -lassimp
 FAST	:= -j4
 
