@@ -100,7 +100,7 @@ void InputManager::autoassignDevices(){
     bool t_keyboardAssigned = false;
     updateJoysticks();
 
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < 4; i++){
         if(isConnected(i)){
             m_inputDevices[i] = i;
             std::cout << "Player " << i+1 << " es mando." << std::endl;

@@ -66,7 +66,8 @@ protected:
     SoundManager*    m_soundManager;
 
     static int              m_entityCount;
-    int                     m_id; 
+    int                     m_id;
+    int                     m_modelId; 
     
     float                   m_position[3]; // [0] for x, [1] for y, [2] for z
     float                   m_lastPosition[3]; // [0] for x, [1] for y, [2] for z

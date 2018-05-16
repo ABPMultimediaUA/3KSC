@@ -48,7 +48,11 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
         m_lastPosition[i] = p_position[i];
     }
     
-    m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
+    if(p_type == 0)
+        m_modelId = m_engineManager->loadAnimation(p_position, t_scale, p_modelURL);
+    else
+        m_modelId = m_engineManager->load3DModel(p_position, t_scale, p_modelURL);
+    
     moveTo(p_position);
 
     switch(p_type){
@@ -84,7 +88,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 }
 
 Entity::~Entity(){
-    m_engineManager->deleteEntity(m_id);
+    m_engineManager->deleteEntity(m_modelId);
     m_physicsManager->destroyBody(m_id);
 
     /*for(int i = 0; i < m_totalFixtures; i++){

@@ -168,8 +168,45 @@ void EngineManager::deleteEntity(int p_id){
     m_scene->remove(m_entityNodes.at(p_id)->getTopNode());
 }
 
+//Loads animations of 3D models
+int EngineManager::loadAnimation(float p_position[3], float p_scale[3], const char* p_modelURL){
+
+    std::ifstream t_file(p_modelURL);
+    std::string t_line;
+    const char* t_path;
+
+    while(std::getline(t_file, t_line)){
+        if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
+            continue;
+
+        t_path = t_line.c_str();
+        t_mesh = (CEResourceMesh*)&t_manager->getResource(t_path);
+        if(t_mesh != NULL)
+            m_meshes.push_back(t_mesh);
+    }
+
+    CESceneAnimation* t_animation = m_scene->createAnimatedMesh(p_modelURL);
+    t_animation->loadAnimation("assets/Anim/cubo_tam.anim");
+
+    if(t_animation){
+        t_animation->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
+        t_animation->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
+
+        m_animationNodes.push_back(t_mesh);
+        return m_animationNodes.size()-1;
+    }
+    return -1;
+}
+
+//change the current animations
+void EngineManager::changeAnimation(int p_animation, int p_newAnimation){
+    if(m_animationNodes[p_animation] != NULL){
+        m_animationNodes[p_animation]->changeCurrentAnimation(p_newAnimation);
+    }
+}
+
 //Loads a 3D model
-void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL){
+int EngineManager::load3DModel(float p_position[3], float p_scale[3], const char* p_modelURL){
     CESceneMesh* t_mesh = m_scene->createMesh(p_modelURL);
 
     if(t_mesh){
@@ -179,13 +216,13 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
         //std::cout << "Scale: " << p_scale[0] << ", " << p_scale[1] << ", " << p_scale[2] << std::endl;
 
         m_entityNodes.push_back(t_mesh);
+        return m_entityNodes.size()-1;
     }
+    return -1;
 }
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
     CESceneSkybox* t_skybox = m_scene->createSkybox(p_skyboxURLs, t_scale);
-
-    //m_entityNodes.push_back(t_skybox);
 }
 
 void EngineManager::moveEntity(Entity* p_entity){

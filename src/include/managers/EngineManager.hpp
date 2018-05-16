@@ -26,6 +26,7 @@
 #include "../ChaoticEngine/fachada/CESceneCamera.hpp"
 #include "../ChaoticEngine/fachada/CESceneLight.hpp"
 #include "../ChaoticEngine/fachada/CESceneMesh.hpp"
+#include "../ChaoticEngine/fachada/CESceneAnimation.hpp"
 #include "../ChaoticEngine/fachada/CESceneQuad.hpp"
 #include "../ChaoticEngine/fachada/CESceneSprite.hpp"
 #include "../ChaoticEngine/fachada/CESceneParticleSystem.hpp"
@@ -38,6 +39,7 @@
 class EngineManager{
 private:
     std::vector<CESceneMesh*>   m_entityNodes;
+    std::vector<CESceneAnimation*> m_animationNodes;
     CEWindow*       m_window;
     CEScene*        m_scene;
 
@@ -80,7 +82,9 @@ public:
     void                createPointLight(float p_lightPosition[3], float p_lightAtenuation);
 
     void                deleteEntity(int p_id);
-    void                load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL);
+    int                 loadAnimation(float p_position[3], float p_scale[3], const char* p_modelURL);
+    void                changeAnimation(int p_animation, int p_newAnimation);
+    int                 load3DModel(float p_position[3], float p_scale[3], const char* p_modelURL);
     void                loadSkybox(const char* p_skyboxURLs[6], float t_scale); 
     void                moveEntity(Entity* p_entity);
     void                setRotation(int p_id, float p_degrees);

@@ -51,7 +51,7 @@ void CEAnimatedMesh::beginDraw(){
     //showMat(m_modelMatrix);
 
     double t_time = glfwGetTime();
-    m_frameTime = 1.0; //así ira a 1 fps (quitar para aumentar a 25 fps)
+    //m_frameTime = 1.0; //así ira a 1 fps (quitar para aumentar a 25 fps)
 
     if (t_time - m_lastTime >= m_frameTime){ 
         m_currentFrame++;
