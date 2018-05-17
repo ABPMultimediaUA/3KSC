@@ -50,7 +50,8 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_pathfinding       = &Pathfinding::instance();
     m_deltaTime         = 0;
 
-    createArena("assets/Fusfus_Stadium.cgm");
+    //createArena("assets/Fusfus_Stadium.cgm");
+    createArena("assets/Sakura_lake.cgm");
 
     //Online stuff
     m_onlineMode = p_onlineMode;

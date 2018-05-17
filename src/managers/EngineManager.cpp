@@ -174,25 +174,26 @@ int EngineManager::loadAnimation(float p_position[3], float p_scale[3], const ch
     std::ifstream t_file(p_modelURL);
     std::string t_line;
     const char* t_path;
+    CESceneAnimation* t_animation = NULL;
 
     while(std::getline(t_file, t_line)){
         if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
             continue;
 
         t_path = t_line.c_str();
-        t_mesh = (CEResourceMesh*)&t_manager->getResource(t_path);
-        if(t_mesh != NULL)
-            m_meshes.push_back(t_mesh);
+        if(t_animation == NULL){
+            t_animation = m_scene->createAnimatedMesh(t_path);
+        }
+        else{
+            t_animation->loadAnimation(t_path);
+        }
     }
-
-    CESceneAnimation* t_animation = m_scene->createAnimatedMesh(p_modelURL);
-    t_animation->loadAnimation("assets/Anim/cubo_tam.anim");
 
     if(t_animation){
         t_animation->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
         t_animation->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
 
-        m_animationNodes.push_back(t_mesh);
+        m_animationNodes.push_back(t_animation);
         return m_animationNodes.size()-1;
     }
     return -1;
@@ -333,12 +334,12 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
     m_VertexZ.push_back(p_maxZ);
 
     
-   /* std::cout <<
+    std::cout <<
         "Objeto: " << m_totalVertex << "\n" <<
         "PosMin: " << p_minX << "," << p_minY << "," << p_minZ << "\n" <<
         "PosMax: " << p_maxX << "," << p_maxY << "," << p_maxZ << "\n" <<
         "---------------------------------\n";
-    */
+    
 }
 
 void EngineManager::createDebugQuad(float p_vertex[4][2]){

@@ -93,7 +93,7 @@ Arena* Arena::getInstance(){
 void Arena::spawnPlayers(){
     //m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
-    m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
+    //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
     //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
     //m_players[m_playerCount++] = new Plup("Player 4", m_spawnPositions[3]);
 
