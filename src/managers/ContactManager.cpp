@@ -24,47 +24,116 @@
 #include "../include/entities/items/Portal.hpp"
 
 void ContactManager::BeginContact(b2Contact* p_contact){
-	void* dataA = p_contact->GetFixtureA()->GetUserData();
-	void* dataB = p_contact->GetFixtureB()->GetUserData();
-	checkCollision(dataB, dataA);
+	//std::cout << "Beg" << std::endl;
+	b2Fixture* fixtureA = p_contact->GetFixtureA();
+	b2Fixture* fixtureB = p_contact->GetFixtureB();
+	
+	checkCollision(fixtureA, fixtureB, p_contact);
+	checkCollision(fixtureB, fixtureA, p_contact);
 }
 
 void ContactManager::EndContact(b2Contact* p_contact){
-	void* dataA = p_contact->GetFixtureA()->GetUserData();
-	void* dataB = p_contact->GetFixtureB()->GetUserData();
-	checkLeave(dataB, dataA);
+	//std::cout << "End" << std::endl;
+	b2Fixture* fixtureA = p_contact->GetFixtureA();
+	b2Fixture* fixtureB = p_contact->GetFixtureB();
+
+	checkLeave(fixtureA, fixtureB, p_contact);
+	checkLeave(fixtureB, fixtureA, p_contact);
 }
 
-void ContactManager::checkCollision(void* p_data1, void* p_data2){
-	onCollide(p_data1, p_data2);
-	onCollide(p_data2, p_data1);
+void ContactManager::PreSolve(b2Contact* p_contact, const b2Manifold* p_oldManifold){
+	//std::cout << "Pre" << std::endl;
+	b2Fixture* fixtureA = p_contact->GetFixtureA();
+	b2Fixture* fixtureB = p_contact->GetFixtureB();
+
+	checkPreSolve(fixtureA, fixtureB, p_contact, p_oldManifold);
+	checkPreSolve(fixtureB, fixtureA, p_contact, p_oldManifold);
 }
 
-void ContactManager::checkLeave(void* p_data1, void* p_data2){
-	onLeave(p_data1, p_data2);
-	onLeave(p_data2, p_data1);
-}
-
-void ContactManager::onCollide(void* p_data1, void* p_data2){
-	if(p_data1){
-		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
+void ContactManager::checkCollision(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact){
+	void* t_data = fixture1->GetUserData();
+	if(t_data){
+		/*
+		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(t_data)){
 			//comprobamos que el character exista de verdad
-			if(static_cast<Character*>(p_data1)->getValidation() != 123)
+			if(static_cast<Character*>(t_data)->getValidation() != 123)
 				return;
-			static_cast<Portal*>(p_data2)->onEnter(static_cast<Character*>(p_data1));
+			static_cast<Portal*>(p_data2)->onEnter(static_cast<Character*>(t_data));
 		}else
-			static_cast<Character*>(p_data1)->onTouchGround();
+			static_cast<Character*>(t_data)->onTouchGround();
+		*/
+		if(static_cast<Character*>(t_data)){
+			static_cast<Character*>(t_data)->onTouchGround();
+			//std::cout << "TOUCH" << std::endl;
+		}
 	}
 }
 
-void ContactManager::onLeave(void* p_data1, void* p_data2){
-	if(p_data1){
-		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
+void ContactManager::checkLeave(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact){
+	void* t_data = fixture1->GetUserData();
+	if(t_data){
+		/*
+		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(t_data)){
 			//comprobamos que el character exista de verdad
-			if(static_cast<Character*>(p_data1)->getValidation() != 123)
+			if(static_cast<Character*>(t_data)->getValidation() != 123)
 				return;
-			static_cast<Portal*>(p_data2)->onLeave(static_cast<Character*>(p_data1));
+			static_cast<Portal*>(p_data2)->onLeave(static_cast<Character*>(t_data));
 		}else
-			static_cast<Character*>(p_data1)->onLeaveGround();
+			static_cast<Character*>(t_data)->onLeaveGround();
+		*/
+		if(static_cast<Character*>(t_data)){
+			static_cast<Character*>(t_data)->onLeaveGround();
+			//std::cout << "LEAVE" << std::endl;
+			p_contact->SetEnabled(true);
+		}
+	}
+	p_contact->SetEnabled(true);
+}
+
+void ContactManager::checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact, const b2Manifold* p_oldManifold){
+//	std::cout << "CHECK PRESOLVE" << std::endl;
+	//void* t_data = fixture1->GetUserData();
+	int	  t_data1 = *reinterpret_cast<int*>(fixture1->GetBody()->GetUserData());
+	int	  t_data2 = *reinterpret_cast<int*>(fixture2->GetBody()->GetUserData());
+	//std::cout << "ASDF: " << *reinterpret_cast<int*>(fixture1->GetBody()->GetUserData()) << std::endl;
+	//std::cout << "ASDF: " << t_data1 << std::endl;
+	
+	if(t_data1 == 0 && t_data2 == 1){
+		//check if one of the fixtures is the platform
+        b2Fixture* playerFixture 	= fixture1;
+        b2Fixture* otherFixture 	= fixture2;
+        /*
+        if(t_data){
+            playerFixture = fixture1;
+            otherFixture = fixture2;
+        }else
+            return;
+		*/
+		b2Body* playerBody	= playerFixture->GetBody();
+		b2Body* otherBody	= otherFixture->GetBody();
+
+		int* player_id = reinterpret_cast<int*>(playerBody->GetUserData());
+		int* other_id  = reinterpret_cast<int*>(otherBody->GetUserData());
+		//std::cout << "PLAYER ID: " << *player_id << std::endl;
+		//std::cout << "OTHER  ID: " << *other_id << std::endl;
+
+		int numPoints = p_oldManifold->pointCount;
+		//int numPoints = p_contact->GetManifold()->pointCount;
+		//b2WorldManifold worldManifold;
+		//p_contact->GetWorldManifold( &worldManifold );
+		//std::cout << numPoints << std::endl;
+
+		//check if p_contact points are moving downward
+		for(int i = 0; i < numPoints; i++){
+			b2Vec2 pointVel = otherBody->GetLinearVelocityFromWorldPoint( p_oldManifold->points[i].localPoint );
+			std::cout << pointVel.y << std::endl;
+			if(pointVel.y < 0){
+				std::cout << "SALIMOS" << std::endl;
+				return;//point is moving down, leave p_contact solid and exit
+			}
+		}
+
+		//no points are moving downward, p_contact should not be solid
+		p_contact->SetEnabled(false);
 	}
 }

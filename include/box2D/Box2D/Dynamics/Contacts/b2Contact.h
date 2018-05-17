@@ -243,7 +243,7 @@ inline void b2Contact::SetEnabled(bool flag)
 {
 	if (flag)
 	{
-		m_flags |= e_enabledFlag;
+		//m_flags |= e_enabledFlag;
 	}
 	else
 	{

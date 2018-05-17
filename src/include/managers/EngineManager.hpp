@@ -101,7 +101,7 @@ public:
     std::vector<float>  getTotalVertexY()   {    return m_VertexY;      };
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
 
-    void                createDebugQuad(float p_vertex[4][2]);
+    int                 createDebugQuad(float p_vertex[4][2]);
     void                createSprite(const char* p_url, float p_width, float p_height);
     void                createParticleSystem(const char* p_url, int p_amount);
     void                updateParticleSystem();

@@ -70,6 +70,7 @@ void PhysicsManager::update(float p_delta){
 
 void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY){
     //Create a new body and positioning it in the coords of the Entity
+    std::cout << "BOX: " << *p_id << std::endl;
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
     t_bodyDef->position.Set(p_position[0], p_position[1]);
@@ -134,6 +135,7 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     b2BodyDef* t_bodyDef = new b2BodyDef();
+    t_bodyDef->type = b2_kinematicBody;
     t_bodyDef->position.Set(0.0f, 0.0f);
     
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
