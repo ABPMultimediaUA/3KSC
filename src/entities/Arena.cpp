@@ -92,11 +92,9 @@ Arena* Arena::getInstance(){
 
 void Arena::spawnPlayers(){
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
-    m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
+   // m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
     //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
 
-    //float positionPortal[3] = {0, 0.5, 0};
-    //m_portal = new Portal(positionPortal);
     std::cout << "PLAYER COUNT " << m_playerCount << std::endl;
     m_soundManager->modifyParameter("fos_music", m_musicIntensity[m_playerCount], "Intensity", false);
 }
@@ -176,10 +174,10 @@ void Arena::update(float p_delta){
 
     if(!m_soundManager->isPlaying("fos_ambient"))
         m_soundManager->playSound("fos_ambient");
-    //if(m_portalState)
-    //    m_portal->update(p_delta);
+    if(m_portalState)
+        m_portal->update(p_delta);
 
-    //portalSpawner();
+    portalSpawner();
 }
 
 void Arena::portalSpawner(){
@@ -204,14 +202,15 @@ bool Arena::spawnRandomItem(){
 }
 
 void Arena::spawnPortal(){
-    float positionPortal[3] = {0, 5, 0};
-    m_portal -> moveTo(positionPortal);
+    std::cout<<"portal spawned"<<std::endl;
+    float positionPortal[3] = {0, 0.5, 0};
+    m_portal = new Portal(positionPortal);
     m_portalState = true;
 }
 
 void Arena::hidePortal(){
-    float positionPortal[3] = {-370, 5, 0};
-    m_portal -> moveTo(positionPortal);
+    delete m_portal;
+    m_portal = nullptr;
     m_portalState = false;
 }
 
@@ -227,7 +226,6 @@ void Arena::onlineUpdate(){
 }
 
 void Arena::spawnItemAt(int p_type, int x, int y){
-    std::cout << "SPAWN" << std::endl;
     float t_position[3] = {x, y, 0};
     switch (p_type){
         case 0:     { m_items.push_back(new Shield(t_position));     }   break;
@@ -236,7 +234,7 @@ void Arena::spawnItemAt(int p_type, int x, int y){
     }
 
     m_currentItems = m_items.size();
-    m_lastItemType = p_type;
+    m_lastItemType = p_type; 
 }
 
 void Arena::setOnline(bool p_state){

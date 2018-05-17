@@ -37,10 +37,6 @@ Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/it
 
 //Destructor
 Portal::~Portal(){
-    std::cout << "1.5" << std::endl;
-    //delete m_physicsManager;
-   // delete m_arena;
-    std::cout << "2" << std::endl;
 }
 
 void Portal::onEnter(Character* p_character){
@@ -61,8 +57,7 @@ void Portal::onLeave(Character* p_character){
 void Portal::update(float p_delta){
     if(m_using && m_charactersInPortal == 1){
         m_charge += p_delta;
-        if(m_charge >= 4){
-    
+        if(m_charge >= 3){
             use();
             m_charge = 0;
         }
