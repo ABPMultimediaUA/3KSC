@@ -29,17 +29,12 @@ OnlineJoinScreen& OnlineJoinScreen::instance(){
 //Constructor
 OnlineJoinScreen::OnlineJoinScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
+    createFromFile("assets/UI/menu_screens/OnlineJoin.cgs");
 }
 
 //Destructor
 OnlineJoinScreen::~OnlineJoinScreen(){
     std::cout << "~OnlineJoinScreen" << std::endl;
-}
-
-//Draws to the screen
-void OnlineJoinScreen::render(){
-    
 }
 
 

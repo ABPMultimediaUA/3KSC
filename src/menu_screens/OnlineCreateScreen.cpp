@@ -29,17 +29,12 @@ OnlineCreateScreen& OnlineCreateScreen::instance(){
 //Constructor
 OnlineCreateScreen::OnlineCreateScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
+    createFromFile("assets/UI/menu_screens/OnlineCreate.cgs");
 }
 
 //Destructor
 OnlineCreateScreen::~OnlineCreateScreen(){
     std::cout << "~OnlineCreateScreen" << std::endl;   
-}
-
-//Draws to the screen
-void OnlineCreateScreen::render(){
-    
 }
 
 

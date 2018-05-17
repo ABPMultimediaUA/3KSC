@@ -31,8 +31,6 @@ class OnlineCreateScreen : public MenuScreen{
         static OnlineCreateScreen& instance();
         ~OnlineCreateScreen();
 
-        void render()               override;
-
         void select()               override;
 };
 

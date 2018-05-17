@@ -36,7 +36,6 @@ CharacterLocalScreen& CharacterLocalScreen::instance(){
 //Constructor
 CharacterLocalScreen::CharacterLocalScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
     m_game              = Game::getInstance();
     createFromFile("assets/UI/menu_screens/CharacterSelect.cgs");
 }
@@ -72,11 +71,6 @@ void CharacterLocalScreen::input(){
 void CharacterLocalScreen::update(){
     //Call to default update for navigation purposes
     MenuScreen::update();
-}
-
-//Draws to the screen
-void CharacterLocalScreen::render(){
-    
 }
 
 

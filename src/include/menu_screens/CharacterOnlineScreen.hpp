@@ -37,7 +37,6 @@ class CharacterOnlineScreen : public MenuScreen{
 
         void input();
         void update();
-        void render();
 
         void select()               override;
 };

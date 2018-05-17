@@ -29,19 +29,14 @@ BattleSettingsScreen& BattleSettingsScreen::instance(){
 
 //Constructor
 BattleSettingsScreen::BattleSettingsScreen(MenuState* p_menu)
-    : MenuScreen(p_menu){
-        
+    : MenuScreen(p_menu){    
     m_game              = Game::getInstance();
+    createFromFile("assets/UI/menu_screens/BattleSettings.cgs");
 }
 
 //Destructor
 BattleSettingsScreen::~BattleSettingsScreen(){
     std::cout << "~BattleSettingsScreen" << std::endl;
-}
-
-//Draws to the screen
-void BattleSettingsScreen::render(){
-    
 }
 
 

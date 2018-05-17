@@ -42,6 +42,8 @@ Game::Game(){
     m_nanoFrames = 1000000000/FPS;
     m_elapsedTotal = 0;
 
+    m_quitRequest       = false;
+
     m_resolutionPreset  = 1;
     m_fullscreen        = false;
 
@@ -86,7 +88,7 @@ void Game::run(){
     auto t_now      = std::chrono::high_resolution_clock::now();
     auto t_elapsed  = std::chrono::high_resolution_clock::now() - t_now;
 
-    while(m_engineManager->running()){
+    while(m_engineManager->running() && !m_quitRequest){
         t_elapsed = std::chrono::high_resolution_clock::now() - t_now;
         m_elapsedTotal += std::chrono::duration_cast<std::chrono::nanoseconds>(t_elapsed).count();
 

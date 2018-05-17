@@ -19,6 +19,7 @@
 */
 
 #include "../include/menu_screens/MainScreen.hpp"
+#include "../include/Game.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include <iostream>
 
@@ -31,7 +32,10 @@ MainScreen& MainScreen::instance(){
 //Constructor
 MainScreen::MainScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
+    m_game = Game::getInstance();
     createFromFile("assets/UI/menu_screens/Main.cgs");
+
+    hideUnselected();
 }
 
 //Destructor
@@ -39,7 +43,43 @@ MainScreen::~MainScreen(){
     std::cout << "~MainScreen" << std::endl;
 }
 
-//Draws to the screen
-void MainScreen::render(){
-    m_engineManager->drawScene2D();
+//Hides all elements except the selected one
+void MainScreen::hideUnselected(){
+    for (CESceneSprite* t_sprite : m_sprites){
+        t_sprite->setVisible(t_sprite == m_selectedNode->element);
+    }
+}
+
+
+
+
+
+
+
+
+
+/* ****************************** ACTIONS ****************************** */
+void MainScreen::left(){    
+    if (m_selectedNode && m_selectedNode->left){
+        m_selectedNode = m_selectedNode->left;
+        hideUnselected();
+    }
+}
+
+void MainScreen::right(){    
+    if (m_selectedNode && m_selectedNode->right){
+        m_selectedNode = m_selectedNode->right;
+        hideUnselected();
+    }
+}
+
+void MainScreen::select(){
+    //Quit    
+    if (m_selectedNode == m_nodes[2]){
+        m_game->quit();
+    }
+
+    else{
+        MenuScreen::select();
+    }
 }

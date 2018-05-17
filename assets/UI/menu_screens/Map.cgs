@@ -1,0 +1,12 @@
+# Map creen
+
+# n is used for menu nodes [INDEX SPRITE_URL X Y WIDTH HEIGHT]
+n   0   assets/UI/menu_screens/Map/FusFus.png   0   -75     640     140
+n   1   assets/UI/menu_screens/Map/Sakura.png   0    75     640     140
+
+# hl, vl and tl are used to link nodes horizontally, vertically and with their targets
+vl  0   1
+vl  1   0
+
+# ps, ns and ss are used to link screen with previous, next and settings screen
+ps  CharacterLocal

@@ -101,13 +101,13 @@ void MenuState::setScreen(Screen p_screen){
         m_currentScreen->showElements();
 
 
-        //Hide cursor in character select
-        if (p_screen == Screen::CharacterLocal || p_screen == Screen::CharacterOnline){
-            m_engineManager->setCursorVisible(false);
-        }
-        else{
-            m_engineManager->setCursorVisible();
-        }
+        // //Hide cursor in character select
+        // if (p_screen == Screen::CharacterLocal || p_screen == Screen::CharacterOnline){
+        //     m_engineManager->setCursorVisible(false);
+        // }
+        // else{
+        //     m_engineManager->setCursorVisible();
+        // }
     }
 }
 
@@ -128,7 +128,7 @@ void MenuState::initializeScreens(){
         m_screens[i]->hideElements();
     }
 
-    m_currentScreen = m_screens[1];
+    m_currentScreen = m_screens[0];
     m_currentScreen->showElements();
 }
 

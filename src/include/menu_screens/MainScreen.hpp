@@ -21,17 +21,24 @@
 #ifndef MAIN_SCREEN
 #define MAIN_SCREEN
 
+class Game;
+
 #include "MenuScreen.hpp"
 
 class MainScreen : public MenuScreen{
     private:
+        Game*   m_game;
+
         MainScreen(MenuState* p_menu);
+        void hideUnselected();
 
     public:
         static MainScreen& instance();
         ~MainScreen();
 
-        void render()               override;
+        void left()     override;
+        void right()    override;   
+        void select()   override;         
 };
 
 #endif

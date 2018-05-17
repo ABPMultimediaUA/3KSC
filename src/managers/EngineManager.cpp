@@ -236,12 +236,12 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_window->clear(0.5f, 0.0f, 0.0f, 1.0f);
+    m_window->clear(0.0f, 0.8f, 0.9f, 1.0f);
     m_scene->draw();
 }
 
 void EngineManager::drawScene2D(){
-    m_window->clear(0.5f, 0.0f, 0.0f, 1.0f);
+    m_window->clear(0.5f, 0.8f, 0.9f, 1.0f);
     m_scene->draw2D();
 }
 

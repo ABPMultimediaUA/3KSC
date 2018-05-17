@@ -19,6 +19,7 @@
 */
 
 #include "../include/menu_screens/MapScreen.hpp"
+#include "../include/Game.hpp"
 
 //Returns the only instance of this class
 MapScreen& MapScreen::instance(){
@@ -29,7 +30,8 @@ MapScreen& MapScreen::instance(){
 //Constructor
 MapScreen::MapScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
+    m_game = Game::getInstance();
+    createFromFile("assets/UI/menu_screens/Map.cgs");
 }
 
 //Destructor
@@ -37,7 +39,20 @@ MapScreen::~MapScreen(){
     std::cout << "~MapScreen" << std::endl;
 }
 
-//Draws to the screen
-void MapScreen::render(){
-    
+
+
+
+
+
+
+
+
+
+/* ****************************** ACTIONS ****************************** */
+void MapScreen::select(){
+    m_game->nextState();
+}
+
+void MapScreen::save(){
+    m_game->nextState();
 }

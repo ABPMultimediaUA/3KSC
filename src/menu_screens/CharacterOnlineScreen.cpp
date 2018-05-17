@@ -32,8 +32,8 @@ CharacterOnlineScreen& CharacterOnlineScreen::instance(){
 //Constructor
 CharacterOnlineScreen::CharacterOnlineScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
     m_game              = Game::getInstance();
+    createFromFile("assets/UI/menu_screens/CharacterSelectOnline.cgs");
 }
 
 //Destructor
@@ -52,10 +52,6 @@ void CharacterOnlineScreen::update(){
     MenuScreen::update();
 }
 
-//Draws to the screen
-void CharacterOnlineScreen::render(){
-    
-}
 
 
 

@@ -1,0 +1,17 @@
+# Game settings screen
+
+# n is used for menu nodes [INDEX SPRITE_URL X Y WIDTH HEIGHT]
+n   0   assets/UI/menu_screens/Settings/Videomode.png       0   -135    900     80
+n   1   assets/UI/menu_screens/Settings/BGM.png             0    -45    900     80
+n   2   assets/UI/menu_screens/Settings/FX.png              0     45    900     80
+n   3   assets/UI/menu_screens/Settings/Voices.png          0    135    900     80
+
+# hl, vl and tl are used to link nodes horizontally, vertically and with their targets
+vl  0   1
+vl  1   2
+vl  2   3
+vl  3   0
+
+# ps, ns and ss are used to link screen with previous, next and settings screen
+ps  Main
+ns  Main

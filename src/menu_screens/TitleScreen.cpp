@@ -29,17 +29,12 @@ TitleScreen& TitleScreen::instance(){
 //Constructor
 TitleScreen::TitleScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
+    createFromFile("assets/UI/menu_screens/Title.cgs");
 }
 
 //Destructor
 TitleScreen::~TitleScreen(){
     std::cout << "~TitleScreen" << std::endl;
-}
-
-//Draws to the screen
-void TitleScreen::render(){
-    
 }
 
 

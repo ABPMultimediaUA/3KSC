@@ -29,15 +29,10 @@ OnlineModeScreen& OnlineModeScreen::instance(){
 //Constructor
 OnlineModeScreen::OnlineModeScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
+    createFromFile("assets/UI/menu_screens/OnlineMode.cgs");
 }
 
 //Destructor
 OnlineModeScreen::~OnlineModeScreen(){
     std::cout << "~OnlineModeScreen" << std::endl;
-}
-
-//Draws to the screen
-void OnlineModeScreen::render(){
-    
 }

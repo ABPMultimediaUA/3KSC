@@ -21,17 +21,21 @@
 #ifndef MAP_SCREEN
 #define MAP_SCREEN
 
+class Game;
+
 #include "MenuScreen.hpp"
 
 class MapScreen : public MenuScreen{
     private:
         MapScreen(MenuState* p_menu);
+        Game* m_game;
 
     public:
         static MapScreen& instance();
         ~MapScreen();
 
-        void render()               override;
+        void select()   override;
+        void save()     override;
 };
 
 #endif

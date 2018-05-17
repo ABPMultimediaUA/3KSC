@@ -31,8 +31,6 @@ class OnlineJoinScreen : public MenuScreen{
         static OnlineJoinScreen& instance();
         ~OnlineJoinScreen();
 
-        void render()               override;
-
         void select()               override;
 };
 

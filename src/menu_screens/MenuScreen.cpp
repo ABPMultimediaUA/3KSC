@@ -82,17 +82,20 @@ void MenuScreen::createFromFile(const char* p_url){
         //Menu nodes
         if (t_tag == "n"){
             const char* t_url   = t_elements[2].c_str();
-            float t_width       = strtof(t_elements[3].c_str(), nullptr);
-            float t_height      = strtof(t_elements[4].c_str(), nullptr);
+            float t_x           = strtof(t_elements[3].c_str(), nullptr);
+            float t_y           = strtof(t_elements[4].c_str(), nullptr);
+            float t_width       = strtof(t_elements[5].c_str(), nullptr);
+            float t_height      = strtof(t_elements[6].c_str(), nullptr);
 
             CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
+            t_sprite->setAbsolutePosition(t_x * -1, t_y * -1, 0);
             MenuNode* t_node        = new MenuNode(t_sprite); 
             m_nodes.push_back(t_node);
             m_sprites.push_back(t_sprite);
         }
 
         //Menu nodes horizontal links
-        else if (t_tag == "nhl"){
+        else if (t_tag == "hl"){
             int t_nodeA = (int) strtof(t_elements[1].c_str(), nullptr);
             int t_nodeB = (int) strtof(t_elements[2].c_str(), nullptr);
 
@@ -100,7 +103,7 @@ void MenuScreen::createFromFile(const char* p_url){
         }
 
         //Menu nodes vertical links
-        else if (t_tag == "nvl"){
+        else if (t_tag == "vl"){
             int t_nodeA = (int) strtof(t_elements[1].c_str(), nullptr);
             int t_nodeB = (int) strtof(t_elements[2].c_str(), nullptr);
 
@@ -108,7 +111,7 @@ void MenuScreen::createFromFile(const char* p_url){
         }
 
         //Menu nodes target links
-        else if (t_tag == "ntl"){
+        else if (t_tag == "tl"){
             int t_index = (int) strtof(t_elements[1].c_str(), nullptr);
             ScreenMapping* t_iterator = m_menu->m_screenMaps;
 
@@ -150,6 +153,7 @@ void MenuScreen::createFromFile(const char* p_url){
 //Shows all elements in the screen
 void MenuScreen::showElements(){
     for (CESceneSprite* t_sprite : m_sprites){
+        // std::cout << "Showing sprite" << std::endl;
         t_sprite->setVisible(true);
     }
 }
@@ -157,6 +161,7 @@ void MenuScreen::showElements(){
 //Hides all elements in the screen
 void MenuScreen::hideElements(){
     for (CESceneSprite* t_sprite : m_sprites){
+        // std::cout << "Hiding sprite" << std::endl;
         t_sprite->setVisible(false);
     }
 }
@@ -223,7 +228,7 @@ void MenuScreen::update(){
 }
 
 void MenuScreen::render(){
-    
+    m_engineManager->drawScene2D();
 }
 
 

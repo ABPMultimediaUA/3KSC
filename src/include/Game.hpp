@@ -36,6 +36,8 @@ class Game{
         long long       m_elapsedTotal;
         long long       m_nanoFrames;
 
+        bool            m_quitRequest;
+
         //Video settings
         int             m_resolutionPreset;
         bool            m_fullscreen;
@@ -46,8 +48,8 @@ class Game{
         int             m_volVoices;
 
         //Character settings
-        bool            m_enabledPlayers[4];
-        int             m_chosenPlayers[4];
+        bool            m_enabledPlayers[2];
+        int             m_chosenPlayers[2];
 
         //Battle settings
         int             m_rounds;
@@ -65,6 +67,7 @@ class Game{
         
         void run();
         void fixedUpdate(long long p_delta);
+        void quit()                                 { m_quitRequest = true; }
 
         //Getters
         int         getResolutionPreset()           { return m_resolutionPreset; }

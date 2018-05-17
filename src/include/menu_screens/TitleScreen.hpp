@@ -30,8 +30,7 @@ class TitleScreen : public MenuScreen{
     public:
         static TitleScreen& instance();
         ~TitleScreen();
-
-        void render()               override;
+        
         void select()               override;
 };
 

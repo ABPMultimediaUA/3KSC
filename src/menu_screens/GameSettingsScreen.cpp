@@ -31,18 +31,13 @@ GameSettingsScreen& GameSettingsScreen::instance(){
 //Constructor
 GameSettingsScreen::GameSettingsScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    
     m_game              = Game::getInstance();
+    createFromFile("assets/UI/menu_screens/GameSettings.cgs");
 }
 
 //Destructor
 GameSettingsScreen::~GameSettingsScreen(){
     std::cout << "~GameSettingsScreen" << std::endl;
-}
-
-//Draws to the screen
-void GameSettingsScreen::render(){
-    
 }
 
 
