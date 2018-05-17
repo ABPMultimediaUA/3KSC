@@ -523,6 +523,7 @@ void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
 
 void PhysicsManager::jump(int p_idBody, float p_force){
     b2Body* t_body = getBody(p_idBody);
+    t_body->SetLinearVelocity(b2Vec2(t_body->GetLinearVelocity().x,0));
     t_body->ApplyLinearImpulse(b2Vec2(0,p_force * 25), b2Vec2(t_body->GetWorldCenter()), true);
 }
 int PhysicsManager::getTotalFixtures(int p_idBody){
