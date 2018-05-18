@@ -163,8 +163,11 @@ float EngineManager::updateFrameDeltaTime(float p_delta){
 }
 
 void EngineManager::deleteEntity(int p_id){
-    //m_entityNodes.at(p_id)->remove();
     m_scene->remove(m_entityNodes.at(p_id)->getTopNode());
+}
+
+void EngineManager::deleteEntityAnim(int p_id){
+    m_scene->remove(m_animationNodes.at(p_id)->getTopNode());
 }
 
 //Loads animations of 3D models

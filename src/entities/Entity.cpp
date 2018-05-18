@@ -40,14 +40,18 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_inputManager      = &InputManager::instance();
     m_soundManager      = &SoundManager::instance();
 
-    m_id = m_entityCount++;    
-    float t_scale[3] = {p_scale, p_scale, p_scale};
+    m_entityCount++;
 
+    float t_scale[3] = {p_scale, p_scale, p_scale};
     for(int i = 0; i < 3; i++){
         m_position[i] = p_position[i];
         m_lastPosition[i] = p_position[i];
     }
+
+    m_id      = -1;
+    m_modelId = -1;
     m_type = p_type;
+
     if(p_type == 0)
         m_modelId = m_engineManager->loadAnimations(p_position, t_scale, p_modelURL);
     else
@@ -88,15 +92,12 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 }
 
 Entity::~Entity(){
-    m_engineManager->deleteEntity(m_modelId);
-    m_physicsManager->destroyBody(m_id);
+    if(m_modelId != -1)
+        m_engineManager->deleteEntityAnim(m_modelId);
+    else
+        m_engineManager->deleteEntity(m_id);
 
-    /*for(int i = 0; i < m_totalFixtures; i++){
-        if(m_entityDebug[i]){
-            delete m_entityDebug[i];
-            m_entityDebug[i] = nullptr;
-        }
-    }*/
+    m_physicsManager->destroyBody(m_id);
 }
 
 void Entity::updatePosition(){

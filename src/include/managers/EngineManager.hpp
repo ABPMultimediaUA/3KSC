@@ -82,6 +82,7 @@ public:
     void                createPointLight(float p_lightPosition[3], float p_lightAtenuation);
 
     void                deleteEntity(int p_id);
+    void                deleteEntityAnim(int p_id);
     int                 loadAnimations(float p_position[3], float p_scale[3], const char* p_modelURL);
     void                changeAnimation(int p_animation, int p_newAnimation);
     int                 load3DModel(float p_position[3], float p_scale[3], const char* p_modelURL);
