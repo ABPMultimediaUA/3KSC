@@ -231,7 +231,7 @@ void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
 void EngineManager::moveEntity(Entity* p_entity){
     float* t_position = p_entity->getPosition();
     if(p_entity->getType() == 0){
-        m_entityNodes[p_entity->getModelId()]->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
+        m_animationNodes[p_entity->getModelId()]->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
     }
     else{
         m_entityNodes[p_entity->getId()]->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
@@ -239,7 +239,7 @@ void EngineManager::moveEntity(Entity* p_entity){
 }
 
 void EngineManager::setRotation(int p_id, float p_degrees){
-    CESceneMesh* t_node  = m_entityNodes.at(p_id);
+    CESceneMesh* t_node  = m_entityNodes[p_id];
     
     t_node->setAbsoluteRotation(0.0f, p_degrees, 0.0f);
 }

@@ -201,7 +201,7 @@ int Entity::getEntityCount(){
 
 void Entity::rotate(float p_degrees){
     if(m_type == 0)
-        m_engineManager->setRotation(this->getModelId(), p_degrees);
+        m_engineManager->setAnimRotation(this->getModelId(), p_degrees);
     else
         m_engineManager->setRotation(this->getId(), p_degrees);
 }
