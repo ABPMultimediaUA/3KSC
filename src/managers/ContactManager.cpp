@@ -84,56 +84,44 @@ void ContactManager::checkLeave(b2Fixture* fixture1, b2Fixture* fixture2, b2Cont
 		if(static_cast<Character*>(t_data)){
 			static_cast<Character*>(t_data)->onLeaveGround();
 			//std::cout << "LEAVE" << std::endl;
-			p_contact->SetEnabled(true);
 		}
 	}
 	p_contact->SetEnabled(true);
 }
 
 void ContactManager::checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact, const b2Manifold* p_oldManifold){
-//	std::cout << "CHECK PRESOLVE" << std::endl;
-	//void* t_data = fixture1->GetUserData();
+	//std::cout << "CHECK PRESOLVE" << std::endl;
 	int	  t_data1 = *reinterpret_cast<int*>(fixture1->GetBody()->GetUserData());
 	int	  t_data2 = *reinterpret_cast<int*>(fixture2->GetBody()->GetUserData());
-	//std::cout << "ASDF: " << *reinterpret_cast<int*>(fixture1->GetBody()->GetUserData()) << std::endl;
-	//std::cout << "ASDF: " << t_data1 << std::endl;
 	
-	if(t_data1 == 0 && t_data2 == 1){
-		//check if one of the fixtures is the platform
-        b2Fixture* playerFixture 	= fixture1;
-        b2Fixture* otherFixture 	= fixture2;
-        /*
-        if(t_data){
-            playerFixture = fixture1;
-            otherFixture = fixture2;
-        }else
-            return;
-		*/
-		b2Body* playerBody	= playerFixture->GetBody();
-		b2Body* otherBody	= otherFixture->GetBody();
+	if(t_data1 == 0 && (t_data2 == 1 || t_data2 == 2)){
+		//std::cout << "PLAYER ID: " << t_data1 << std::endl;
+		//std::cout << "OTHER  ID: " << t_data2 << std::endl;
 
-		int* player_id = reinterpret_cast<int*>(playerBody->GetUserData());
-		int* other_id  = reinterpret_cast<int*>(otherBody->GetUserData());
-		//std::cout << "PLAYER ID: " << *player_id << std::endl;
-		//std::cout << "OTHER  ID: " << *other_id << std::endl;
+        b2Fixture* otherFixture 	= fixture1;
+        b2Fixture* playerFixture 	= fixture2;
+
+		b2Body* otherBody	= otherFixture->GetBody();
+		b2Body* playerBody	= playerFixture->GetBody();
 
 		int numPoints = p_oldManifold->pointCount;
-		//int numPoints = p_contact->GetManifold()->pointCount;
-		//b2WorldManifold worldManifold;
-		//p_contact->GetWorldManifold( &worldManifold );
-		//std::cout << numPoints << std::endl;
+		for(int i = 0; i < numPoints; i++){			
+			b2Vec2 pointVelPlatform	= otherBody->GetLinearVelocityFromWorldPoint(p_oldManifold->points[i].localPoint);
+			b2Vec2 pointVelOther	= playerBody->GetLinearVelocityFromWorldPoint(p_oldManifold->points[i].localPoint);
+			b2Vec2 relativeVel		= otherBody->GetLocalVector(pointVelOther - pointVelPlatform);
 
-		//check if p_contact points are moving downward
-		for(int i = 0; i < numPoints; i++){
-			b2Vec2 pointVel = otherBody->GetLinearVelocityFromWorldPoint( p_oldManifold->points[i].localPoint );
-			std::cout << pointVel.y << std::endl;
-			if(pointVel.y < 0){
-				std::cout << "SALIMOS" << std::endl;
-				return;//point is moving down, leave p_contact solid and exit
+			//std::cout << "Vel: " << relativeVel.y << std::endl;
+
+			if(relativeVel.y < 0)
+				return; 	//Point in the platform
+			else if(relativeVel.y < 3){
+				b2Vec2 relativePoint = otherBody->GetLocalPoint(p_oldManifold->points[i].localPoint);
+				//std::cout << relativePoint.y << std::endl;
+				float platformFaceY = 0.5f;
+				if(relativePoint.y > (platformFaceY - 0.1))
+					return;		
 			}
 		}
-
-		//no points are moving downward, p_contact should not be solid
 		p_contact->SetEnabled(false);
 	}
 }

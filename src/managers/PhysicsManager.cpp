@@ -83,7 +83,7 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->density  = 750.0f;
-    t_fixtureDef->friction = 1.0f;
+    t_fixtureDef->friction = 5.0f;
     t_fixtureDef->isSensor = false;
 
     switch(p_type){
@@ -178,8 +178,8 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
 
         t_body->CreateFixture(t_fixtureDef);
 
-        //float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
-        //m_engineManager->createDebugQuad(t_vertex);
+        float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
+        m_engineManager->createDebugQuad(t_vertex);
     }
 }
 
@@ -554,4 +554,32 @@ void PhysicsManager::dash(int p_idBody, int t_side){
     t_body->SetLinearDamping(-0.5);
     //t_body->ApplyLinearImpulse(b2Vec2(250*t_side,0), t_body->GetWorldCenter(), true);
     t_body->SetLinearVelocity(b2Vec2(7.5*t_side,0));
+}
+
+void PhysicsManager::createBodyDebug(int p_idBody){
+    b2Body* t_body = getBody(p_idBody);
+
+    float t_vertex[4][2];
+
+    b2Fixture* t_fixture = t_body->GetFixtureList();
+    //while(t_fixture != NULL){
+        b2Shape* t_shape = t_fixture->GetShape();
+        if(t_shape->GetType() == b2Shape::e_polygon){
+                b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(t_shape);
+            
+                int t_bodyPositionX = t_body->GetPosition().x;
+                int t_bodyPositionY = t_body->GetPosition().y;
+
+                int t_count = t_polyShape->GetVertexCount();
+                for(int i = 0; i < t_count; i++){
+                    b2Vec2 t_verts = t_polyShape->GetVertex(i);
+                    t_vertex[i][0] = t_verts.x + t_bodyPositionX;
+                    t_vertex[i][1] = t_verts.y + t_bodyPositionY;
+                    //std::cout << t_vertex[i][0] << " , " << t_vertex[i][1] << std::endl;
+                }
+        }
+        //t_fixture = t_fixture->GetNext();
+    //}
+
+    m_engineManager->createDebugQuad(t_vertex);
 }

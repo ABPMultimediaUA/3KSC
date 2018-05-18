@@ -52,10 +52,9 @@ public:
     void        updatePosition();
     static int  getEntityCount();
 
-    /*
+
     void        createDebug();
     void        updateDebug();
-    */
 
 protected:
     EngineManager*   m_engineManager;
