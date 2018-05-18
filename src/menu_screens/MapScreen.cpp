@@ -39,7 +39,9 @@ MapScreen::MapScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
     m_game = Game::getInstance();
     m_engineManager = &EngineManager::instance();
+
     createFromFile("assets/UI/menu_screens/Map.cgs");
+    m_selector->setAbsolutePosition(-384, m_selectedNode->element->getPosition().y, 0);
 }
 
 //Destructor

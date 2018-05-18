@@ -6,6 +6,9 @@ n   1   assets/UI/menu_screens/Settings/BGM.png             0    -45    900     
 n   2   assets/UI/menu_screens/Settings/FX.png              0     45    900     80
 n   3   assets/UI/menu_screens/Settings/Voices.png          0    135    900     80
 
+# s is used for selector (hand cursor) [SPRITE_URL WIDTH HEIGHT]
+s   assets/UI/menu_screens/Common/Selector.png  64  64
+
 # hl, vl and tl are used to link nodes horizontally, vertically and with their targets
 vl  0   1
 vl  1   2

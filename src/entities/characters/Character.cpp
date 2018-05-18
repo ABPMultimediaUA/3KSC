@@ -510,7 +510,7 @@ int Character::getValidation(){
 bool Character::left(){
     lookLeft();
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
-    std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
+    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
     return false;
 }
@@ -518,7 +518,7 @@ bool Character::left(){
 bool Character::right(){
     lookRight();
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
-    std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
+    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
 
     return false;

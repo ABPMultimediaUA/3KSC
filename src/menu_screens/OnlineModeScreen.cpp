@@ -36,6 +36,7 @@ OnlineModeScreen* OnlineModeScreen::instance(){
 OnlineModeScreen::OnlineModeScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
     createFromFile("assets/UI/menu_screens/OnlineMode.cgs");
+    m_selector->setAbsolutePosition(-384, m_selectedNode->element->getPosition().y, 0);
 }
 
 //Destructor

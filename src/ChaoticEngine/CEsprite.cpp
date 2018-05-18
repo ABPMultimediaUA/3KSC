@@ -67,7 +67,7 @@ void CESprite::beginDraw(){
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix));
     
     glm::mat4 t_projection = glm::ortho(512.0f, -512.0f, -384.0f, 384.0f, -15.0f, 100.0f);
-    m_MVP = t_projection * m_viewMatrix * m_modelMatrix;
+    m_MVP = t_projection * m_modelMatrix;
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
     //glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
 

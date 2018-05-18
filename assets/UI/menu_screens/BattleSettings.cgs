@@ -4,6 +4,9 @@
 n   0   assets/UI/menu_screens/BattleSettings/Lives.png     0   -45     900     80
 n   1   assets/UI/menu_screens/BattleSettings/Rounds.png    0    45     900     80
 
+# s is used for selector (hand cursor) [SPRITE_URL WIDTH HEIGHT]
+s   assets/UI/menu_screens/Common/Selector.png  64  64
+
 # hl, vl and tl are used to link nodes horizontally, vertically and with their targets
 vl  0   1
 vl  1   0

@@ -24,7 +24,8 @@ public:
 	void 	setAbsoluteRotation(float p_x, float p_y, float p_z);
 	void 	setAbsolutePosition(float p_x, float p_y, float p_z);
 
-    glm::vec3	getPosition() { return glm::vec3(glm::inverse(m_sprite->getMVP())[3]); }    
+    // glm::vec3	getPosition() { return glm::vec3(glm::inverse(m_sprite->getMVP())[3]); }    
+    glm::vec3	getPosition() { return glm::vec3(glm::transpose(m_sprite->getMVP())[3]); }    
 
 	float 	getHeight() 				{   return m_sprite->getHeight();   }
 	float 	getWidth() 				    {	return m_sprite->getWidth();    }

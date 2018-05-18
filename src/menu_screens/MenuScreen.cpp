@@ -48,6 +48,9 @@ MenuScreen::MenuScreen(MenuState* p_menu){
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
 
+    m_selectedNode      = nullptr;
+    m_selector          = nullptr;
+
     m_prev              = Screen::Undefined;
     m_next              = Screen::Undefined;
     m_settings          = Screen::Undefined;
@@ -56,8 +59,9 @@ MenuScreen::MenuScreen(MenuState* p_menu){
 MenuScreen::~MenuScreen(){
     std::cout << "~MenuScreen\n" << std::endl;
 
-    m_selectedNode = nullptr;
+    m_selectedNode  = nullptr;    
 
+    if  (m_selector)                            { delete m_selector;    m_selector = nullptr; }
     for (MenuNode* t_node : m_nodes)            { delete t_node;    }   m_nodes.clear();
     for (CESceneSprite* t_sprite : m_sprites)   { delete t_sprite;  }   m_sprites.clear();
 }
@@ -88,10 +92,28 @@ void MenuScreen::createFromFile(const char* p_url){
             float t_height      = strtof(t_elements[6].c_str(), nullptr);
 
             CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
-            t_sprite->setAbsolutePosition(t_x * -1, t_y * -1, 0);
+            t_sprite->setAbsolutePosition(-t_x, -t_y, 0);
+            std::cout << "Posición CESprite: " << t_sprite->getPosition().x << " " << t_sprite->getPosition().y << std::endl;
             MenuNode* t_node        = new MenuNode(t_sprite); 
             m_nodes.push_back(t_node);
             m_sprites.push_back(t_sprite);
+        }
+
+        //Extra textures
+        else if (t_tag == "t"){
+            int t_index         = (int) strtof(t_elements[1].c_str(), nullptr);
+            const char* t_url   = t_elements[2].c_str();
+
+            m_nodes[t_index]->element->addTexture(t_url);
+        }
+
+        //Selector (hand cursor)
+        else if (t_tag == "s"){
+            const char* t_url   = t_elements[1].c_str();
+            float t_width       = strtof(t_elements[2].c_str(), nullptr);
+            float t_height      = strtof(t_elements[3].c_str(), nullptr);
+
+            m_selector = m_engineManager->createSprite(t_url, t_width, t_height);
         }
 
         //Menu nodes horizontal links
@@ -148,6 +170,8 @@ void MenuScreen::createFromFile(const char* p_url){
     }
 
     m_selectedNode = m_nodes[0];     
+    
+    if (m_selector) std::cout << "(x,y) seleccionado: " << m_nodes[0]->element->getPosition().x << " " << m_nodes[0]->element->getPosition().y << std::endl;
 }
 
 //Shows all elements in the screen
@@ -156,6 +180,8 @@ void MenuScreen::showElements(){
         // std::cout << "Showing sprite" << std::endl;
         t_sprite->setVisible(true);
     }
+
+    if (m_selector) m_selector->setVisible(true);
 }
 
 //Hides all elements in the screen
@@ -164,6 +190,8 @@ void MenuScreen::hideElements(){
         // std::cout << "Hiding sprite" << std::endl;
         t_sprite->setVisible(false);
     }
+
+    if (m_selector) m_selector->setVisible(false);
 }
 
 

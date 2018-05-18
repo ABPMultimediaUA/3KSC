@@ -115,11 +115,11 @@ void InGameState::update(){
 }
 
 void InGameState::calculateFPS(double t_time){
-    std::cout << t_time << std::endl;
+    // std::cout << t_time << std::endl;
     m_time += t_time;
     m_FPS++;
     if(m_time >= 1.0){
-        std::cout << m_FPS << std::endl;
+        std::cout << m_FPS << " FPS" << std::endl;
         m_time  = 0;
         m_FPS   = 0;
     }

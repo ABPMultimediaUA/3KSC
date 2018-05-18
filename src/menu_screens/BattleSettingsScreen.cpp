@@ -37,7 +37,9 @@ BattleSettingsScreen* BattleSettingsScreen::instance(){
 BattleSettingsScreen::BattleSettingsScreen(MenuState* p_menu)
     : MenuScreen(p_menu){    
     m_game              = Game::getInstance();
+
     createFromFile("assets/UI/menu_screens/BattleSettings.cgs");
+    m_selector->setAbsolutePosition(483, m_selectedNode->element->getPosition().y, 0);
 }
 
 //Destructor

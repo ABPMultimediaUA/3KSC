@@ -1,8 +1,12 @@
 # Map creen
 
 # n is used for menu nodes [INDEX SPRITE_URL X Y WIDTH HEIGHT]
-n   0   assets/UI/menu_screens/Map/FusFus.png   0   -75     640     140
-n   1   assets/UI/menu_screens/Map/Sakura.png   0    75     640     140
+n   0   assets/UI/menu_screens/Map/FusFus.png          0    -75    640     140
+n   1   assets/UI/menu_screens/Map/Sakura.png          0     75    640     140
+n   2   assets/UI/menu_screens/Common/Selector.png  -384    -75     64      64
+
+# s is used for selector (hand cursor) [SPRITE_URL WIDTH HEIGHT]
+s   assets/UI/menu_screens/Common/Selector.png  64  64
 
 # hl, vl and tl are used to link nodes horizontally, vertically and with their targets
 vl  0   1
