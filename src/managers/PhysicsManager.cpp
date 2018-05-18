@@ -70,6 +70,7 @@ void PhysicsManager::update(float p_delta){
 
 void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY){
     //Create a new body and positioning it in the coords of the Entity
+    std::cout << "BOX: " << *p_id << std::endl;
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_dynamicBody;
     t_bodyDef->position.Set(p_position[0], p_position[1]);
@@ -82,7 +83,7 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->density  = 750.0f;
-    t_fixtureDef->friction = 1.0f;
+    t_fixtureDef->friction = 5.0f;
     t_fixtureDef->isSensor = false;
     switch(p_type){
         case Box::Player:
@@ -133,6 +134,7 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
 
 void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
     b2BodyDef* t_bodyDef = new b2BodyDef();
+    t_bodyDef->type = b2_kinematicBody;
     t_bodyDef->position.Set(0.0f, 0.0f);
     
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
@@ -176,7 +178,8 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
 
         t_body->CreateFixture(t_fixtureDef);
 
-        float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
+        //float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
+        float t_vertex[][2] = {{t_minX,t_minY},{t_maxX,t_minY},{t_maxX,t_maxY},{t_minX,t_maxY}};
         m_engineManager->createDebugQuad(t_vertex);
     }
 }
@@ -556,3 +559,62 @@ void PhysicsManager::dash(int p_idBody, int t_side){
     //t_body->ApplyLinearImpulse(b2Vec2(250*t_side,0), t_body->GetWorldCenter(), true);
     t_body->SetLinearVelocity(b2Vec2(7.5*t_side,0));
 }
+
+int PhysicsManager::createBodyDebug(int p_idBody){
+    b2Body* t_body = getBody(p_idBody);
+
+    float t_vertex[4][2];
+
+    b2Fixture* t_fixture = t_body->GetFixtureList();
+    //while(t_fixture != NULL){
+        b2Shape* t_shape = t_fixture->GetShape();
+        if(t_shape->GetType() == b2Shape::e_polygon){
+                b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(t_shape);
+            
+                int t_bodyPositionX = t_body->GetPosition().x;
+                int t_bodyPositionY = t_body->GetPosition().y;
+
+                int t_count = t_polyShape->GetVertexCount();
+                for(int i = 0; i < t_count; i++){
+                    b2Vec2 t_verts = t_polyShape->GetVertex(i);
+                    t_vertex[i][0] = t_verts.x + t_bodyPositionX;
+                    t_vertex[i][1] = t_verts.y + t_bodyPositionY;
+                    std::cout << t_vertex[i][0] << " , " << t_vertex[i][1] << std::endl;
+                }
+        }
+        //std::cout << "++++++++++++++" << std::endl;
+        //t_fixture = t_fixture->GetNext();
+    //}
+
+    return m_engineManager->createDebugQuad(t_vertex);
+}
+
+void PhysicsManager::updateBodyDebug(int p_idBody, int p_idDebug){
+    b2Body* t_body = getBody(p_idBody);
+
+    float t_vertex[4][2];
+
+    b2Fixture* t_fixture = t_body->GetFixtureList();
+    //while(t_fixture != NULL){
+        b2Shape* t_shape = t_fixture->GetShape();
+        if(t_shape->GetType() == b2Shape::e_polygon){
+                b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(t_shape);
+            
+                int t_bodyPositionX = t_body->GetPosition().x;
+                int t_bodyPositionY = t_body->GetPosition().y;
+
+                int t_count = t_polyShape->GetVertexCount();
+                for(int i = 0; i < t_count; i++){
+                    b2Vec2 t_verts = t_polyShape->GetVertex(i);
+                    t_vertex[i][0] = t_verts.x + t_bodyPositionX;
+                    t_vertex[i][1] = t_verts.y + t_bodyPositionY;
+                    //std::cout << t_vertex[i][0] << " , " << t_vertex[i][1] << std::endl;
+                }
+        }
+        //std::cout << "++++++++++++++" << std::endl;
+        //t_fixture = t_fixture->GetNext();
+    //}
+
+    m_engineManager->updateDebugQuad(p_idDebug, t_vertex);
+}
+

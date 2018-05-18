@@ -54,10 +54,9 @@ public:
     void        updatePosition();
     static int  getEntityCount();
 
-    /*
+
     void        createDebug();
     void        updateDebug();
-    */
 
 protected:
     EngineManager*   m_engineManager;
@@ -77,6 +76,7 @@ protected:
     
     bool                    m_debugMode;
     int                     m_totalFixtures;
+    int                     m_idDebug;
     //Debug*                  m_entityDebug[4];
 };
 

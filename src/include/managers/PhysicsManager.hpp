@@ -108,6 +108,10 @@ public:
     void                    jump(int p_idBody, float p_force);
     void                    resetVelocity(int p_idBody);
     void                    dash(int p_idBody, int t_side);
+
+    int                     createBodyDebug(int p_idBody);
+    void                    updateBodyDebug(int p_idBody, int p_idDebug);
+
 };
 
 #endif

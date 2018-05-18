@@ -40,6 +40,8 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_inputManager      = &InputManager::instance();
     m_soundManager      = &SoundManager::instance();
 
+    m_idDebug = -1;
+
     m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
 
@@ -51,8 +53,10 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
     moveTo(p_position);
 
+    m_debugMode = false;
     switch(p_type){
         case 0:
+            m_debugMode = true;
             m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
             break;
 
@@ -78,9 +82,8 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
     }
 
-    m_debugMode = true;
-    //if(m_debugMode)
-    //    createDebug();
+    if(m_debugMode)
+        createDebug();
 }
 
 Entity::~Entity(){
@@ -96,8 +99,8 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(){
-    //if(m_debugMode)
-    //    updateDebug();
+    if(m_debugMode)
+        updateDebug();
 
     m_lastPosition[0] = m_position[0];
     m_lastPosition[1] = m_position[1];
@@ -202,19 +205,9 @@ void Entity::setY(float p_position){
     moveTo(getX(), p_position);
 }
 
-/*
 void Entity::createDebug(){
-    m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
-
-    for(int i = 0; i < m_totalFixtures; i++){
-        m_entityDebug[i] = new Debug(m_physicsManager->getBody(m_id), i);
-    }
+    m_idDebug = m_physicsManager->createBodyDebug(m_id);
 }
-
 void Entity::updateDebug(){
-    for(int i = 0; i < m_totalFixtures; i++){
-        if(m_entityDebug[i] != 0)
-        m_entityDebug[i]->update();
-    }
+    m_physicsManager->updateBodyDebug(m_id, m_idDebug);
 }
-*/

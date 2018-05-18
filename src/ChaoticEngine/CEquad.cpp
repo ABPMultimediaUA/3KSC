@@ -11,14 +11,17 @@ CEQuad::CEQuad(float p_vertex[4][2], GLuint p_shaderProgram) : CEEntity(){
         m_vertices[i*3]   = p_vertex[i][0];
         m_vertices[i*3+1] = p_vertex[i][1];
         m_vertices[i*3+2] = 0.0f;
+        std::cout << p_vertex[i][0] << " , " << p_vertex[i][1] << std::endl;
     }
+    std::cout << "+++++++++++++" << std::endl;
+
 
     m_indices[0] = 0; //First Triangle
-    m_indices[1] = 1;
-    m_indices[2] = 3;
-    m_indices[3] = 1; //Second Triangle
+    m_indices[1] = 3;
+    m_indices[2] = 1;
+    m_indices[3] = 3; //Second Triangle
     m_indices[4] = 2;
-    m_indices[5] = 3;
+    m_indices[5] = 1;
     
     /*m_indices = {
         0, 1, 3,  // First Triangle

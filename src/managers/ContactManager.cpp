@@ -24,48 +24,84 @@
 #include "../include/entities/items/Portal.hpp"
 
 void ContactManager::BeginContact(b2Contact* p_contact){
-
-	void* dataA = p_contact->GetFixtureA()->GetUserData();
-	void* dataB = p_contact->GetFixtureB()->GetUserData();
-	checkCollision(dataB, dataA);
+	//std::cout << "Beg" << std::endl;
+	b2Fixture* fixtureA = p_contact->GetFixtureA();
+	b2Fixture* fixtureB = p_contact->GetFixtureB();
+	
+	checkCollision(fixtureA, fixtureB, p_contact);
+	checkCollision(fixtureB, fixtureA, p_contact);
 }
 
 void ContactManager::EndContact(b2Contact* p_contact){
-	void* dataA = p_contact->GetFixtureA()->GetUserData();
-	void* dataB = p_contact->GetFixtureB()->GetUserData();
-	checkLeave(dataB, dataA);
+	//std::cout << "End" << std::endl;
+	b2Fixture* fixtureA = p_contact->GetFixtureA();
+	b2Fixture* fixtureB = p_contact->GetFixtureB();
+
+	checkLeave(fixtureA, fixtureB, p_contact);
+	checkLeave(fixtureB, fixtureA, p_contact);
 }
 
-void ContactManager::checkCollision(void* p_data1, void* p_data2){
-	onCollide(p_data1, p_data2);
-	onCollide(p_data2, p_data1);
+void ContactManager::PreSolve(b2Contact* p_contact, const b2Manifold* p_oldManifold){
+	//std::cout << "Pre" << std::endl;
+	b2Fixture* fixtureA = p_contact->GetFixtureA();
+	b2Fixture* fixtureB = p_contact->GetFixtureB();
+
+	checkPreSolve(fixtureA, fixtureB, p_contact, p_oldManifold);
+	checkPreSolve(fixtureB, fixtureA, p_contact, p_oldManifold);
 }
 
-void ContactManager::checkLeave(void* p_data1, void* p_data2){
-	onLeave(p_data1, p_data2);
-	onLeave(p_data2, p_data1);
-}
-
-void ContactManager::onCollide(void* p_data1, void* p_data2){
-	if(p_data1){
-		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
+void ContactManager::checkCollision(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact){
+	void* t_data1 = fixture1->GetUserData();
+	void* t_data2 = fixture2->GetUserData();
+	if(t_data1){
+		if(static_cast<Portal*>(t_data2) && static_cast<Character*>(t_data1)){
 			//comprobamos que el character exista de verdad
-			if(static_cast<Character*>(p_data1)->getValidation() != 123)
+			if(static_cast<Character*>(t_data1)->getValidation() != 123)
 				return;
-			static_cast<Portal*>(p_data2)->onEnter(static_cast<Character*>(p_data1));
+			static_cast<Portal*>(t_data2)->onEnter(static_cast<Character*>(t_data1));
 		}else
-			static_cast<Character*>(p_data1)->onTouchGround();
+			static_cast<Character*>(t_data1)->onTouchGround();
 	}
 }
 
-void ContactManager::onLeave(void* p_data1, void* p_data2){
-	if(p_data1){
-		if(static_cast<Portal*>(p_data2) && static_cast<Character*>(p_data1)){
+void ContactManager::checkLeave(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact){
+	void* t_data1 = fixture1->GetUserData();
+	void* t_data2 = fixture2->GetUserData();
+	if(t_data1){
+		if(static_cast<Portal*>(t_data2) && static_cast<Character*>(t_data1)){
 			//comprobamos que el character exista de verdad
-			if(static_cast<Character*>(p_data1)->getValidation() != 123)
+			if(static_cast<Character*>(t_data1)->getValidation() != 123)
 				return;
-			static_cast<Portal*>(p_data2)->onLeave(static_cast<Character*>(p_data1));
+			static_cast<Portal*>(t_data2)->onLeave(static_cast<Character*>(t_data1));
 		}else
-			static_cast<Character*>(p_data1)->onLeaveGround();
+			static_cast<Character*>(t_data1)->onLeaveGround();
+	}
+	p_contact->SetEnabled(true);
+}
+
+void ContactManager::checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact, const b2Manifold* p_oldManifold){
+	//std::cout << "CHECK PRESOLVE" << std::endl;
+	int	  t_data1 = *reinterpret_cast<int*>(fixture1->GetBody()->GetUserData());
+	int	  t_data2 = *reinterpret_cast<int*>(fixture2->GetBody()->GetUserData());
+	
+	if(t_data1 == 0 && (t_data2 == 1 || t_data2 == 2)){
+        b2Fixture* otherFixture 	= fixture1;
+        b2Fixture* playerFixture 	= fixture2;
+
+		b2Body* otherBody	= otherFixture->GetBody();
+		b2Body* playerBody	= playerFixture->GetBody();
+
+		int numPoints = p_oldManifold->pointCount;
+		for(int i = 0; i < numPoints; i++){			
+			b2Vec2 relativeVel		= playerBody->GetLinearVelocity();
+			//std::cout << "Vel: " << relativeVel.y << std::endl;
+
+			if(relativeVel.y < 5.5)
+				return;
+			/*else if(relativeVel.y < 5.5){
+				return;
+			}*/
+		}
+		p_contact->SetEnabled(false);
 	}
 }
