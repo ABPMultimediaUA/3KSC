@@ -243,6 +243,7 @@ void Character::removeWings(){
 
 //Decreases number of lives
 void Character::die(){
+    std::cout << "LA HA PALMADOOOOOO POR IMBECIIIIIL!!!" << std::endl;
     m_lives--;
     //std::cout << "Me quedan " << m_lives << " vidas." << std::endl;
     m_HP = 0;
@@ -372,6 +373,8 @@ void Character::update(){
     checkAlive();
 
     //std::cout << getX() << ", " << getY() << std::endl;
+    //std::cout << "PHYSIC: "; m_physicsManager->getPosition(m_id);
+    //std::cout << "ENGINE: " << m_engineManager->getEntityPosition(m_id).x << " , " << m_engineManager->getEntityPosition(m_id).y << std::endl;
 }
 
 //Returns the type of the player

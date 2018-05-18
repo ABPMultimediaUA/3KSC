@@ -23,11 +23,12 @@
 #include "../include/AI/AINode.hpp"
 #include <iostream>
 
-AINode::AINode(int p_type, float p_comparison_value, float *p_data, int p_action){
+AINode::AINode(int p_id, int p_type, float p_comparison_value, float *p_data, int p_action){
     m_type              = p_type;
     m_comparison_value  = p_comparison_value;
     m_data              = p_data;
     m_action            = p_action;
+    m_id                = p_id;
 }
 
 AINode::~AINode(){}

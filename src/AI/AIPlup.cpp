@@ -39,6 +39,7 @@ AIPlup::~AIPlup(){}
 
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
+    m_time = 0.0f;
     m_specialUpRange = 0.0;
     m_specialSideRange = 0.0;
     m_distanceToPortal = 0.0f;
@@ -181,9 +182,10 @@ void AIPlup::update(){
         t_currentPlayer->basicAttack();
     }
     else if (t_action == 0){
-        m_inputManager->setAction(Action::SpecialAttackUp, m_index);
+        t_currentPlayer->specialAttackUp();
     }
     else if (t_action == 2){
+        t_currentPlayer->specialAttackSide();
         //m_inputManager->setAction(Action::SpecialAttackSide, m_index);
     }
     else if (t_action == 1){
@@ -290,7 +292,7 @@ void AIPlup::buildTree(){
             t_action = nodes[i]["data"]["value"];
         }
         // Create AINode   
-        m_nodes[i] = new AINode(t_comparison_type, t_value, t_data, t_action);
+        m_nodes[i] = new AINode(i, t_comparison_type, t_value, t_data, t_action);
     }
 
     // Set child nodes

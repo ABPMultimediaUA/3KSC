@@ -163,7 +163,11 @@ float EngineManager::updateFrameDeltaTime(float p_delta){
 }
 
 void EngineManager::deleteEntity(int p_id){
-    m_scene->remove(m_entityNodes.at(p_id)->getTopNode());
+    m_scene->remove(m_entityNodes[p_id]->getTopNode());
+}
+
+void EngineManager::deleteDebug(int p_id){
+    m_scene->remove(m_debugNodes[p_id]->getTopNode());
 }
 
 void EngineManager::deleteEntityAnim(int p_id){
@@ -251,7 +255,7 @@ void EngineManager::setAnimRotation(int p_id, float p_degrees){
 }
 
 void EngineManager::scale(int p_id, float p_scale[3]){
-    CESceneMesh* t_node  = m_entityNodes.at(p_id);
+    CESceneMesh* t_node  = m_entityNodes[p_id];
 
     t_node->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
 }
@@ -272,11 +276,11 @@ float EngineManager::getFrameDeltaTime(){
 }
 
 CESceneMesh* EngineManager::getEntityNode(int p_id){
-    return m_entityNodes.at(p_id);
+    return m_entityNodes[p_id];
 }
 
-void EngineManager::getEntityPosition(int p_id){
-    m_entityNodes.at(p_id)->getPosition();
+glm::vec3 EngineManager::getEntityPosition(int p_id){
+    return m_entityNodes[p_id]->getPosition();
 }
 
 void EngineManager::parseOBJ(const char* p_filename){
@@ -355,8 +359,15 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
     */
 }
 
-void EngineManager::createDebugQuad(float p_vertex[4][2]){
+int EngineManager::createDebugQuad(float p_vertex[4][2]){
     CESceneQuad* t_quad = m_scene->createQuad(p_vertex);
+    m_debugNodes.push_back(t_quad);
+    
+    return (m_debugNodes.size()-1);
+}
+
+void EngineManager::updateDebugQuad(int p_idDebug, float p_vertex[4][2]){
+    m_debugNodes[p_idDebug]->updatePositions(p_vertex);
 }
 
 void EngineManager::createSprite(const char* p_url, float p_width, float p_height){

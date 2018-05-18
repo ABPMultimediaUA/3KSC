@@ -40,8 +40,9 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_inputManager      = &InputManager::instance();
     m_soundManager      = &SoundManager::instance();
 
-    m_entityCount++;
+    m_idDebug = -1;
 
+    m_id = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
     for(int i = 0; i < 3; i++){
         m_position[i] = p_position[i];
@@ -59,6 +60,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     
     moveTo(p_position);
 
+    m_debugMode = true;
     switch(p_type){
         case 0:
             m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
@@ -66,7 +68,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 
         case 1:
             m_engineManager->parseOBJ(p_modelURL);
-            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position);
+            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, m_debugMode);
             break;
 
         case 2:
@@ -86,12 +88,14 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
     }
 
-    m_debugMode = true;
-    //if(m_debugMode)
-    //    createDebug();
+    if(m_debugMode)
+        createDebug();
 }
 
 Entity::~Entity(){
+    if(m_debugMode)
+        m_engineManager->deleteDebug(m_idDebug);
+    
     if(m_modelId != -1)
         m_engineManager->deleteEntityAnim(m_modelId);
     else
@@ -101,8 +105,8 @@ Entity::~Entity(){
 }
 
 void Entity::updatePosition(){
-    //if(m_debugMode)
-    //    updateDebug();
+    if(m_debugMode)
+        updateDebug();
 
     m_lastPosition[0] = m_position[0];
     m_lastPosition[1] = m_position[1];
@@ -110,9 +114,6 @@ void Entity::updatePosition(){
     //Set to the entity the new position of the body
     m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
     m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-
-    //float t_vertex[][2] = {{m_position[0]+0.5,m_position[1]+0.5},{m_position[0]+0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[1]+0.5}};
-    //m_engineManager->createDebugQuad(t_vertex);
 
     m_engineManager->moveEntity(this);
 }
@@ -186,7 +187,6 @@ void Entity::setVX(float x){
     m_physicsManager->move(getId(), x, 0);
 }
 
-
 float Entity::getY(){
     return m_physicsManager->getBody(m_id)->GetPosition().y;
 }
@@ -214,19 +214,9 @@ void Entity::setY(float p_position){
     moveTo(getX(), p_position);
 }
 
-/*
 void Entity::createDebug(){
-    m_totalFixtures = m_physicsManager->getTotalFixtures(m_id);
-
-    for(int i = 0; i < m_totalFixtures; i++){
-        m_entityDebug[i] = new Debug(m_physicsManager->getBody(m_id), i);
-    }
+    m_idDebug = m_physicsManager->createBodyDebug(m_id);
 }
-
 void Entity::updateDebug(){
-    for(int i = 0; i < m_totalFixtures; i++){
-        if(m_entityDebug[i] != 0)
-        m_entityDebug[i]->update();
-    }
+    m_physicsManager->updateBodyDebug(m_id, m_idDebug);
 }
-*/

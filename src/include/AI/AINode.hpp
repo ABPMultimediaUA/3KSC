@@ -31,12 +31,13 @@ class AINode{
     public:
         AINode* m_true_children;
         AINode* m_false_children;
-        AINode(int p_type, float p_comparison_value, float *p_data, int action);
+        AINode(int p_id, int p_type, float p_comparison_value, float *p_data, int action);
         ~AINode();
         AINode* makeDecision(AINode* node);
         int      m_action;
         float    m_comparison_value;
         float*   m_data;
+        int      m_id;
 };
 
 #endif

@@ -72,7 +72,7 @@ public:
     //void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    setPlayerSensor(int p_id, Character* p_character);
     //void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
-    void                    createPhysicBoxPlatform(int* p_id, float p_position[3]);
+    void                    createPhysicBoxPlatform(int* p_id, float p_position[3], bool p_debugMode = false);
     void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    addDataToPortal(Portal* p_portal);
 
@@ -108,6 +108,10 @@ public:
     void                    jump(int p_idBody, float p_force);
     void                    resetVelocity(int p_idBody);
     void                    dash(int p_idBody, int t_side);
+
+    int                     createBodyDebug(int p_idBody);
+    void                    updateBodyDebug(int p_idBody, int p_idDebug);
+
 };
 
 #endif

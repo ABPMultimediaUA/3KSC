@@ -38,7 +38,6 @@ PhysicsManager::PhysicsManager(){
     m_engineManager = &EngineManager::instance();
 
     b2Vec2 gravity(0.0f, -4.9f);
-    //b2Vec2 gravity(0.0f, 0.0f);
 
     m_world = new b2World(gravity);
 
@@ -62,10 +61,7 @@ PhysicsManager::~PhysicsManager(){
 }
 
 void PhysicsManager::update(float p_delta){
-    //m_timeStep = p_delta * 10;
-    // std::cout << "Before Step" << std::endl;
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
-    // std::cout << "After Step" << std::endl;
 }
 
 void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY){
@@ -82,7 +78,7 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
     b2FixtureDef* t_fixtureDef = new b2FixtureDef();
     t_fixtureDef->shape = t_polygonShape;
     t_fixtureDef->density  = 750.0f;
-    t_fixtureDef->friction = 1.0f;
+    t_fixtureDef->friction = 5.0f;
     t_fixtureDef->isSensor = false;
     switch(p_type){
         case Box::Player:
@@ -131,8 +127,9 @@ void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
     footSensorFixture->SetUserData(p_character);
 }
 
-void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
+void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], bool p_debugMode){
     b2BodyDef* t_bodyDef = new b2BodyDef();
+    t_bodyDef->type = b2_kinematicBody;
     t_bodyDef->position.Set(0.0f, 0.0f);
     
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
@@ -176,15 +173,18 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3]){
 
         t_body->CreateFixture(t_fixtureDef);
 
-        float t_vertex[][2] = {{t_maxX,t_maxY},{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY}};
-        m_engineManager->createDebugQuad(t_vertex);
+        if(p_debugMode){
+            //float t_vertex[][2] = {{t_minX,t_minY},{t_maxX,t_minY},{t_maxX,t_maxY},{t_minX,t_maxY}};
+            float t_vertex[][2] = {{t_maxX,t_minY},{t_minX,t_minY},{t_minX,t_maxY},{t_maxX,t_maxY}};
+            m_engineManager->createDebugQuad(t_vertex);
+        }
     }
 }
 
 void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY){
     float size = 1;
     b2BodyDef* t_bodyDef = new b2BodyDef();
-    t_bodyDef->type = b2_dynamicBody;
+    t_bodyDef->type = b2_staticBody;
     t_bodyDef->position.Set(p_position[0], p_position[1]);
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
     
@@ -197,7 +197,8 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
     t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
     t_fixtureDef->filter.groupIndex   = 1;
-      t_fixtureDef->restitution = 0;
+    t_fixtureDef->restitution = 0;
+    t_fixtureDef->isSensor = true;
 
     //Attach the shape to the body
     m_portalFixture = t_body->CreateFixture(t_fixtureDef);
@@ -345,23 +346,19 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
 }
 
 void PhysicsManager::applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP){
-    //std::cout << "KNOCKBACK!" << std::endl;
     b2Body* t_body = getBody(p_idBody);
 
     float t_inverseHP = (1-(p_HP*0.01)) * 5;
     int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
     int t_powerY = 750  * p_knockPower * t_inverseHP;
-    //std::cout << t_powerX << " - " << t_powerY << std::endl;
     t_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), t_body->GetWorldCenter(), true);
 }
 
 void PhysicsManager::applyKnockback(b2Body* p_body, int t_side, float p_knockPower, int p_HP){
-    //std::cout << "KNOCKBACK!" << std::endl;
     float t_inverseHP = (1-(p_HP*0.01)) * 5;
     int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
     int t_powerY = 750 * p_knockPower * t_inverseHP;
 
-    //std::cout << t_powerX << " - " << t_powerY << std::endl;
     p_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), p_body->GetWorldCenter(), true);
 }
 
@@ -422,7 +419,6 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                 int t_side = 1;
                 if(p_ignoreBody->GetPosition().x > t_body->GetPosition().x)
                     t_side = -1;
-                //t_player->receiveAttack(p_damage, false, p_knockPower, t_side);
                 t_player->changeHP(-p_damage);
                 applyKnockback(t_body, t_side, p_knockPower, t_player->getHP());
             }
@@ -523,6 +519,7 @@ void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
 
 void PhysicsManager::jump(int p_idBody, float p_force){
     b2Body* t_body = getBody(p_idBody);
+    t_body->SetLinearVelocity(b2Vec2(t_body->GetLinearVelocity().x,0));
     t_body->ApplyLinearImpulse(b2Vec2(0,p_force * 25), b2Vec2(t_body->GetWorldCenter()), true);
 }
 int PhysicsManager::getTotalFixtures(int p_idBody){
@@ -551,6 +548,52 @@ void PhysicsManager::dash(int p_idBody, int t_side){
     b2Body* t_body = getBody(p_idBody);
 
     t_body->SetLinearDamping(-0.5);
-    //t_body->ApplyLinearImpulse(b2Vec2(250*t_side,0), t_body->GetWorldCenter(), true);
     t_body->SetLinearVelocity(b2Vec2(7.5*t_side,0));
 }
+
+int PhysicsManager::createBodyDebug(int p_idBody){
+    float t_vertex[4][2];
+
+    b2Body* t_body = getBody(p_idBody);
+    b2Fixture* t_fixture = t_body->GetFixtureList();
+    b2Shape* t_shape     = t_fixture->GetShape();
+    if(t_shape->GetType() == b2Shape::e_polygon){
+        b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(t_shape);
+    
+        int t_bodyPositionX = t_body->GetPosition().x;
+        int t_bodyPositionY = t_body->GetPosition().y;
+
+        int t_count = t_polyShape->GetVertexCount();
+        for(int i = 0; i < t_count; i++){
+            b2Vec2 t_verts = t_polyShape->GetVertex(i);
+            t_vertex[i][0] = -(t_verts.x + t_bodyPositionX);
+            t_vertex[i][1] = t_verts.y + t_bodyPositionY;
+        }
+    }
+
+    return m_engineManager->createDebugQuad(t_vertex);
+}
+
+void PhysicsManager::updateBodyDebug(int p_idBody, int p_idDebug){
+    float t_vertex[4][2];
+
+    b2Body* t_body = getBody(p_idBody);
+    b2Fixture* t_fixture = t_body->GetFixtureList();
+    b2Shape* t_shape     = t_fixture->GetShape();
+    if(t_shape->GetType() == b2Shape::e_polygon){
+        b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(t_shape);
+    
+        int t_bodyPositionX = t_body->GetPosition().x;
+        int t_bodyPositionY = t_body->GetPosition().y;
+
+        int t_count = t_polyShape->GetVertexCount();
+        for(int i = 0; i < t_count; i++){
+            b2Vec2 t_verts = t_polyShape->GetVertex(i);
+            t_vertex[i][0] = -(t_verts.x + t_bodyPositionX);
+            t_vertex[i][1] = t_verts.y + t_bodyPositionY;
+        }
+    }
+
+    m_engineManager->updateDebugQuad(p_idDebug, t_vertex);
+}
+

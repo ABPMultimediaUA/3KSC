@@ -57,7 +57,7 @@ glm::mat4 CETransform::transpose(glm::mat4 p_matrix){
 //Applies a traslation to the matrix
 //Receives the offset for each axis
 void CETransform::translate(float p_tx, float p_ty, float p_tz){
-    m_matrix = glm::translate(m_matrix, glm::vec3(p_tx, p_ty, p_tz));
+    m_matrix = glm::translate(m_matrix, glm::vec3(-p_tx, p_ty, p_tz));
 }
 
 //Applies a rotation to the matrix

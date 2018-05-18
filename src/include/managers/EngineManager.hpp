@@ -39,6 +39,7 @@
 class EngineManager{
 private:
     std::vector<CESceneMesh*>   m_entityNodes;
+    std::vector<CESceneQuad*>   m_debugNodes;
     std::vector<CESceneAnimation*> m_animationNodes;
     CEWindow*       m_window;
     CEScene*        m_scene;
@@ -86,6 +87,7 @@ public:
     int                 loadAnimations(float p_position[3], float p_scale[3], const char* p_modelURL);
     void                changeAnimation(int p_animation, int p_newAnimation);
     int                 load3DModel(float p_position[3], float p_scale[3], const char* p_modelURL);
+    void                deleteDebug(int p_id);
     void                loadSkybox(const char* p_skyboxURLs[6], float t_scale); 
     void                moveEntity(Entity* p_entity);
     void                setRotation(int p_id, float p_degrees);
@@ -96,7 +98,7 @@ public:
 
     float               getFrameDeltaTime();
     CESceneMesh*        getEntityNode(int p_id);
-    void                getEntityPosition(int p_id);
+    glm::vec3           getEntityPosition(int p_id);
 
     void                parseOBJ(const char* p_filename);
     void                compareMaxAndMin(float p_value, float &p_max, float &p_min);
@@ -107,13 +109,14 @@ public:
     std::vector<float>  getTotalVertexY()   {    return m_VertexY;      };
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
 
-    void                createDebugQuad(float p_vertex[4][2]);
+    int                 createDebugQuad(float p_vertex[4][2]);
     void                createSprite(const char* p_url, float p_width, float p_height);
     void                createParticleSystem(const char* p_url, int p_amount);
     void                updateParticleSystem();
 
     double              getTime();
     double              getElapsedTime();
+    void                updateDebugQuad(int p_idDebug, float p_vertex[4][2]);
 
 
 };

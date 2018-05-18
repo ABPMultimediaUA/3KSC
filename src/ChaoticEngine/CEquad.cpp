@@ -13,18 +13,21 @@ CEQuad::CEQuad(float p_vertex[4][2], GLuint p_shaderProgram) : CEEntity(){
         m_vertices[i*3+2] = 0.0f;
     }
 
+    /*
     m_indices[0] = 0; //First Triangle
-    m_indices[1] = 1;
-    m_indices[2] = 3;
-    m_indices[3] = 1; //Second Triangle
+    m_indices[1] = 3;
+    m_indices[2] = 1;
+    m_indices[3] = 3; //Second Triangle
     m_indices[4] = 2;
-    m_indices[5] = 3;
+    m_indices[5] = 1;
+    */
+    m_indices[0] = 1; //First Triangle
+    m_indices[1] = 2;
+    m_indices[2] = 0;
+    m_indices[3] = 2; //Second Triangle
+    m_indices[4] = 3;
+    m_indices[5] = 0;
     
-    /*m_indices = {
-        0, 1, 3,  // First Triangle
-        1, 2, 3   // Second Triangle
-    };*/
-
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_VBO);
     glGenBuffers(1, &m_EBO);
