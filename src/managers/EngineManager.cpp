@@ -250,7 +250,7 @@ void EngineManager::cleanScene(){
 }
 
 float EngineManager::getFrameDeltaTime(){
-    return (float)m_frameDeltaTime * 5;
+    return (float)m_frameDeltaTime;
 }
 
 CESceneMesh* EngineManager::getEntityNode(int p_id){
