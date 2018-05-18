@@ -20,10 +20,16 @@
 
 #include "../include/menu_screens/TitleScreen.hpp"
 
+//Instance initialization
+TitleScreen* TitleScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-TitleScreen& TitleScreen::instance(){
-    static TitleScreen instance(MenuState::getInstance());
-    return instance;
+TitleScreen* TitleScreen::instance(){
+    if (!m_instance){
+        m_instance = new TitleScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

@@ -23,7 +23,6 @@
 
 #include "../states/MenuState.hpp"
 #include <CESceneSprite.hpp>
-#include <vector>
 
 class EngineManager;
 class InputManager;

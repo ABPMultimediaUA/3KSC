@@ -360,7 +360,7 @@ void InputManager::playerInputJoystick(int p_player){
     m_playerActions[p_player][(int) Action::Right]  = t_right;
 
     m_playerActions[p_player][(int) Action::Jump]   = isButtonPressed(t_joystick, Button::A);
-    m_playerActions[p_player][(int) Action::Block]  = isButtonPressed(t_joystick, Button::LB);
+    m_playerActions[p_player][(int) Action::Block]  = isButtonPressed(t_joystick, Button::RB);
     m_playerActions[p_player][(int) Action::Pick]   = isButtonPressed(t_joystick, Button::Y);
 
     m_playerActions[p_player][(int) Action::BasicAttack]        = isButtonPressed(t_joystick, Button::X);
@@ -369,6 +369,8 @@ void InputManager::playerInputJoystick(int p_player){
     m_playerActions[p_player][(int) Action::SpecialAttackSide]  = t_special && (t_left || t_right);
     m_playerActions[p_player][(int) Action::UltimateAttack]     = getAxisPosition(t_joystick, Axis::Z) >= 0 && getAxisPosition(t_joystick, Axis::R) >= 0;
     
+    m_playerActions[p_player][(int) Action::Taunt]              = isButtonPressed(t_joystick, Button::LB);
+    m_playerActions[p_player][(int) Action::Leave]              = isButtonPressed(t_joystick, Button::Back);
     m_playerActions[p_player][(int) Action::ToggleAI]           = isButtonPressed(t_joystick, Button::LS);
 }
 
@@ -395,8 +397,9 @@ void InputManager::playerInputKeyboard(int p_player){
     m_playerActions[p_player][(int) Action::SpecialAttackSide]  = t_special && (t_left || t_right);
     m_playerActions[p_player][(int) Action::UltimateAttack]     = isKeyPressed(Key::Z);
 
-    m_playerActions[p_player][(int) Action::ToggleAI]           = isKeyPressed(Key::O);
     m_playerActions[p_player][(int) Action::Taunt]              = isKeyPressed(Key::T);
+    m_playerActions[p_player][(int) Action::Leave]              = isKeyPressed(Key::Escape);
+    m_playerActions[p_player][(int) Action::ToggleAI]           = isKeyPressed(Key::O);
 }
 
 //Updates player actions (for NPC)

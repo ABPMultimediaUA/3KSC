@@ -23,10 +23,16 @@
 #include "../include/managers/EngineManager.hpp"
 #include <iostream>
 
+//Instance initialization
+MainScreen* MainScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-MainScreen& MainScreen::instance(){
-    static MainScreen instance(MenuState::getInstance());
-    return instance;
+MainScreen* MainScreen::instance(){
+    if (!m_instance){
+        m_instance = new MainScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

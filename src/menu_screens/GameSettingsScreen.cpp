@@ -22,10 +22,16 @@
 #include "../include/Game.hpp"
 #include "../include/extra/ResolutionPresets.hpp"
 
+//Instance initialization
+GameSettingsScreen* GameSettingsScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-GameSettingsScreen& GameSettingsScreen::instance(){
-    static GameSettingsScreen instance(MenuState::getInstance());
-    return instance;
+GameSettingsScreen* GameSettingsScreen::instance(){
+    if (!m_instance){
+        m_instance = new GameSettingsScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

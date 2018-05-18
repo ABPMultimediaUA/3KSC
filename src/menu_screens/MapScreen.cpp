@@ -19,18 +19,26 @@
 */
 
 #include "../include/menu_screens/MapScreen.hpp"
+#include "../include/managers/EngineManager.hpp"
 #include "../include/Game.hpp"
 
+//Instance initialization
+MapScreen* MapScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-MapScreen& MapScreen::instance(){
-    static MapScreen instance(MenuState::getInstance());
-    return instance;
+MapScreen* MapScreen::instance(){
+    if (!m_instance){
+        m_instance = new MapScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor
 MapScreen::MapScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
     m_game = Game::getInstance();
+    m_engineManager = &EngineManager::instance();
     createFromFile("assets/UI/menu_screens/Map.cgs");
 }
 
@@ -50,9 +58,11 @@ MapScreen::~MapScreen(){
 
 /* ****************************** ACTIONS ****************************** */
 void MapScreen::select(){
+    m_engineManager->cleanScene();    
     m_game->nextState();
 }
 
 void MapScreen::save(){
+    m_engineManager->cleanScene();        
     m_game->nextState();
 }

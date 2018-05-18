@@ -77,8 +77,9 @@ MenuState::MenuState(Game* p_game){
 MenuState::~MenuState(){
     std::cout << "~MenuState" << std::endl;
 
-    if (m_actions)      { delete[] m_actions;       m_actions = nullptr;        }
-    if (m_screenMaps)   { delete[] m_screenMaps;    m_screenMaps = nullptr;     }
+    for (MenuScreen* t_screen : m_screens)  { delete t_screen;  }   m_screens.clear();
+    if  (m_actions)     { delete[] m_actions;       m_actions = nullptr;        }
+    if  (m_screenMaps)  { delete[] m_screenMaps;    m_screenMaps = nullptr;     }
     m_instance = nullptr;
 }
 
@@ -113,19 +114,19 @@ void MenuState::setScreen(Screen p_screen){
 
 //Creates the instance of each menu screen
 void MenuState::initializeScreens(){
-    m_screens[0]    = &TitleScreen::instance();
-    m_screens[1]    = &MainScreen::instance();
-    m_screens[2]    = &CharacterLocalScreen::instance();
-    m_screens[3]    = &CharacterOnlineScreen::instance();
-    m_screens[4]    = &BattleSettingsScreen::instance();
-    m_screens[5]    = &MapScreen::instance();
-    m_screens[6]    = &OnlineModeScreen::instance();
-    m_screens[7]    = &OnlineCreateScreen::instance();
-    m_screens[8]    = &OnlineJoinScreen::instance();
-    m_screens[9]    = &GameSettingsScreen::instance();
+    m_screens.push_back(TitleScreen::instance());
+    m_screens.push_back(MainScreen::instance());
+    m_screens.push_back(CharacterLocalScreen::instance());
+    m_screens.push_back(CharacterOnlineScreen::instance());
+    m_screens.push_back(BattleSettingsScreen::instance());
+    m_screens.push_back(MapScreen::instance());
+    m_screens.push_back(OnlineModeScreen::instance());
+    m_screens.push_back(OnlineCreateScreen::instance());
+    m_screens.push_back(OnlineJoinScreen::instance());
+    m_screens.push_back(GameSettingsScreen::instance());
 
-    for (int i = 0; i < 10; i++){
-        m_screens[i]->hideElements();
+    for (MenuScreen* t_screen : m_screens){
+        t_screen->hideElements();
     }
 
     m_currentScreen = m_screens[0];

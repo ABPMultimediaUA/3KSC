@@ -29,10 +29,11 @@ class CharacterOnlineScreen : public MenuScreen{
     private:
         CharacterOnlineScreen(MenuState* p_menu);
         
-        Game*           m_game;
+        static CharacterOnlineScreen*   m_instance;
+        Game*                           m_game;
 
     public:
-        static CharacterOnlineScreen& instance();
+        static CharacterOnlineScreen* instance();
         ~CharacterOnlineScreen();
 
         void input();

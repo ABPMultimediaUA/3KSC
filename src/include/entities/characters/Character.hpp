@@ -32,6 +32,7 @@ class AICharacter;
 #include <Client.hpp>
 
 struct ActionMapping;
+class Game;
 
 class Character : public Entity{
 public:
@@ -86,6 +87,7 @@ public:
     virtual bool    ultimateAttack();
     virtual bool    tauntSound();
     virtual void    deathSound();
+    bool            leave();
     bool            toggleAI();
 
     virtual int     getCurrentSnowmen();
@@ -99,6 +101,8 @@ public:
     int             getValidation();
 
 protected:
+    Game*           m_game;
+
     static int      m_playerCount;
     int             m_playerIndex;
     bool            m_NPC;

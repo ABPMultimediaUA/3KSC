@@ -20,10 +20,16 @@
 
 #include "../include/menu_screens/OnlineModeScreen.hpp"
 
+//Instance initialization
+OnlineModeScreen* OnlineModeScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-OnlineModeScreen& OnlineModeScreen::instance(){
-    static OnlineModeScreen instance(MenuState::getInstance());
-    return instance;
+OnlineModeScreen* OnlineModeScreen::instance(){
+    if (!m_instance){
+        m_instance = new OnlineModeScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

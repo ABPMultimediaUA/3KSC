@@ -71,6 +71,8 @@ public:
     void        pollEvents();
     void        stop();
 
+
+
     float       updateFrameDeltaTime(float p_delta);
 
     void        createCamera(float p_cameraPosition[3], float p_tarjet[3]);
@@ -90,6 +92,7 @@ public:
     
     void        drawScene();
     void        drawScene2D();
+    void        cleanScene();
 
     float               getFrameDeltaTime();
     CESceneMesh*        getEntityNode(int p_id);

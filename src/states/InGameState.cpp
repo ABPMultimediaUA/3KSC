@@ -76,14 +76,10 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
 //Destructor
 InGameState::~InGameState(){
-    // delete m_UIManager;
-    // m_UIManager = nullptr;
+    std::cout << "~InGameState" << std::endl;
     
     delete m_arena;
     m_arena = nullptr;
-
-    delete m_client;
-    m_client = nullptr;
 }
 
 void InGameState::input(){}

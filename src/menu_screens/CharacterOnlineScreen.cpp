@@ -22,11 +22,16 @@
 #include "../include/Game.hpp"
 #include <iostream>
 
+//Instance initialization
+CharacterOnlineScreen* CharacterOnlineScreen::m_instance = nullptr;
 
 //Returns the only instance of this class
-CharacterOnlineScreen& CharacterOnlineScreen::instance(){
-    static CharacterOnlineScreen instance(MenuState::getInstance());
-    return instance;
+CharacterOnlineScreen* CharacterOnlineScreen::instance(){
+    if (!m_instance){
+        m_instance = new CharacterOnlineScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

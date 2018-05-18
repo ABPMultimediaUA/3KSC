@@ -22,16 +22,20 @@
 #define MAP_SCREEN
 
 class Game;
+class EngineManager;
 
 #include "MenuScreen.hpp"
 
 class MapScreen : public MenuScreen{
     private:
         MapScreen(MenuState* p_menu);
-        Game* m_game;
+
+        static MapScreen*   m_instance;
+        Game*               m_game;
+        EngineManager*      m_engineManager;
 
     public:
-        static MapScreen& instance();
+        static MapScreen* instance();
         ~MapScreen();
 
         void select()   override;

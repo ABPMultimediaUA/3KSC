@@ -27,10 +27,16 @@
 #define k_characters    3
 #define k_players       2
 
+//Instance initialization
+CharacterLocalScreen* CharacterLocalScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-CharacterLocalScreen& CharacterLocalScreen::instance(){
-    static CharacterLocalScreen instance(MenuState::getInstance());
-    return instance;
+CharacterLocalScreen* CharacterLocalScreen::instance(){
+    if (!m_instance){
+        m_instance = new CharacterLocalScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

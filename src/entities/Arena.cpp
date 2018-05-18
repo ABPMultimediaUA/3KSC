@@ -70,10 +70,10 @@ Arena::~Arena(){
     delete[] m_players;
     m_players = nullptr;
 
-    if(m_portal){
-        delete m_portal;
-        m_portal = nullptr;
-    }
+    // if(m_portal){
+    //     delete m_portal;
+    //     m_portal = nullptr;
+    // }
 
     if(m_clock){
         delete m_clock;

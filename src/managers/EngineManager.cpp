@@ -245,6 +245,10 @@ void EngineManager::drawScene2D(){
     m_scene->draw2D();
 }
 
+void EngineManager::cleanScene(){
+    m_scene->clean();
+}
+
 float EngineManager::getFrameDeltaTime(){
     return (float)m_frameDeltaTime * 5;
 }

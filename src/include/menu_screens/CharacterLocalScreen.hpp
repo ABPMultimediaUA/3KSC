@@ -30,7 +30,8 @@ class CharacterLocalScreen : public MenuScreen{
     private:
         CharacterLocalScreen(MenuState* p_menu);
         
-        Game*           m_game;
+        static CharacterLocalScreen*    m_instance;
+        Game*                           m_game;
 
         int             m_localPlayers;
         bool            m_enabledPlayers[4];
@@ -40,7 +41,7 @@ class CharacterLocalScreen : public MenuScreen{
         void disablePlayer(int p_player);
 
     public:
-        static CharacterLocalScreen& instance();
+        static CharacterLocalScreen* instance();
         ~CharacterLocalScreen();
 
         void input();

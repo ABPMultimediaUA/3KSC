@@ -30,6 +30,9 @@
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
 
+#include "../../include/Game.hpp"
+#include "../../include/states/MenuState.hpp"
+
 #include <iostream>
 
 struct ActionMapping{
@@ -150,9 +153,10 @@ void Character::mapActions(){
     m_actions[7]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
     m_actions[8]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
     m_actions[9]    = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
-    m_actions[10]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
-    m_actions[11]   = {Action::Taunt              , &Character::tauntSound        , true      , false};
-    m_actions[12]   = {Action::Count              , 0                             , false     , false};
+    m_actions[10]   = {Action::Taunt              , &Character::tauntSound        , true      , false};
+    m_actions[11]   = {Action::Leave              , &Character::leave             , true      , false};
+    m_actions[12]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
+    m_actions[13]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
@@ -254,10 +258,14 @@ void Character::die(){
     deathSound();
     removeWings();
 
-    if(m_lives >= 0)
+    if(m_lives >= 0){
         respawn();
-    else
+    }    
+    else{
         m_arena->pleaseKill(m_playerIndex);
+        m_engineManager->cleanScene();
+        m_game->setState(new MenuState(m_game));
+    }
 
     //HUD Stuff
     //Delete when m_lives == 0
@@ -541,6 +549,13 @@ bool Character::specialAttackSide(){}
 bool Character::ultimateAttack(){}
 bool Character::tauntSound(){}
 void Character::deathSound(){}
+
+bool Character::leave(){
+    m_engineManager->cleanScene();
+    m_game->setState(new MenuState(m_game));
+
+    return false;
+}
 
 bool Character::toggleAI(){
     m_AIEnabled = !m_AIEnabled;

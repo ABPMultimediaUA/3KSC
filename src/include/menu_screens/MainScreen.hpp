@@ -27,13 +27,15 @@ class Game;
 
 class MainScreen : public MenuScreen{
     private:
-        Game*   m_game;
-
         MainScreen(MenuState* p_menu);
+
+        static MainScreen*  m_instance;
+        Game*               m_game;
+
         void hideUnselected();
 
     public:
-        static MainScreen& instance();
+        static MainScreen* instance();
         ~MainScreen();
 
         void left()     override;

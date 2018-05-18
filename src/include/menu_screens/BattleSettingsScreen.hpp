@@ -29,10 +29,11 @@ class BattleSettingsScreen : public MenuScreen{
     private:
         BattleSettingsScreen(MenuState* p_menu);
         
-        Game*                   m_game;
+        static BattleSettingsScreen*    m_instance;
+        Game*                           m_game;
 
     public:
-        static BattleSettingsScreen& instance();
+        static BattleSettingsScreen* instance();
         ~BattleSettingsScreen();
 
         void select()               override;

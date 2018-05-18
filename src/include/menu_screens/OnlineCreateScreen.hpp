@@ -27,8 +27,10 @@ class OnlineCreateScreen : public MenuScreen{
     private:
         OnlineCreateScreen(MenuState* p_menu);
 
+        static OnlineCreateScreen* m_instance;
+
     public:
-        static OnlineCreateScreen& instance();
+        static OnlineCreateScreen* instance();
         ~OnlineCreateScreen();
 
         void select()               override;

@@ -20,10 +20,16 @@
 
 #include "../include/menu_screens/OnlineJoinScreen.hpp"
 
+//Instance initialization
+OnlineJoinScreen* OnlineJoinScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-OnlineJoinScreen& OnlineJoinScreen::instance(){
-    static OnlineJoinScreen instance(MenuState::getInstance());
-    return instance;
+OnlineJoinScreen* OnlineJoinScreen::instance(){
+    if (!m_instance){
+        m_instance = new OnlineJoinScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

@@ -27,8 +27,10 @@ class OnlineModeScreen : public MenuScreen{
     private:
         OnlineModeScreen(MenuState* p_menu);
 
+        static OnlineModeScreen* m_instance;
+
     public:
-        static OnlineModeScreen& instance();
+        static OnlineModeScreen* instance();
         ~OnlineModeScreen();
 };
 

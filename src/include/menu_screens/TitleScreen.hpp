@@ -27,8 +27,10 @@ class TitleScreen : public MenuScreen{
     private:
         TitleScreen(MenuState* p_menu);
 
+        static TitleScreen* m_instance;
+
     public:
-        static TitleScreen& instance();
+        static TitleScreen* instance();
         ~TitleScreen();
         
         void select()               override;

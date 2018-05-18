@@ -21,10 +21,16 @@
 #include "../include/menu_screens/BattleSettingsScreen.hpp"
 #include "../include/Game.hpp"
 
+//Instance initialization
+BattleSettingsScreen* BattleSettingsScreen::m_instance = nullptr;
+
 //Returns the only instance of this class
-BattleSettingsScreen& BattleSettingsScreen::instance(){
-    static BattleSettingsScreen instance(MenuState::getInstance());
-    return instance;
+BattleSettingsScreen* BattleSettingsScreen::instance(){
+    if (!m_instance){
+        m_instance = new BattleSettingsScreen(MenuState::getInstance());
+    }
+
+    return m_instance;
 }
 
 //Constructor

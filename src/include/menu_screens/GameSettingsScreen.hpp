@@ -29,14 +29,15 @@ class GameSettingsScreen : public MenuScreen{
     private:
         GameSettingsScreen(MenuState* p_menu);
         
-        Game*                   m_game;
+        static GameSettingsScreen*  m_instance;
+        Game*                       m_game;
 
-        int                     m_volBGM;
-        int                     m_volFX;
-        int                     m_volVoices;
+        int                         m_volBGM;
+        int                         m_volFX;
+        int                         m_volVoices;
 
     public:
-        static GameSettingsScreen& instance();
+        static GameSettingsScreen* instance();
         ~GameSettingsScreen();
 
         void select()               override;

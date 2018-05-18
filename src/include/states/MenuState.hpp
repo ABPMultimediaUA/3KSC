@@ -28,7 +28,7 @@ struct ScreenMapping;
 
 #include "State.hpp"
 #include "../extra/Screens.hpp"
-// #include <SFML/Graphics.hpp>
+#include <vector>
 
 class MenuState : public State{
     friend class MenuScreen;
@@ -43,10 +43,10 @@ class MenuState : public State{
     friend class OnlineModeScreen;
 
     private:
-        static MenuState*   m_instance;
-        EngineManager*      m_engineManager;
-        MenuScreen*         m_screens[(int) Screen::Count];
-        MenuScreen*         m_currentScreen;
+        static MenuState*           m_instance;
+        EngineManager*              m_engineManager;
+        std::vector<MenuScreen*>    m_screens;
+        MenuScreen*                 m_currentScreen;
 
         void initializeScreens();
 

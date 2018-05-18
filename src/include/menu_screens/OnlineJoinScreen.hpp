@@ -27,8 +27,10 @@ class OnlineJoinScreen : public MenuScreen{
     private:
         OnlineJoinScreen(MenuState* p_menu);
 
+        static OnlineJoinScreen* m_instance;
+
     public:
-        static OnlineJoinScreen& instance();
+        static OnlineJoinScreen* instance();
         ~OnlineJoinScreen();
 
         void select()               override;

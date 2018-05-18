@@ -40,6 +40,7 @@ public:
 	void 	draw();
     void    draw2D();
 	void 	release();
+    void    clean()     { m_root->removeAllChilds(); }
 	void 	remove(CESceneNode* p_node);
 
 private:
