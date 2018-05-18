@@ -38,6 +38,7 @@
 class EngineManager{
 private:
     std::vector<CESceneMesh*>   m_entityNodes;
+    std::vector<CESceneQuad*>   m_debugNodes;
     CEWindow*       m_window;
     CEScene*        m_scene;
 
@@ -90,7 +91,7 @@ public:
 
     float               getFrameDeltaTime();
     CESceneMesh*        getEntityNode(int p_id);
-    void                getEntityPosition(int p_id);
+    glm::vec3           getEntityPosition(int p_id);
 
     void                parseOBJ(const char* p_filename);
     void                compareMaxAndMin(float p_value, float &p_max, float &p_min);
@@ -108,6 +109,7 @@ public:
 
     double              getTime();
     double              getElapsedTime();
+    void                updateDebugQuad(int p_idDebug, float p_vertex[4][2]);
 
 
 };

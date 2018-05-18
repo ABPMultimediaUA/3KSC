@@ -74,6 +74,7 @@ protected:
     
     bool                    m_debugMode;
     int                     m_totalFixtures;
+    int                     m_idDebug;
     //Debug*                  m_entityDebug[4];
 };
 

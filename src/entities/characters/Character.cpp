@@ -371,7 +371,8 @@ void Character::update(){
     checkAlive();
 
     //std::cout << getX() << ", " << getY() << std::endl;
-    //m_physicsManager->getPosition(m_id);
+    //std::cout << "PHYSIC: "; m_physicsManager->getPosition(m_id);
+    //std::cout << "ENGINE: " << m_engineManager->getEntityPosition(m_id).x << " , " << m_engineManager->getEntityPosition(m_id).y << std::endl;
 }
 
 //Returns the type of the player

@@ -95,9 +95,6 @@ void ContactManager::checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2C
 	int	  t_data2 = *reinterpret_cast<int*>(fixture2->GetBody()->GetUserData());
 	
 	if(t_data1 == 0 && (t_data2 == 1 || t_data2 == 2)){
-		//std::cout << "PLAYER ID: " << t_data1 << std::endl;
-		//std::cout << "OTHER  ID: " << t_data2 << std::endl;
-
         b2Fixture* otherFixture 	= fixture1;
         b2Fixture* playerFixture 	= fixture2;
 
@@ -106,21 +103,14 @@ void ContactManager::checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2C
 
 		int numPoints = p_oldManifold->pointCount;
 		for(int i = 0; i < numPoints; i++){			
-			b2Vec2 pointVelPlatform	= otherBody->GetLinearVelocityFromWorldPoint(p_oldManifold->points[i].localPoint);
-			b2Vec2 pointVelOther	= playerBody->GetLinearVelocityFromWorldPoint(p_oldManifold->points[i].localPoint);
-			b2Vec2 relativeVel		= otherBody->GetLocalVector(pointVelOther - pointVelPlatform);
+			b2Vec2 relativeVel		= playerBody->GetLinearVelocity();
+			std::cout << "Vel: " << relativeVel.y << std::endl;
 
-			//std::cout << "Vel: " << relativeVel.y << std::endl;
-
-			if(relativeVel.y < 0)
-				return; 	//Point in the platform
-			else if(relativeVel.y < 3){
-				b2Vec2 relativePoint = otherBody->GetLocalPoint(p_oldManifold->points[i].localPoint);
-				//std::cout << relativePoint.y << std::endl;
-				float platformFaceY = 0.5f;
-				if(relativePoint.y > (platformFaceY - 0.1))
-					return;		
-			}
+			if(relativeVel.y < 5.5)
+				return;
+			/*else if(relativeVel.y < 5.5){
+				return;
+			}*/
 		}
 		p_contact->SetEnabled(false);
 	}

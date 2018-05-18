@@ -109,7 +109,8 @@ public:
     void                    resetVelocity(int p_idBody);
     void                    dash(int p_idBody, int t_side);
 
-    void                    createBodyDebug(int p_idBody);
+    int                     createBodyDebug(int p_idBody);
+    void                    updateBodyDebug(int p_idBody, int p_idDebug);
 
 };
 
