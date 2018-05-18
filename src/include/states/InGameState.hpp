@@ -59,7 +59,7 @@ class InGameState : public State{
         void    nextState();
         void    createArena(const char* p_fileCgm);
 
-        void    calculateFPS();
+        void    calculateFPS(double t_time);
 
 };
 
