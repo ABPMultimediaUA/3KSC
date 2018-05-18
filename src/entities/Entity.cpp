@@ -53,16 +53,15 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
     moveTo(p_position);
 
-    m_debugMode = false;
+    m_debugMode = true;
     switch(p_type){
         case 0:
-            m_debugMode = true;
             m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
             break;
 
         case 1:
             m_engineManager->parseOBJ(p_modelURL);
-            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position);
+            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, m_debugMode);
             break;
 
         case 2:
@@ -87,15 +86,11 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 }
 
 Entity::~Entity(){
+    if(m_debugMode)
+        m_engineManager->deleteDebug(m_idDebug);
+    
     m_engineManager->deleteEntity(m_id);
     m_physicsManager->destroyBody(m_id);
-
-    /*for(int i = 0; i < m_totalFixtures; i++){
-        if(m_entityDebug[i]){
-            delete m_entityDebug[i];
-            m_entityDebug[i] = nullptr;
-        }
-    }*/
 }
 
 void Entity::updatePosition(){
@@ -108,9 +103,6 @@ void Entity::updatePosition(){
     //Set to the entity the new position of the body
     m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
     m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
-
-    //float t_vertex[][2] = {{m_position[0]+0.5,m_position[1]+0.5},{m_position[0]+0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[0]-0.5},{m_position[0]-0.5,m_position[1]+0.5}};
-    //m_engineManager->createDebugQuad(t_vertex);
 
     m_engineManager->moveEntity(this);
 }
@@ -179,7 +171,6 @@ float Entity::getVX(){
 void Entity::setVX(float x){
     m_physicsManager->move(getId(), x, 0);
 }
-
 
 float Entity::getY(){
     return m_physicsManager->getBody(m_id)->GetPosition().y;

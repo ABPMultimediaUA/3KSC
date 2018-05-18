@@ -72,7 +72,7 @@ public:
     //void                    createPhysicBoxPlayer(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    setPlayerSensor(int p_id, Character* p_character);
     //void                    createPhysicBoxObject(int* p_id, float p_position[3], float p_dimX, float p_dimY);
-    void                    createPhysicBoxPlatform(int* p_id, float p_position[3]);
+    void                    createPhysicBoxPlatform(int* p_id, float p_position[3], bool p_debugMode = false);
     void                    createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY);
     void                    addDataToPortal(Portal* p_portal);
 

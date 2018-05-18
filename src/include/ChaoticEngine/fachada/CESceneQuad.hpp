@@ -19,9 +19,14 @@ public:
 
 	void	updatePositions(float p_vertex[4][2]) { m_quad->updatePositions(p_vertex);	}
 
+	CESceneNode* getTopNode()	{ return m_nodeTranslate; }
+
+
 private:
 	CEQuad*			m_quad;
 	CETransform*	m_translate;
+
+	CESceneNode*	m_nodeTranslate;
 
 };
 
