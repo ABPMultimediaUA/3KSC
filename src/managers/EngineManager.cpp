@@ -235,10 +235,10 @@ void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
 void EngineManager::moveEntity(Entity* p_entity){
     float* t_position = p_entity->getPosition();
     if(p_entity->getType() == 0){
-        m_animationNodes[p_entity->getModelId()]->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
+        m_animationNodes[p_entity->getModelId()]->setAbsolutePosition(t_position[0], t_position[1], t_position[2]);
     }
     else{
-        m_entityNodes[p_entity->getId()]->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
+        m_entityNodes[p_entity->getId()]->setAbsolutePosition(t_position[0], t_position[1], t_position[2]);
     }
 }
 
