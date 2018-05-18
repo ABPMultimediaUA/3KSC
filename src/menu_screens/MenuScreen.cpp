@@ -93,7 +93,7 @@ void MenuScreen::createFromFile(const char* p_url){
 
             CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
             t_sprite->setAbsolutePosition(-t_x, -t_y, 0);
-            std::cout << "Posición CESprite: " << t_sprite->getPosition().x << " " << t_sprite->getPosition().y << std::endl;
+            
             MenuNode* t_node        = new MenuNode(t_sprite); 
             m_nodes.push_back(t_node);
             m_sprites.push_back(t_sprite);
@@ -169,9 +169,7 @@ void MenuScreen::createFromFile(const char* p_url){
         }
     }
 
-    m_selectedNode = m_nodes[0];     
-    
-    if (m_selector) std::cout << "(x,y) seleccionado: " << m_nodes[0]->element->getPosition().x << " " << m_nodes[0]->element->getPosition().y << std::endl;
+    m_selectedNode = m_nodes[0];
 }
 
 //Shows all elements in the screen
@@ -275,7 +273,7 @@ void MenuScreen::up(){
     }
 }
 
-void MenuScreen::down(){    
+void MenuScreen::down(){
     if (m_selectedNode && m_selectedNode->down){
         m_selectedNode = m_selectedNode->down;
     }

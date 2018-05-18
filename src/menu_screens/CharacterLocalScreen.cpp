@@ -77,6 +77,8 @@ void CharacterLocalScreen::input(){
 void CharacterLocalScreen::update(){
     //Call to default update for navigation purposes
     MenuScreen::update();
+    // // std::cout << "POS:" << m_sprites[0]->getPosition().x << " , " << m_sprites[0]->getPosition().y << std::endl;
+    
 }
 
 

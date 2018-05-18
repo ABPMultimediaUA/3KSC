@@ -40,6 +40,8 @@ class GameSettingsScreen : public MenuScreen{
         static GameSettingsScreen* instance();
         ~GameSettingsScreen();
 
+        void update()               override;
+
         void select()               override;
 };
 

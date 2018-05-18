@@ -41,12 +41,19 @@ MapScreen::MapScreen(MenuState* p_menu)
     m_engineManager = &EngineManager::instance();
 
     createFromFile("assets/UI/menu_screens/Map.cgs");
-    m_selector->setAbsolutePosition(-384, m_selectedNode->element->getPosition().y, 0);
 }
 
 //Destructor
 MapScreen::~MapScreen(){
     std::cout << "~MapScreen" << std::endl;
+}
+
+void MapScreen::update(){
+    MenuScreen::update();
+
+    if(m_selector){
+        m_selector->setAbsolutePosition(384, m_selectedNode->element->getPosition().y, 0);
+    }
 }
 
 

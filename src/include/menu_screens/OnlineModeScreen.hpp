@@ -32,6 +32,8 @@ class OnlineModeScreen : public MenuScreen{
     public:
         static OnlineModeScreen* instance();
         ~OnlineModeScreen();
+
+        void update()   override;
 };
 
 #endif

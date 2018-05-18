@@ -36,6 +36,8 @@ class BattleSettingsScreen : public MenuScreen{
         static BattleSettingsScreen* instance();
         ~BattleSettingsScreen();
 
+        void update()   override;
+
         void select()               override;
 };
 

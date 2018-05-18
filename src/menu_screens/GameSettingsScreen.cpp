@@ -40,12 +40,16 @@ GameSettingsScreen::GameSettingsScreen(MenuState* p_menu)
     m_game              = Game::getInstance();
 
     createFromFile("assets/UI/menu_screens/GameSettings.cgs");
-    m_selector->setAbsolutePosition(483, m_selectedNode->element->getPosition().y, 0);
 }
 
 //Destructor
 GameSettingsScreen::~GameSettingsScreen(){
     std::cout << "~GameSettingsScreen" << std::endl;
+}
+
+void GameSettingsScreen::update(){
+    MenuScreen::update();
+    m_selector->setAbsolutePosition(483, m_selectedNode->element->getPosition().y, 0);
 }
 
 

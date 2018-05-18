@@ -111,7 +111,7 @@ void InGameState::update(){
     }
     //m_engineManager->updateParticleSystem();
 
-    calculateFPS(t_time);
+    // calculateFPS(t_time);
 }
 
 void InGameState::calculateFPS(double t_time){

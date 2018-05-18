@@ -38,6 +38,8 @@ class MapScreen : public MenuScreen{
         static MapScreen* instance();
         ~MapScreen();
 
+        void update()   override;
+
         void select()   override;
         void save()     override;
 };

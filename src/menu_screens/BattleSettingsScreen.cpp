@@ -47,6 +47,11 @@ BattleSettingsScreen::~BattleSettingsScreen(){
     std::cout << "~BattleSettingsScreen" << std::endl;
 }
 
+void BattleSettingsScreen::update(){
+    MenuScreen::update();
+    m_selector->setAbsolutePosition(483, m_selectedNode->element->getPosition().y, 0);
+}
+
 
 
 
