@@ -308,3 +308,5 @@ void MenuScreen::save(){
 void MenuScreen::settings(){
     m_menu->setScreen(m_settings);
 }
+
+void MenuScreen::toggleNPC(){}

@@ -136,16 +136,17 @@ void MenuState::initializeScreens(){
 //Initializes actions mapping
 void MenuState::mapActions(){
     m_actions = new MenuActionMapping[(int) MenuAction::Count + 1];
-                      //Action                //Function                  //onlyOnce  //Enabled
-    m_actions[0]    = {MenuAction::Up       , &MenuScreen::up           , true      , false};
-    m_actions[1]    = {MenuAction::Down     , &MenuScreen::down         , true      , false};
-    m_actions[2]    = {MenuAction::Left     , &MenuScreen::left         , true      , false};
-    m_actions[3]    = {MenuAction::Right    , &MenuScreen::right        , true      , false};
-    m_actions[4]    = {MenuAction::Select   , &MenuScreen::select       , true      , false};
-    m_actions[5]    = {MenuAction::Back     , &MenuScreen::back         , true      , false};
-    m_actions[6]    = {MenuAction::Save     , &MenuScreen::save         , true      , false};
-    m_actions[7]    = {MenuAction::Settings , &MenuScreen::settings     , true      , false};
-    m_actions[8]    = {MenuAction::Count    , nullptr                   , false     , false};
+                      //Action                    //Function                  //onlyOnce  //Enabled
+    m_actions[0]    = {MenuAction::Up           , &MenuScreen::up           , true      , false};
+    m_actions[1]    = {MenuAction::Down         , &MenuScreen::down         , true      , false};
+    m_actions[2]    = {MenuAction::Left         , &MenuScreen::left         , true      , false};
+    m_actions[3]    = {MenuAction::Right        , &MenuScreen::right        , true      , false};
+    m_actions[4]    = {MenuAction::Select       , &MenuScreen::select       , true      , false};
+    m_actions[5]    = {MenuAction::Back         , &MenuScreen::back         , true      , false};
+    m_actions[6]    = {MenuAction::Save         , &MenuScreen::save         , true      , false};
+    m_actions[7]    = {MenuAction::Settings     , &MenuScreen::settings     , true      , false};
+    m_actions[8]    = {MenuAction::ToggleNPC    , &MenuScreen::toggleNPC    , true      , false};
+    m_actions[9]    = {MenuAction::Count        , nullptr                   , false     , false};
 }
 
 //Initializes actions mapping

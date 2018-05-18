@@ -109,3 +109,9 @@ void CESprite::getLast(){
     if(m_currentFrame < 0)
         m_currentFrame = m_totalFrames;
 }
+
+void CESprite::setFrame(int p_frame){
+    if (p_frame >= 0 && p_frame < m_totalFrames){
+        m_currentFrame = p_frame;
+    }
+}

@@ -33,21 +33,29 @@ class CharacterLocalScreen : public MenuScreen{
         static CharacterLocalScreen*    m_instance;
         Game*                           m_game;
 
-        int             m_localPlayers;
-        bool            m_enabledPlayers[4];
+        bool            m_joystickConnected;    
+        int             m_nowChoosing;          //Current player choosing
+        int             m_chosen[2];            //Chosen characters
+        bool            m_NPC[2];               //Playable or NPC
 
-        void chooseCharacter(int p_player, int p_character);
-        void enablePlayer(int p_player, bool p_playable = true);
-        void disablePlayer(int p_player);
+        void init();
+        void chooseCharacter();
+        void colorizeBackground();
+        void colorizeBorder();
 
     public:
         static CharacterLocalScreen* instance();
         ~CharacterLocalScreen();
 
-        void input();
-        void update();
+        void input()        override;
+        void update()       override;
 
-        void select()               override;
+        void left()         override;
+        void right()        override;
+        void select()       override;
+        void back()         override;
+        void save()         override;
+        void toggleNPC()    override;
 };
 
 #endif

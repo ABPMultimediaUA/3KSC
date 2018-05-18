@@ -30,6 +30,7 @@
         Back,
         Save,
         Settings,
+        ToggleNPC,
 
         Count
     };

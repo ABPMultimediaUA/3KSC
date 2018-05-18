@@ -14,6 +14,7 @@ t   0   assets/UI/menu_screens/CharacterSelect/AI.png
 t   0   assets/UI/menu_screens/CharacterSelect/PlupAI.png
 t   0   assets/UI/menu_screens/CharacterSelect/SparkyAI.png
 t   0   assets/UI/menu_screens/CharacterSelect/RandomAI.png
+
 t   1   assets/UI/menu_screens/CharacterSelect/PlupP2.png
 t   1   assets/UI/menu_screens/CharacterSelect/SparkyP2.png
 t   1   assets/UI/menu_screens/CharacterSelect/RandomP2.png
@@ -22,6 +23,9 @@ t   1   assets/UI/menu_screens/CharacterSelect/PlupAI.png
 t   1   assets/UI/menu_screens/CharacterSelect/SparkyAI.png
 t   1   assets/UI/menu_screens/CharacterSelect/RandomAI.png
 t   1   assets/UI/menu_screens/CharacterSelect/PlayerUnknown.png
+
+t   2   assets/UI/menu_screens/CharacterSelect/BorderAI.png
+t   3   assets/UI/menu_screens/CharacterSelect/BorderAI.png
 
 # hl, vl and tl are used to link nodes horizontally, vertically and with their targets
 

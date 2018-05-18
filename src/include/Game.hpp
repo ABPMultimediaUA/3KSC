@@ -48,7 +48,7 @@ class Game{
         int             m_volVoices;
 
         //Character settings
-        bool            m_enabledPlayers[2];
+        bool            m_NPC[2];
         int             m_chosenPlayers[2];
 
         //Battle settings
@@ -77,7 +77,7 @@ class Game{
         int         getVolFX()                      { return m_volFX; }
         int         getVolVoices()                  { return m_volVoices; }
 
-        bool        isPlayerEnabled(int p_player)   { return m_enabledPlayers[p_player]; }
+        bool        isNPC(int p_player)             { return m_NPC[p_player]; }
         int         getChosenPlayer(int p_player)   { return m_chosenPlayers[p_player]; }
 
         int         getRounds()                     { return m_rounds; }
@@ -93,8 +93,8 @@ class Game{
         void        setVolFX(int p_vol)             { m_volFX = p_vol; }
         void        setVolVoices(int p_vol)         { m_volVoices = p_vol; }
 
-        void        setPlayerEnabled(int p_player, bool p_enabled = true)   { m_enabledPlayers[p_player] = p_enabled; }
-        void        setChosenPlayer(int p_player, int p_character)          { m_chosenPlayers[p_player] = p_character; }
+        void        setPlayerNPC(int p_player, bool p_NPC = true)   { m_NPC[p_player] = p_NPC; }
+        void        setChosenPlayer(int p_player, int p_character)  { m_chosenPlayers[p_player] = p_character; }
         
         void        setRounds(int p_rounds)         { m_rounds = p_rounds; }
         void        setLives(int p_lives)           { m_lives = p_lives; }

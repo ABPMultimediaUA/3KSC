@@ -32,8 +32,11 @@ public:
 	void 	setHeight(float p_height)	{   m_sprite->setHeight(p_height);  }
     bool    getVisible()                { return m_sprite->getVisible();    }
     void    setVisible(bool p_visible)  { m_sprite->setVisible(p_visible);  }
+    void    toggleVisible()             { m_sprite->toggleVisible();        }
 
-	void 	addTexture(const char* p_urlSource) { m_sprite->loadResource(p_urlSource); }
+	void 	addTexture(const char* p_urlSource) { m_sprite->loadResource(p_urlSource);  }
+    int     getTexture()                        { return m_sprite->getFrame();          }
+    void    setTexture(int p_index)             { m_sprite->setFrame(p_index);          }
 
 private:
 	CESprite*		m_sprite;

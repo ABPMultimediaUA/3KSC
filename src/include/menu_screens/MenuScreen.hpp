@@ -99,6 +99,7 @@ class MenuScreen{
         virtual void back();
         virtual void save();
         virtual void settings();
+        virtual void toggleNPC();
 };
 
 #endif

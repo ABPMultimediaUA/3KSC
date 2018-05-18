@@ -146,6 +146,7 @@ int InputManager::getMouseY(){
 
 //Checks if controller with index p_index is connected
 bool InputManager::isConnected(int p_joystick){
+    sf::Joystick::update();
     return sf::Joystick::isConnected(p_joystick);
 }
 
@@ -291,6 +292,7 @@ void InputManager::menuInputJoystick(){
     m_menuActions[(int) MenuAction::Back]       = isButtonPressed(0, Button::B);
     m_menuActions[(int) MenuAction::Save]       = isButtonPressed(0, Button::Start);
     m_menuActions[(int) MenuAction::Settings]   = isButtonPressed(0, Button::Y);
+    m_menuActions[(int) MenuAction::ToggleNPC]  = isButtonPressed(0, Button::X);
 }
 
 //Updates menu actions (Keyboard input)
@@ -305,6 +307,7 @@ void InputManager::menuInputKeyboard(){
     m_menuActions[(int) MenuAction::Back]       = isKeyPressed(Key::Escape);
     m_menuActions[(int) MenuAction::Save]       = isKeyPressed(Key::Return);
     m_menuActions[(int) MenuAction::Settings]   = isKeyPressed(Key::Tab);
+    m_menuActions[(int) MenuAction::ToggleNPC]  = isKeyPressed(Key::A);
 }
 
 //Updates menu actions (for online players)

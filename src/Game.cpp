@@ -52,8 +52,8 @@ Game::Game(){
     m_volVoices         = 20;
 
     for (int i = 0; i < 4; i++){
-        m_enabledPlayers[i] = false;
-        m_chosenPlayers[i]  = 6;
+        m_NPC[i]            = false;
+        m_chosenPlayers[i]  = 0;
     }
 
     m_rounds            = 2;

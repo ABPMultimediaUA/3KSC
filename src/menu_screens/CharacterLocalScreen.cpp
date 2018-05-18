@@ -43,7 +43,13 @@ CharacterLocalScreen* CharacterLocalScreen::instance(){
 CharacterLocalScreen::CharacterLocalScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
     m_game              = Game::getInstance();
+
     createFromFile("assets/UI/menu_screens/CharacterSelect.cgs");
+    
+    m_joystickConnected = m_inputManager->isConnected(0);
+
+    //Simulates initial character choosing
+    init();
 }
 
 //Destructor
@@ -51,34 +57,72 @@ CharacterLocalScreen::~CharacterLocalScreen(){
     std::cout << "~CharacterLocalScreen" << std::endl;
 }
 
-//Chooses a character for a player
-void CharacterLocalScreen::chooseCharacter(int p_player, int p_character){
-    
+void CharacterLocalScreen::init(){
+    //P1 (Random, playable)
+    m_nowChoosing   = 0;
+    m_chosen[0]     = 2;
+    m_NPC[0]        = false;
+    m_game->setPlayerNPC(0, false);
+    chooseCharacter();
+
+    //P2 (Random, NPC only if no joysticks connected)
+    m_nowChoosing   = 1;
+    m_chosen[1]     = 2;
+    m_NPC[1]        = false;
+
+    if (!m_joystickConnected){
+        m_NPC[1] = true;
+        colorizeBackground();
+        colorizeBorder();
+        m_game->setPlayerNPC(1, true);
+    }
+    else{
+        m_game->setPlayerNPC(1, false);
+    }
+
+    chooseCharacter();
+
+    //Return control to user, focused in P1
+    m_nowChoosing = 0;
 }
 
-//Enables a player
-void CharacterLocalScreen::enablePlayer(int p_player, bool p_playable){
-    
+//Shows the face and name of the chosen character
+void CharacterLocalScreen::chooseCharacter(){
+    //If NPC, select the texture index + 4
+    int t_NPCExtra = (m_NPC[m_nowChoosing] ? 4 : 0);
+
+    m_sprites[m_nowChoosing]->setTexture(m_chosen[m_nowChoosing] + 1 + t_NPCExtra);  
+    m_game->setChosenPlayer(m_nowChoosing, m_chosen[m_nowChoosing]);    
 }
 
-//Disables a player
-void CharacterLocalScreen::disablePlayer(int p_player){
-    
+//Puts a rectangle around the player choosing character
+void CharacterLocalScreen::colorizeBackground(){
+    //Go foward or backwards in textures vector
+    int t_factor = (m_NPC[m_nowChoosing] ? 1 : -1);
+
+    m_sprites[m_nowChoosing]->setTexture(m_sprites[m_nowChoosing]->getTexture() + (4 * t_factor));
+}
+
+//Changes the color of the focus rectangle
+void CharacterLocalScreen::colorizeBorder(){
+    m_sprites[m_nowChoosing + 2]->setTexture((int) m_NPC[m_nowChoosing]);
 }
 
 //Handles the user inputs for the screen
 void CharacterLocalScreen::input(){
     //Call to default input for navigation purposes
     MenuScreen::input();
-
 }
 
 //Updates the state of the screen
 void CharacterLocalScreen::update(){
+    //Put rectangle around the player who's choosing a character
+    m_sprites[2]->setVisible(m_nowChoosing == 0);
+    m_sprites[3]->setVisible(m_nowChoosing == 1);
+    
     //Call to default update for navigation purposes
     MenuScreen::update();
-    // // std::cout << "POS:" << m_sprites[0]->getPosition().x << " , " << m_sprites[0]->getPosition().y << std::endl;
-    
+
 }
 
 
@@ -91,8 +135,44 @@ void CharacterLocalScreen::update(){
 
 
 /* ****************************** ACTIONS ****************************** */
+void CharacterLocalScreen::left(){
+    if (m_chosen[m_nowChoosing] > 0)    { m_chosen[m_nowChoosing]--;                    }
+    else                                { m_chosen[m_nowChoosing] = k_characters - 1;   }
+    
+    chooseCharacter();
+    
+}
+
+void CharacterLocalScreen::right(){
+    if (m_chosen[m_nowChoosing] < k_characters - 1) { m_chosen[m_nowChoosing]++;    }
+    else                                            { m_chosen[m_nowChoosing] = 0;  }
+    
+    chooseCharacter();
+    m_game->setChosenPlayer(m_nowChoosing, m_chosen[m_nowChoosing]);
+}
+
 void CharacterLocalScreen::select(){
     save();
 }
 
-//Create override save method (don't save until everyone chooses)
+void CharacterLocalScreen::back(){
+    if (m_nowChoosing == 1) { m_nowChoosing = 0;    }
+    else                    { MenuScreen::back();   }
+}
+
+void CharacterLocalScreen::save(){
+    if (m_nowChoosing == 0) { m_nowChoosing = 1;    }
+    else                    { MenuScreen::save();   }
+}
+
+void CharacterLocalScreen::toggleNPC(){
+    //If there's no joystick, P2 must be AI
+    if (m_nowChoosing == 0 || m_joystickConnected){
+        m_NPC[m_nowChoosing] = !m_NPC[m_nowChoosing];
+
+        colorizeBackground();
+        colorizeBorder();
+
+        m_game->setPlayerNPC(m_nowChoosing, m_NPC[m_nowChoosing]);
+    }
+}
