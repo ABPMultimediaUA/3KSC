@@ -579,7 +579,7 @@ int PhysicsManager::createBodyDebug(int p_idBody){
                     b2Vec2 t_verts = t_polyShape->GetVertex(i);
                     t_vertex[i][0] = t_verts.x + t_bodyPositionX;
                     t_vertex[i][1] = t_verts.y + t_bodyPositionY;
-                    std::cout << t_vertex[i][0] << " , " << t_vertex[i][1] << std::endl;
+                    //std::cout << t_vertex[i][0] << " , " << t_vertex[i][1] << std::endl;
                 }
         }
         //std::cout << "++++++++++++++" << std::endl;
