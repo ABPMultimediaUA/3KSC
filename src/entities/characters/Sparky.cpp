@@ -29,7 +29,7 @@
 #include "../../include/managers/InputManager.hpp"
 #include <iostream>
 
-Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 150, 70, 65.f, "assets/models/characters/sparky/sparky.obj", p_online){
+Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 150, 70, 65.f, "assets/models/characters/sparky/sparky_animations.anim", p_online){
     m_type               = 4;
     
     m_jumpingDuration    = 0.10;

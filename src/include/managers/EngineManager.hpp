@@ -82,12 +82,13 @@ public:
     void                createPointLight(float p_lightPosition[3], float p_lightAtenuation);
 
     void                deleteEntity(int p_id);
-    int                 loadAnimation(float p_position[3], float p_scale[3], const char* p_modelURL);
+    int                 loadAnimations(float p_position[3], float p_scale[3], const char* p_modelURL);
     void                changeAnimation(int p_animation, int p_newAnimation);
     int                 load3DModel(float p_position[3], float p_scale[3], const char* p_modelURL);
     void                loadSkybox(const char* p_skyboxURLs[6], float t_scale); 
     void                moveEntity(Entity* p_entity);
     void                setRotation(int p_id, float p_degrees);
+    void                setAnimRotation(int p_id, float p_degrees);
     void                scale(int p_id, float p_scale[3]);
     
     void                drawScene();

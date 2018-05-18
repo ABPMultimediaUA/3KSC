@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/manuel/Documentos/Modelos/Sparky/marta/Sparky/tex_sparky.png
+map_Kd tex_sparky.png
 
 newmtl metralleta:wire_166166166
 Ns 31.372549

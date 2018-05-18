@@ -25,9 +25,8 @@ bool CEResourceAnimation::loadFile(const char* p_name){
     while(std::getline(t_file, t_line)){
         if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
             continue;
-
+        t_line.erase(t_line.find_last_not_of(" \n\r\t")+1);
         t_path = t_line.c_str();
-        //t_mesh = static_cast<CEResourceMesh*>(t_manager->getResource(t_path));
         t_mesh = (CEResourceMesh*)&t_manager->getResource(t_path);
         if(t_mesh != NULL)
         	m_meshes.push_back(t_mesh);

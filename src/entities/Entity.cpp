@@ -47,11 +47,11 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
         m_position[i] = p_position[i];
         m_lastPosition[i] = p_position[i];
     }
-    
-    /*if(p_type == 0)
-        m_modelId = m_engineManager->loadAnimation(p_position, t_scale, p_modelURL);
-    else*/
-        m_modelId = m_engineManager->load3DModel(p_position, t_scale, p_modelURL);
+    m_type = p_type;
+    if(p_type == 0)
+        m_modelId = m_engineManager->loadAnimations(p_position, t_scale, p_modelURL);
+    else
+        m_id = m_engineManager->load3DModel(p_position, t_scale, p_modelURL);
     
     moveTo(p_position);
 
@@ -157,6 +157,10 @@ int Entity::getId(){
     return m_id;
 }
 
+int Entity::getModelId(){
+    return m_modelId;
+}
+
 float* Entity::getElapsedPosition(){
     m_elapsed[0] = m_position[0] - m_lastPosition[0];
     m_elapsed[1] = m_position[1] - m_lastPosition[1];
@@ -195,7 +199,10 @@ int Entity::getEntityCount(){
 }
 
 void Entity::rotate(float p_degrees){
-    m_engineManager->setRotation(this->getId(), p_degrees);
+    if(m_type == 0)
+        m_engineManager->setRotation(this->getModelId(), p_degrees);
+    else
+        m_engineManager->setRotation(this->getId(), p_degrees);
 }
 
 void Entity::setX(float p_position){

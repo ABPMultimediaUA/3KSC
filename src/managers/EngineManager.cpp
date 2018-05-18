@@ -163,32 +163,31 @@ float EngineManager::updateFrameDeltaTime(float p_delta){
 }
 
 void EngineManager::deleteEntity(int p_id){
-    //std::cout << "IMPLEMENTAR DELETE EN MESH EN NUETRO MOTOR" << std::endl;
     //m_entityNodes.at(p_id)->remove();
     m_scene->remove(m_entityNodes.at(p_id)->getTopNode());
 }
 
 //Loads animations of 3D models
-int EngineManager::loadAnimation(float p_position[3], float p_scale[3], const char* p_modelURL){
+int EngineManager::loadAnimations(float p_position[3], float p_scale[3], const char* p_modelURL){
 
     std::ifstream t_file(p_modelURL);
     std::string t_line;
     const char* t_path;
+    std::cout << "cargando animaciones de: " << p_modelURL << std::endl;
     CESceneAnimation* t_animation = NULL;
 
     while(std::getline(t_file, t_line)){
         if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
             continue;
-
         t_path = t_line.c_str();
         if(t_animation == NULL){
             t_animation = m_scene->createAnimatedMesh(t_path);
+            t_animation->changeCurrentAnimation(0);
         }
         else{
             t_animation->loadAnimation(t_path);
         }
     }
-
     if(t_animation){
         t_animation->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
         t_animation->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
@@ -228,11 +227,22 @@ void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
 
 void EngineManager::moveEntity(Entity* p_entity){
     float* t_position = p_entity->getPosition();
-    m_entityNodes.at(p_entity->getId())->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
+    if(p_entity->getType() == 0){
+        m_entityNodes[p_entity->getModelId()]->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
+    }
+    else{
+        m_entityNodes[p_entity->getId()]->setAbsolutePosition(-t_position[0], t_position[1], t_position[2]);
+    }
 }
 
 void EngineManager::setRotation(int p_id, float p_degrees){
     CESceneMesh* t_node  = m_entityNodes.at(p_id);
+    
+    t_node->setAbsoluteRotation(0.0f, p_degrees, 0.0f);
+}
+
+void EngineManager::setAnimRotation(int p_id, float p_degrees){
+    CESceneAnimation* t_node  = m_animationNodes[p_id];
     
     t_node->setAbsoluteRotation(0.0f, p_degrees, 0.0f);
 }
@@ -334,12 +344,12 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
     m_VertexZ.push_back(p_maxZ);
 
     
-    std::cout <<
+    /*std::cout <<
         "Objeto: " << m_totalVertex << "\n" <<
         "PosMin: " << p_minX << "," << p_minY << "," << p_minZ << "\n" <<
         "PosMax: " << p_maxX << "," << p_maxY << "," << p_maxZ << "\n" <<
         "---------------------------------\n";
-    
+    */
 }
 
 void EngineManager::createDebugQuad(float p_vertex[4][2]){
