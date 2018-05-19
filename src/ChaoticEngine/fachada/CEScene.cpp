@@ -116,8 +116,8 @@ CESceneBillboard* CEScene::createBillboard(const char* p_path, float p_width, fl
 	return CEbillboard;
 }
 
-CESceneParticleSystem* CEScene::createParticleSystem(const char* p_path, int p_amount, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode){
-	CESceneParticleSystem* CEemitter = new CESceneParticleSystem(m_root, p_path, p_amount, p_velocity, p_life, p_minAngle, p_maxAngle, p_explode,m_shaderProgram->getShaderProgram(3));
+CESceneParticleSystem* CEScene::createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode, float p_systemLife){
+	CESceneParticleSystem* CEemitter = new CESceneParticleSystem(m_root, p_path, p_amount, p_x, p_y,p_velocity, p_life, p_minAngle, p_maxAngle, p_explode, p_systemLife,m_shaderProgram->getShaderProgram(3));
 
 	return CEemitter;
 }

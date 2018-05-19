@@ -324,12 +324,32 @@ void EngineManager::createSprite(const char* p_url, float p_width, float p_heigh
     CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_width, p_height);
 }
 
-void EngineManager::createParticleSystem(const char* p_path, int p_amount, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode){
-    m_system = m_scene->createParticleSystem(p_path, p_amount, p_velocity, p_life, p_minAngle, p_maxAngle, p_explode);
+int EngineManager::createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife){
+    CESceneParticleSystem* t_system = m_scene->createParticleSystem(p_path, p_amount, p_x, p_y, p_velocity, p_life, p_minAngle, p_maxAngle, p_explode, p_systemLife);
+    m_systems.push_back(t_system);
+    // particlePosition(m_systems.size()-1, 10, 10, 1);
+    //     std::cout<<"creando"<<std::endl;
+    return m_systems.size()-1;
+
+}
+
+CESceneParticleSystem* EngineManager::getParticleSystem(int p_id)
+{
+    return m_systems.at(p_id);
 }
 
 void EngineManager::updateParticleSystem(){
-    m_system->update();
+    for (unsigned i=0; i< m_systems.size(); ++i)
+    {
+        m_systems[i]->update();
+    }
+}
+
+void EngineManager::deleteParticleSystem(){
+    for (unsigned i=0; i< m_systems.size(); ++i)
+    {
+        m_systems[i]->update();
+    }
 }
 
 double EngineManager::getTime(){
@@ -338,4 +358,9 @@ double EngineManager::getTime(){
 
 double EngineManager::getElapsedTime(){
     return m_window->getElapsedTime();
+}
+
+void EngineManager::particlePosition(int p_id, int p_x, int p_y, int p_z)
+{
+    getParticleSystem(p_id)->setPosition(p_x, p_y, p_z);
 }

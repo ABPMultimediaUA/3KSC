@@ -54,6 +54,8 @@ private:
     Projectile*     m_ultimateBullet;
 
     int             m_ultimateAmmo;
+
+    int             m_system;
     
     void    updatePunch();
     void    updateUltimate();

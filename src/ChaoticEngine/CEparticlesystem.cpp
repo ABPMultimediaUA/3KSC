@@ -7,8 +7,8 @@
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 #define PI 3.14159265
 
-CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, GLfloat p_velocity,
-    GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, GLuint p_shaderProgram) : CEEntity(){
+CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity,
+    GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife, GLuint p_shaderProgram) : CEEntity(){
     m_shaderProgram     = p_shaderProgram;
     m_amount            = p_amount;
     m_newParticles      = 1; //??
@@ -20,6 +20,7 @@ CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, GLfloat p_v
     m_explode           = p_explode;
     m_lifeVariation     = 0.001;
     m_velocityVariation = 0.6;
+    m_systemLife        = p_systemLife;
 
     loadResource(p_path);
     init();
@@ -62,13 +63,14 @@ void CEParticleSystem::init(){
     for(GLuint i = 0; i < m_amount; i++)
     {
         m_particles.push_back(Particle());
-        respawnParticle(m_particles[i]);
     }
     m_lifeVariation = 0.5; //after first particles
 }
 
+
 //Render all particles
 void CEParticleSystem::beginDraw(){
+    
     glUseProgram(m_shaderProgram);
     glm::mat4 t_projection = glm::ortho(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
     m_MVP = t_projection * m_modelMatrix;
@@ -98,12 +100,14 @@ void CEParticleSystem::endDraw(){}
 
 void CEParticleSystem::update(GLfloat dt){
     //Add new particles 
+
     for(GLuint i = 0; i < m_newParticles; i++){
         int unusedParticle = firstUnusedParticle();
         if(unusedParticle == -1) break;
         respawnParticle(m_particles[unusedParticle]);
     }
 
+    m_systemLife -= dt;
     //Update all particles
     for(GLuint i = 0; i < m_amount; i++){
         Particle &p = m_particles[i];
@@ -118,8 +122,8 @@ void CEParticleSystem::update(GLfloat dt){
 //Stores the index of the last particle used (for quick access to next dead particle)
 int lastUsedParticle = 0;
 int CEParticleSystem::firstUnusedParticle(){
-    if(m_explode)
-        return -1;
+    if(m_explode && m_systemLife < 0)
+         return -1;
     //First search from last used particle, this will usually return almost instantly
     for(int i = lastUsedParticle; i < m_amount; i++){
         if(m_particles[i].Life <= 0.0f){
