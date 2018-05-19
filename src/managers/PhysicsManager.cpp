@@ -92,6 +92,12 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
             t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
             break;
 
+        case Box::Bullet:
+            t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
+            t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
+            t_body->SetGravityScale(0);
+            break;
+
         case Box::Other:
             t_fixtureDef->filter.categoryBits = CATEGORY_ITEM;
             t_fixtureDef->filter.maskBits     = CATEGORY_PLAYER | CATEGORY_GROUND;
