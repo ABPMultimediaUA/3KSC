@@ -42,17 +42,19 @@
 Arena* Arena::m_instance = 0;
 
 Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entity(p_position, p_scale, p_modelURL, 1){
-    m_currentItems    = 0;
-    //m_items         = new Item*[m_maxItemsOnScreen];
-    m_instance        = this;
-    m_offsetSpawnTime = 7.5;
-    m_nextSpawnTime   = m_inputManager->getMasterClock() + m_offsetSpawnTime;
-    m_playerCount     = 0;
-    m_players         = new Character*[4];
-    m_usedItems       = 0;
-    m_spawningPortalTime    = 10;
-    m_portalClock           = new sf::Clock();
-    m_portalState           = false;
+    m_currentItems      = 0;
+    //m_items           = new Item*[m_maxItemsOnScreen];
+    m_instance          = this;
+    m_offsetSpawnTime   = 7.5;
+    m_nextSpawnTime     = m_inputManager->getMasterClock() + m_offsetSpawnTime;
+    m_playerCount       = 0;
+    m_players           = new Character*[4];
+    m_usedItems         = 0;
+
+    m_portalDuration    = 0.75;
+    m_portalOffsetTime  = 10;
+    m_portalSpawnTime   = m_inputManager->getMasterClock() + m_portalOffsetTime;
+    m_portalSpawned     = false;
 
     m_musicIntensity[0] = 0.8;
     m_musicIntensity[1] = 0.6;
@@ -72,16 +74,6 @@ Arena::~Arena(){
     if(m_portal){
         delete m_portal;
         m_portal = nullptr;
-    }
-
-    if(m_clock){
-        delete m_clock;
-        m_clock = nullptr;
-    }
-
-    if(m_portalClock){
-        delete m_portalClock;
-        m_portalClock = nullptr;
     }
 }
 
@@ -121,9 +113,9 @@ void Arena::catchItem(int p_owner, float p_where[3]){
     //Check if there's an item here and use it
     for (int i = 0; i < m_items.size(); i++){
         //X axis
-        if(p_where[0] >= m_items.at(i)->getX() - 5 && p_where[0] <= m_items.at(i)->getX() + 5){
+        if(p_where[0] >= m_items.at(i)->getX() - 1 && p_where[0] <= m_items.at(i)->getX() + 1){
             //Y axis
-            if(p_where[1] >= m_items.at(i)->getY() - 10 && p_where[1] <= m_items.at(i)->getY() + 10){
+            if(p_where[1] >= m_items.at(i)->getY() - 1 && p_where[1] <= m_items.at(i)->getY() + 1){
                 //Use the item
                 m_items.at(i)->setOwner(p_owner);
                 m_items.at(i)->use();
@@ -173,18 +165,16 @@ void Arena::update(float p_delta){
 
     if(!m_soundManager->isPlaying("fos_ambient"))
         m_soundManager->playSound("fos_ambient");
-    if(m_portalState)
+    if(m_portalSpawned)
         m_portal->update(p_delta);
 
     portalSpawner();
 }
 
 void Arena::portalSpawner(){
-    if(m_portalState)
-        m_portalClock->restart();
-    float t_time = m_portalClock->getElapsedTime().asSeconds();
-    if(t_time > m_spawningPortalTime){
-        m_portalClock->restart();
+    float t_time = m_inputManager->getMasterClock();
+
+    if(!m_portalSpawned && t_time > m_portalSpawnTime){
         spawnPortal();
     }
 }
@@ -204,13 +194,15 @@ void Arena::spawnPortal(){
     std::cout<<"portal spawned"<<std::endl;
     float positionPortal[3] = {0, 0.5, 0};
     m_portal = new Portal(positionPortal);
-    m_portalState = true;
+    m_portalSpawned = true;
 }
 
 void Arena::hidePortal(){
+    m_portalSpawnTime   = m_inputManager->getMasterClock() + m_portalOffsetTime;
+
     delete m_portal;
     m_portal = nullptr;
-    m_portalState = false;
+    m_portalSpawned = false;
 }
 
 void Arena::onlineUpdate(){
@@ -250,7 +242,7 @@ void Arena::pleaseKill(int p_playerIndex){
 }
 
 bool Arena::portalIsActive(){
-    return m_portalState;
+    return m_portalSpawned;
 }
 
 float* Arena::getPortalPosition(){

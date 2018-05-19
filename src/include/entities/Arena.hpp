@@ -28,16 +28,8 @@ class PhysicsManager;
 class Item;
 
 #include "characters/Character.hpp"
-#include <SFML/System/Clock.hpp>
 #include "../include/entities/items/Portal.hpp"
 #include <Box2D/Common/b2Math.h>
-//#include "Skybox.hpp"
-//#include "Texture.hpp"
-//#include "WaterLily.hpp"
-//#include "Branch.hpp"
-//#include "Platform.hpp"
-//#include "GravityZone.hpp"
-
 
 class Arena : public Entity {
 public:
@@ -100,10 +92,12 @@ private:
     float               m_spawnItemRange[3];
 
     bool                m_online = false;
-    sf::Clock*          m_clock;
 
-    bool                m_portalState;
-    sf::Clock*          m_portalClock;
+    bool                m_portalSpawned;
+    float               m_portalDuration;
+    float               m_portalTime;
+    float               m_portalOffsetTime;
+    float               m_portalSpawnTime;
 
     float               m_musicIntensity[4];
 };

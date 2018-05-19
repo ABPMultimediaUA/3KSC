@@ -69,7 +69,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
 
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1.75, 1.5);
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1.4, 1.5);
             break;
 
         case 4:
