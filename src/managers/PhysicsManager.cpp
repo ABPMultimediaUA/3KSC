@@ -458,7 +458,11 @@ void PhysicsManager::shockwaveBox(int p_idBody, float p_damage, float p_knockPow
     t_fixtureDef->shape = t_polygonShape;
 
     //Attach the shape to the body
-    t_body->CreateFixture(t_fixtureDef);
+    b2Fixture* t_fixture = t_body->CreateFixture(t_fixtureDef);
+
+    /* DEBUG FOR THE COLLISION*/
+    //int t_debufId = createBodyDebug(t_fixture);
+    //m_engineManager->deleteDebug(t_debugId);
 
     //Check collision with the other players
     checkCollisionMultiple(t_body, p_body, p_damage, p_knockPower);
@@ -500,9 +504,13 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage,
     t_fixtureDef->shape = t_polygonShape;
 
     //Attach the shape to the body
-    t_body->CreateFixture(t_fixtureDef);
+    b2Fixture* t_fixture = t_body->CreateFixture(t_fixtureDef);
     //Check collision with the other players
     checkCollisionMultiple(t_body, p_body, p_damage, p_knockPower);
+    
+    /* DEBUG FOR THE COLLISION*/
+    //int t_debufId = createBodyDebug(t_fixture);
+    //m_engineManager->deleteDebug(t_debugId);
     
     m_world->DestroyBody(t_body);
 }
@@ -549,6 +557,26 @@ void PhysicsManager::dash(int p_idBody, int t_side){
 
     t_body->SetLinearDamping(-0.5);
     t_body->SetLinearVelocity(b2Vec2(7.5*t_side,0));
+}
+
+int PhysicsManager::createBodyDebug(b2Fixture* p_fixture){
+    float t_vertex[4][2];
+    b2Shape* t_shape = p_fixture->GetShape();
+    if(t_shape->GetType() == b2Shape::e_polygon){
+        b2Body* t_body = p_fixture->GetBody();
+        b2PolygonShape* t_polyShape = static_cast<b2PolygonShape*>(t_shape);
+    
+        int t_bodyPositionX = t_body->GetPosition().x;
+        int t_bodyPositionY = t_body->GetPosition().y;
+
+        int t_count = t_polyShape->GetVertexCount();
+        for(int i = 0; i < t_count; i++){
+            b2Vec2 t_verts = t_polyShape->GetVertex(i);
+            t_vertex[i][0] = -(t_verts.x + t_bodyPositionX);
+            t_vertex[i][1] = t_verts.y + t_bodyPositionY;
+        }
+    }
+    return m_engineManager->createDebugQuad(t_vertex);
 }
 
 int PhysicsManager::createBodyDebug(int p_idBody){

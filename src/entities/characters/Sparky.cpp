@@ -137,7 +137,7 @@ bool Sparky::specialAttackSide(){
 }
 
 bool Sparky::ultimateAttack(){
-   // m_ultimateCharged = true;
+    // m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
         m_ultimateAmmo = 10;

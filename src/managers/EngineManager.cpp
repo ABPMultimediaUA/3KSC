@@ -177,8 +177,6 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
     if(t_mesh){
         t_mesh->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
         t_mesh->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
-        //std::cout << "Posit: " << p_position[0] << ", " << p_position[1] << ", " << p_position[2] << std::endl;
-        //std::cout << "Scale: " << p_scale[0] << ", " << p_scale[1] << ", " << p_scale[2] << std::endl;
 
         m_entityNodes.push_back(t_mesh);
     }
@@ -186,14 +184,9 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
     CESceneSkybox* t_skybox = m_scene->createSkybox(p_skyboxURLs, t_scale);
-
-    //m_entityNodes.push_back(t_skybox);
 }
 
 void EngineManager::moveEntity(Entity* p_entity){
-    //float* t_position = p_entity->getPosition();
-    //m_entityNodes[p_entity->getId()]->setAbsolutePosition(t_position[0], t_position[1], t_position[2]);
-    
     float* t_position = p_entity->getElapsedPosition();
     m_entityNodes[p_entity->getId()]->setPosition(t_position[0], t_position[1], t_position[2]);
 }
@@ -212,7 +205,6 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    //m_window->processInput();
     m_window->clear(0.5f, 0.0f, 0.0f, 1.0f);
 
     m_scene->draw();
