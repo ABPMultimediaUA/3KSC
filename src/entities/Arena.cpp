@@ -93,7 +93,7 @@ void Arena::spawnPlayers(){
     m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
     //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
     //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
-
+    m_engineManager->createParticleSystem("assets/fire.png", 50, 10, 2, -20, 20, false);
     std::cout << "PLAYER COUNT " << m_playerCount << std::endl;
     m_soundManager->modifyParameter("fos_music", m_musicIntensity[m_playerCount], "Intensity", false);
 }
@@ -175,7 +175,7 @@ void Arena::update(float p_delta){
         m_soundManager->playSound("fos_ambient");
     if(m_portalState)
         m_portal->update(p_delta);
-
+    m_engineManager->updateParticleSystem();
     portalSpawner();
 }
 

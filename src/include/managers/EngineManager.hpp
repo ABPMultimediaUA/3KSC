@@ -105,7 +105,7 @@ public:
 
     int                 createDebugQuad(float p_vertex[4][2]);
     void                createSprite(const char* p_url, float p_width, float p_height);
-    void                createParticleSystem(const char* p_url, int p_amount);
+    void                createParticleSystem(const char* p_path, int p_amount, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode);
     void                updateParticleSystem();
 
     double              getTime();

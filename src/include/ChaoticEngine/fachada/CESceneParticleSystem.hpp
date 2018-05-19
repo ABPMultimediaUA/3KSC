@@ -11,7 +11,8 @@
 
 class CESceneParticleSystem{
 public:
-	CESceneParticleSystem(CESceneNode* p_parent, const char* p_path, int p_amount, GLuint p_shaderProgram);
+	CESceneParticleSystem(CESceneNode* p_parent, const char* p_path, int p_amount, GLfloat p_velocity, 
+    GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode,GLuint p_shaderProgram); 
 	~CESceneParticleSystem();
 
 	void	processInput(GLFWwindow* p_window);

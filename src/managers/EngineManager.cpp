@@ -324,8 +324,8 @@ void EngineManager::createSprite(const char* p_url, float p_width, float p_heigh
     CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_width, p_height);
 }
 
-void EngineManager::createParticleSystem(const char* p_url, int p_amount){
-    m_system = m_scene->createParticleSystem(p_url, p_amount);
+void EngineManager::createParticleSystem(const char* p_path, int p_amount, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode){
+    m_system = m_scene->createParticleSystem(p_path, p_amount, p_velocity, p_life, p_minAngle, p_maxAngle, p_explode);
 }
 
 void EngineManager::updateParticleSystem(){

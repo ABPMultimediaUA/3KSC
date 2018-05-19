@@ -4,11 +4,12 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneParticleSystem.hpp"
 
-CESceneParticleSystem::CESceneParticleSystem(CESceneNode* p_parent, const char* p_path, int p_amount, GLuint p_shaderProgram){
+CESceneParticleSystem::CESceneParticleSystem(CESceneNode* p_parent, const char* p_path, int p_amount, GLfloat p_velocity,
+		GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, GLuint p_shaderProgram){
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();
 	m_translate = new CETransform(); 
-	m_system 	= new CEParticleSystem(p_path, p_amount, p_shaderProgram);
+	m_system 	= new CEParticleSystem(p_path, p_amount, p_velocity, p_life, p_minAngle, p_maxAngle, p_explode, p_shaderProgram);
 	
 	m_rotate->rotate(0, 0, 0);
 	m_scale->scale(1, 1, 1);
