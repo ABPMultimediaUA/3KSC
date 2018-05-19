@@ -84,10 +84,10 @@ void AIPlup::update(){
     /*************************************************************/
     /*   Check if an enemy is in range for a special attack up   */
     /*************************************************************/
-    float t_PLUP_special_up_wideness = 10.0;
-    float t_PLUP_special_up_min_height = 40.0;
-    float t_PLUP_special_side_wideness = 200.0;
-    float t_PLUP_special_side_heighth = 20.0;
+    float t_PLUP_special_up_wideness = 1.0;
+    float t_PLUP_special_up_min_height = 4.0;
+    float t_PLUP_special_side_wideness = 20.0;
+    float t_PLUP_special_side_height = 2.0;
 
     for (int i = 0; i < t_playerCount; i++){
         //Plup shall not take himself into consideration
@@ -123,7 +123,7 @@ void AIPlup::update(){
         /*  Check if an enemy is in range for a special attack side  */
         /*************************************************************/
         if(abs(target_x-self_x) < t_PLUP_special_side_wideness){
-            if(abs(target_y-self_y) < t_PLUP_special_side_heighth){
+            if(abs(target_y-self_y) < t_PLUP_special_side_height){
                 float t_closestBodyFraction = m_physicsManager->RaycastBetween(t_p1, t_p2);
 
                 // Check wether there is an object between the 2 characters
@@ -200,7 +200,7 @@ void AIPlup::update(){
     }
 }
 
-// Builds the tree containing Plup's AI. Builds all the trues to a node. If no trues are left, builds the falses and repeats itself with the next node
+// Builds the tree containing Plup's AI. Links every node afterwards.
 void AIPlup::buildTree(){
     // Read JSON
     std::ifstream t_file("assets/ai/ai_tree_plup.json");
@@ -216,7 +216,7 @@ void AIPlup::buildTree(){
     int t_action;
     int t_true_child;
     int t_false_child;
-    m_nodes = new AINode*[53];
+    m_nodes = new AINode*[55];
     
     // Iterate through every node
     for(int i=0; nodes[i]!=nullptr; i++){
