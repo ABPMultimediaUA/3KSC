@@ -43,7 +43,7 @@ private:
     CEScene*        m_scene;
 
     CESceneCamera*          m_cameraNode;
-    CESceneParticleSystem*  m_system;
+    std::vector<CESceneParticleSystem*> m_systems;
 
     unsigned int    m_nowTime;
     float           m_frameDeltaTime;
@@ -105,13 +105,15 @@ public:
 
     int                 createDebugQuad(float p_vertex[4][2]);
     void                createSprite(const char* p_url, float p_width, float p_height);
-    void                createParticleSystem(const char* p_url, int p_amount);
+    int                 createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode, float p_systemLife);
+    CESceneParticleSystem* getParticleSystem(int p_id);
     void                updateParticleSystem();
+    void                deleteParticleSystem();
 
     double              getTime();
     double              getElapsedTime();
     void                updateDebugQuad(int p_idDebug, float p_vertex[4][2]);
-
+    void                particlePosition(int p_id, int p_x, int p_y, int p_z);
 
 };
 
