@@ -69,11 +69,13 @@ class MenuScreen{
         Screen              m_settings;        //Settings screen for that menu
 
 
-        void createFromFile(const char* p_url);
+
+        void    createFromFile(const char* p_url);
+        int     getSelectedIndex(); 
         
         //Return the width/height of the viewport. Optionally, they can return part of it.
-        float getViewportWidth(float p_factor = 1);
-        float getViewportHeight(float p_factor = 1);
+        float   getViewportWidth(float p_factor = 1);
+        float   getViewportHeight(float p_factor = 1);
         
         void createControlsBar(int p_variant);
 

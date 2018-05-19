@@ -11,7 +11,7 @@ hl  1   2
 hl  2   0
 
 tl  0   CharacterLocal
-tl  1   OnlineMode
+# tl  1   OnlineMode
 
 # ps, ns and ss are used to link screen with previous, next and settings screen
 ps  Title

@@ -39,12 +39,24 @@ BattleSettingsScreen::BattleSettingsScreen(MenuState* p_menu)
     m_game              = Game::getInstance();
 
     createFromFile("assets/UI/menu_screens/BattleSettings.cgs");
-    m_selector->setAbsolutePosition(483, m_selectedNode->element->getPosition().y, 0);
+    init();
 }
 
 //Destructor
 BattleSettingsScreen::~BattleSettingsScreen(){
     std::cout << "~BattleSettingsScreen" << std::endl;
+}
+
+//Initializes battle settings
+void BattleSettingsScreen::init(){
+    m_battleSettings[0] = 2;
+    m_battleSettings[1] = 3;
+
+    m_sprites[2]->setTexture(2);
+    m_sprites[3]->setTexture(3);
+
+    m_game->setBattleSettings(0, 2);
+    m_game->setBattleSettings(1, 3);
 }
 
 void BattleSettingsScreen::update(){
@@ -62,6 +74,26 @@ void BattleSettingsScreen::update(){
 
 
 /* ****************************** ACTIONS ****************************** */
+void BattleSettingsScreen::left(){
+    int t_index = getSelectedIndex();
+
+    if (m_battleSettings[t_index] > 0){
+        int t_value = --m_battleSettings[t_index];
+        m_sprites[t_index + 2]->setTexture(t_value);
+        m_game->setBattleSettings(t_index, t_value);
+    }
+}
+
+void BattleSettingsScreen::right(){
+    int t_index = getSelectedIndex();
+
+    if (m_battleSettings[t_index] < 6){
+        int t_value = ++m_battleSettings[t_index]; 
+        m_sprites[t_index + 2]->setTexture(t_value);
+        m_game->setBattleSettings(t_index, t_value);
+    }
+}
+
 void BattleSettingsScreen::select(){
     save();
 }

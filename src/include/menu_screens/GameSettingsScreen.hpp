@@ -32,9 +32,9 @@ class GameSettingsScreen : public MenuScreen{
         static GameSettingsScreen*  m_instance;
         Game*                       m_game;
 
-        int                         m_volBGM;
-        int                         m_volFX;
-        int                         m_volVoices;
+        int                         m_volumes[3];   //[BGM, FX, VOICES]
+
+        void                        init();
 
     public:
         static GameSettingsScreen* instance();
@@ -42,6 +42,8 @@ class GameSettingsScreen : public MenuScreen{
 
         void update()               override;
 
+        void left()                 override;
+        void right()                override;
         void select()               override;
 };
 

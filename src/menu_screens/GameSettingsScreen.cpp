@@ -40,11 +40,27 @@ GameSettingsScreen::GameSettingsScreen(MenuState* p_menu)
     m_game              = Game::getInstance();
 
     createFromFile("assets/UI/menu_screens/GameSettings.cgs");
+    init();
 }
 
 //Destructor
 GameSettingsScreen::~GameSettingsScreen(){
     std::cout << "~GameSettingsScreen" << std::endl;
+} 
+
+//Initializes settings
+void GameSettingsScreen::init(){
+    m_volumes[0] = 20;
+    m_volumes[1] = 20;
+    m_volumes[2] = 20;
+
+    m_sprites[3]->setTexture(20);
+    m_sprites[4]->setTexture(20);
+    m_sprites[5]->setTexture(20);
+
+    m_game->setVolume(0, 20);
+    m_game->setVolume(1, 20);
+    m_game->setVolume(2, 20);
 }
 
 void GameSettingsScreen::update(){
@@ -62,6 +78,26 @@ void GameSettingsScreen::update(){
 
 
 /* ****************************** ACTIONS ****************************** */
+void GameSettingsScreen::left(){
+    int t_index = getSelectedIndex();
+
+    if (m_volumes[t_index] > 0){
+        int t_volume = --m_volumes[t_index];
+        m_sprites[t_index + 3]->setTexture(t_volume);
+        m_game->setVolume(t_index, t_volume);
+    }
+}
+
+void GameSettingsScreen::right(){
+    int t_index = getSelectedIndex();
+
+    if (m_volumes[t_index] < 20){
+        int t_volume = ++m_volumes[t_index]; 
+        m_sprites[t_index + 3]->setTexture(t_volume);
+        m_game->setVolume(t_index, t_volume);
+    }
+}
+
 void GameSettingsScreen::select(){
     save();
 }

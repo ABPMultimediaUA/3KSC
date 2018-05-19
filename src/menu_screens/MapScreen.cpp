@@ -67,11 +67,11 @@ void MapScreen::update(){
 
 /* ****************************** ACTIONS ****************************** */
 void MapScreen::select(){
-    m_engineManager->cleanScene();    
-    m_game->nextState();
+    save();
 }
 
 void MapScreen::save(){
+    m_game->setMap(getSelectedIndex());
     m_engineManager->cleanScene();        
     m_game->nextState();
 }

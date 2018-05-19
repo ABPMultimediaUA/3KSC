@@ -25,6 +25,8 @@ class EngineManager;
 class InputManager;
 class State;
 
+#include <iostream>
+
 class Game{
     private:
         static Game*    m_instance;
@@ -43,18 +45,16 @@ class Game{
         bool            m_fullscreen;
 
         //Audio settings
-        int             m_volBGM;
-        int             m_volFX;
-        int             m_volVoices;
+        int             m_volumes[3];           //[BGM, FX, VOICES]
 
         //Character settings
         bool            m_NPC[2];
         int             m_chosenPlayers[2];
 
         //Battle settings
-        int             m_rounds;
-        int             m_lives;
-        int             m_timeLimit;
+        int             m_battleSettings[2];    //[ROUNDS, LIVES]     
+
+        //Map
         int             m_map;
 
     public:
@@ -73,33 +73,30 @@ class Game{
         int         getResolutionPreset()           { return m_resolutionPreset; }
         bool        isFullscreen()                  { return m_fullscreen; }
 
-        int         getVolBGM()                     { return m_volBGM; }
-        int         getVolFX()                      { return m_volFX; }
-        int         getVolVoices()                  { return m_volVoices; }
+        int         getVolBGM()                     { return m_volumes[0];  }
+        int         getVolFX()                      { return m_volumes[1];  }
+        int         getVolVoices()                  { return m_volumes[2];  }
 
         bool        isNPC(int p_player)             { return m_NPC[p_player]; }
         int         getChosenPlayer(int p_player)   { return m_chosenPlayers[p_player]; }
 
-        int         getRounds()                     { return m_rounds; }
-        int         getLives()                      { return m_lives; }
-        int         getTimeLimit()                  { return m_timeLimit; }
-        int         getMap()                        { return m_map; }
+        int         getRounds()                     { return m_battleSettings[0];   }
+        int         getLives()                      { return m_battleSettings[0];   }
+
+        int         getMap()                        { return m_map;                 }
         
         //Setters
         void        setResolutionPreset(int p_preset);
         void        changeVideoMode();
 
-        void        setVolBGM(int p_vol)            { m_volBGM = p_vol; }
-        void        setVolFX(int p_vol)             { m_volFX = p_vol; }
-        void        setVolVoices(int p_vol)         { m_volVoices = p_vol; }
+        void        setVolume(int p_type, int p_vol)    { m_volumes[p_type] = p_vol;    std::cout << "Volume" << p_type << ": " << m_volumes[p_type] << std::endl;}
 
-        void        setPlayerNPC(int p_player, bool p_NPC = true)   { m_NPC[p_player] = p_NPC; }
-        void        setChosenPlayer(int p_player, int p_character)  { m_chosenPlayers[p_player] = p_character; }
+        void        setPlayerNPC(int p_player, bool p_NPC = true)   { m_NPC[p_player] = p_NPC; std::cout << "NPC" << p_player << ": " << m_NPC[p_player] << std::endl;}
+        void        setChosenPlayer(int p_player, int p_character)  { m_chosenPlayers[p_player] = p_character; std::cout << "Chosen" << p_player << ": " << m_chosenPlayers[p_player] << std::endl;}
         
-        void        setRounds(int p_rounds)         { m_rounds = p_rounds; }
-        void        setLives(int p_lives)           { m_lives = p_lives; }
-        void        setTimeLimit(int p_timeLimit)   { m_timeLimit = p_timeLimit; }
-        void        setMap(int p_map)               { m_map = p_map; }        
+        void        setBattleSettings(int p_type, int p_value)      { m_battleSettings[p_type] = p_value;   std::cout << "BattleSettings" << p_type << ": " << m_battleSettings[p_type] << std::endl;}
+
+        void        setMap(int p_map)               { m_map = p_map; std::cout << "Map: " << m_map << std::endl;}        
 };
 
 #endif

@@ -47,18 +47,19 @@ Game::Game(){
     m_resolutionPreset  = 1;
     m_fullscreen        = false;
 
-    m_volBGM            = 20;
-    m_volFX             = 20;
-    m_volVoices         = 20;
+    m_volumes[0]        = 20;
+    m_volumes[1]        = 20;
+    m_volumes[2]        = 20;
 
-    for (int i = 0; i < 4; i++){
+    for (int i = 0; i < 2; i++){
         m_NPC[i]            = false;
         m_chosenPlayers[i]  = 0;
     }
 
-    m_rounds            = 2;
-    m_lives             = 3;
-    m_timeLimit         = -1;
+    m_battleSettings[0] = 2;
+    m_battleSettings[1] = 3;
+
+    m_map               = 0;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
     m_state = new MenuState(this);

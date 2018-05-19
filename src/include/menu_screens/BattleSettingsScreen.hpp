@@ -32,12 +32,18 @@ class BattleSettingsScreen : public MenuScreen{
         static BattleSettingsScreen*    m_instance;
         Game*                           m_game;
 
+        int                             m_battleSettings[2];    //[ROUNDS, LIVES]
+
+        void                            init();
+
     public:
         static BattleSettingsScreen* instance();
         ~BattleSettingsScreen();
 
         void update()   override;
 
+        void left()                 override;
+        void right()                override;
         void select()               override;
 };
 

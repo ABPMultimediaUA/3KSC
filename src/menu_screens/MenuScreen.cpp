@@ -88,11 +88,12 @@ void MenuScreen::createFromFile(const char* p_url){
             const char* t_url   = t_elements[2].c_str();
             float t_x           = strtof(t_elements[3].c_str(), nullptr);
             float t_y           = strtof(t_elements[4].c_str(), nullptr);
+            float t_z           = (t_elements.size() == 8 ? strtof(t_elements[7].c_str(), nullptr) : 0);
             float t_width       = strtof(t_elements[5].c_str(), nullptr);
             float t_height      = strtof(t_elements[6].c_str(), nullptr);
 
             CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
-            t_sprite->setAbsolutePosition(-t_x, -t_y, 0);
+            t_sprite->setAbsolutePosition(-t_x, -t_y, t_z);
             
             MenuNode* t_node        = new MenuNode(t_sprite); 
             m_nodes.push_back(t_node);
@@ -170,6 +171,16 @@ void MenuScreen::createFromFile(const char* p_url){
     }
 
     m_selectedNode = m_nodes[0];
+}
+
+int MenuScreen::getSelectedIndex(){
+    for (int i = 0; i < m_nodes.size(); i++){
+        if (m_selectedNode == m_nodes[i]){
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 //Shows all elements in the screen

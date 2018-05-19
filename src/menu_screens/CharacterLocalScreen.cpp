@@ -108,12 +108,6 @@ void CharacterLocalScreen::colorizeBorder(){
     m_sprites[m_nowChoosing + 2]->setTexture((int) m_NPC[m_nowChoosing]);
 }
 
-//Handles the user inputs for the screen
-void CharacterLocalScreen::input(){
-    //Call to default input for navigation purposes
-    MenuScreen::input();
-}
-
 //Updates the state of the screen
 void CharacterLocalScreen::update(){
     //Put rectangle around the player who's choosing a character
@@ -122,7 +116,6 @@ void CharacterLocalScreen::update(){
     
     //Call to default update for navigation purposes
     MenuScreen::update();
-
 }
 
 

@@ -46,8 +46,7 @@ class CharacterLocalScreen : public MenuScreen{
     public:
         static CharacterLocalScreen* instance();
         ~CharacterLocalScreen();
-
-        void input()        override;
+        
         void update()       override;
 
         void left()         override;
