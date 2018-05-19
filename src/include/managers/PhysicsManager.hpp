@@ -35,6 +35,7 @@ enum class Box{
     Platform,
     Item,
     Portal,
+    Bullet,
     Other
 };
 
@@ -109,6 +110,7 @@ public:
     void                    resetVelocity(int p_idBody);
     void                    dash(int p_idBody, int t_side);
 
+    int                     createBodyDebug(b2Fixture* p_fiture);
     int                     createBodyDebug(int p_idBody);
     void                    updateBodyDebug(int p_idBody, int p_idDebug);
 
