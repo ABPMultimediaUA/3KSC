@@ -98,7 +98,7 @@ void MenuScreen::createFromFile(const char* p_url){
             float t_height      = strtof(t_elements[5].c_str(), nullptr);
 
             m_screenName = m_engineManager->createSprite(t_url, t_width, t_height);
-            m_screenName->setAbsolutePosition(-t_x, -t_y, t_z);
+            m_screenName->setAbsolutePosition(t_x, -t_y, t_z);
         }
 
         //Menu nodes
@@ -111,7 +111,7 @@ void MenuScreen::createFromFile(const char* p_url){
             float t_height      = strtof(t_elements[6].c_str(), nullptr);
 
             CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
-            t_sprite->setAbsolutePosition(-t_x, -t_y, t_z);
+            t_sprite->setAbsolutePosition(t_x, -t_y, t_z);
             
             MenuNode* t_node        = new MenuNode(t_sprite); 
             m_nodes.push_back(t_node);
@@ -210,7 +210,7 @@ void MenuScreen::createFromFile(const char* p_url){
             float t_height      = strtof(t_elements[5].c_str(), nullptr);
 
             CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
-            t_sprite->setAbsolutePosition(-t_x, -t_y, t_z);
+            t_sprite->setAbsolutePosition(t_x, -t_y, t_z);
 
             m_extras.push_back(t_sprite);
         }

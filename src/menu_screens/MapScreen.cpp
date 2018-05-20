@@ -52,7 +52,7 @@ void MapScreen::update(){
     MenuScreen::update();
 
     if(m_selector){
-        m_selector->setAbsolutePosition(384, m_selectedNode->element->getPosition().y, 0);
+        m_selector->setAbsolutePosition(-384, m_selectedNode->element->getPosition().y, 0);
     }
 }
 

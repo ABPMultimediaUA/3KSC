@@ -61,7 +61,7 @@ void BattleSettingsScreen::init(){
 
 void BattleSettingsScreen::update(){
     MenuScreen::update();
-    m_selector->setAbsolutePosition(483, m_selectedNode->element->getPosition().y, 0);
+    m_selector->setAbsolutePosition(-483, m_selectedNode->element->getPosition().y, 0);
 }
 
 

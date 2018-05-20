@@ -26,11 +26,15 @@ class CEScene;
 class CESceneCamera;
 class CESceneMesh;
 class CESceneParticleSystem;
+class CEParticleSystem;
+class CESceneQuad;
 class CESceneSprite;
 
+#include "../entities/Entity.hpp"
 #include <CETypes.hpp>
 #include <vector>
-#include "../entities/Entity.hpp"
+#include <vec3.hpp>
+#include <glew.h>
 
 class EngineManager{
 private:
@@ -68,11 +72,15 @@ public:
     bool        isWindowActive();
     void        setCursorVisible(bool p_visible = true);
     bool        running();
+    void        updateFrameDeltaTime(float p_delta);
     void        swapBuffers();
     void        pollEvents();
     void        stop();
 
-
+    void        createCamera(float p_cameraPosition[3], float p_target[3]);
+    void        moveCamera(float p_posX, float p_posY, float p_posZ);
+    void        resetCamera();
+    void        updateCamera();
 
     void                createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]);
     void                createPointLight(float p_lightPosition[3], float p_lightAtenuation);
@@ -103,7 +111,7 @@ public:
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      }
 
     int                 createDebugQuad(float p_vertex[4][2]);
-    void                createSprite(const char* p_url, float p_width, float p_height);
+    CESceneSprite*      createSprite(const char* p_url, float p_width, float p_height);
     int                 createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode, float p_systemLife);
     CESceneParticleSystem* getParticleSystem(int p_id);
     void                updateParticleSystem();

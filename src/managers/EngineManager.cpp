@@ -19,6 +19,7 @@
 */
 
 #include <CE.hpp>
+#include "../include/ChaoticEngine/CEparticlesystem.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/extra/ResolutionPresets.hpp"
@@ -92,17 +93,17 @@ void EngineManager::stop(){
 }
 
 //Creates a camera
-void EngineManager::createCamera(float p_cameraPosition[3], float p_tarjet[3]){
+void EngineManager::createCamera(float p_cameraPosition[3], float p_target[3]){
     m_cameraNode = m_scene->createCamera(true);
     if(m_cameraNode){
         m_resetPosition[0] = m_cameraPosition[0] = p_cameraPosition[0];
         m_resetPosition[1] = m_cameraPosition[1] = p_cameraPosition[1];
         m_resetPosition[2] = m_cameraPosition[2] = p_cameraPosition[2];
-        m_resetPosition[3] = m_cameraPosition[3] = p_tarjet[0];
-        m_resetPosition[4] = m_cameraPosition[4] = p_tarjet[1];
-        m_resetPosition[5] = m_cameraPosition[5] = p_tarjet[2];
+        m_resetPosition[3] = m_cameraPosition[3] = p_target[0];
+        m_resetPosition[4] = m_cameraPosition[4] = p_target[1];
+        m_resetPosition[5] = m_cameraPosition[5] = p_target[2];
         m_cameraNode->setAbsolutePosition(p_cameraPosition[0],p_cameraPosition[1],p_cameraPosition[2]);
-        m_cameraNode->lookAt(p_tarjet[0],p_tarjet[1],p_tarjet[2]);
+        m_cameraNode->lookAt(p_target[0],p_target[1],p_target[2]);
     }
 }
 
@@ -184,14 +185,9 @@ void EngineManager::createPointLight(float p_lightPosition[3], float p_lightAten
     }
 }
 
-//Drops the device
-void EngineManager::stop(){
-    m_scene->release();
-    m_window->close();
-}
 
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
-float EngineManager::updateFrameDeltaTime(float p_delta){
+void EngineManager::updateFrameDeltaTime(float p_delta){
     m_frameDeltaTime = p_delta;
 }
 
