@@ -1,5 +1,8 @@
 # Battle settings screen
 
+# sn is used for screen name [SPRITE_URL X Y WIDTH HEIGHT Z_INDEX(OPTIONAL)]
+sn  assets/UI/menu_screens/BattleSettings/Name.png  0   -267    1024    128 
+
 # n is used for menu nodes [INDEX SPRITE_URL X Y WIDTH HEIGHT]
 n   0   assets/UI/menu_screens/BattleSettings/Lives.png     0    -45    900     80
 n   1   assets/UI/menu_screens/BattleSettings/Rounds.png    0     45    900     80
@@ -33,3 +36,6 @@ vl  1   0
 # ps, ns and ss are used to link screen with previous, next and settings screen
 ps  CharacterLocal
 ns  CharacterLocal
+
+# c is used for controls tutorial [TEX1 TEX2]
+c   assets/UI/menu_screens/Controls/JS_Type2.png    assets/UI/menu_screens/Controls/KB_Type2.png

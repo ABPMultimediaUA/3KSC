@@ -100,15 +100,6 @@ void MenuState::setScreen(Screen p_screen){
         m_currentScreen->hideElements();
         m_currentScreen = m_screens[(int) p_screen];
         m_currentScreen->showElements();
-
-
-        // //Hide cursor in character select
-        // if (p_screen == Screen::CharacterLocal || p_screen == Screen::CharacterOnline){
-        //     m_engineManager->setCursorVisible(false);
-        // }
-        // else{
-        //     m_engineManager->setCursorVisible();
-        // }
     }
 }
 
@@ -117,12 +108,12 @@ void MenuState::initializeScreens(){
     m_screens.push_back(TitleScreen::instance());
     m_screens.push_back(MainScreen::instance());
     m_screens.push_back(CharacterLocalScreen::instance());
-    m_screens.push_back(CharacterOnlineScreen::instance());
+    // m_screens.push_back(CharacterOnlineScreen::instance());
     m_screens.push_back(BattleSettingsScreen::instance());
     m_screens.push_back(MapScreen::instance());
-    m_screens.push_back(OnlineModeScreen::instance());
-    m_screens.push_back(OnlineCreateScreen::instance());
-    m_screens.push_back(OnlineJoinScreen::instance());
+    // m_screens.push_back(OnlineModeScreen::instance());
+    // m_screens.push_back(OnlineCreateScreen::instance());
+    // m_screens.push_back(OnlineJoinScreen::instance());
     m_screens.push_back(GameSettingsScreen::instance());
 
     for (MenuScreen* t_screen : m_screens){
@@ -156,14 +147,14 @@ void MenuState::mapScreens(){
     m_screenMaps[0]     = { "Title"             , Screen::Title             };
     m_screenMaps[1]     = { "Main"              , Screen::Main              };
     m_screenMaps[2]     = { "CharacterLocal"    , Screen::CharacterLocal    };
-    m_screenMaps[3]     = { "CharacterOnline"   , Screen::CharacterOnline   };
-    m_screenMaps[4]     = { "BattleSettings"    , Screen::BattleSettings    };
-    m_screenMaps[5]     = { "Map"               , Screen::Map               };
-    m_screenMaps[6]     = { "OnlineMode"        , Screen::OnlineMode        };
-    m_screenMaps[7]     = { "OnlineCreate"      , Screen::OnlineCreate      };
-    m_screenMaps[8]     = { "OnlineJoin"        , Screen::OnlineJoin        };
-    m_screenMaps[9]     = { "GameSettings"      , Screen::GameSettings      };
-    m_screenMaps[10]    = { ""                  , Screen::Undefined         };
+    // m_screenMaps[3]     = { "CharacterOnline"   , Screen::CharacterOnline   };
+    m_screenMaps[3]     = { "BattleSettings"    , Screen::BattleSettings    };
+    m_screenMaps[4]     = { "Map"               , Screen::Map               };
+    // m_screenMaps[6]     = { "OnlineMode"        , Screen::OnlineMode        };
+    // m_screenMaps[7]     = { "OnlineCreate"      , Screen::OnlineCreate      };
+    // m_screenMaps[8]     = { "OnlineJoin"        , Screen::OnlineJoin        };
+    m_screenMaps[5]     = { "GameSettings"      , Screen::GameSettings      };
+    m_screenMaps[6]     = { ""                  , Screen::Undefined         };
 }
 
 void MenuState::input(){

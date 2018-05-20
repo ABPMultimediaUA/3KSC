@@ -26,12 +26,12 @@
         Title = 0,
         Main,
         CharacterLocal,
-        CharacterOnline,
+        // CharacterOnline,
         BattleSettings,
         Map,
-        OnlineMode,
-        OnlineCreate,
-        OnlineJoin,
+        // OnlineMode,
+        // OnlineCreate,
+        // OnlineJoin,
         GameSettings,
 
         Count

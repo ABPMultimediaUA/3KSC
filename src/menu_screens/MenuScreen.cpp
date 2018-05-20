@@ -48,8 +48,10 @@ MenuScreen::MenuScreen(MenuState* p_menu){
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
 
+    m_screenName        = nullptr;
     m_selectedNode      = nullptr;
     m_selector          = nullptr;
+    m_controls          = nullptr;
 
     m_prev              = Screen::Undefined;
     m_next              = Screen::Undefined;
@@ -61,7 +63,9 @@ MenuScreen::~MenuScreen(){
 
     m_selectedNode  = nullptr;    
 
-    if  (m_selector)                            { delete m_selector;    m_selector = nullptr; }
+    if  (m_screenName)                          { delete m_screenName;  m_screenName = nullptr; }
+    if  (m_selector)                            { delete m_selector;    m_selector = nullptr;   }
+    if  (m_controls)                            { delete m_controls;    m_controls = nullptr;   }
     for (MenuNode* t_node : m_nodes)            { delete t_node;    }   m_nodes.clear();
     for (CESceneSprite* t_sprite : m_sprites)   { delete t_sprite;  }   m_sprites.clear();
 }
@@ -83,8 +87,21 @@ void MenuScreen::createFromFile(const char* p_url){
 
         t_tag = t_elements[0].c_str();
 
+        //Screen name
+        if (t_tag == "sn"){
+            const char* t_url   = t_elements[1].c_str();
+            float t_x           = strtof(t_elements[2].c_str(), nullptr);
+            float t_y           = strtof(t_elements[3].c_str(), nullptr);
+            float t_z           = (t_elements.size() == 7 ? strtof(t_elements[6].c_str(), nullptr) : 0);
+            float t_width       = strtof(t_elements[4].c_str(), nullptr);
+            float t_height      = strtof(t_elements[5].c_str(), nullptr);
+
+            m_screenName = m_engineManager->createSprite(t_url, t_width, t_height);
+            m_screenName->setAbsolutePosition(-t_x, -t_y, t_z);
+        }
+
         //Menu nodes
-        if (t_tag == "n"){
+        else if (t_tag == "n"){
             const char* t_url   = t_elements[2].c_str();
             float t_x           = strtof(t_elements[3].c_str(), nullptr);
             float t_y           = strtof(t_elements[4].c_str(), nullptr);
@@ -168,6 +185,19 @@ void MenuScreen::createFromFile(const char* p_url){
                 ++t_iterator;
             }
         }
+
+        //Controls tutorial
+        else if (t_tag == "c"){
+            const char* t_tex1   = t_elements[1].c_str();
+            const char* t_tex2   = t_elements[2].c_str();
+
+            m_controls = m_engineManager->createSprite(t_tex1, 1024, 60);
+            m_controls->setAbsolutePosition(0, -354, 0);
+            m_controls->addTexture(t_tex2);
+
+            //Switch to keyboard controls if no joystick connected
+            if (!m_inputManager->isConnected(0))    { m_controls->setTexture(1);    }
+        }
     }
 
     m_selectedNode = m_nodes[0];
@@ -186,21 +216,23 @@ int MenuScreen::getSelectedIndex(){
 //Shows all elements in the screen
 void MenuScreen::showElements(){
     for (CESceneSprite* t_sprite : m_sprites){
-        // std::cout << "Showing sprite" << std::endl;
         t_sprite->setVisible(true);
     }
 
-    if (m_selector) m_selector->setVisible(true);
+    if (m_screenName)   m_screenName->setVisible(true);
+    if (m_selector)     m_selector->setVisible(true);
+    if (m_controls)     m_controls->setVisible(true);
 }
 
 //Hides all elements in the screen
 void MenuScreen::hideElements(){
     for (CESceneSprite* t_sprite : m_sprites){
-        // std::cout << "Hiding sprite" << std::endl;
         t_sprite->setVisible(false);
     }
 
-    if (m_selector) m_selector->setVisible(false);
+    if (m_screenName)   m_screenName->setVisible(false);
+    if (m_selector)     m_selector->setVisible(false);
+    if (m_controls)     m_controls->setVisible(false);
 }
 
 

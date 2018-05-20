@@ -59,10 +59,12 @@ class MenuScreen{
         EngineManager*      m_engineManager;
         InputManager*       m_inputManager;
         
+        CESceneSprite*              m_screenName;
         std::vector<MenuNode*>      m_nodes;  
-        MenuNode*                   m_selectedNode;
         std::vector<CESceneSprite*> m_sprites;
+        MenuNode*                   m_selectedNode;
         CESceneSprite*              m_selector;
+        CESceneSprite*              m_controls;
 
         Screen              m_prev;             //Previous screen
         Screen              m_next;             //Next screen (save)

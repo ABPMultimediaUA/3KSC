@@ -22,10 +22,13 @@
 
 #include "../include/managers/InputManager.hpp"
 #include "../include/Game.hpp"
-#include <iostream>
 
-#define k_characters    3
-#define k_players       2
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+#define k_characters    3   //Number of different characters (RANDOM included)
+#define k_players       2   //Max number of players
 
 //Instance initialization
 CharacterLocalScreen* CharacterLocalScreen::m_instance = nullptr;
@@ -44,11 +47,8 @@ CharacterLocalScreen::CharacterLocalScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
     m_game              = Game::getInstance();
 
-    createFromFile("assets/UI/menu_screens/CharacterSelect.cgs");
-    
+    createFromFile("assets/UI/menu_screens/CharacterSelect.cgs");    
     m_joystickConnected = m_inputManager->isConnected(0);
-
-    //Simulates initial character choosing
     init();
 }
 
@@ -57,6 +57,7 @@ CharacterLocalScreen::~CharacterLocalScreen(){
     std::cout << "~CharacterLocalScreen" << std::endl;
 }
 
+//Simulates initial character choosing
 void CharacterLocalScreen::init(){
     //P1 (Random, playable)
     m_nowChoosing   = 0;
@@ -92,7 +93,21 @@ void CharacterLocalScreen::chooseCharacter(){
     int t_NPCExtra = (m_NPC[m_nowChoosing] ? 4 : 0);
 
     m_sprites[m_nowChoosing]->setTexture(m_chosen[m_nowChoosing] + 1 + t_NPCExtra);  
-    m_game->setChosenPlayer(m_nowChoosing, m_chosen[m_nowChoosing]);    
+
+    //Don't send 'random' to Game. Send an actual random character
+    int t_character = (m_chosen[m_nowChoosing] == 2 ? getRandomCharacter() : m_chosen[m_nowChoosing]);
+    m_game->setChosenPlayer(m_nowChoosing, t_character);    
+}
+
+// Returns a random character index
+// Implementation based in std::rand() reference page
+// (http://en.cppreference.com/w/cpp/numeric/random/rand)
+int CharacterLocalScreen::getRandomCharacter(){
+    //Get different random seed with current time
+    std::srand(std::time(nullptr));
+
+    // Get random in interval [0, k_characters - 2] (Last index means random itself)
+    return std::rand()%(k_characters - 1);
 }
 
 //Puts a rectangle around the player choosing character

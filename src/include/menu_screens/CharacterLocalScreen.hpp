@@ -38,10 +38,11 @@ class CharacterLocalScreen : public MenuScreen{
         int             m_chosen[2];            //Chosen characters
         bool            m_NPC[2];               //Playable or NPC
 
-        void init();
-        void chooseCharacter();
-        void colorizeBackground();
-        void colorizeBorder();
+        void    init();
+        void    chooseCharacter();
+        int     getRandomCharacter();
+        void    colorizeBackground();
+        void    colorizeBorder();
 
     public:
         static CharacterLocalScreen* instance();

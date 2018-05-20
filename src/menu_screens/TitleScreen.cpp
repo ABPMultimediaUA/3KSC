@@ -19,6 +19,7 @@
 */
 
 #include "../include/menu_screens/TitleScreen.hpp"
+#include "../include/managers/InputManager.hpp"
 
 //Instance initialization
 TitleScreen* TitleScreen::m_instance = nullptr;
@@ -36,6 +37,9 @@ TitleScreen* TitleScreen::instance(){
 TitleScreen::TitleScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
     createFromFile("assets/UI/menu_screens/Title.cgs");
+    
+    //Show 'Press ENTER' instead of 'Press START' with keyboard
+    if (!m_inputManager->isConnected(0))    { m_sprites[0]->setTexture(1);  }
 }
 
 //Destructor

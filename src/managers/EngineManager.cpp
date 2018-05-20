@@ -241,7 +241,7 @@ void EngineManager::drawScene(){
 }
 
 void EngineManager::drawScene2D(){
-    m_window->clear(0.5f, 0.8f, 0.9f, 1.0f);
+    m_window->clear(0.251f, 0.675f, 0.843f, 1.0f);
     m_scene->draw2D();
 }
 
