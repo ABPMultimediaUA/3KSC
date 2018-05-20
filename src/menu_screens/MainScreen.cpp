@@ -81,7 +81,7 @@ void MainScreen::right(){
 
 void MainScreen::select(){
     //Quit    
-    if (m_selectedNode == m_nodes[2]){
+    if (m_selectedNode == m_nodes[1]){
         m_game->quit();
     }
 

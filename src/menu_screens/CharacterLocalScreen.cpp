@@ -156,7 +156,6 @@ void CharacterLocalScreen::right(){
     else                                            { m_chosen[m_nowChoosing] = 0;  }
     
     chooseCharacter();
-    m_game->setChosenPlayer(m_nowChoosing, m_chosen[m_nowChoosing]);
 }
 
 void CharacterLocalScreen::select(){

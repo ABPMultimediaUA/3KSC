@@ -25,8 +25,6 @@ class EngineManager;
 class InputManager;
 class State;
 
-#include <iostream>
-
 class Game{
     private:
         static Game*    m_instance;
@@ -89,14 +87,14 @@ class Game{
         void        setResolutionPreset(int p_preset);
         void        changeVideoMode();
 
-        void        setVolume(int p_type, int p_vol)    { m_volumes[p_type] = p_vol;    std::cout << "Volume" << p_type << ": " << m_volumes[p_type] << std::endl;}
+        void        setVolume(int p_type, int p_vol)                { m_volumes[p_type] = p_vol;                }
 
-        void        setPlayerNPC(int p_player, bool p_NPC = true)   { m_NPC[p_player] = p_NPC; std::cout << "NPC" << p_player << ": " << m_NPC[p_player] << std::endl;}
-        void        setChosenPlayer(int p_player, int p_character)  { m_chosenPlayers[p_player] = p_character; std::cout << "Chosen" << p_player << ": " << m_chosenPlayers[p_player] << std::endl;}
+        void        setPlayerNPC(int p_player, bool p_NPC = true)   { m_NPC[p_player] = p_NPC;                  }
+        void        setChosenPlayer(int p_player, int p_character)  { m_chosenPlayers[p_player] = p_character;  }
         
-        void        setBattleSettings(int p_type, int p_value)      { m_battleSettings[p_type] = p_value;   std::cout << "BattleSettings" << p_type << ": " << m_battleSettings[p_type] << std::endl;}
+        void        setBattleSettings(int p_type, int p_value)      { m_battleSettings[p_type] = p_value;       }
 
-        void        setMap(int p_map)               { m_map = p_map; std::cout << "Map: " << m_map << std::endl;}        
+        void        setMap(int p_map)                               { m_map = p_map;                            }
 };
 
 #endif

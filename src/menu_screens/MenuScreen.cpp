@@ -68,6 +68,7 @@ MenuScreen::~MenuScreen(){
     if  (m_controls)                            { delete m_controls;    m_controls = nullptr;   }
     for (MenuNode* t_node : m_nodes)            { delete t_node;    }   m_nodes.clear();
     for (CESceneSprite* t_sprite : m_sprites)   { delete t_sprite;  }   m_sprites.clear();
+    for (CESceneSprite* t_sprite : m_extras)    { delete t_sprite;  }   m_extras.clear();
 }
 
 //Reads a CGS file and creates the screen from it
@@ -198,6 +199,21 @@ void MenuScreen::createFromFile(const char* p_url){
             //Switch to keyboard controls if no joystick connected
             if (!m_inputManager->isConnected(0))    { m_controls->setTexture(1);    }
         }
+
+        //Extra sprites
+        else if (t_tag == "x"){
+            const char* t_url   = t_elements[1].c_str();
+            float t_x           = strtof(t_elements[2].c_str(), nullptr);
+            float t_y           = strtof(t_elements[3].c_str(), nullptr);
+            float t_z           = (t_elements.size() == 7 ? strtof(t_elements[6].c_str(), nullptr) : 0);
+            float t_width       = strtof(t_elements[4].c_str(), nullptr);
+            float t_height      = strtof(t_elements[5].c_str(), nullptr);
+
+            CESceneSprite* t_sprite = m_engineManager->createSprite(t_url, t_width, t_height);
+            t_sprite->setAbsolutePosition(-t_x, -t_y, t_z);
+
+            m_extras.push_back(t_sprite);
+        }
     }
 
     m_selectedNode = m_nodes[0];
@@ -222,6 +238,10 @@ void MenuScreen::showElements(){
     if (m_screenName)   m_screenName->setVisible(true);
     if (m_selector)     m_selector->setVisible(true);
     if (m_controls)     m_controls->setVisible(true);
+
+    for (CESceneSprite* t_sprite : m_extras){
+        t_sprite->setVisible(true);
+    }
 }
 
 //Hides all elements in the screen
@@ -233,6 +253,10 @@ void MenuScreen::hideElements(){
     if (m_screenName)   m_screenName->setVisible(false);
     if (m_selector)     m_selector->setVisible(false);
     if (m_controls)     m_controls->setVisible(false);
+
+    for (CESceneSprite* t_sprite : m_extras){
+        t_sprite->setVisible(false);
+    }
 }
 
 

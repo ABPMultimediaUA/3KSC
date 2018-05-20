@@ -40,7 +40,7 @@ MapScreen::MapScreen(MenuState* p_menu)
     m_game = Game::getInstance();
     m_engineManager = &EngineManager::instance();
 
-    createFromFile("assets/UI/menu_screens/Map.cgs");
+    createFromFile("assets/UI/menu_screens/Map.cgs");    
 }
 
 //Destructor
