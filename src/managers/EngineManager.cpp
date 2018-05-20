@@ -334,13 +334,24 @@ void EngineManager::updateParticleSystem(){
     for (unsigned i=0; i< m_systems.size(); ++i)
     {
         if(m_systems[i])
+        {
             m_systems[i]->update();
+        }
+        
     }
 }
 
 void EngineManager::deleteParticleSystem(int p_id){
     m_scene->remove(m_systems[p_id]->getTopNode());
     m_systems[p_id] = nullptr;
+}
+
+void EngineManager::deleteParticleSystem(CEParticleSystem* p_system){
+    for(uint i = 0; i < m_systems.size(); i++)
+    {
+        if(m_systems[i] && m_systems[i]->getSystem() == p_system)
+           deleteParticleSystem(i);
+    }   
 }
 
 double EngineManager::getTime(){

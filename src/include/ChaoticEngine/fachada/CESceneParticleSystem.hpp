@@ -41,6 +41,8 @@ public:
     void 	setParticleLife(int p_particleLife)    {m_system->setParticleLife(p_particleLife); }
     int  	getParticleLife()  { return m_system->getParticleLife(); }
 
+	CEParticleSystem* getSystem();
+
 private:
 	CETransform*	m_rotate;
 	CETransform*	m_scale;

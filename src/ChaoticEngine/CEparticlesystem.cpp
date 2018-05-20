@@ -5,6 +5,7 @@
 #include <cmath>
 #include "../include/ChaoticEngine/CEparticlesystem.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
+#include "../include/managers/EngineManager.hpp"
 #define PI 3.14159265
 
 CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity,
@@ -82,7 +83,7 @@ void CEParticleSystem::beginDraw(){
     for(Particle particle : m_particles){
         if(particle.Life > 0.0f){
             glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
-            glUniform1f(glGetUniformLocation(m_shaderProgram, "scale"), 3);
+            glUniform1f(glGetUniformLocation(m_shaderProgram, "scale2"), 1);
             glUniform2f(glGetUniformLocation(m_shaderProgram, "offset"), particle.Position.x, particle.Position.y);
             glUniform4f(glGetUniformLocation(m_shaderProgram, "color"), particle.Color.x, particle.Color.y, particle.Color.z, particle.Color.w);
 
@@ -105,7 +106,16 @@ void CEParticleSystem::update(GLfloat dt){
 
     for(GLuint i = 0; i < m_newParticles; i++){
         int unusedParticle = firstUnusedParticle();
-        if(unusedParticle == -1) break;
+        if(unusedParticle == -1) 
+        {
+            auto  m_engineManager = &EngineManager::instance();
+            for(GLuint i = 0; i < m_amount; i++)
+            {
+                m_particles[i].Life = 0;
+            }
+            m_engineManager->deleteParticleSystem(this);
+            break;
+        }
         respawnParticle(m_particles[unusedParticle]);
     }
 
@@ -124,7 +134,9 @@ void CEParticleSystem::update(GLfloat dt){
 int lastUsedParticle = 0;
 int CEParticleSystem::firstUnusedParticle(){
     if(m_explode && m_systemLife < 0)
-         return -1;
+    {   
+        return -1;
+    }
     //First search from last used particle, this will usually return almost instantly
     for(int i = lastUsedParticle; i < m_amount; i++){
         if(m_particles[i].Life <= 0.0f){
