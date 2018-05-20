@@ -100,8 +100,8 @@ CESceneQuad* CEScene::createQuad(float p_vertex[4][2]){
 	return CEquad;	
 }
 
-CESceneSprite* CEScene::createSprite(const char* p_path, float p_width, float p_height){
-	CESceneSprite* CEsprite = new CESceneSprite(m_root, p_path, p_width, p_height, m_shaderProgram->getShaderProgram(2));
+CESceneSprite* CEScene::createSprite(const char* p_path, float p_width, float p_height, bool p_originCenter){
+	CESceneSprite* CEsprite = new CESceneSprite(m_root, p_path, p_width, p_height, m_shaderProgram->getShaderProgram(2), p_originCenter);
 
 	return CEsprite;
 }

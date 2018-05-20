@@ -346,8 +346,8 @@ void EngineManager::updateDebugQuad(int p_idDebug, float p_vertex[4][2]){
     m_debugNodes[p_idDebug]->updatePositions(p_vertex);
 }
 
-CESceneSprite* EngineManager::createSprite(const char* p_url, float p_width, float p_height){
-    return m_scene->createSprite(p_url, p_width, p_height);
+CESceneSprite* EngineManager::createSprite(const char* p_url, float p_width, float p_height, bool p_originCenter){
+    return m_scene->createSprite(p_url, p_width, p_height, p_originCenter);
 }
 
 int EngineManager::createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife){

@@ -111,7 +111,7 @@ public:
     std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      }
 
     int                 createDebugQuad(float p_vertex[4][2]);
-    CESceneSprite*      createSprite(const char* p_url, float p_width, float p_height);
+    CESceneSprite*      createSprite(const char* p_url, float p_width, float p_height, bool p_originCenter = true);
     int                 createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode, float p_systemLife);
     CESceneParticleSystem* getParticleSystem(int p_id);
     void                updateParticleSystem();
