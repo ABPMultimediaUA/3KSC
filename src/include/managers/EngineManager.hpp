@@ -31,6 +31,7 @@
 #include "../ChaoticEngine/fachada/CESceneParticleSystem.hpp"
 #include "../ChaoticEngine/fachada/CESceneSkybox.hpp"
 #include "../ChaoticEngine/fachada/CEShader.hpp"
+#include "../ChaoticEngine/CEparticlesystem.hpp"
 
 #include <vector>
 #include "../entities/Entity.hpp"
@@ -108,7 +109,8 @@ public:
     int                 createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode, float p_systemLife);
     CESceneParticleSystem* getParticleSystem(int p_id);
     void                updateParticleSystem();
-    void                deleteParticleSystem();
+    void                deleteParticleSystem(int p_id);
+    void                deleteParticleSystem(CEParticleSystem* p_system);
 
     double              getTime();
     double              getElapsedTime();

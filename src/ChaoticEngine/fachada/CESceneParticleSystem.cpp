@@ -85,3 +85,8 @@ void CESceneParticleSystem::setAbsolutePosition(float p_x, float p_y, float p_z)
 	m_translate->loadIdentity();
 	m_translate->translate(p_x, p_y, p_z);	
 }
+
+CEParticleSystem* CESceneParticleSystem::getSystem(){
+	return m_system;
+}
+
