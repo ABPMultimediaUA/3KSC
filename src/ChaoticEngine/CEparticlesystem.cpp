@@ -23,6 +23,9 @@ CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, float p_x, 
     m_velocityVariation = 0.6;
     m_systemLife        = p_systemLife;
 
+    m_newParticles = 100;
+    m_particleLife = 2.0f;
+
     loadResource(p_path);
     init();
 }
@@ -80,6 +83,12 @@ void CEParticleSystem::beginDraw(){
     glEnable (GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    m_MVP = m_projectionMatrix * m_viewMatrix * m_modelMatrix;
+    m_position = getPosition();
+
+    glEnable (GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
     for(Particle particle : m_particles){
         if(particle.Life > 0.0f){
             glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
@@ -103,7 +112,6 @@ void CEParticleSystem::endDraw(){}
 
 void CEParticleSystem::update(GLfloat dt){
     //Add new particles 
-
     for(GLuint i = 0; i < m_newParticles; i++){
         int unusedParticle = firstUnusedParticle();
         if(unusedParticle == -1) 

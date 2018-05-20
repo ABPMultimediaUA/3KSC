@@ -32,10 +32,11 @@ class AICharacter;
 #include <Client.hpp>
 
 struct ActionMapping;
+class Game;
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online = false);
+    Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online = false, bool p_NPC = false);
     ~Character();
 
     void            getRespawnPosition();
@@ -86,6 +87,7 @@ public:
     virtual bool    ultimateAttack();
     virtual bool    tauntSound();
     virtual void    deathSound();
+    bool            leave();
     bool            toggleAI();
 
     virtual int     getCurrentSnowmen();
@@ -99,6 +101,8 @@ public:
     int             getValidation();
 
 protected:
+    Game*           m_game;
+
     static int      m_playerCount;
     int             m_playerIndex;
     bool            m_NPC;

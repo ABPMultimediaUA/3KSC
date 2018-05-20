@@ -39,6 +39,13 @@ CESceneSprite::~CESceneSprite(){
 	m_scale = nullptr;
 }
 
+void CESceneSprite::processInput(GLFWwindow* p_window){
+	if(glfwGetKey(p_window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		m_sprite->getLast();
+	else if(glfwGetKey(p_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		m_sprite->getNext();
+}
+
 void CESceneSprite::setScale(float p_x, float p_y, float p_z){
 	m_scale->scale(p_x, p_y, p_z);
 }

@@ -21,18 +21,14 @@
 #ifndef ENGINE_MANAGER
 #define ENGINE_MANAGER
 
-#include "../ChaoticEngine/fachada/CEWindow.hpp"
-#include "../ChaoticEngine/fachada/CEScene.hpp"
-#include "../ChaoticEngine/fachada/CESceneCamera.hpp"
-#include "../ChaoticEngine/fachada/CESceneLight.hpp"
-#include "../ChaoticEngine/fachada/CESceneMesh.hpp"
-#include "../ChaoticEngine/fachada/CESceneQuad.hpp"
-#include "../ChaoticEngine/fachada/CESceneSprite.hpp"
-#include "../ChaoticEngine/fachada/CESceneParticleSystem.hpp"
-#include "../ChaoticEngine/fachada/CESceneSkybox.hpp"
-#include "../ChaoticEngine/fachada/CEShader.hpp"
-#include "../ChaoticEngine/CEparticlesystem.hpp"
+class CEWindow;
+class CEScene;
+class CESceneCamera;
+class CESceneMesh;
+class CESceneParticleSystem;
+class CESceneSprite;
 
+#include <CETypes.hpp>
 #include <vector>
 #include "../entities/Entity.hpp"
 
@@ -66,17 +62,17 @@ public:
     EngineManager();
     ~EngineManager();
 
-    void                createWindow(bool p_fullscreen = true);
-    bool                isWindowActive();
-    bool                running();
-    void                stop();
+    void        createWindow(int p_resolutionPreset, bool p_fullscreen = true);
+    CEPosition  getWindowPosition();
+    CESize      getWindowSize(); 
+    bool        isWindowActive();
+    void        setCursorVisible(bool p_visible = true);
+    bool        running();
+    void        swapBuffers();
+    void        pollEvents();
+    void        stop();
 
-    float               updateFrameDeltaTime(float p_delta);
 
-    void                createCamera(float p_cameraPosition[3], float p_tarjet[3]);
-    void                moveCamera(float p_posX, float p_posY, float p_posZ);
-    void                resetCamera();
-    void                updateCamera();
 
     void                createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]);
     void                createPointLight(float p_lightPosition[3], float p_lightAtenuation);
@@ -89,7 +85,9 @@ public:
     void                setRotation(int p_id, float p_degrees);
     void                scale(int p_id, float p_scale[3]);
     
-    void                drawScene();
+    void        drawScene();
+    void        drawScene2D();
+    void        cleanScene();
 
     float               getFrameDeltaTime();
     CESceneMesh*        getEntityNode(int p_id);
@@ -99,10 +97,10 @@ public:
     void                compareMaxAndMin(float p_value, float &p_max, float &p_min);
     void                pushVertex(float p_minX, float p_maxX, float p_minY, float p_maxY, float p_minZ, float p_maxZ);
 
-    int                 getTotalVertex()    {    return m_totalVertex;  };
-    std::vector<float>  getTotalVertexX()   {    return m_VertexX;      };
-    std::vector<float>  getTotalVertexY()   {    return m_VertexY;      };
-    std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      };
+    int                 getTotalVertex()    {    return m_totalVertex;  }
+    std::vector<float>  getTotalVertexX()   {    return m_VertexX;      }
+    std::vector<float>  getTotalVertexY()   {    return m_VertexY;      }
+    std::vector<float>  getTotalVertexZ()   {    return m_VertexZ;      }
 
     int                 createDebugQuad(float p_vertex[4][2]);
     void                createSprite(const char* p_url, float p_width, float p_height);

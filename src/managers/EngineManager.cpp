@@ -18,8 +18,10 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
+#include <CE.hpp>
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/extra/ResolutionPresets.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -40,10 +42,21 @@ EngineManager::EngineManager(){
 EngineManager::~EngineManager(){}
 
 //Creates the game window
-void EngineManager::createWindow(bool p_fullscreen){
-    //m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
-    m_window = new CEWindow(1024, 768, "3KSC", p_fullscreen);
+void EngineManager::createWindow(int p_resolutionPreset, bool p_fullscreen){
+    int t_width     = g_resolutionPresets[p_resolutionPreset].width,
+        t_height    = g_resolutionPresets[p_resolutionPreset].height;
+
+    m_window = new CEWindow(t_width, t_height, "3KSC", p_fullscreen);
+    // m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
     m_scene  = new CEScene();
+}
+
+CEPosition EngineManager::getWindowPosition(){
+    return m_window->getPosition();
+}
+
+CESize EngineManager::getWindowSize(){
+    return m_window->getSize();
 }
 
 bool EngineManager::isWindowActive(){
@@ -53,9 +66,29 @@ bool EngineManager::isWindowActive(){
     return false;
 }
 
+//Hides or shows the cursor
+void EngineManager::setCursorVisible(bool p_visible){
+    m_window->setCursorVisible(p_visible);
+}
+
 //Returns whether the device is running or not
 bool EngineManager::running(){
     return m_window->isOpen();
+}
+
+void EngineManager::swapBuffers(){
+    m_window->swapBuffers();
+}
+
+void EngineManager::pollEvents(){
+    m_window->pollEvents();
+}
+
+
+//Drops the device
+void EngineManager::stop(){
+    m_scene->release();
+    m_window->close();
 }
 
 //Creates a camera
@@ -205,16 +238,21 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_window->clear(0.5f, 0.0f, 0.0f, 1.0f);
-
+    m_window->clear(0.0f, 0.8f, 0.9f, 1.0f);
     m_scene->draw();
+}
 
-    m_window->swapBuffers();
-    m_window->pollEvents();
+void EngineManager::drawScene2D(){
+    m_window->clear(0.047f, 0.165f, 0.549f, 1.0f);
+    m_scene->draw2D();
+}
+
+void EngineManager::cleanScene(){
+    m_scene->clean();
 }
 
 float EngineManager::getFrameDeltaTime(){
-    return (float)m_frameDeltaTime * 5;
+    return (float)m_frameDeltaTime;
 }
 
 CESceneMesh* EngineManager::getEntityNode(int p_id){
@@ -312,8 +350,8 @@ void EngineManager::updateDebugQuad(int p_idDebug, float p_vertex[4][2]){
     m_debugNodes[p_idDebug]->updatePositions(p_vertex);
 }
 
-void EngineManager::createSprite(const char* p_url, float p_width, float p_height){
-    CESceneSprite* t_sprite = m_scene->createSprite(p_url, p_width, p_height);
+CESceneSprite* EngineManager::createSprite(const char* p_url, float p_width, float p_height){
+    return m_scene->createSprite(p_url, p_width, p_height);
 }
 
 int EngineManager::createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife){

@@ -30,6 +30,9 @@
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
 
+#include "../../include/Game.hpp"
+#include "../../include/states/MenuState.hpp"
+
 #include <iostream>
 
 struct ActionMapping{
@@ -45,13 +48,13 @@ int Character::m_playerCount = 0;
 // UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
-Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online) : Entity(p_position, 0.5f, p_modelURL){
+Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online, bool p_NPC) : Entity(p_position, 0.5f, p_modelURL){
     m_arena                 = Arena::getInstance();
     m_client                = &Client::instance();
     
     m_playerIndex           = Character::m_playerCount++;
-    m_NPC                   = m_inputManager->getInputDevice(m_playerIndex) == -2;
-    m_AI                    = nullptr;      //Each character will create it if not NPC
+    m_NPC                   = p_NPC;
+    m_AI                    = nullptr;      //Each character will create it if NPC
     m_AIEnabled             = false;
     
     m_name                  = p_name;
@@ -150,9 +153,10 @@ void Character::mapActions(){
     m_actions[7]    = {Action::SpecialAttackDown  , &Character::specialAttackDown , true      , false};
     m_actions[8]    = {Action::SpecialAttackSide  , &Character::specialAttackSide , true      , false};
     m_actions[9]    = {Action::UltimateAttack     , &Character::ultimateAttack    , true      , false};
-    m_actions[10]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
-    m_actions[11]   = {Action::Taunt              , &Character::tauntSound        , true      , false};
-    m_actions[12]   = {Action::Count              , 0                             , false     , false};
+    m_actions[10]   = {Action::Taunt              , &Character::tauntSound        , true      , false};
+    m_actions[11]   = {Action::Leave              , &Character::leave             , true      , false};
+    m_actions[12]   = {Action::ToggleAI           , &Character::toggleAI          , true      , false};
+    m_actions[13]   = {Action::Count              , 0                             , false     , false};
 }
 
 //Receives an attack from other player
@@ -255,10 +259,14 @@ void Character::die(){
     deathSound();
     removeWings();
 
-    if(m_lives >= 0)
+    if(m_lives >= 0){
         respawn();
-    else
+    }    
+    else{
         m_arena->pleaseKill(m_playerIndex);
+        m_engineManager->cleanScene();
+        m_game->setState(new MenuState(m_game));
+    }
 
     //HUD Stuff
     //Delete when m_lives == 0
@@ -506,8 +514,8 @@ int Character::getValidation(){
 /* ****************************** ACTIONS ****************************** */
 bool Character::left(){
     lookLeft();
-    //std::cout<<m_frameDeltaTime<<std::endl;
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
+    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
     return false;
 }
@@ -515,6 +523,7 @@ bool Character::left(){
 bool Character::right(){
     lookRight();
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
+    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
     m_physicsManager->move(getId(), m_moveAmmount, 0);
 
     return false;
@@ -546,6 +555,13 @@ bool Character::specialAttackSide(){}
 bool Character::ultimateAttack(){}
 bool Character::tauntSound(){}
 void Character::deathSound(){}
+
+bool Character::leave(){
+    m_engineManager->cleanScene();
+    m_game->setState(new MenuState(m_game));
+
+    return false;
+}
 
 bool Character::toggleAI(){
     m_AIEnabled = !m_AIEnabled;

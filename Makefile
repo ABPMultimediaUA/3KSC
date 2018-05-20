@@ -4,7 +4,7 @@ HDRDIR	:= $(SRCDIR)include/
 LIBDIR  := lib/
 INCDIR  := include/
 OBJDIR	:= obj/
-SUBDIRS := $(OBJDIR)entities $(OBJDIR)entities/characters $(OBJDIR)entities/items $(OBJDIR)managers $(OBJDIR)AI $(OBJDIR)states $(OBJDIR)ChaoticEngine $(OBJDIR)ChaoticEngine/manager $(OBJDIR)ChaoticEngine/fachada
+SUBDIRS := $(OBJDIR)entities $(OBJDIR)entities/characters $(OBJDIR)entities/items $(OBJDIR)managers $(OBJDIR)AI $(OBJDIR)states $(OBJDIR)menu_screens $(OBJDIR)ChaoticEngine $(OBJDIR)ChaoticEngine/manager $(OBJDIR)ChaoticEngine/fachada
 
 #Files
 SOURCES := $(shell find $(SRCDIR) -name '*.cpp')
@@ -15,7 +15,7 @@ BINARY 	:= 3KSC
 CC		:= g++
 LDFLAGS := -Wl,-rpath=$(LIBDIR)
 
-INCLUDE := -I$(HDRDIR) -I$(INCDIR) -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)nlohmann -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod -I$(INCDIR)OpenGL -I$(INCDIR)glm -I$(INCDIR)ChaoticEngine
+INCLUDE := -I$(HDRDIR) -I$(HDRDIR)ChaoticEngine/fachada -I$(INCDIR) -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)nlohmann -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod -I$(INCDIR)OpenGL -I$(INCDIR)glm -I$(INCDIR)ChaoticEngine
 LIBS	:= -L$(LIBDIR) -lGL -lGLEW -lglfw -lassimp -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL -lassimp
 FAST	:= -j4
 
@@ -64,3 +64,4 @@ info:
 	$(info $(SOURCES))
 	$(info $(INCLUDE))
 	$(info $(LIBS))
+	$(info $(MAKE))

@@ -27,6 +27,8 @@ class State;
 
 class Game{
     private:
+        static Game*    m_instance;
+
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
         State*          m_state;
@@ -34,14 +36,65 @@ class Game{
         long long       m_elapsedTotal;
         long long       m_nanoFrames;
 
+        bool            m_quitRequest;
+
+        //Video settings
+        int             m_resolutionPreset;
+        bool            m_fullscreen;
+
+        //Audio settings
+        int             m_volumes[3];           //[BGM, FX, VOICES]
+
+        //Character settings
+        bool            m_NPC[2];
+        int             m_chosenPlayers[2];
+
+        //Battle settings
+        int             m_battleSettings[2];    //[ROUNDS, LIVES]     
+
+        //Map
+        int             m_map;
+
     public:
         Game();
         ~Game();
+        static Game* getInstance() { return m_instance; }
+
         void setState(State* p_state);
         void nextState();
+        
         void run();
         void fixedUpdate(long long p_delta);
+        void quit()                                 { m_quitRequest = true; }
+
+        //Getters
+        int         getResolutionPreset()           { return m_resolutionPreset; }
+        bool        isFullscreen()                  { return m_fullscreen; }
+
+        int         getVolBGM()                     { return m_volumes[0];  }
+        int         getVolFX()                      { return m_volumes[1];  }
+        int         getVolVoices()                  { return m_volumes[2];  }
+
+        bool        isNPC(int p_player)             { return m_NPC[p_player]; }
+        int         getChosenPlayer(int p_player)   { return m_chosenPlayers[p_player]; }
+
+        int         getRounds()                     { return m_battleSettings[0];   }
+        int         getLives()                      { return m_battleSettings[0];   }
+
+        int         getMap()                        { return m_map;                 }
         
+        //Setters
+        void        setResolutionPreset(int p_preset);
+        void        changeVideoMode();
+
+        void        setVolume(int p_type, int p_vol)                { m_volumes[p_type] = p_vol;                }
+
+        void        setPlayerNPC(int p_player, bool p_NPC = true)   { m_NPC[p_player] = p_NPC;                  }
+        void        setChosenPlayer(int p_player, int p_character)  { m_chosenPlayers[p_player] = p_character;  }
+        
+        void        setBattleSettings(int p_type, int p_value)      { m_battleSettings[p_type] = p_value;       }
+
+        void        setMap(int p_map)                               { m_map = p_map;                            }
 };
 
 #endif
