@@ -29,6 +29,9 @@ public:
 
 	glm::vec3	getPosition()	{ return m_system->getPosition(); }
 
+	CESceneNode* getTopNode()	{ return m_nodeRotate; }
+	CESceneNode* getNode() 		{ return m_nodeEmitter;}
+
 	void 	setAmount(int p_amount) { m_system->setAmount(p_amount); }
     int  	getAmount()  { return m_system->getAmount(); }  
 
@@ -44,6 +47,9 @@ private:
 	CETransform*	m_translate;
 	
 	CEParticleSystem*		m_system;
+
+	CESceneNode* m_nodeRotate;
+	CESceneNode* m_nodeEmitter;
 
 };
 

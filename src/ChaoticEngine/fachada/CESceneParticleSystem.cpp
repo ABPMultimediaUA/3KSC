@@ -16,10 +16,10 @@ CESceneParticleSystem::CESceneParticleSystem(CESceneNode* p_parent, const char* 
 	m_scale->scale(1, 1, 1);
 	m_translate->translate(0, 0, 0);
 
-	CESceneNode* t_nodeRotate 	 = new CESceneNode(p_parent);
+	m_nodeRotate 	 			 = new CESceneNode(p_parent);
 	CESceneNode* t_nodeScale 	 = new CESceneNode(t_nodeRotate);
 	CESceneNode* t_nodeTranslate = new CESceneNode(t_nodeScale);
-	CESceneNode* t_nodeEmitter 	 = new CESceneNode(t_nodeTranslate);
+	m_nodeEmitter 	 			 = new CESceneNode(t_nodeTranslate);
 	t_nodeRotate->setEntity(m_rotate);
 	t_nodeScale->setEntity(m_scale);
 	t_nodeTranslate->setEntity(m_translate);
@@ -39,6 +39,12 @@ CESceneParticleSystem::~CESceneParticleSystem(){
 	
 	delete m_scale;
 	m_scale = nullptr;
+
+	delete m_nodeRotate;
+	m_nodeRotate = nullptr;
+
+	delete m_nodeEmitter;
+	m_nodeEmitter = nullptr;
 }
 
 void CESceneParticleSystem::processInput(GLFWwindow* p_window){
