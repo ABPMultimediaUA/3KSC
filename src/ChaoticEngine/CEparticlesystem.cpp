@@ -86,13 +86,14 @@ void CEParticleSystem::beginDraw(){
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_texture->getTextureId());
-
+            glDepthMask (GL_FALSE); //arreglo para las transparencias
             glBindVertexArray(m_VAO);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             glBindVertexArray(0);
         }
     }
+    glDepthMask (GL_TRUE);
 }
 
 void CEParticleSystem::endDraw(){}
@@ -110,10 +111,9 @@ void CEParticleSystem::update(GLfloat dt){
     //Update all particles
     for(GLuint i = 0; i < m_amount; i++){
         Particle &p = m_particles[i];
-        p.Life -= dt; //reduce life
-        if(p.Life > 0.0f){  //particle is alive, thus update
+        p.Life -= dt;
+        if(p.Life > 0.0f){  //particle is alive
             p.Position -= p.Velocity * dt; 
-         //  p.Color.a -= dt * 2.5;
         }
     }
 }
