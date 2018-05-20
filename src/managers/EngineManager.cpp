@@ -333,15 +333,14 @@ CESceneParticleSystem* EngineManager::getParticleSystem(int p_id)
 void EngineManager::updateParticleSystem(){
     for (unsigned i=0; i< m_systems.size(); ++i)
     {
-        m_systems[i]->update();
+        if(m_systems[i])
+            m_systems[i]->update();
     }
 }
 
-void EngineManager::deleteParticleSystem(){
-    for (unsigned i=0; i< m_systems.size(); ++i)
-    {
-        m_systems[i]->update();
-    }
+void EngineManager::deleteParticleSystem(int p_id){
+    m_scene->remove(m_systems[p_id]->getTopNode());
+    m_systems[p_id] = nullptr;
 }
 
 double EngineManager::getTime(){

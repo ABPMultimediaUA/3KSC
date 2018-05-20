@@ -26,6 +26,7 @@ CEParticleSystem::CEParticleSystem(const char* p_path, int p_amount, float p_x, 
     init();
 }
 
+
 void CEParticleSystem::init(){
     GLfloat t_vertices[] = { 
         // Pos      // Tex
@@ -81,6 +82,7 @@ void CEParticleSystem::beginDraw(){
     for(Particle particle : m_particles){
         if(particle.Life > 0.0f){
             glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
+            glUniform1f(glGetUniformLocation(m_shaderProgram, "scale"), 3);
             glUniform2f(glGetUniformLocation(m_shaderProgram, "offset"), particle.Position.x, particle.Position.y);
             glUniform4f(glGetUniformLocation(m_shaderProgram, "color"), particle.Color.x, particle.Color.y, particle.Color.z, particle.Color.w);
 

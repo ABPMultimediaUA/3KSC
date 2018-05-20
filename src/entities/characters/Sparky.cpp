@@ -116,6 +116,7 @@ bool Sparky::specialAttackDown(){
         m_soundManager->playSound("s_atak");
         m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
         m_system= m_engineManager->createParticleSystem("assets/spark.png",30, -m_position[0], 9- m_position[1], 20, 0.2, 0, 180, true, 1);
+        //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
     }
 
     return false;
@@ -167,10 +168,10 @@ void Sparky::updatePlayer(){
     if(m_ultimateMode)
         updateUltimate();
     
-    // if(m_system>=0)
-    // {
-    //     m_engineManager->particlePosition(m_system, -m_position[0], 9- m_position[1], 0);
-    // }
+    //  if(m_system>=0)
+    //  {
+    //      m_engineManager->particlePosition(m_system, -m_position[0], 9- m_position[1], 0);
+    //  }
     randomSounds();
 }
 
