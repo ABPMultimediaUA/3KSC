@@ -57,8 +57,10 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     m_knockbackUlti      = 0.25f;
     m_system             = -1;
 
-    if(m_NPC)
+    if(m_NPC){
+        toggleAI();
         m_AI = new AISparky(this);
+    }
 
     m_soundManager->loadBank(SoundID::S_SPARKY);
     m_soundManager->loadEvents(SoundID::S_SPARKY);
