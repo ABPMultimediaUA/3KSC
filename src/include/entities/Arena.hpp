@@ -23,6 +23,7 @@
 #ifndef ARENA
 #define ARENA
 
+class Game;
 class EngineManager;
 class PhysicsManager;
 class Item;
@@ -76,6 +77,7 @@ public:
 
 private: 
     static Arena*       m_instance;
+    Game*               m_game;
     PhysicsManager*     m_physicsManager;
     
     static const char*  m_modelURLs[3];
@@ -106,6 +108,8 @@ private:
     sf::Clock*          m_portalClock;
 
     float               m_musicIntensity[4];
+
+    void                spawnPlayer(bool p_online = false);
 };
 
 #endif

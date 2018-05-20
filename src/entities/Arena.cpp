@@ -21,6 +21,7 @@
 *********************************************************************************/
 
 #include "../include/entities/Arena.hpp"
+#include "../include/Game.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
@@ -42,14 +43,16 @@
 Arena* Arena::m_instance = 0;
 
 Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entity(p_position, p_scale, p_modelURL, 1){
-    m_currentItems    = 0;
-    //m_items         = new Item*[m_maxItemsOnScreen];
-    m_instance        = this;
-    m_offsetSpawnTime = 10.0;
-    m_nextSpawnTime   = m_inputManager->getMasterClock() + m_offsetSpawnTime;
-    m_playerCount     = 0;
-    m_players         = new Character*[4];
-    m_usedItems       = 0;
+    m_instance          = this;
+    m_game              = Game::getInstance();
+
+    m_currentItems      = 0;
+    //m_items           = new Item*[m_maxItemsOnScreen];
+    m_offsetSpawnTime   = 10.0;
+    m_nextSpawnTime     = m_inputManager->getMasterClock() + m_offsetSpawnTime;
+    m_playerCount       = 0;
+    m_players           = new Character*[4];
+    m_usedItems         = 0;
     
     m_spawningPortalTime    = 10;
     m_portalClock           = new sf::Clock();
@@ -90,8 +93,12 @@ Arena* Arena::getInstance(){
     return m_instance;
 }
 
+//Spawns all players
 void Arena::spawnPlayers(){
-    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
+    spawnPlayer();
+    spawnPlayer();
+
+    // m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
     //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
     //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
 
@@ -100,6 +107,17 @@ void Arena::spawnPlayers(){
     std::cout << "PLAYER COUNT " << m_playerCount << std::endl;
     m_soundManager->modifyParameter("fos_music", m_musicIntensity[m_playerCount], "Intensity", false);
 }
+
+//Spawns a single player
+void Arena::spawnPlayer(bool p_online){
+    switch (m_game->getChosenPlayer(m_playerCount)){
+        case 0: { m_players[m_playerCount] = new Plup("Plup", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));         break;  }
+        case 1: { m_players[m_playerCount] = new Sparky("Sparky", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));     break;  }
+    }
+
+    m_playerCount++;
+}
+
 
 void Arena::addPlayer(bool p_bool){
     float positionSparky[3] = {0, 100, 0};
