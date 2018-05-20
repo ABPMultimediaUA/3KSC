@@ -11,7 +11,7 @@
 
 class CESceneSprite{
 public:
-	CESceneSprite(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram);
+	CESceneSprite(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram, bool p_originCenter = true);
 	~CESceneSprite();
 
 	void 	processInput(GLFWwindow* p_window);

@@ -6,7 +6,7 @@
 #include "../include/ChaoticEngine/CEsprite.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
-CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram) : CEEntity(){
+CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram, bool p_originCenter) : CEEntity(){
     m_shaderProgram = p_shaderProgram;
 
     m_currentFrame = 0;
@@ -15,18 +15,37 @@ CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuin
     m_width   = p_width ;
     m_height  = p_height;
 
-    float t_minX = m_width/2 * -1;
-    float t_maxX = m_width/2;
-    float t_minY = m_height/2 * -1;
-    float t_maxY = m_height/2;
+    GLfloat t_vertices[16] = { 0 };
 
-    GLfloat t_vertices[] = { 
-        // Pos      // Tex
-        t_minX, t_minY, 0.0f, 0.0f, 
-        t_minX, t_maxY, 0.0f, 1.0f,
-        t_maxX, t_maxY, 1.0f, 1.0f,
-        t_maxX, t_minY, 1.0f, 0.0f
-    };
+    if(p_originCenter){
+        float t_minX = m_width/2 * -1;
+        float t_maxX = m_width/2;
+        float t_minY = m_height/2 * -1;
+        float t_maxY = m_height/2;
+
+        GLfloat t_vert[] = { 
+            // Pos      // Tex
+            t_minX, t_minY, 0.0f, 0.0f, 
+            t_minX, t_maxY, 0.0f, 1.0f,
+            t_maxX, t_maxY, 1.0f, 1.0f,
+            t_maxX, t_minY, 1.0f, 0.0f
+        };
+        for(int i = 0; i < 16; i++)
+            t_vertices[i] = t_vert[i];
+    }else{
+        GLfloat t_vert[] = {
+            // Pos      // Tex
+            0.0f,    0.0f,     0.0f, 0.0f, 
+            0.0f,    m_height, 0.0f, 1.0f,
+            m_width, m_height, 1.0f, 1.0f,
+            m_width, 0.0f,     1.0f, 0.0f
+        };
+
+        std::cout << "HOLAAAAAAAAAA" << std::endl;
+
+        for(int i = 0; i < 16; i++)
+            t_vertices[i] = t_vert[i];
+    }
 
     unsigned int m_indices[] = {
         0, 1, 3,  // First Triangle
@@ -61,7 +80,6 @@ void CESprite::beginDraw(){
     if (!m_visible) return;
 
     glUseProgram(m_shaderProgram);
-    
 
     //PRECALCULAMOS LAS MATRICES Y LAS PASAMOS AL SHADER
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix));

@@ -9,7 +9,7 @@
 
 class CESprite : public CEEntity{
 public:
-	CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram);
+	CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram, bool p_originCenter = true);
 	virtual ~CESprite();
 
 	void 	loadResource(const char* p_urlSource);

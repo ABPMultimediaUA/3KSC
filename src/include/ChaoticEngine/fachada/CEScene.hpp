@@ -29,7 +29,7 @@ public:
 	CESceneMesh*			createMesh(const char* p_path);
 	CESceneAnimation*		createAnimatedMesh(const char* p_path);
 	CESceneQuad*			createQuad(float p_vertex[4][2]);
-	CESceneSprite*			createSprite(const char* p_path, float p_width, float p_height);
+	CESceneSprite*			createSprite(const char* p_path, float p_width, float p_height, bool p_originCenter = true);
 	CESceneBillboard*		createBillboard(const char* p_path, float p_width, float p_height, CESceneNode* p_parent = NULL);
   	CESceneParticleSystem*  createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode,float p_systemLife); 
 	CESceneSkybox*			createSkybox(const char* p_path[6], float p_scale);

@@ -4,11 +4,11 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneSprite.hpp"
 
-CESceneSprite::CESceneSprite(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram){
+CESceneSprite::CESceneSprite(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram, bool p_originCenter){
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();
 	m_translate = new CETransform(); 
-	m_sprite 	= new CESprite(p_path, p_width, p_height, p_shaderProgram);
+	m_sprite 	= new CESprite(p_path, p_width, p_height, p_shaderProgram, p_originCenter);
 	
 	m_rotate->rotate(0, 0, 180);
 	m_scale->scale(1, 1, 1);
