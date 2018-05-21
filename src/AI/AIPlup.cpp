@@ -39,6 +39,9 @@ AIPlup::~AIPlup(){}
 
 // Updates all the variables required by the tree to work properly
 void AIPlup::update(){
+    /*************************************************************/
+    /****************          Get Time           ****************/
+    /*************************************************************/
     m_time = m_inputManager->getMasterClock() - m_starting_time;
     if(m_inputManager->getMasterClock() - m_starting_time > 9.0f){
         m_starting_time = m_inputManager->getMasterClock();
@@ -161,10 +164,15 @@ void AIPlup::update(){
     Character* t_closestPlayer = m_physicsManager->getClosestCharacter(m_position);
 
     /*************************************************************/
+    /*******              Get ultimate state              ********/
+    /*************************************************************/
+    m_ultimate_ready = (float)t_currentPlayer->getUltimateCharged();
+
+    /*************************************************************/
     /*******        MAKE DECISION ABOUT WHAT TO DO        ********/
     /*************************************************************/
     int t_action;
-    t_action = m_nodes[0]->makeDecision(m_nodes[0])->m_action;
+    t_action = m_nodes[0]->makeDecision(m_nodes[53])->m_action;
     
     if (t_action == 0){                             // Special Attack Up
         t_currentPlayer->specialAttackUp();
@@ -242,6 +250,9 @@ void AIPlup::update(){
             t_destination_float[1] = t_destination.y;
             t_currentPlayer->moveToPath(t_destination_float);
         }
+    }
+    else if (t_action == 9){                        // Ultimate
+        t_currentPlayer->ultimateAttack();
     }
     else{
         // Error. Do nothing.
@@ -333,6 +344,9 @@ void AIPlup::buildTree(){
             }
             else if(nodes[i]["name"] == "pick_up_range"){
                 t_data = &m_distanceToItem;
+            }
+            else if(nodes[i]["name"] == "ultimate_ready"){
+                t_data = &m_ultimate_ready;
             }
             t_value = nodes[i]["data"]["value"];
         }

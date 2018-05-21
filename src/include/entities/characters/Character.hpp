@@ -70,6 +70,7 @@ public:
     void            onTouchGround();
     void            onLeaveGround();
     void            setUltimateCharged();
+    bool            getUltimateCharged();
     void            onPortal();
     void            leavePortal();
     

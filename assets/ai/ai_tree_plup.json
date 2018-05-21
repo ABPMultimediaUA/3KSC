@@ -59,6 +59,6 @@
 	{"id": 52, "name": "move", "type": "action", "data": {"value": 6}},
 	
 	{"id": 53, "name": "ultimate_ready", "type": "comparison", "data": {"value": 1, "comparison_type": 2, "children": [54, 0]}},
-	{"id": 54, "name": "ultimate", "type": "action", "data": {"value": 8}}
+	{"id": 54, "name": "ultimate", "type": "action", "data": {"value": 9}}
 ]
 }

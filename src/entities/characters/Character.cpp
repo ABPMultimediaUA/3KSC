@@ -459,6 +459,10 @@ void Character::setUltimateCharged(){
     m_ultimateCharged = true;
 }
 
+bool Character::getUltimateCharged(){
+    return m_ultimateCharged;
+}
+
 bool Character::moveToPath(float p_position[2]){
     b2Vec2 t_position = b2Vec2(m_position[0], m_position[1]);
     Character* t_closestPlayer = m_physicsManager->getClosestCharacter(t_position);

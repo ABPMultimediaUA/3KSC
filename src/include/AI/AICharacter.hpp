@@ -58,6 +58,7 @@ class AICharacter{
         float           m_specialDownRange;
         float           m_time;                 // Time that has passed since the last change of action
         float           m_starting_time;        // Control time
+        float           m_ultimate_ready;       // Determines if ultimate is ready
         
         std::string     readFile(const char* p_url);
     public:
