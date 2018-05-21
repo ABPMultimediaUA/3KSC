@@ -36,13 +36,14 @@ AISparky::AISparky(Character* p_player)
     buildTree();
 }
 
-AISparky::~AISparky(){
-    
-}
+AISparky::~AISparky(){}
 
 // Updates all the variables required by the tree to work properly
 void AISparky::update(){
-    m_time = 0.0f;
+    m_time = m_inputManager->getMasterClock() - m_starting_time;
+    if(m_inputManager->getMasterClock() - m_starting_time > 9.0f){
+        m_starting_time = m_inputManager->getMasterClock();
+    }
     m_specialUpRange = 0.0;
     m_specialSideRange = 0.0;
     m_distanceToPortal = 0.0f;
@@ -170,7 +171,26 @@ void AISparky::update(){
     /*************************************************************/
     int t_action;
     t_action = m_nodes[0]->makeDecision(m_nodes[0])->m_action;
-    if (t_action == 6){
+
+    if (t_action == 0){                             // Special Attack Up
+        t_currentPlayer->specialAttackUp();
+    }
+    else if (t_action == 1){                        // Special Attack Down
+        t_currentPlayer->specialAttackDown();
+    }
+    else if (t_action == 2){                        // Special Attack Side
+        t_currentPlayer->specialAttackSide();
+    }
+    else if (t_action == 3){                        // Basic Attack
+        t_currentPlayer->basicAttack();
+    }
+    else if (t_action == 4){                        // Block
+        t_currentPlayer->block();
+    }
+    else if (t_action == 5){                        // Pick
+        t_currentPlayer->pick();
+    }
+    else if (t_action == 6){                        // Move to enemy
         b2Vec2 t_destination;
         if(t_closestPlayer!=0){
             if(m_position.x > t_closestPlayer->getX()){
@@ -186,25 +206,42 @@ void AISparky::update(){
             t_currentPlayer->moveToPath(t_destination_float);
         }
     }
-    else if (t_action == 3){
-        t_currentPlayer->basicAttack();
+    else if (t_action == 7){                        // Move to item
+        b2Vec2 t_destination;
+        if(t_closestItemPosition.x != 0.0f && t_closestItemPosition.y != 0.0f){
+            if(m_position.x > t_closestItemPosition.x){
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
+            }
+            else{
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 1); // Find waypoint to the right
+            }
+
+            float t_destination_float[2];
+            t_destination_float[0] = t_destination.x;
+            t_destination_float[1] = t_destination.y;
+            t_currentPlayer->moveToPath(t_destination_float);
+        }
     }
-    else if (t_action == 0){
-        t_currentPlayer->specialAttackUp();
-    }
-    else if (t_action == 2){
-        t_currentPlayer->specialAttackSide();
-        //m_inputManager->setAction(Action::SpecialAttackSide, m_index);
-    }
-    else if (t_action == 1){
-        // m_inputManager->setAction(Action::SpecialAttackDown, m_index);
-        t_currentPlayer->specialAttackDown();
-    }
-    else if (t_action == 4){
-        m_inputManager->setAction(Action::Block, m_index);
+    else if (t_action == 8){                        // Move to portal
+        b2Vec2 t_destination;
+        b2Vec2 t_portal_position = b2Vec2(0.0f,0.0f);
+        t_portal_position = b2Vec2(m_arena->getPortalPosition()[0],m_arena->getPortalPosition()[1]);
+        if(t_portal_position.x != 0.0f && t_portal_position.y != 0.0f){
+            if(m_position.x > t_portal_position.x){
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
+            }
+            else{
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 1); // Find waypoint to the right
+            }
+
+            float t_destination_float[2];
+            t_destination_float[0] = t_destination.x;
+            t_destination_float[1] = t_destination.y;
+            t_currentPlayer->moveToPath(t_destination_float);
+        }
     }
     else{
-       //std::cout<<"NOTHING?"<<std::endl;
+        // Error. Do nothing.
     }
 }
 

@@ -57,6 +57,7 @@ class AICharacter{
         float           m_specialSideRange;     // Determines if an enemy is in range of special ability side
         float           m_specialDownRange;
         float           m_time;                 // Time that has passed since the last change of action
+        float           m_starting_time;        // Control time
         
         std::string     readFile(const char* p_url);
     public:

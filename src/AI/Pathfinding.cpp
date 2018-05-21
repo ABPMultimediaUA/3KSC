@@ -30,7 +30,8 @@ Pathfinding& Pathfinding::instance(){
     return instance;
 }
 
-Pathfinding::Pathfinding(){}
+Pathfinding::Pathfinding(){
+}
 
 Pathfinding::~Pathfinding(){}
 
@@ -43,14 +44,16 @@ b2Vec2 Pathfinding::findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint)
     m_physicsManager = &PhysicsManager::instance();
     float t_closestDistance = 0.0f;
     Waypoint *t_closestWaypoint;
-    bool t_direction;
+    bool t_direction = 0;
 
-    // Set direction
-    if(p_p1.x > p_p2.x){
-        t_direction = 0; // Left
-    }
-    else{
-        t_direction = 1; // Right
+    // Prevent flickering
+    if(abs(p_p1.x - p_p2.x) > 0.2f){
+        if(p_p1.x > p_p2.x){
+            t_direction = 0; // Left
+        }
+        else{
+            t_direction = 1; // Right
+        }
     }
 
     if(t_direction == 0){   // Direction is left
