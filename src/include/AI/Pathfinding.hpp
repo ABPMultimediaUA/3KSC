@@ -30,7 +30,7 @@ class PhysicsManager;
 
 class Pathfinding{
     private:   
-        PhysicsManager*         m_physicsManager;                                    
+        PhysicsManager*         m_physicsManager;                                
     public:
         std::vector<Waypoint*>  m_waypoints;
 
