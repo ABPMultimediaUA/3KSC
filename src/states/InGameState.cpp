@@ -24,7 +24,7 @@
 
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
-// #include "../include/managers/UIManager.hpp"
+#include "../include/managers/HUDManager.hpp"
 #include "../include/managers/SoundManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
@@ -44,7 +44,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_game              = p_game;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
-    // m_UIManager         = &UIManager::instance();
+    m_HUDManager        = &HUDManager::instance();
     m_soundManager      = &SoundManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
@@ -97,6 +97,7 @@ void InGameState::update(){
 
     int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
+    
     //Input and update for every character
     for(int i = 0; i < t_playerCount; i++){
         t_currentPlayer = m_arena->getPlayer(i);
@@ -128,7 +129,7 @@ void InGameState::calculateFPS(double t_time){
 void InGameState::render(){
     m_engineManager->updateCamera();
     m_engineManager->drawScene();
-    // m_UIManager->render();
+    m_HUDManager->render();
 }
 
 //Change to next state

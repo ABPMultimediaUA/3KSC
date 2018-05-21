@@ -23,7 +23,7 @@
 
 class EngineManager;
 class InputManager;
-class UIManager;
+class HUDManager;
 class SoundManager;
 class PhysicsManager;
 class AICharacter;
@@ -37,7 +37,7 @@ class InGameState : public State{
     private:
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
-        UIManager*      m_UIManager;
+        HUDManager*     m_HUDManager;
         SoundManager*   m_soundManager;
         PhysicsManager* m_physicsManager;
         Arena*          m_arena;

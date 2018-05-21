@@ -26,7 +26,7 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
-#include "../../include/managers/UIManager.hpp"
+#include "../../include/managers/HUDManager.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
 
@@ -45,7 +45,7 @@ struct ActionMapping{
 //Static members
 int Character::m_playerCount = 0;
 
-// UIManager*      m_UIManager         = &UIManager::instance();
+// HUDManager*      m_HUDManager         = &HUDManager::instance();
 Arena*          m_arena             = 0;
 
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online, bool p_NPC) : Entity(p_position, 0.5f, p_modelURL){
@@ -192,7 +192,7 @@ void Character::changeHP(int p_variation){
     std::cout << "HP: " << m_HP << std::endl;
 
     //HUD Stuff
-    // m_UIManager->setHP(m_playerIndex, m_HP);
+    // m_HUDManager->setHP(m_playerIndex, m_HP);
 }
 
 void Character::checkAlive(){
@@ -208,7 +208,7 @@ void Character::addMP(int p_MP){
         m_MP = m_maxMP;
 
     //HUD Stuff
-    // m_UIManager->setMP(m_playerIndex, m_MP);
+    // m_HUDManager->setMP(m_playerIndex, m_MP);
 }
 
 //Check if we can do an action. If we can, substract the MP and return true, if not, return false.
@@ -441,7 +441,7 @@ void Character::respawn(){
     m_MP = m_maxMP;
 
     moveTo(m_respawnPosition);
-    //m_UIManager->setHP(m_playerIndex, m_HP);
+    //m_HUDManager->setHP(m_playerIndex, m_HP);
     //m_UIManafer->setMP(m_playerIndex, m_MP);
 }
 

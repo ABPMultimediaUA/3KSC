@@ -33,6 +33,7 @@ class AICharacter;
 
 struct ActionMapping;
 class Game;
+class HUDManager;
 
 class Character : public Entity{
 public:
@@ -102,6 +103,7 @@ public:
 
 protected:
     Game*           m_game;
+    HUDManager*     m_HUDManager;
 
     static int      m_playerCount;
     int             m_playerIndex;

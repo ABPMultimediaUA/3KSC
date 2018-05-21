@@ -234,7 +234,7 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_window->clear(0.0f, 0.8f, 0.9f, 1.0f);
+    m_window->clear(0.047f, 0.165f, 0.549f, 1.0f);
     m_scene->draw();
 }
 
