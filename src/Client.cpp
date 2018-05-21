@@ -66,11 +66,15 @@ void Client::send(char const *mens){
 	client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
-void Client::update(){
+void Client::update(float p_time){
 	listen();
 	if(m_yourPlayer == 0)
 	{
-		//Arena::getInstance()->onlineUpdate();
+		Arena::getInstance()->onlineUpdate(p_time);
+	}
+	else
+	{
+		Arena::getInstance()->onlineUpdateClient(p_time);
 	}
 }
 void Client::listen(){

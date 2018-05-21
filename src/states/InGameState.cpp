@@ -91,7 +91,7 @@ void InGameState::update(){
     m_engineManager->updateFrameDeltaTime(t_time);
 
     if(m_onlineMode)
-        m_client->update();
+        m_client->update((float)t_time);
     else
         m_arena->update((float)t_time);
 

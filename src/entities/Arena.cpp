@@ -222,15 +222,30 @@ void Arena::hidePortal(){
     m_portalSpawned = false;
 }
 
-void Arena::onlineUpdate(){
-    // float t_time = m_itemClock->getElapsedTime().asSeconds();
+void Arena::onlineUpdate(float p_delta){
+
+        float t_time = m_inputManager->getMasterClock();
     
-    // if(t_time > m_nextSpawnTime){
-    //     m_nextSpawnTime = t_time + m_offsetSpawnTime;
-    //     if(spawnRandomItem()){
-    //         Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems)->getX(), m_items.at(m_currentItems)->getY());
-    //     }
-    // }
+    if(t_time > m_nextSpawnTime){
+        m_nextSpawnTime = t_time + m_offsetSpawnTime;
+        if(spawnRandomItem())
+        {    m_currentItems = m_items.size();
+            std::cout<<m_items.size()<<std::endl;
+            Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems-1)->getX(), m_items.at(m_currentItems-1)->getY());
+        }
+    }
+
+    for(int i = 0; i < m_items.size(); i++){
+        if(m_items.at(i)->update())
+            m_items.erase(m_items.begin()+i);        
+    }
+}
+
+void Arena::onlineUpdateClient(float p_delta){
+    for(int i = 0; i < m_items.size(); i++){
+        if(m_items.at(i)->update())
+            m_items.erase(m_items.begin()+i);        
+    }
 }
 
 void Arena::spawnItemAt(int p_type, int x, int y){

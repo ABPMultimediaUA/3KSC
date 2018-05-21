@@ -15,7 +15,7 @@ class Client{
         Client();
         ~Client();
         void start();
-        void update();
+        void update(float p_time);
         void listen();
         void send(char const *mens);
         int getActions(int p_player);

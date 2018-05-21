@@ -28,6 +28,7 @@
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/SoundManager.hpp"
+#include "../../include/managers/EngineManager.hpp"
 #include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.obj", p_online, p_NPC){
@@ -127,6 +128,8 @@ bool Plup::specialAttackDown(){
         m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
         m_soundManager->modifyParameter("p_atak", 0.7, "Atak");
         m_soundManager->playSound("p_atak");
+        m_engineManager->createParticleSystem("assets/fire.png", 3, -m_position[0], 9- m_position[1], 1, 0.2, 0, 1, true, 0.1);
+
     }
     return false;
 }
