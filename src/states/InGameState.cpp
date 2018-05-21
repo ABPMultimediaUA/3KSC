@@ -30,8 +30,11 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/Client.hpp"
+#include "../include/states/MenuState.hpp"
 
 #include "../include/extra/Inputs.hpp"
+#include "../include/extra/Screens.hpp"
+
 
 #include <iostream>
 #include <fstream>
@@ -68,7 +71,9 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
     m_time  = 0;
     m_FPS   = 0;
-    
+
+    m_changeState = false;
+
     //m_engineManager->createSprite("assets/awesome.bin", 10.0f, 10.0f);
     //IF PARTICLE SYSTEM, ACTIVATE THE UPDATE IN THE UPDATE LOOP OF INGAMESTATE
     //m_engineManager->createParticleSystem("assets/awesome.bin", 1000);
@@ -82,7 +87,9 @@ InGameState::~InGameState(){
     m_arena = nullptr;
 }
 
-void InGameState::input(){}
+void InGameState::input(){
+
+}
 
 void InGameState::update(){
     double t_time = m_engineManager->getElapsedTime();
@@ -98,12 +105,13 @@ void InGameState::update(){
     int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
     //Input and update for every character
-    for(int i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount && !m_changeState; i++){
         t_currentPlayer = m_arena->getPlayer(i);
 
         if(t_currentPlayer){
             t_currentPlayer->input();
             t_currentPlayer->update();
+            m_changeState = !t_currentPlayer->getAlive();
         }
     }
     //Update the physics one step more(need to be done first of all)
@@ -112,7 +120,11 @@ void InGameState::update(){
     //m_engineManager->updateParticleSystem();
     // calculateFPS(t_time);
 
-
+    if(m_changeState){
+        m_engineManager->cleanScene();
+        //m_game->setState(new MenuState(m_game));
+        m_game->nextState();
+    }
 }
 
 void InGameState::calculateFPS(double t_time){
@@ -134,7 +146,9 @@ void InGameState::render(){
 
 //Change to next state
 void InGameState::nextState(){
-    m_game->setState(new EndGameState(m_game));
+    //m_game->setState(new MenuState(m_game));
+    //MenuState::getInstance()->setScreen(Screen::Main);
+    m_game->setState(new MenuState(m_game));
 }
 
 void InGameState::createArena(const char* p_fileCgm){

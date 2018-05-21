@@ -68,7 +68,7 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
 Arena::~Arena(){
     for(int i = 0; i < m_playerCount; i++){
         delete m_players[i];
-        m_players = nullptr;
+        m_players[i] = nullptr;
     }
 
     delete[] m_players;
@@ -254,8 +254,8 @@ bool Arena::getOnline(){
 }
 
 void Arena::pleaseKill(int p_playerIndex){
-    delete m_players[p_playerIndex];
-    m_players[p_playerIndex] = 0;
+    //delete m_players[p_playerIndex];
+    //m_players[p_playerIndex] = 0;
 }
 
 bool Arena::portalIsActive(){

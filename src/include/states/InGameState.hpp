@@ -50,6 +50,8 @@ class InGameState : public State{
         double  m_time;
         int     m_FPS;
 
+        bool    m_changeState;
+
     public:
         InGameState(Game* p_game, bool p_onlineMode = false);
         ~InGameState();

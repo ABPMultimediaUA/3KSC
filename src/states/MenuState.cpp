@@ -62,7 +62,6 @@ MenuState::MenuState(Game* p_game){
     m_instance      = this;
     m_game          = p_game;
     m_engineManager = &EngineManager::instance();
-    // m_window        = m_engineManager->getWindow();
     
     mapActions();
     mapScreens();
@@ -77,9 +76,22 @@ MenuState::MenuState(Game* p_game){
 MenuState::~MenuState(){
     std::cout << "~MenuState" << std::endl;
 
-    for (MenuScreen* t_screen : m_screens)  { delete t_screen;  }   m_screens.clear();
-    if  (m_actions)     { delete[] m_actions;       m_actions = nullptr;        }
-    if  (m_screenMaps)  { delete[] m_screenMaps;    m_screenMaps = nullptr;     }
+    for (MenuScreen* t_screen : m_screens){ 
+        delete t_screen;  
+    }
+
+    m_screens.clear();
+    
+    if(m_actions){
+        delete[] m_actions;
+        m_actions = nullptr;        
+    }
+
+    if(m_screenMaps){
+        delete[] m_screenMaps;
+        m_screenMaps = nullptr;     
+    }
+
     m_instance = nullptr;
 }
 
@@ -87,12 +99,10 @@ MenuState* MenuState::getInstance(){
     return m_instance;
 }
 
-
 //Change to next state
 void MenuState::nextState(){
     m_game->setState(new InGameState(m_game));
 }
-
 
 //Changes to specified screen
 void MenuState::setScreen(Screen p_screen){
@@ -105,6 +115,7 @@ void MenuState::setScreen(Screen p_screen){
 
 //Creates the instance of each menu screen
 void MenuState::initializeScreens(){
+    m_screens.clear();
     m_screens.push_back(TitleScreen::instance());
     m_screens.push_back(MainScreen::instance());
     m_screens.push_back(CharacterLocalScreen::instance());
@@ -165,7 +176,7 @@ void MenuState::update(){
     m_currentScreen->update();
 }
 
+//Update texture contents
 void MenuState::render(){
-    //Update texture contents
     m_currentScreen->render();
 }

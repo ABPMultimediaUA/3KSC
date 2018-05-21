@@ -65,6 +65,7 @@ public:
     int             getHP();
     int             getMP();
     int             getOrientation();
+    bool            getAlive()  {   return m_alive; }
     void            setStunned(float p_time = 0);
     bool            isJumping();
     void            onTouchGround();

@@ -58,8 +58,8 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
     m_AIEnabled             = false;
     
     m_name                  = p_name;
-    //m_lives                 = 0;
-    m_lives                 = 3;
+    m_lives                 = 0;
+    //m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
     m_MP                    = m_maxMP = p_MP;
     m_velocity              = p_velocity;
@@ -265,8 +265,9 @@ void Character::die(){
     }    
     else{
         m_arena->pleaseKill(m_playerIndex);
-        m_engineManager->cleanScene();
-        m_game->setState(new MenuState(m_game));
+        m_alive = false;
+        //m_engineManager->cleanScene();
+        //m_game->setState(new MenuState(m_game));
     }
 
     //HUD Stuff
