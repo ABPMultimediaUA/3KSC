@@ -89,7 +89,7 @@ void Arena::spawnPlayers(){
     spawnPlayer();
     spawnPlayer();
 
-    // m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
+    //m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
     //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
     //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
     //m_engineManager->createParticleSystem("assets/fire.png", 50, 5, 5, 10, 2, -20, 20, false,30);
@@ -106,7 +106,6 @@ void Arena::spawnPlayer(bool p_online){
 
     m_playerCount++;
 }
-
 
 void Arena::addPlayer(bool p_bool){
     float positionSparky[3] = {0, 100, 0};
@@ -255,8 +254,8 @@ bool Arena::getOnline(){
 }
 
 void Arena::pleaseKill(int p_playerIndex){
-    //delete m_players[p_playerIndex];
-    //m_players[p_playerIndex] = 0;
+    delete m_players[p_playerIndex];
+    m_players[p_playerIndex] = 0;
 }
 
 bool Arena::portalIsActive(){
