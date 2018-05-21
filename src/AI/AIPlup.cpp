@@ -200,6 +200,13 @@ void AIPlup::update(){
                 t_destination_float[1] = t_destination.y;
                 t_currentPlayer->moveToPath(t_destination_float);
             }
+            if(abs(m_position.y - t_closestPlayer->getY()) > 8.0f){               // Move left to prevent getting stuck
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
+                float t_destination_float[2];
+                t_destination_float[0] = t_destination.x;
+                t_destination_float[1] = t_destination.y;
+                t_currentPlayer->moveToPath(t_destination_float);
+            }
         }
     }
     else if (t_action == 7){                        // Move to item

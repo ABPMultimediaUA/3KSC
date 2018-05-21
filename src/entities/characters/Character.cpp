@@ -460,6 +460,8 @@ void Character::setUltimateCharged(){
 }
 
 bool Character::moveToPath(float p_position[2]){
+    b2Vec2 t_position = b2Vec2(m_position[0], m_position[1]);
+    Character* t_closestPlayer = m_physicsManager->getClosestCharacter(t_position);
     m_flagAIJump = !m_flagAIJump;
     // Move
     m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
@@ -473,7 +475,11 @@ bool Character::moveToPath(float p_position[2]){
     // Jump if enemy is above
     if(p_position[1] > (this->getY() + 1.5f)){
         if(m_flagAIJump){
-            jump();
+            if(t_closestPlayer!=0){
+                if(t_closestPlayer->getY() > m_position[1]){
+                    jump();
+                }
+            }
         }
     }
     return false;

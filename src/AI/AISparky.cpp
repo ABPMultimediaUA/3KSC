@@ -193,17 +193,26 @@ void AISparky::update(){
     else if (t_action == 6){                        // Move to enemy
         b2Vec2 t_destination;
         if(t_closestPlayer!=0){
-            if(m_position.x > t_closestPlayer->getX()){
-                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
-            }
-            else{
-                t_destination = m_pathfinding->getClosestWaypoint(m_position, 1); // Find waypoint to the right
-            }
+            if(abs(m_position.x - t_closestPlayer->getX()) > 0.2f){
+                if(m_position.x > t_closestPlayer->getX()){
+                    t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
+                }
+                else{
+                    t_destination = m_pathfinding->getClosestWaypoint(m_position, 1); // Find waypoint to the right
+                }
 
-            float t_destination_float[2];
-            t_destination_float[0] = t_destination.x;
-            t_destination_float[1] = t_destination.y;
-            t_currentPlayer->moveToPath(t_destination_float);
+                float t_destination_float[2];
+                t_destination_float[0] = t_destination.x;
+                t_destination_float[1] = t_destination.y;
+                t_currentPlayer->moveToPath(t_destination_float);
+            }
+            if(abs(m_position.y - t_closestPlayer->getY()) > 8.0f){               // Move left to prevent getting stuck
+                t_destination = m_pathfinding->getClosestWaypoint(m_position, 0); // Find waypoint to the left
+                float t_destination_float[2];
+                t_destination_float[0] = t_destination.x;
+                t_destination_float[1] = t_destination.y;
+                t_currentPlayer->moveToPath(t_destination_float);
+            }
         }
     }
     else if (t_action == 7){                        // Move to item
