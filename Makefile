@@ -57,6 +57,14 @@ cleanr:
 fast:
 	$(MAKE) $(FAST)
 
+debug:
+	$(MAKE) $(FAST)
+	cgdb ./$(BINARY)
+
+debugc:
+	$(MAKE) cleanc
+	cgdb ./$(BINARY)
+
 #Prints sources, objects and headers lists
 info:
 	$(info $(BINARY))

@@ -108,10 +108,11 @@ void InGameState::update(){
     }
     //Update the physics one step more(need to be done first of all)
     m_physicsManager->update(m_deltaTime);
-    
-    //m_engineManager->updateParticleSystem();
 
+    //m_engineManager->updateParticleSystem();
     // calculateFPS(t_time);
+
+
 }
 
 void InGameState::calculateFPS(double t_time){

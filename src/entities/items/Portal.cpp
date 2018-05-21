@@ -26,7 +26,7 @@
 #include <iostream>
 
 //Constructor
-Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/items/portal.obj", 3){
+Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/items/portal_000004.obj", 3){
     m_arena             = Arena::getInstance();
     m_physicsManager    = &PhysicsManager::instance();
     m_using             = false;

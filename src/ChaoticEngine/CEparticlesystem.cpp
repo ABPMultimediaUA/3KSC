@@ -77,8 +77,9 @@ void CEParticleSystem::init(){
 void CEParticleSystem::beginDraw(){
     
     glUseProgram(m_shaderProgram);
-    glm::mat4 t_projection = glm::ortho(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
-    m_MVP = t_projection * m_modelMatrix;
+    glm::mat4 t_projection = glm::ortho(512.0f, -512.0f, -384.0f, 384.0f, -15.0f, 100.0f);
+    //glm::mat4 t_projection = glm::ortho(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
+    m_MVP = t_projection * m_viewMatrix * m_modelMatrix;
     m_position = getPosition();
     glEnable (GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -92,7 +93,7 @@ void CEParticleSystem::beginDraw(){
     for(Particle particle : m_particles){
         if(particle.Life > 0.0f){
             glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
-            glUniform1f(glGetUniformLocation(m_shaderProgram, "scale2"), 1);
+            glUniform1f(glGetUniformLocation(m_shaderProgram, "scale2"), 20);
             glUniform2f(glGetUniformLocation(m_shaderProgram, "offset"), particle.Position.x, particle.Position.y);
             glUniform4f(glGetUniformLocation(m_shaderProgram, "color"), particle.Color.x, particle.Color.y, particle.Color.z, particle.Color.w);
 

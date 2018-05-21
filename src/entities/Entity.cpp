@@ -32,7 +32,6 @@
 //Entity count initialization
 int Entity::m_entityCount = 0;
 
-
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
     m_engineManager     = &EngineManager::instance();
@@ -53,7 +52,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
     moveTo(p_position);
 
-    m_debugMode = true;
+    m_debugMode = false;
     switch(p_type){
         //PLAYER
         case 0:

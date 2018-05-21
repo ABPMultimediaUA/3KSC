@@ -87,7 +87,6 @@ void CESprite::beginDraw(){
     glm::mat4 t_projection = glm::ortho(512.0f, -512.0f, -384.0f, 384.0f, -15.0f, 100.0f);
     m_MVP = t_projection * m_modelMatrix;
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
-    //glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
 
     glm::vec3 t_color = glm::vec3(1.0f, 1.0f, 1.0f);
     glUniform3f(glGetUniformLocation(m_shaderProgram, "spriteColor"), t_color.x, t_color.y, t_color.z);

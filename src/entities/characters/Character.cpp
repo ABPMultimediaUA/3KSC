@@ -58,6 +58,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
     m_AIEnabled             = false;
     
     m_name                  = p_name;
+    //m_lives                 = 0;
     m_lives                 = 3;
     m_HP                    = m_maxHP = p_HP;
     m_MP                    = m_maxMP = p_MP;
