@@ -88,7 +88,8 @@ void CEParticleSystem::beginDraw(){
     m_position = getPosition();
 
     glEnable (GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
 
     for(Particle particle : m_particles){
         if(particle.Life > 0.0f){

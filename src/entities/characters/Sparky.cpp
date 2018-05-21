@@ -105,19 +105,21 @@ bool Sparky::specialAttackUp(){
         m_physicsManager->sparkyJump(getId());
         m_jumpingTime = m_inputManager->getMasterClock() + m_jumpingDuration;
         m_sparkyJumping = true;
+        m_system = m_engineManager->createParticleSystem("assets/fire.png", 20, -m_position[0]*5, (10-m_position[1])*(5),150, 0.5, 0, 360, true, 0.5);
+
     }
     
     return false;
 }
 
 bool Sparky::specialAttackDown(){
-    //if(useMP(20) && !m_ultimateMode){
+    if(useMP(20) && !m_ultimateMode){
         m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
         m_soundManager->playSound("s_atak");
         m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
-        m_system = m_engineManager->createParticleSystem("assets/spark.png", 10, -m_position[0]*5, (10-m_position[1])*(5), 10, 0.5, 0, 180, true, 1);
+        m_system = m_engineManager->createParticleSystem("assets/spark.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
         //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
-    //}
+    }
 
     return false;
 }
