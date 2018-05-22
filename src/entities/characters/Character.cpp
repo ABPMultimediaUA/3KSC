@@ -110,7 +110,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
 
     m_validation = 123;
 
-    m_physicsManager->setPlayerSensor(getId(), this);
+    m_physicsManager->setPlayerSensor(m_idBody, this);
     //createDebug();
 
     m_damageBasic    = 0;
@@ -441,7 +441,7 @@ void Character::setStunned(float p_time){
 }
 
 void Character::respawn(){
-    m_physicsManager->resetVelocity(getId());
+    m_physicsManager->resetVelocity(m_idBody);
     m_respawning = true;
     m_HP = m_maxHP;
     m_MP = m_maxMP;
@@ -505,7 +505,7 @@ void Character::knockback(int p_orientation, float p_knockPower){
         m_sideKnockback = p_orientation;
         setKnockback();
     }
-    m_physicsManager->applyKnockback(getId(), p_orientation, p_knockPower, m_HP);
+    m_physicsManager->applyKnockback(m_idBody, p_orientation, p_knockPower, m_HP);
 }
 
 int  Character::getCurrentSnowmen(){}
@@ -532,7 +532,7 @@ bool Character::left(){
     lookLeft();
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
     // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
-    m_physicsManager->move(getId(), m_moveAmmount, 0);
+    m_physicsManager->move(m_idBody, m_moveAmmount, 0);
     return false;
 }
 
@@ -540,7 +540,7 @@ bool Character::right(){
     lookRight();
     m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
     // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
-    m_physicsManager->move(getId(), m_moveAmmount, 0);
+    m_physicsManager->move(m_idBody, m_moveAmmount, 0);
 
     return false;
 }
@@ -548,7 +548,7 @@ bool Character::right(){
 bool Character::jump(){
     if(m_maxJumps > 0){
         m_maxJumps--;
-        m_physicsManager->jump(m_id, 300);
+        m_physicsManager->jump(m_idBody, 300);
     }
 }
 

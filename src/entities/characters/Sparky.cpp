@@ -106,7 +106,7 @@ bool Sparky::specialAttackUp(){
     if(useMP(10)){
         m_soundManager->modifyParameter("s_atak", 0.5, "Atak");
         m_soundManager->playSound("s_atak");
-        m_physicsManager->sparkyJump(getId());
+        m_physicsManager->sparkyJump(m_idBody);
         m_jumpingTime = m_inputManager->getMasterClock() + m_jumpingDuration;
         m_sparkyJumping = true;
         m_system = m_engineManager->createParticleSystem("assets/fire.png", 20, -m_position[0]*5, (10-m_position[1])*(5),150, 0.5, 0, 360, true, 0.5);
@@ -120,7 +120,7 @@ bool Sparky::specialAttackDown(){
     if(useMP(20) && !m_ultimateMode){
         m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
         m_soundManager->playSound("s_atak");
-        m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
+        m_physicsManager->shockwaveBox(m_idBody, m_damageDown, m_knockbackDown);
         m_system = m_engineManager->createParticleSystem("assets/spark.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
         //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
     }
@@ -188,12 +188,12 @@ void Sparky::updateJump(){
     if(m_inputManager->getMasterClock() > m_jumpingTime){
         if(!m_gravity){
             m_gravity = true;
-            m_physicsManager->fastGravity(getId());
+            m_physicsManager->fastGravity(m_idBody);
         }else if(m_onGround){
             m_gravity       = false;
             m_sparkyJumping = false;
-            m_physicsManager->shockwaveBox(getId(), m_damageUp, m_knockbackUp);
-            m_physicsManager->resetVelocity(getId());
+            m_physicsManager->shockwaveBox(m_idBody, m_damageUp, m_knockbackUp);
+            m_physicsManager->resetVelocity(m_idBody);
         }
     }
 }
@@ -218,7 +218,7 @@ void Sparky::updateUltimate(){
         m_attackTarget[2] = m_position[2];
         
         m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 2);
-        m_physicsManager->machineGun(getId(), m_orientation, m_damageUlti, m_knockbackUlti, true);
+        m_physicsManager->machineGun(m_idBody, m_orientation, m_damageUlti, m_knockbackUlti, true);
         m_ultiBulletLaunched = true;
         m_ultimateAmmo--;
     }else if(m_ultiBulletLaunched){

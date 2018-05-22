@@ -149,8 +149,8 @@ bool Plup::specialAttackSide(){
         m_dashTime = m_inputManager->getMasterClock() + m_dashDuration;
         m_dashing = true;
 
-        m_physicsManager->dash(getId(), m_orientation);
-        m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide);
+        m_physicsManager->dash(m_idBody, m_orientation);
+        m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(m_idBody), true, m_damageSide, m_damageSide);
     }
 
     return false;
@@ -224,13 +224,13 @@ int Plup::getCurrentSnowmen(){
 
 void Plup::updateDash(){
     if(m_inputManager->getMasterClock() < m_dashTime){
-        m_physicsManager->dash(getId(), m_orientation);
-        if(m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide)){
-            m_physicsManager->resetVelocity(getId());
+        m_physicsManager->dash(m_idBody, m_orientation);
+        if(m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(m_idBody), true, m_damageSide, m_damageSide)){
+            m_physicsManager->resetVelocity(m_idBody);
             m_dashing = false;
         }
     }else{
-        m_physicsManager->resetVelocity(getId());
+        m_physicsManager->resetVelocity(m_idBody);
         m_dashing = false;
     }
 }
@@ -246,7 +246,7 @@ void Plup::updateKalasnikov(){
         m_attackTarget[2] = m_position[2];
         
         m_kalasnikovBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 1);
-        m_physicsManager->machineGun(getId(), m_orientation, m_damageUp, m_knockbackUp, false);
+        m_physicsManager->machineGun(m_idBody, m_orientation, m_damageUp, m_knockbackUp, false);
         m_kalasnikovBulletLaunched = true;
         m_kalasnikovAmmo--;
     }else if(m_kalasnikovBulletLaunched){

@@ -68,6 +68,7 @@ protected:
 
     static int              m_entityCount;
     int                     m_id;
+    int                     m_idBody;
     int                     m_modelId; 
     int                     m_type;
     
