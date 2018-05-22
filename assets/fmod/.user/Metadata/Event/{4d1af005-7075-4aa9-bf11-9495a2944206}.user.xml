@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.01.10.00">
     <object class="Event" id="{4d1af005-7075-4aa9-bf11-9495a2944206}">
+        <relationship name="selectables">
+            <destination>{bbab12d3-ae8c-47f7-9776-d61f1f266e9c}</destination>
+        </relationship>
         <relationship name="uiLastParameterSelection">
             <destination>{992662dd-4f93-4fc3-8113-df7323d1ccd9}</destination>
         </relationship>
@@ -12,7 +15,7 @@
     <object class="GroupTrack" id="{ca4996e2-5edb-46af-82e5-3d38e044161d}"/>
     <object class="Timeline" id="{992662dd-4f93-4fc3-8113-df7323d1ccd9}">
         <property name="uiLastRulerScaleRatio">
-            <value>0.0024744486282947818</value>
+            <value>0.0013948511805654661</value>
         </property>
     </object>
     <object class="EventMixerMaster" id="{b327b307-6340-4f57-ac71-d97f95cc258b}">
@@ -22,11 +25,16 @@
     </object>
     <object class="MixerBusEffectChain" id="{4b3e171e-ca85-45a1-a1d3-fdbb7c9a633a}"/>
     <object class="MixerBusPanner" id="{846bad02-8b98-4260-847a-cafcd7571f56}"/>
-    <object class="MultiSound" id="{bbab12d3-ae8c-47f7-9776-d61f1f266e9c}"/>
+    <object class="MultiSound" id="{bbab12d3-ae8c-47f7-9776-d61f1f266e9c}">
+        <property name="uiTriggerBehaviorDrawerVisible">
+            <value>true</value>
+        </property>
+    </object>
     <object class="EventMixerGroup" id="{c4682ec3-71f8-4430-8d12-91f96f7e69bf}"/>
     <object class="MixerBusEffectChain" id="{0a17cc1b-f1c1-46d6-82d7-2f4de6b1721d}"/>
     <object class="MixerBusPanner" id="{eb89f358-f221-441d-8518-591ea1e2abe1}"/>
     <object class="MixerBusFader" id="{956bfbd5-1baf-410b-8f30-3888d82f6461}"/>
+    <object class="SingleSound" id="{c57e35cb-41e9-4644-a3f0-e987884f65e2}"/>
     <object class="SingleSound" id="{43026c4f-76dd-4380-b538-ceefed207391}"/>
     <object class="SingleSound" id="{96f4094d-3e21-4e8b-9b08-e79bc3524aeb}"/>
     <object class="SingleSound" id="{08d41a58-842a-4673-a292-51e966ce92aa}"/>

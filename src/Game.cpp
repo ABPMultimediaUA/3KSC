@@ -21,6 +21,7 @@
 #include "include/Game.hpp"
 #include "include/managers/EngineManager.hpp"
 #include "include/managers/InputManager.hpp"
+#include "include/managers/SoundManager.hpp"
 #include "include/states/MenuState.hpp"
 #include "include/states/InGameState.hpp"
 
@@ -37,6 +38,7 @@ Game::Game(){
     Game::m_instance    = this;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
+    m_soundManager      = &SoundManager::instance();
     
     const int FPS = 170;
     m_nanoFrames = 1000000000/FPS;
@@ -120,3 +122,18 @@ void Game::fixedUpdate(long long p_delta){
     m_state->update();
     m_state->render();
 }
+
+ void Game::setVolume(int p_type, float p_vol){
+    switch(p_type){
+        case 0:
+            m_soundManager->setMusicVolume(p_vol);
+        break;
+
+        case 1:
+            m_soundManager->setEffectVolume(p_vol);
+            m_soundManager->modifyParameter("menu_sounds", 0.15f, "option");
+            m_soundManager->playSound("menu_sounds");
+        break;
+    }
+    m_volumes[p_type] = p_vol/0.05;
+ }

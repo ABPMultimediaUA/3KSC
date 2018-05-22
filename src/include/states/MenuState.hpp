@@ -22,7 +22,9 @@
 #define MENU_STATE
 
 class EngineManager;
+class SoundManager;
 class MenuScreen;
+
 struct MenuActionMapping;
 struct ScreenMapping;
 
@@ -46,6 +48,7 @@ class MenuState : public State{
         MenuState(Game* p_game);
         static MenuState*           m_instance;
         EngineManager*              m_engineManager;
+        SoundManager*               m_soundManager;
         std::vector<MenuScreen*>    m_screens;
         MenuScreen*                 m_currentScreen;
 

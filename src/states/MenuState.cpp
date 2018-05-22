@@ -20,6 +20,7 @@
 
 #include "../include/states/MenuState.hpp"
 #include "../include/states/InGameState.hpp"
+
 #include "../include/Game.hpp"
 
 #include "../include/menu_screens/MenuScreen.hpp"
@@ -36,6 +37,7 @@
 
 #include "../include/extra/MenuActions.hpp"
 #include "../include/managers/EngineManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 
 #include <iostream>
 #include <string>
@@ -67,6 +69,7 @@ MenuState::MenuState(Game* p_game){
     m_instance      = this;
     m_game          = p_game;
     m_engineManager = &EngineManager::instance();
+    m_soundManager  = &SoundManager::instance();
     
     mapActions();
     mapScreens();
@@ -75,6 +78,10 @@ MenuState::MenuState(Game* p_game){
 
     m_waitRelease   = false;
     m_keepWaiting   = false;
+
+    m_soundManager->loadBank(SoundID::S_MENU);
+    m_soundManager->loadEvents(SoundID::S_MENU);
+    m_soundManager->playMusic("menu_music");
 }
 
 //Destructor
@@ -106,6 +113,8 @@ MenuState* MenuState::getInstance(){
 
 //Change to next state
 void MenuState::nextState(){
+    m_soundManager->stopAll();
+
     m_game->setState(&InGameState::instance());
 }
 
@@ -181,6 +190,7 @@ void MenuState::input(){
 }
 
 void MenuState::update(){
+    m_soundManager->update();
     m_currentScreen->update();
 }
 

@@ -21,6 +21,7 @@
 #include "../include/menu_screens/CharacterLocalScreen.hpp"
 
 #include "../include/managers/InputManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 #include "../include/Game.hpp"
 
 #include <iostream>
@@ -159,6 +160,8 @@ void CharacterLocalScreen::right(){
 }
 
 void CharacterLocalScreen::select(){
+    m_soundManager->modifyParameter("menu_sounds", 0.9f, "option");
+    m_soundManager->playSound("menu_sounds");
     save();
 }
 

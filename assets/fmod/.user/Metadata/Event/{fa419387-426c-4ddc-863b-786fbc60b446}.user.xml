@@ -74,7 +74,11 @@
         </property>
     </object>
     <object class="EventMixerGroup" id="{f52f34e9-77ab-4e64-8fac-079486cf5704}"/>
-    <object class="SingleSound" id="{9e0756f2-f4f7-4326-8f1e-864e77c7229a}"/>
+    <object class="SingleSound" id="{9e0756f2-f4f7-4326-8f1e-864e77c7229a}">
+        <property name="uiTriggerBehaviorDrawerVisible">
+            <value>true</value>
+        </property>
+    </object>
     <object class="SingleSound" id="{0d2ff245-29f1-4cd7-a8b9-97bd83bf5ad9}"/>
     <object class="SingleSound" id="{9b9d9362-b5d5-434c-ae63-132afa9d488a}"/>
     <object class="EventMixerGroup" id="{ad2fc435-e201-4e7d-972c-39f9224170fd}"/>
