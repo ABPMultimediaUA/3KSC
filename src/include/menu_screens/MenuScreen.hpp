@@ -25,6 +25,7 @@
 #include <CESceneSprite.hpp>
 
 class EngineManager;
+class SoundManager;
 class InputManager;
 
 struct MenuNode{
@@ -57,6 +58,7 @@ class MenuScreen{
 
         MenuState*          m_menu;
         EngineManager*      m_engineManager;
+        SoundManager*       m_soundManager;
         InputManager*       m_inputManager;
         
         CESceneSprite*              m_screenName;

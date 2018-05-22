@@ -23,6 +23,7 @@
 
 class EngineManager;
 class InputManager;
+class SoundManager;
 class State;
 
 class Game{
@@ -31,6 +32,7 @@ class Game{
 
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
+        SoundManager*   m_soundManager;
         State*          m_state;
         
         long long       m_elapsedTotal;
@@ -87,7 +89,7 @@ class Game{
         void        setResolutionPreset(int p_preset);
         void        changeVideoMode();
 
-        void        setVolume(int p_type, int p_vol)                { m_volumes[p_type] = p_vol;                }
+        void        setVolume(int p_type, float p_vol);
 
         void        setPlayerNPC(int p_player, bool p_NPC = true)   { m_NPC[p_player] = p_NPC;                  }
         void        setChosenPlayer(int p_player, int p_character)  { m_chosenPlayers[p_player] = p_character;  }
