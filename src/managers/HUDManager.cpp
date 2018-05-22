@@ -21,6 +21,7 @@
 #include "../include/managers/HUDManager.hpp"
 #include "../include/Game.hpp"
 #include "../include/managers/EngineManager.hpp"
+#include "../include/managers/InputManager.hpp"
 #include "../include/entities/Arena.hpp"
 #include "../include/ChaoticEngine/fachada/CESceneSprite.hpp"
 #include <string> //For std::to_string()
@@ -57,8 +58,8 @@ HUDManager& HUDManager::instance(){
 HUDManager::HUDManager(){
     m_game              = Game::getInstance();
     m_engineManager     = &EngineManager::instance();
-    m_arena             = Arena::getInstance();
-    
+    m_inputManager      = &InputManager::instance();
+
     initializePlayer(0);
     initializePlayer(1);
     initializeUB();
@@ -95,7 +96,6 @@ void HUDManager::initializePlayer(int p_index){
     }
 
     if (t_NPC){
-
         t_type = "_AI_";
     }
     else{
@@ -153,6 +153,7 @@ void HUDManager::initializePlayer(int p_index){
 
 
     m_playerHUDs[p_index] = t_playerHUD;
+    setUltimate(p_index, false);
 }
 
 //Initializes the HUD for the Ultimate Bar
@@ -165,32 +166,80 @@ void HUDManager::initializeUB(){
 
     m_ultimateBG->setAbsolutePosition(t_x, t_y, 0);
     m_ultimateFG->setAbsolutePosition(t_x, t_y, 1);
+
+    m_ultimateCharge = 0;
+    m_ultimateFG->setAbsoluteScale(0, 1, 1);
 }
 
-//Changes the HP of a player in the screen
+// Changes the HP of a player in the screen
+// Changes the color of the HP bar and the face of the character
 void HUDManager::setHP(int p_player, int p_HP, int p_maxHP){
-    // TODO: Change size and color
     m_playerHUDs[p_player]->hp->setAbsoluteScale(((float)(p_HP) / (float) p_maxHP) * 0.5, 0.5, 1);
+
+    //Low HP
+    if (p_HP <= (p_maxHP / 3)){
+        m_playerHUDs[p_player]->hp->setTexture(1);
+        m_playerHUDs[p_player]->face->setTexture(1);        
+    }
+
+    //High HP
+    else{
+        m_playerHUDs[p_player]->hp->setTexture(0);
+        m_playerHUDs[p_player]->face->setTexture(0);        
+    }
 }
 
 //Changes the MP of a player in the screen
 void HUDManager::setMP(int p_player, int p_MP, int p_maxMP){
-    // TODO: Change size
     m_playerHUDs[p_player]->mp->setAbsoluteScale(((float)(p_MP) / (float) p_maxMP) * 0.5, 0.5, 1);
 }
 
 //Changes the lives left of a player in the screen
 void HUDManager::setLives(int p_player, int p_lives){
-    //TODO: Change lives texture
     m_playerHUDs[p_player]->lives->setTexture(p_lives);
+}
+
+//Fills the Ultimate Bar
+void HUDManager::fillUB(float p_delta){
+    m_ultimateCharge += p_delta;
+
+    if (m_ultimateCharge >= 3){
+        m_ultimateCharge = 0;
+    }
+
+    m_ultimateFG->setAbsoluteScale((m_ultimateCharge / 3), 1, 1);
+}
+
+// Enables or disables the Ultimate Attack of a player
+void HUDManager::setUltimate(int p_player, bool p_active){
+    m_playerHUDs[p_player]->ultimateON = p_active;
+    m_playerHUDs[p_player]->up->setVisible(p_active);
+}
+
+// Makes the Ultimate blink in player HUD
+void HUDManager::ultimateBlink(int p_player){
+    int t_time = (int) m_inputManager->getMasterClock();
+    m_playerHUDs[p_player]->up->setVisible(t_time % 2 == 0);
 }
 
 //Updates the UI
 void HUDManager::update(){
-    
+    m_ultimateBG->setVisible(m_arena->portalIsActive());
+    m_ultimateFG->setVisible(m_arena->portalIsActive());
+
+    for (int i = 0; i < 2; i++){
+        if (m_playerHUDs[i]->ultimateON){
+            ultimateBlink(i);
+        }
+    }
 }
 
 //Displays the UI
 void HUDManager::render(){
 
+}
+
+//Initializes the arena pointer
+void HUDManager::setArena(){
+    m_arena = Arena::getInstance();
 }

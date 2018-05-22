@@ -62,8 +62,8 @@ Game::Game(){
     m_map               = 0;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
-    // m_state = new MenuState(this);
-    m_state = new InGameState(this, false);
+    m_state = new MenuState(this);
+    // m_state = new InGameState(this, false);
 }
 
 //Destructor

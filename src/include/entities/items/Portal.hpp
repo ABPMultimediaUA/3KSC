@@ -24,6 +24,7 @@
 #define PORTAL
 
 class PhysicsManager;
+class HUDManager;
 class Arena;
 
 #include "../Entity.hpp"
@@ -38,8 +39,10 @@ public:
     void        update(float p_delta);
     void        use();
 private:
-    Arena*      m_arena;
+    Arena*          m_arena;
     PhysicsManager* m_physicsManager;
+    HUDManager*     m_HUDManager;
+
     float       m_charge;
     bool        m_using;
     int         m_charactersInPortal;

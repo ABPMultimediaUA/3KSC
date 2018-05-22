@@ -28,6 +28,7 @@
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/EngineManager.hpp"
+#include "../../include/managers/HUDManager.hpp"
 
 #include <iostream>
 
@@ -146,6 +147,11 @@ bool Sparky::specialAttackSide(){
 }
 
 bool Sparky::ultimateAttack(){
+    //Disable Ultimate in HUD
+    m_HUDManager->setUltimate(m_playerIndex, false);
+    //Disable Ultimate in HUD
+    m_HUDManager->setUltimate(m_playerIndex, false);
+    
     // m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;

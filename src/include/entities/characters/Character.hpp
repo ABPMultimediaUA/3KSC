@@ -119,6 +119,7 @@ protected:
     int             m_maxMP;
     int             m_damage;
     float           m_velocity;
+    bool            m_ultimateMode;
     float           m_attackPosition[3];
     float           m_attackTarget[3];
     float           m_respawnPosition[3];

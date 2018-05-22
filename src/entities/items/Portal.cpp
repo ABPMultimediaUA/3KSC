@@ -22,13 +22,16 @@
 
 #include "../../include/entities/items/Portal.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
+#include "../../include/managers/HUDManager.hpp"
 #include "../../include/entities/Arena.hpp"
 #include <iostream>
 
 //Constructor
-Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/items/portal.obj", 3){
+Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/items/portal_000004.obj", 3){
     m_arena             = Arena::getInstance();
     m_physicsManager    = &PhysicsManager::instance();
+    m_HUDManager        = &HUDManager::instance();
+
     m_using             = false;
     m_charge            = 0.0f;
     m_charactersInPortal = 0;
@@ -61,6 +64,8 @@ void Portal::update(float p_delta){
             use();
             m_charge = 0;
         }
+
+        m_HUDManager->fillUB(p_delta);
     }
 }
 //Increases owner's ultimate bar
@@ -69,6 +74,7 @@ void Portal::use(){
     for(i = 0; i < 2; i++){
         if(m_players[i]!= NULL){
             m_players[i]->setUltimateCharged();
+            m_HUDManager->setUltimate(i, true);
             break;
         }
     }

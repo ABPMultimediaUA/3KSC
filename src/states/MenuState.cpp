@@ -166,6 +166,5 @@ void MenuState::update(){
 }
 
 void MenuState::render(){
-    //Update texture contents
     m_currentScreen->render();
 }

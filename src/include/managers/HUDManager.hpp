@@ -23,6 +23,7 @@
 
 class Game;
 class EngineManager;
+class InputManager;
 class Arena;
 class CESceneSprite;
 
@@ -34,6 +35,8 @@ struct PlayerHUD{
     CESceneSprite*  up;
     CESceneSprite*  lives;
 
+    bool            ultimateON;
+
     ~PlayerHUD();
 };
 
@@ -41,24 +44,31 @@ class HUDManager{
     private:
         Game*           m_game;
         EngineManager*  m_engineManager;
+        InputManager*   m_inputManager;
         Arena*          m_arena;
 
         PlayerHUD*      m_playerHUDs[2];
         CESceneSprite*  m_ultimateBG;
         CESceneSprite*  m_ultimateFG;
+        float           m_ultimateCharge;
 
         HUDManager();
         
         void initializePlayer(int p_index);
         void initializeUB();
+        void ultimateBlink(int p_player);
 
     public:
         static HUDManager& instance();
         ~HUDManager();
 
+        void setArena();
+
         void setHP(int p_player, int p_HP, int p_maxHP);
         void setMP(int p_player, int p_MP, int p_maxMP);
         void setLives(int p_player, int p_lives);
+        void fillUB(float p_delta);
+        void setUltimate(int p_player, bool p_active);
 
         void update();
         void render();

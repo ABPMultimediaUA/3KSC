@@ -51,6 +51,7 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_deltaTime         = 0;
 
     createArena("assets/Fusfus_Stadium.cgm");
+    m_HUDManager->setArena();
 
     //Online stuff
     m_onlineMode = p_onlineMode;
@@ -109,8 +110,9 @@ void InGameState::update(){
     }
     //Update the physics one step more(need to be done first of all)
     m_physicsManager->update(m_deltaTime);
-    
     //m_engineManager->updateParticleSystem();
+    m_HUDManager->update();
+
 
     // calculateFPS(t_time);
 }
@@ -129,7 +131,6 @@ void InGameState::calculateFPS(double t_time){
 void InGameState::render(){
     m_engineManager->updateCamera();
     m_engineManager->drawScene();
-    m_HUDManager->render();
 }
 
 //Change to next state
