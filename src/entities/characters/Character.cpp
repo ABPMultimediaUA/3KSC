@@ -249,7 +249,6 @@ void Character::removeWings(){
 
 //Decreases number of lives
 void Character::die(){
-    std::cout << "LA HA PALMADOOOOOO POR IMBECIIIIIL!!!" << std::endl;
     m_lives--;
     //std::cout << "Me quedan " << m_lives << " vidas." << std::endl;
     m_HP = 0;

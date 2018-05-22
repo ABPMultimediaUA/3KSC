@@ -137,8 +137,6 @@ bool Sparky::specialAttackSide(){
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
 
-        
-        m_system = m_engineManager->createParticleSystem("assets/fire.png", 3, -m_position[0], 9- m_position[1], 1, 0.2, 0, 1, true, 0.1);
         //Create attack and increase projectile count
         m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 0);
         m_punchLaunched = true;

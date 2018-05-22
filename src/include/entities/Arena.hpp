@@ -51,12 +51,14 @@ public:
     void            setSpawnPositions(float p_spawnPositions[4][3]); 
     void            update(float p_delta);
     void            portalSpawner();
+    void            portalSpawnerOnline();
     void            spawnPortal();
     void            hidePortal();
     bool            portalIsActive();
     float*          getPortalPosition();
     bool            spawnRandomItem();
-    void            onlineUpdate();
+    void            onlineUpdate(float p_time);
+    void            onlineUpdateClient(float p_time);
     void            spawnItemAt(int p_type, int x, int y);
     b2Vec2          getClosestItemPosition(b2Vec2 p_position);
     void            setOnline(bool p_state);
