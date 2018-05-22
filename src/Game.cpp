@@ -74,11 +74,11 @@ Game::~Game(){
 
 //Changes to an specified state
 void Game::setState(State* p_state){
-    std::cout << "Deleting state: " << m_state << std::endl;
+    //std::cout << "Deleting state: " << m_state << std::endl;
     //delete m_state;
-    std::cout << "State deleted, setting state: " << p_state << std::endl;
+    //std::cout << "State deleted, setting state: " << p_state << std::endl;
     m_state = p_state;
-    std::cout << "State set" << std::endl;
+    //std::cout << "State set" << std::endl;
 }
 
 //Changes to the next stage

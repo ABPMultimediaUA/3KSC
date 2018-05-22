@@ -191,8 +191,6 @@ void Character::changeHP(int p_variation){
     if(m_stunned)
         m_stunned = false;
 
-    std::cout << "HP: " << m_HP << std::endl;
-
     //HUD Stuff
     m_HUDManager->setHP(m_playerIndex, m_HP, m_maxHP);
 }
@@ -265,15 +263,10 @@ void Character::die(){
     deathSound();
     removeWings();
 
-    if(m_lives > 0){
-        respawn();
-    }    
-    else{
-        //m_arena->pleaseKill(m_playerIndex);
-        //m_engineManager->cleanScene();
-        //m_game->setState(new MenuState(m_game));
-    }
-
+    if(m_lives > 0)
+        respawn(); 
+    else
+        m_alive = false;
 
     //Delete when m_lives == 0
 }
@@ -312,7 +305,6 @@ void Character::input(){
     m_inputManager->updatePlayerActions(m_playerIndex);
     
     //For movement
-    
     m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
     //Block
@@ -350,6 +342,7 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
+    m_currentTime = m_inputManager->getMasterClock();
 
     //Update AI if exists and is enabled
     if(m_AI && m_AIEnabled)
@@ -359,21 +352,20 @@ void Character::update(){
     updatePlayer();
     m_moveAmmount = 0;
 
-    float t_currentTime = m_inputManager->getMasterClock();
-    if(m_winged && t_currentTime >= m_wingsTime)
+    if(m_winged && m_currentTime >= m_wingsTime)
         removeWings();
 
-    if(m_shielded && t_currentTime >= m_shieldTime)
+    if(m_shielded && m_currentTime >= m_shieldTime)
         m_shielded = false;
 
-    if(m_stunned && t_currentTime > m_stunTime){
+    if(m_stunned && m_currentTime > m_stunTime){
         m_stunDuration = 1.0;
         m_stunned      = false;
     }    
     else
         doActions();
 
-    if(m_knockback && t_currentTime >= m_knockbackTime)
+    if(m_knockback && m_currentTime >= m_knockbackTime)
         m_knockback = false;
 
     if(m_respawning)
@@ -529,19 +521,20 @@ int Character::getValidation(){
 
 /* ****************************** ACTIONS ****************************** */
 bool Character::left(){
-    lookLeft();
-    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
-    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
-    m_physicsManager->move(getId(), m_moveAmmount, 0);
+    if(!m_stunned){
+        lookLeft();
+        m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
+        m_physicsManager->move(getId(), m_moveAmmount, 0);
+    }
     return false;
 }
 
 bool Character::right(){
-    lookRight();
-    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
-    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
-    m_physicsManager->move(getId(), m_moveAmmount, 0);
-
+    if(!m_stunned){
+        lookRight();
+        m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
+        m_physicsManager->move(getId(), m_moveAmmount, 0);
+    }
     return false;
 }
 

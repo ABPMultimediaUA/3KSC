@@ -42,10 +42,12 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Chara
 
     m_turretDuration    = 15.0f;
     m_turretTime        = 0.0f;
-    m_basicDuration     = 0.5f;
-    m_basicTime         = 0.0f;
+    m_atakOffset        = 0.5f;
+    m_atakTime          = 0.0f;
     m_ultimateDuration  = 3.0f;
     m_ultimateTime      = 0.0f;
+    m_kalasnikovOffset  = 0.0f;
+    m_kalasnikovTime    = 0.0f;
 
     m_damageBasic       = 15.0f;
     m_damageSide        = 35.0f;
@@ -79,8 +81,7 @@ bool Plup::jump(){
 
 //Slap
 bool Plup::basicAttack(){
-    float t_currentTime = m_inputManager->getMasterClock();
-    if(t_currentTime >= m_basicTime){
+    if(m_currentTime >= m_atakTime){
         Character* t_currentPlayer;
 
         for(int i = 0; i < m_playerCount; i++){
@@ -102,29 +103,31 @@ bool Plup::basicAttack(){
                 }
             }
         }
-        m_basicTime = t_currentTime + m_basicDuration;
+        m_atakTime = m_currentTime + m_atakOffset;
     }
     return false;
 }
 
 //Range attack
 bool Plup::specialAttackUp(){
-    if(useMP(15)){
+    if(m_currentTime >= m_atakTime && useMP(15)){
         m_soundManager->modifyParameter("p_atak", 0.5, "Atak");
         m_soundManager->playSound("p_atak");
 
         m_kalasnikov = true;
-        m_kalasnikovAmmo = 0;
+        m_kalasnikovAmmo = 5;
 
-        m_engineManager->createParticleSystem("assets/bala.png", 5, -m_position[0]*5, (10-m_position[1])*(5), 650, 0.5, 80, 90, true, 1);
-        ///ULTIMO PARAMETRO DURACIÓN DEL SISTEMA
+        m_engineManager->createParticleSystem("assets/bala.png", 5, -m_position[0]*5, (10-m_position[1])*(5), 650, 0.5, 80, 90, true, 0.5);
+        
+        m_kalasnikovTime = m_currentTime + m_kalasnikovOffset;
+        m_atakTime = m_currentTime + m_atakOffset;
     }
     return false;
 }
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if(!m_snowmanPlaced && useMP(40)){
+    if(!m_snowmanPlaced && m_currentTime >= m_atakTime && useMP(40)){
         m_attackPosition[0] = m_position[0] + 1*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -132,25 +135,29 @@ bool Plup::specialAttackDown(){
         //Create snowman and increase snowmen count
         m_snowman = new Snowman(m_attackPosition, m_playerIndex, m_damageDown, m_knockbackDown);
         m_snowmanPlaced = true;
-        m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
+        m_turretTime = m_currentTime + m_turretDuration;
         m_soundManager->modifyParameter("p_atak", 0.7, "Atak");
         m_soundManager->playSound("p_atak");
+
+        m_atakTime = m_currentTime + m_atakOffset;
     }
     return false;
 }
 
 //Dash
 bool Plup::specialAttackSide(){
-    if(m_onGround && !m_dashing && useMP(20)){
+    if(m_onGround && !m_dashing && m_currentTime >= m_atakTime && useMP(20)){
         //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
         m_soundManager->modifyParameter("p_atak", 0.3, "Atak");
         m_soundManager->playSound("p_atak");
         
-        m_dashTime = m_inputManager->getMasterClock() + m_dashDuration;
+        m_dashTime = m_currentTime + m_dashDuration;
         m_dashing = true;
 
         m_physicsManager->dash(getId(), m_orientation);
         m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide);
+
+        m_atakTime = m_currentTime + m_atakOffset;
     }
 
     return false;
@@ -174,7 +181,7 @@ bool Plup::ultimateAttack(){
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
             t_currentPlayer->setStunned(3.0);
         }
-        m_ultimateTime = m_inputManager->getMasterClock() + m_ultimateDuration;
+        m_ultimateTime = m_currentTime + m_ultimateDuration;
         m_ultimateCharged = false;
         m_engineManager->createParticleSystem("assets/spark.png", 300, -m_position[0]*5, (10-m_position[1])*(5), 1200, 1, 0, 360, true, 0.5);
     }
@@ -183,7 +190,7 @@ bool Plup::ultimateAttack(){
 }
 
 void Plup::updatePlayer(){
-    if(m_inputManager->getMasterClock() > m_ultimateTime)
+    if(m_currentTime > m_ultimateTime)
         m_ultimateMode = false;
     
     if(m_dashing)
@@ -200,7 +207,7 @@ void Plup::updatePlayer(){
 
 void Plup::updateSnowman(){
     //Snowmen AI
-    if(m_inputManager->getMasterClock() < m_turretTime){
+    if(m_currentTime < m_turretTime){
         if(!m_snowman->getBulletLaunched()){
             if(!m_snowman->lockNLoad())
                 deleteSnowman();
@@ -223,7 +230,7 @@ int Plup::getCurrentSnowmen(){
 }
 
 void Plup::updateDash(){
-    if(m_inputManager->getMasterClock() < m_dashTime){
+    if(m_currentTime < m_dashTime){
         m_physicsManager->dash(getId(), m_orientation);
         if(m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide)){
             m_physicsManager->resetVelocity(getId());
@@ -236,25 +243,11 @@ void Plup::updateDash(){
 }
 ///MODIFICAR ESTO, QUE NO SE MUEVA, MUNICION PUESTA A 0 AHORA
 void Plup::updateKalasnikov(){
-    if(!m_kalasnikovBulletLaunched && m_kalasnikovAmmo > 0){
-        m_attackPosition[0] = m_position[0];
-        m_attackPosition[1] = m_position[1] + 0.5;
-        m_attackPosition[2] = m_position[2];
-     
-        m_attackTarget[0] = m_position[0];
-        m_attackTarget[1] = m_position[1] + 10;
-        m_attackTarget[2] = m_position[2];
-        
-        m_kalasnikovBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 1);
+    if(m_currentTime >= m_kalasnikovTime && m_kalasnikovAmmo > 0){
+        std::cout << "Kalasnikov" << std::endl;
         m_physicsManager->machineGun(getId(), m_orientation, m_damageUp, m_knockbackUp, false);
-        m_kalasnikovBulletLaunched = true;
+        m_kalasnikovTime = m_currentTime + m_kalasnikovOffset;
         m_kalasnikovAmmo--;
-    }else if(m_kalasnikovBulletLaunched){
-        if(!m_kalasnikovBullet->update(false)){
-            delete m_kalasnikovBullet;
-            m_kalasnikovBullet         = nullptr;
-            m_kalasnikovBulletLaunched = false;
-        }
     }else
         m_kalasnikov = false;
 }

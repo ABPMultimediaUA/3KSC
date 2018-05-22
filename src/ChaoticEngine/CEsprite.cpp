@@ -41,7 +41,7 @@ CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuin
             m_width, 0.0f,     1.0f, 0.0f
         };
 
-        std::cout << "Origen no centrado" << std::endl;
+        //std::cout << "Origen no centrado" << std::endl;
 
         for(int i = 0; i < 16; i++)
             t_vertices[i] = t_vert[i];
@@ -71,7 +71,7 @@ CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuin
     
     glBindVertexArray(0);
     
-    std::cout << "CESprite creado" << std::endl;
+    //std::cout << "CESprite creado" << std::endl;
 }
 
 CESprite::~CESprite(){}

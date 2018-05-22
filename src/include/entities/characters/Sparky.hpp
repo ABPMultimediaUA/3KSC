@@ -49,6 +49,9 @@ private:
     bool            m_punchLaunched;
     bool            m_ultiBulletLaunched;
 
+    float       m_atakOffset;
+    float       m_atakTime;
+
     Projectile*     m_punch;
     Projectile*     m_ultimateBullet;
 

@@ -136,6 +136,7 @@ protected:
     bool            m_ultimateCharged;
     float           m_frameDeltaTime;       //For movement
     float           m_runningFactor;
+    float           m_currentTime;
 
     //Jumps
     int             m_maxJumps;
