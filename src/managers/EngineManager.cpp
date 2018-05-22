@@ -211,11 +211,17 @@ int EngineManager::loadAnimations(float p_position[3], float p_scale[3], const c
     const char* t_path;
     std::cout << "cargando animaciones de: " << p_modelURL << std::endl;
     CESceneAnimation* t_animation = NULL;
+    int t_cont = 0;
+
 
     while(std::getline(t_file, t_line)){
         if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
             continue;
-        t_path = t_line.c_str();
+
+        std::istringstream t_tokens(t_line);
+        std::vector<std::string> t_elements(std::istream_iterator<std::string>{t_tokens}, std::istream_iterator<std::string>());
+        t_path = t_elements[0].c_str();
+
         if(t_animation == NULL){
             t_animation = m_scene->createAnimatedMesh(t_path);
             t_animation->changeCurrentAnimation(0);
@@ -223,6 +229,11 @@ int EngineManager::loadAnimations(float p_position[3], float p_scale[3], const c
         else{
             t_animation->loadAnimation(t_path);
         }
+        float t_number = strtof((t_elements[1]).c_str(), 0);
+        if(t_number == 1)
+            t_animation->changeCurrentAnimation(t_cont);
+
+        t_cont ++;
     }
     if(t_animation){
         t_animation->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);

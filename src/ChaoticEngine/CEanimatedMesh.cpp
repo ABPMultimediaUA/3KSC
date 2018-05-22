@@ -59,6 +59,7 @@ void CEAnimatedMesh::beginDraw(){
     }
     if(m_currentFrame > m_currentAnimation->getNumFrames() - 1){
         m_currentFrame = 0;
+        m_currentAnimation = m_animations[0];
     }
     
     if(m_currentAnimation != NULL){
