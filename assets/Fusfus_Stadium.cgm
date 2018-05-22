@@ -4,7 +4,7 @@
 m assets/models/arenas/Fusfus_stadium/Estadio_Fusfus.obj 1 0 0 0
 
 # c se utiliza para la camara: posx posy posz(de la camara) posx posy posz(del target)
-c 0 7 -16 0 5 150
+c 0 10 -16 0 8 150
 
 #gl Global light
 gl 0 10 0 -5 -2 -0
