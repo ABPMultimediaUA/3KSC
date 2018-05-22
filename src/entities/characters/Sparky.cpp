@@ -67,7 +67,10 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : C
 
 }
 
-Sparky::~Sparky(){}
+Sparky::~Sparky(){
+    std::cout << "~Sparky" << std::endl;
+
+}
 
 bool Sparky::jump(){
     return Character::jump();

@@ -261,10 +261,17 @@ void SoundManager::unPauseAll(){
 }
 
 void SoundManager::stopAll(){
-    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+    /*for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
         if(strcmp(m_iterator->first, "fos_ambient") != 0)
             m_iterator->second->stop();
+    }*/
+    for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
+        m_iterator->second->stop();
     }
+    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+        m_iterator->second->stop();
+    }
+    update();
 }
 
 void SoundManager::modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound){

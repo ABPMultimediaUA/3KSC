@@ -61,9 +61,6 @@ void MainScreen::hideUnselected(){
 
 
 
-
-
-
 /* ****************************** ACTIONS ****************************** */
 void MainScreen::left(){    
     if (m_selectedNode && m_selectedNode->left){

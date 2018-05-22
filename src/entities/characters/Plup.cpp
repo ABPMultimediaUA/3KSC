@@ -66,7 +66,10 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Chara
     }
 }
 
-Plup::~Plup(){}
+Plup::~Plup(){
+    std::cout << "~Plup" << std::endl;
+
+}
 
 bool Plup::jump(){
     return Character::jump();

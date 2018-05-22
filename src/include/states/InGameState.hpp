@@ -35,6 +35,7 @@ class Client;
 
 class InGameState : public State{
     private:
+        InGameState(Game* p_game, bool p_onlineMode = false);
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
         UIManager*      m_UIManager;
@@ -50,9 +51,12 @@ class InGameState : public State{
         double  m_time;
         int     m_FPS;
 
+        bool    m_changeState;
+
     public:
-        InGameState(Game* p_game, bool p_onlineMode = false);
+        static InGameState& instance();
         ~InGameState();
+        void    initState(Game* p_game);
         void    input();
         void    update();
         void    render();

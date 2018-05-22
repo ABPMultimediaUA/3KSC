@@ -59,6 +59,8 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_portalSpawnTime   = m_inputManager->getMasterClock() + m_portalOffsetTime;
     m_portalSpawned     = false;
 
+    m_portal = nullptr;
+
     m_musicIntensity[0] = 0.8;
     m_musicIntensity[1] = 0.6;
     m_musicIntensity[2] = 0.4;
@@ -66,9 +68,31 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
 }
 
 Arena::~Arena(){
+    std::cout << "~Arena" << std::endl; 
+    //cleanArena();
+
     for(int i = 0; i < m_playerCount; i++){
         delete m_players[i];
-        m_players = nullptr;
+        m_players[i] = nullptr;
+    }
+
+    delete[] m_players;
+    m_players = nullptr;
+
+    if(m_portal){
+        delete m_portal;
+        m_portal = nullptr;
+    }
+
+    std::cout << "TERMINADO DELETE ARENA" << std::endl;
+}
+
+void Arena::cleanArena(){
+    std::cout << "Clean Arena" << std::endl; 
+
+    for(int i = 0; i < m_playerCount; i++){
+        delete m_players[i];
+        m_players[i] = nullptr;
     }
 
     delete[] m_players;
@@ -89,19 +113,23 @@ void Arena::spawnPlayers(){
     spawnPlayer();
     spawnPlayer();
 
-    //m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0]);
-    //m_players[m_playerCount++] = new Plup("Player 2", m_spawnPositions[1]);
-    //m_players[m_playerCount++] = new Plup("Player 3", m_spawnPositions[2]);
-    //m_engineManager->createParticleSystem("assets/fire.png", 50, 5, 5, 10, 2, -20, 20, false,30);
     std::cout << "PLAYER COUNT " << m_playerCount << std::endl;
-    m_soundManager->modifyParameter("fos_music", m_musicIntensity[m_playerCount], "Intensity", false);
+    m_soundManager->modifyParameter("fos_music", m_musicIntensity[0], "Intensity", false);
 }
 
 //Spawns a single player
 void Arena::spawnPlayer(bool p_online){
     switch (m_game->getChosenPlayer(m_playerCount)){
-        case 0: { m_players[m_playerCount] = new Plup("Plup", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));         break;  }
-        case 1: { m_players[m_playerCount] = new Sparky("Sparky", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));     break;  }
+        case 0: { 
+            std::cout << " ++ Spawn Plup" << std::endl;
+            m_players[m_playerCount] = new Plup("Plup", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));
+            break;
+        }
+        case 1: { 
+            std::cout << " ++ Spawn Sparky" << std::endl;
+            m_players[m_playerCount] = new Sparky("Sparky", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));
+            break;
+        }
     }
 
     m_playerCount++;
@@ -184,6 +212,7 @@ void Arena::update(float p_delta){
         m_soundManager->playSound("fos_ambient");
     if(m_portalSpawned)
         m_portal->update(p_delta);
+    
     m_engineManager->updateParticleSystem();
     portalSpawner();
 }
@@ -254,8 +283,8 @@ bool Arena::getOnline(){
 }
 
 void Arena::pleaseKill(int p_playerIndex){
-    delete m_players[p_playerIndex];
-    m_players[p_playerIndex] = 0;
+    //delete m_players[p_playerIndex];
+    //m_players[p_playerIndex] = 0;
 }
 
 bool Arena::portalIsActive(){

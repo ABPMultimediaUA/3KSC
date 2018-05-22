@@ -22,6 +22,8 @@
 #include "../include/states/MenuState.hpp"
 #include "../include/Game.hpp"
 
+#include <iostream>
+
 //Constructor
 EndGameState::EndGameState(Game* p_game){
     m_game = p_game;
@@ -35,7 +37,8 @@ void EndGameState::input(){
 }
 
 void EndGameState::update(){
-
+    std::cout << "EndGameState" << std::endl;
+    nextState();
 }
 
 void EndGameState::render(){
@@ -44,5 +47,5 @@ void EndGameState::render(){
 
 //Change to next state
 void EndGameState::nextState(){
-    m_game->setState(new MenuState(m_game));
+    m_game->setState(&MenuState::instance());
 }

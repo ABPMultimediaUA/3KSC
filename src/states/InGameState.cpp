@@ -30,8 +30,11 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/Client.hpp"
+#include "../include/states/MenuState.hpp"
 
 #include "../include/extra/Inputs.hpp"
+#include "../include/extra/Screens.hpp"
+
 
 #include <iostream>
 #include <fstream>
@@ -39,8 +42,32 @@
 #include <string>
 
 
+InGameState* m_instance = nullptr;
+
+//Instance initialization
+InGameState& InGameState::instance(){
+    static InGameState instance(Game::getInstance());
+    instance.initState(Game::getInstance());
+
+    return instance;
+}
+
 //Constructor
 InGameState::InGameState(Game* p_game, bool p_onlineMode){
+    //Online stuff
+    m_instance = this;
+    m_onlineMode = p_onlineMode;
+}
+
+//Destructor
+InGameState::~InGameState(){
+    std::cout << "~InGameState" << std::endl;
+    
+    delete m_arena;
+    m_arena = nullptr;
+}
+
+void InGameState::initState(Game* p_game){
     m_game              = p_game;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
@@ -51,9 +78,6 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_deltaTime         = 0;
 
     createArena("assets/Fusfus_Stadium.cgm");
-
-    //Online stuff
-    m_onlineMode = p_onlineMode;
 
     if(m_onlineMode){
         m_client = &Client::instance();
@@ -68,21 +92,16 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
     m_time  = 0;
     m_FPS   = 0;
-    
-    //m_engineManager->createSprite("assets/awesome.bin", 10.0f, 10.0f);
-    //IF PARTICLE SYSTEM, ACTIVATE THE UPDATE IN THE UPDATE LOOP OF INGAMESTATE
-    //m_engineManager->createParticleSystem("assets/awesome.bin", 1000);
+
+    m_changeState = false;
 }
 
-//Destructor
-InGameState::~InGameState(){
-    std::cout << "~InGameState" << std::endl;
-    
-    delete m_arena;
-    m_arena = nullptr;
-}
 
-void InGameState::input(){}
+void InGameState::input(){
+    if(m_inputManager->isKeyPressed(Key::Escape)){
+        this->nextState();
+    }
+}
 
 void InGameState::update(){
     double t_time = m_engineManager->getElapsedTime();
@@ -98,12 +117,13 @@ void InGameState::update(){
     int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
     //Input and update for every character
-    for(int i = 0; i < t_playerCount; i++){
+    for(int i = 0; i < t_playerCount && !m_changeState; i++){
         t_currentPlayer = m_arena->getPlayer(i);
 
         if(t_currentPlayer){
             t_currentPlayer->input();
             t_currentPlayer->update();
+            m_changeState = !t_currentPlayer->getAlive();
         }
     }
     //Update the physics one step more(need to be done first of all)
@@ -112,7 +132,9 @@ void InGameState::update(){
     //m_engineManager->updateParticleSystem();
     // calculateFPS(t_time);
 
-
+    if(m_changeState){
+        this->nextState();
+    }
 }
 
 void InGameState::calculateFPS(double t_time){
@@ -134,7 +156,13 @@ void InGameState::render(){
 
 //Change to next state
 void InGameState::nextState(){
-    m_game->setState(new EndGameState(m_game));
+    //m_arena->cleanArena();
+    delete m_arena;
+    m_engineManager->cleanScene();
+    m_soundManager->stopAll();
+    m_physicsManager->clear();
+    MenuState::getInstance()->goToMainScreen();
+    m_game->setState(&MenuState::instance());
 }
 
 void InGameState::createArena(const char* p_fileCgm){
@@ -275,7 +303,7 @@ void InGameState::createArena(const char* p_fileCgm){
             t_skyPath[4] = t_elements[6].c_str(); 
             t_skyPath[5] = t_elements[7].c_str(); 
 
-            m_engineManager->loadSkybox(t_skyPath, t_scale);
+            //m_engineManager->loadSkybox(t_skyPath, t_scale);
         }
     }
 }

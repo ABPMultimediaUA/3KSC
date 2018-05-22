@@ -37,7 +37,7 @@ class Game;
 class Character : public Entity{
 public:
     Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online = false, bool p_NPC = false);
-    ~Character();
+    virtual ~Character();
 
     void            getRespawnPosition();
 	
@@ -65,6 +65,7 @@ public:
     int             getHP();
     int             getMP();
     int             getOrientation();
+    bool            getAlive()  {   return m_alive; }
     void            setStunned(float p_time = 0);
     bool            isJumping();
     void            onTouchGround();
