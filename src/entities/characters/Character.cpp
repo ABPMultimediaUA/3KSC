@@ -265,15 +265,10 @@ void Character::die(){
     deathSound();
     removeWings();
 
-    if(m_lives > 0){
-        respawn();
-    }    
-    else{
-        //m_arena->pleaseKill(m_playerIndex);
-        //m_engineManager->cleanScene();
-        //m_game->setState(new MenuState(m_game));
-    }
-
+    if(m_lives > 0)
+        respawn(); 
+    else
+        m_alive = false;
 
     //Delete when m_lives == 0
 }
@@ -312,7 +307,6 @@ void Character::input(){
     m_inputManager->updatePlayerActions(m_playerIndex);
     
     //For movement
-    
     m_frameDeltaTime = m_engineManager->getFrameDeltaTime();
 
     //Block
@@ -529,19 +523,20 @@ int Character::getValidation(){
 
 /* ****************************** ACTIONS ****************************** */
 bool Character::left(){
-    lookLeft();
-    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
-    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
-    m_physicsManager->move(getId(), m_moveAmmount, 0);
+    if(!m_stunned){
+        lookLeft();
+        m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
+        m_physicsManager->move(getId(), m_moveAmmount, 0);
+    }
     return false;
 }
 
 bool Character::right(){
-    lookRight();
-    m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
-    // std::cout << "moveAmmount: " << m_moveAmmount << std::endl;
-    m_physicsManager->move(getId(), m_moveAmmount, 0);
-
+    if(!m_stunned){
+        lookRight();
+        m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
+        m_physicsManager->move(getId(), m_moveAmmount, 0);
+    }
     return false;
 }
 
