@@ -33,9 +33,7 @@ Wings::Wings(float p_position[3])
 }
 
 //Destructor
-Wings::~Wings(){
-    delete m_arena;
-}
+Wings::~Wings(){}
 
 //Increases owner's speed
 void Wings::use(){

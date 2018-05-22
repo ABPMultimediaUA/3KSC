@@ -33,9 +33,7 @@ FOAH::FOAH(float p_position[3])
 }
 
 //Destructor
-FOAH::~FOAH(){
-    delete m_arena;
-}
+FOAH::~FOAH(){}
 
 //Enemies beware
 void FOAH::use(){

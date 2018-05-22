@@ -47,7 +47,6 @@ private:
     bool            m_gravity;
     bool            m_sparkyJumping;
     bool            m_punchLaunched;
-    bool            m_ultimateMode;
     bool            m_ultiBulletLaunched;
 
     Projectile*     m_punch;

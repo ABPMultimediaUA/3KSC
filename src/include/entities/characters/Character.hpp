@@ -33,6 +33,7 @@ class AICharacter;
 
 struct ActionMapping;
 class Game;
+class HUDManager;
 
 class Character : public Entity{
 public:
@@ -104,6 +105,7 @@ public:
 
 protected:
     Game*           m_game;
+    HUDManager*     m_HUDManager;
 
     static int      m_playerCount;
     int             m_playerIndex;
@@ -119,6 +121,7 @@ protected:
     int             m_maxMP;
     int             m_damage;
     float           m_velocity;
+    bool            m_ultimateMode;
     float           m_attackPosition[3];
     float           m_attackTarget[3];
     float           m_respawnPosition[3];

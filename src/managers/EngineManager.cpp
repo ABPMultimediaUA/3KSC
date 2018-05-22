@@ -234,7 +234,7 @@ void EngineManager::scale(int p_id, float p_scale[3]){
 
 //Scene render function
 void EngineManager::drawScene(){
-    m_window->clear(0.0f, 0.8f, 0.9f, 1.0f);
+    m_window->clear(0.047f, 0.165f, 0.549f, 1.0f);
     m_scene->draw();
 }
 
@@ -352,6 +352,10 @@ void EngineManager::updateDebugQuad(int p_idDebug, float p_vertex[4][2]){
 
 CESceneSprite* EngineManager::createSprite(const char* p_url, float p_width, float p_height, bool p_originCenter){
     return m_scene2D->createSprite(p_url, p_width, p_height, p_originCenter);
+}
+
+CESceneSprite* EngineManager::createHUD(const char* p_url, float p_width, float p_height, bool p_originCenter){
+    return m_scene->createSprite(p_url, p_width, p_height, p_originCenter);
 }
 
 int EngineManager::createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife){

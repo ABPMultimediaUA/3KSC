@@ -47,7 +47,6 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_game              = Game::getInstance();
 
     m_currentItems      = 0;
-    //m_items           = new Item*[m_maxItemsOnScreen];
     m_offsetSpawnTime   = 7.5;
     m_nextSpawnTime     = m_inputManager->getMasterClock() + m_offsetSpawnTime;
     m_playerCount       = 0;
@@ -213,8 +212,8 @@ void Arena::update(float p_delta){
     if(m_portalSpawned)
         m_portal->update(p_delta);
     
+    portalSpawner();
     m_engineManager->updateParticleSystem();
-
 }
 
 void Arena::portalSpawner(){

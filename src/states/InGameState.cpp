@@ -24,7 +24,7 @@
 
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
-// #include "../include/managers/UIManager.hpp"
+#include "../include/managers/HUDManager.hpp"
 #include "../include/managers/SoundManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/entities/Arena.hpp"
@@ -71,13 +71,14 @@ void InGameState::initState(Game* p_game){
     m_game              = p_game;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
-    // m_UIManager         = &UIManager::instance();
+    m_HUDManager        = &HUDManager::instance();
     m_soundManager      = &SoundManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
     m_deltaTime         = 0;
 
     createArena("assets/Fusfus_Stadium.cgm");
+    m_HUDManager->setArena();
 
     if(m_onlineMode){
         m_client = &Client::instance();
@@ -105,7 +106,6 @@ void InGameState::input(){
 
 void InGameState::update(){
     double t_time = m_engineManager->getElapsedTime();
-    m_inputManager->updateMasterClock();
     m_soundManager->update();
     m_engineManager->updateFrameDeltaTime(t_time);
 
@@ -116,6 +116,7 @@ void InGameState::update(){
 
     int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
+    
     //Input and update for every character
     for(int i = 0; i < t_playerCount && !m_changeState; i++){
         t_currentPlayer = m_arena->getPlayer(i);
@@ -130,11 +131,13 @@ void InGameState::update(){
     m_physicsManager->update(m_deltaTime);
 
     //m_engineManager->updateParticleSystem();
-    // calculateFPS(t_time);
+    m_HUDManager->update();
 
     if(m_changeState){
         this->nextState();
     }
+
+    // calculateFPS(t_time);
 }
 
 void InGameState::calculateFPS(double t_time){
@@ -151,7 +154,6 @@ void InGameState::calculateFPS(double t_time){
 void InGameState::render(){
     m_engineManager->updateCamera();
     m_engineManager->drawScene();
-    // m_UIManager->render();
 }
 
 //Change to next state

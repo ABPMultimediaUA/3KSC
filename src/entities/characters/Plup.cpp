@@ -29,9 +29,10 @@
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/SoundManager.hpp"
 #include "../../include/managers/EngineManager.hpp"
+#include "../../include/managers/HUDManager.hpp"
 #include <iostream>
 
-Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.obj", p_online, p_NPC){
+Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 300, 100, 100.f, "assets/models/characters/plup/plup.obj", p_online, p_NPC){
     m_type              = 3;
 
     m_kalasnikovBulletLaunched = false;
@@ -155,6 +156,9 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
+    //Disable Ultimate in HUD
+    m_HUDManager->setUltimate(m_playerIndex, false);
+
     m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;

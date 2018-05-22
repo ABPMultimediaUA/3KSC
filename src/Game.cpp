@@ -63,7 +63,7 @@ Game::Game(){
     
     m_engineManager->createWindow(m_resolutionPreset, false);
     m_state = &MenuState::instance();
-    // m_state = new InGameState(this, false);
+    // m_state = &InGameState::instance();
 }
 
 //Destructor
@@ -107,6 +107,7 @@ void Game::run(){
         // std::cout << "Main loop!"  <<std::endl;
 
         t_now = std::chrono::high_resolution_clock::now();
+        m_inputManager->updateMasterClock();
     }
 
     std::cout << "Stop!"  <<std::endl;
