@@ -21,6 +21,7 @@
 #include "../include/managers/HUDManager.hpp"
 #include "../include/Game.hpp"
 #include "../include/managers/EngineManager.hpp"
+#include "../include/entities/Arena.hpp"
 #include "../include/ChaoticEngine/fachada/CESceneSprite.hpp"
 #include <string> //For std::to_string()
 #include <iostream>
@@ -56,9 +57,11 @@ HUDManager& HUDManager::instance(){
 HUDManager::HUDManager(){
     m_game              = Game::getInstance();
     m_engineManager     = &EngineManager::instance();
+    m_arena             = Arena::getInstance();
     
     initializePlayer(0);
     initializePlayer(1);
+    initializeUB();
 }
 
 //Destructor
@@ -66,17 +69,19 @@ HUDManager::~HUDManager(){
     for (int i = 0; i < 2; i++){
         if (m_playerHUDs[i])    { delete m_playerHUDs[i];   m_playerHUDs[i] = nullptr;  }
     }
+
+    if (m_ultimateBG)   { delete m_ultimateBG;  m_ultimateBG = nullptr; }
+    if (m_ultimateFG)   { delete m_ultimateFG;  m_ultimateFG = nullptr; }
 }
 
+//Initializes the HUD for a player
 void HUDManager::initializePlayer(int p_index){
     PlayerHUD* t_playerHUD = new PlayerHUD();
 
     //Data getting
     bool t_NPC      = m_game->isNPC(p_index);
     int t_chosen    = m_game->getChosenPlayer(p_index);
-    int t_lives     = m_game->getLives();    
-    
-    std::cout << "Lives: " << t_lives << std::endl;
+    int t_lives     = m_game->getLives();
 
     //Faces
     std::string t_string1 = "assets/UI/HUD/Faces/";
@@ -127,33 +132,57 @@ void HUDManager::initializePlayer(int p_index){
     t_playerHUD->lives->setTexture(t_lives);
 
     //Placing
-    int t_x = -482 + (536 * p_index);
-    // int t_y = -290;
-    int t_y = 356;
+    int t_x = -412 + (610 * p_index);
+    int t_y = -258;
 
     t_playerHUD->face->setAbsolutePosition(t_x, t_y, 1);
-    t_playerHUD->bg->setAbsolutePosition(t_x + 128, t_y, 1);
-    t_playerHUD->hp->setAbsolutePosition(t_x + 128, t_y, 2);
-    t_playerHUD->mp->setAbsolutePosition(t_x + 128, t_y, 3);
-    t_playerHUD->up->setAbsolutePosition(t_x + 128, t_y, 4);
-    t_playerHUD->lives->setAbsolutePosition(t_x + 128, t_y - 128, 1);
+    t_playerHUD->bg->setAbsolutePosition(t_x + 64, t_y, 1);
+    t_playerHUD->hp->setAbsolutePosition(t_x + 64, t_y, 2);
+    t_playerHUD->mp->setAbsolutePosition(t_x + 64, t_y, 3);
+    t_playerHUD->up->setAbsolutePosition(t_x + 64, t_y, 4);
+    t_playerHUD->lives->setAbsolutePosition(t_x + 64, t_y - 64, 1);
+
+
+    //Scaling
+    t_playerHUD->face->setAbsoluteScale(0.5, 0.5, 1);
+    t_playerHUD->bg->setAbsoluteScale(0.5, 0.5, 1);
+    t_playerHUD->hp->setAbsoluteScale(0.5, 0.5, 1);
+    t_playerHUD->mp->setAbsoluteScale(0.5, 0.5, 1);
+    t_playerHUD->up->setAbsoluteScale(0.5, 0.5, 1);
+    t_playerHUD->lives->setAbsoluteScale(0.5, 0.5, 1);
+
 
     m_playerHUDs[p_index] = t_playerHUD;
 }
 
+//Initializes the HUD for the Ultimate Bar
+void HUDManager::initializeUB(){
+    m_ultimateBG = m_engineManager->createSprite("assets/UI/HUD/Bars/UltiBG.png", 300, 20, false);
+    m_ultimateFG = m_engineManager->createSprite("assets/UI/HUD/Bars/UltiFG.png", 300, 20, false);
+
+    int t_x = -150;
+    int t_y = -296;
+
+    m_ultimateBG->setAbsolutePosition(t_x, t_y, 0);
+    m_ultimateFG->setAbsolutePosition(t_x, t_y, 1);
+}
+
 //Changes the HP of a player in the screen
-void HUDManager::setHP(int p_player, int p_HP){
+void HUDManager::setHP(int p_player, int p_HP, int p_maxHP){
     // TODO: Change size and color
+    m_playerHUDs[p_player]->hp->setAbsoluteScale(((float)(p_HP) / (float) p_maxHP) * 0.5, 0.5, 1);
 }
 
 //Changes the MP of a player in the screen
-void HUDManager::setMP(int p_player, int p_MP){
+void HUDManager::setMP(int p_player, int p_MP, int p_maxMP){
     // TODO: Change size
+    m_playerHUDs[p_player]->mp->setAbsoluteScale(((float)(p_MP) / (float) p_maxMP) * 0.5, 0.5, 1);
 }
 
 //Changes the lives left of a player in the screen
 void HUDManager::setLives(int p_player, int p_lives){
     //TODO: Change lives texture
+    m_playerHUDs[p_player]->lives->setTexture(p_lives);
 }
 
 //Updates the UI

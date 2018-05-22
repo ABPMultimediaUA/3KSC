@@ -31,7 +31,7 @@
 
 #include <iostream>
 
-Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 150, 70, 65.f, "assets/models/characters/sparky/sparky.obj", p_online, p_NPC){
+Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 450, 70, 65.f, "assets/models/characters/sparky/sparky.obj", p_online, p_NPC){
     m_type               = 4;
     
     m_jumpingDuration    = 0.10;

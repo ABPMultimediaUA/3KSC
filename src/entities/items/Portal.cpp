@@ -66,7 +66,7 @@ void Portal::update(float p_delta){
 //Increases owner's ultimate bar
 void Portal::use(){
     uint i;
-    for(i = 0; i < 4; i++){
+    for(i = 0; i < 2; i++){
         if(m_players[i]!= NULL){
             m_players[i]->setUltimateCharged();
             break;

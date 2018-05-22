@@ -43,7 +43,7 @@ private:
     float       m_charge;
     bool        m_using;
     int         m_charactersInPortal;
-    Character*  m_players[4] = {NULL,NULL,NULL,NULL};
+    Character*  m_players[2] = {NULL,NULL};
 };
 
 #endif

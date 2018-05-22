@@ -23,6 +23,7 @@
 
 class Game;
 class EngineManager;
+class Arena;
 class CESceneSprite;
 
 struct PlayerHUD{
@@ -40,18 +41,23 @@ class HUDManager{
     private:
         Game*           m_game;
         EngineManager*  m_engineManager;
+        Arena*          m_arena;
 
         PlayerHUD*      m_playerHUDs[2];
+        CESceneSprite*  m_ultimateBG;
+        CESceneSprite*  m_ultimateFG;
 
         HUDManager();
+        
         void initializePlayer(int p_index);
+        void initializeUB();
 
     public:
         static HUDManager& instance();
         ~HUDManager();
 
-        void setHP(int p_player, int p_HP);
-        void setMP(int p_player, int p_MP);
+        void setHP(int p_player, int p_HP, int p_maxHP);
+        void setMP(int p_player, int p_MP, int p_maxMP);
         void setLives(int p_player, int p_lives);
 
         void update();
