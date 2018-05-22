@@ -114,7 +114,10 @@ bool Plup::specialAttackUp(){
         m_soundManager->playSound("p_atak");
 
         m_kalasnikov = true;
-        m_kalasnikovAmmo = 5;
+        m_kalasnikovAmmo = 0;
+
+        m_engineManager->createParticleSystem("assets/bala.png", 5, -m_position[0]*5, (10-m_position[1])*(5), 650, 0.5, 80, 90, true, 1);
+        ///ULTIMO PARAMETRO DURACIÓN DEL SISTEMA
     }
     return false;
 }
@@ -132,8 +135,6 @@ bool Plup::specialAttackDown(){
         m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
         m_soundManager->modifyParameter("p_atak", 0.7, "Atak");
         m_soundManager->playSound("p_atak");
-        m_engineManager->createParticleSystem("assets/fire.png", 3, -m_position[0], 9- m_position[1], 1, 0.2, 0, 1, true, 0.1);
-
     }
     return false;
 }
@@ -175,7 +176,7 @@ bool Plup::ultimateAttack(){
         }
         m_ultimateTime = m_inputManager->getMasterClock() + m_ultimateDuration;
         m_ultimateCharged = false;
-
+        m_engineManager->createParticleSystem("assets/spark.png", 300, -m_position[0]*5, (10-m_position[1])*(5), 1200, 1, 0, 360, true, 0.5);
     }
 
     return false;
@@ -233,7 +234,7 @@ void Plup::updateDash(){
         m_dashing = false;
     }
 }
-
+///MODIFICAR ESTO, QUE NO SE MUEVA, MUNICION PUESTA A 0 AHORA
 void Plup::updateKalasnikov(){
     if(!m_kalasnikovBulletLaunched && m_kalasnikovAmmo > 0){
         m_attackPosition[0] = m_position[0];
