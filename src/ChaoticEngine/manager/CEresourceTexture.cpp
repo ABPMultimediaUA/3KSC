@@ -24,6 +24,7 @@ bool CEResourceTexture::textureFromFile(const char * p_path){
 
     m_textureData = stbi_load(t_filename.c_str(), &m_width, &m_height, &m_nrComponents, 0);
     if(m_textureData){
+        glGenTextures(1, &m_textureId);
         return true;
     }else{
         std::cout << "Texture failed to load at path: " << p_path << std::endl;
@@ -35,8 +36,6 @@ bool CEResourceTexture::textureFromFile(const char * p_path){
 
 void CEResourceTexture::glBuffersTexture(){
     if(m_textureData){
-        glGenTextures(1, &m_textureId);
-
         GLenum format;
         if(m_nrComponents == 1)
             format = GL_RED;
@@ -53,8 +52,6 @@ void CEResourceTexture::glBuffersTexture(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        //stbi_image_free(m_textureData);
     }
 }
 

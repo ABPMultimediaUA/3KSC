@@ -52,7 +52,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     m_modelId = -1;
     m_type = p_type;
 
-    if(p_type == 0)
+    if(p_type == 0 || p_type == 3)
         m_modelId = m_engineManager->loadAnimations(p_position, t_scale, p_modelURL);
     else
         m_id = m_engineManager->load3DModel(p_position, t_scale, p_modelURL);

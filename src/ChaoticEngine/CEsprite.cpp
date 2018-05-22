@@ -41,8 +41,6 @@ CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuin
             m_width, 0.0f,     1.0f, 0.0f
         };
 
-        std::cout << "HOLAAAAAAAAAA" << std::endl;
-
         for(int i = 0; i < 16; i++)
             t_vertices[i] = t_vert[i];
     }
@@ -70,8 +68,6 @@ CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuin
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glBindVertexArray(0);
-    
-    std::cout << "CESprite creado" << std::endl;
 }
 
 CESprite::~CESprite(){}
