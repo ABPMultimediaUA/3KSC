@@ -25,6 +25,7 @@ class CEWindow;
 class CEScene;
 class CESceneCamera;
 class CESceneMesh;
+class CESceneAnimation;
 class CESceneParticleSystem;
 class CEParticleSystem;
 class CESceneQuad;
@@ -61,7 +62,7 @@ private:
     std::vector<float>      m_VertexX;
     std::vector<float>      m_VertexY;
     std::vector<float>      m_VertexZ;
-
+//assets/models/characters/sparky/sparky_animations.anim
 public:
     static EngineManager& instance();
     EngineManager();

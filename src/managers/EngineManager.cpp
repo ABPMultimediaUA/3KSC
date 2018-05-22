@@ -200,7 +200,7 @@ void EngineManager::deleteDebug(int p_id){
 }
 
 void EngineManager::deleteEntityAnim(int p_id){
-    m_scene->remove(m_animationNodes.at(p_id)->getTopNode());
+    m_scene->remove(m_animationNodes[p_id]->getTopNode());
 }
 
 //Loads animations of 3D models
