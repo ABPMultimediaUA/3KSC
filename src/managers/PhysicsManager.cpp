@@ -60,6 +60,16 @@ PhysicsManager::~PhysicsManager(){
     m_contactManager = nullptr;
 }
 
+void PhysicsManager::clear(){
+    b2Body* t_body = m_world->GetBodyList();
+    while(t_body != NULL){
+        m_world->DestroyBody(t_body);
+        t_body = m_world->GetBodyList();
+    }
+    
+    m_playersBody.clear();
+}
+
 void PhysicsManager::update(float p_delta){
     m_world->Step(m_timeStep, m_velocityIterations, m_positionIterations);
 }

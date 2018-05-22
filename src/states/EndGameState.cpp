@@ -47,5 +47,5 @@ void EndGameState::render(){
 
 //Change to next state
 void EndGameState::nextState(){
-    m_game->setState(new MenuState(m_game));
+    m_game->setState(&MenuState::instance());
 }

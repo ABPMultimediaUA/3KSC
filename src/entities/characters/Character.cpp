@@ -125,6 +125,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
 }
 
 Character::~Character(){
+    std::cout << "~Character" << std::endl; 
     if(m_AI){
         delete m_AI;
         m_AI = nullptr;
@@ -266,8 +267,6 @@ void Character::die(){
     else{
         m_arena->pleaseKill(m_playerIndex);
         m_alive = false;
-        //m_engineManager->cleanScene();
-        //m_game->setState(new MenuState(m_game));
     }
 
     //HUD Stuff
@@ -565,8 +564,6 @@ bool Character::tauntSound(){}
 void Character::deathSound(){}
 
 bool Character::leave(){
-    m_engineManager->cleanScene();
-    m_game->setState(new MenuState(m_game));
 
     return false;
 }

@@ -36,6 +36,8 @@ class Arena : public Entity {
 public:
     Arena(float p_position[3], float p_scale, const char* p_modelURL);
     ~Arena();
+    void            cleanArena();
+
     static Arena*   getInstance();
     void            spawnPlayers();
     void            addPlayer(bool p_online = false);

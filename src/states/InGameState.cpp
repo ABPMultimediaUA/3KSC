@@ -42,8 +42,32 @@
 #include <string>
 
 
+InGameState* m_instance = nullptr;
+
+//Instance initialization
+InGameState& InGameState::instance(){
+    static InGameState instance(Game::getInstance());
+    instance.initState(Game::getInstance());
+
+    return instance;
+}
+
 //Constructor
 InGameState::InGameState(Game* p_game, bool p_onlineMode){
+    //Online stuff
+    m_instance = this;
+    m_onlineMode = p_onlineMode;
+}
+
+//Destructor
+InGameState::~InGameState(){
+    std::cout << "~InGameState" << std::endl;
+    
+    delete m_arena;
+    m_arena = nullptr;
+}
+
+void InGameState::initState(Game* p_game){
     m_game              = p_game;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
@@ -54,9 +78,6 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_deltaTime         = 0;
 
     createArena("assets/Fusfus_Stadium.cgm");
-
-    //Online stuff
-    m_onlineMode = p_onlineMode;
 
     if(m_onlineMode){
         m_client = &Client::instance();
@@ -73,22 +94,13 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
     m_FPS   = 0;
 
     m_changeState = false;
-
-    //m_engineManager->createSprite("assets/awesome.bin", 10.0f, 10.0f);
-    //IF PARTICLE SYSTEM, ACTIVATE THE UPDATE IN THE UPDATE LOOP OF INGAMESTATE
-    //m_engineManager->createParticleSystem("assets/awesome.bin", 1000);
 }
 
-//Destructor
-InGameState::~InGameState(){
-    std::cout << "~InGameState" << std::endl;
-    
-    delete m_arena;
-    m_arena = nullptr;
-}
 
 void InGameState::input(){
-
+    if(m_inputManager->isKeyPressed(Key::Escape)){
+        this->nextState();
+    }
 }
 
 void InGameState::update(){
@@ -121,9 +133,7 @@ void InGameState::update(){
     // calculateFPS(t_time);
 
     if(m_changeState){
-        m_engineManager->cleanScene();
-        //m_game->setState(new MenuState(m_game));
-        m_game->nextState();
+        this->nextState();
     }
 }
 
@@ -146,9 +156,13 @@ void InGameState::render(){
 
 //Change to next state
 void InGameState::nextState(){
-    //m_game->setState(new MenuState(m_game));
-    //MenuState::getInstance()->setScreen(Screen::Main);
-    m_game->setState(new MenuState(m_game));
+    //m_arena->cleanArena();
+    delete m_arena;
+    m_engineManager->cleanScene();
+    m_soundManager->stopAll();
+    m_physicsManager->clear();
+    MenuState::getInstance()->goToMainScreen();
+    m_game->setState(&MenuState::instance());
 }
 
 void InGameState::createArena(const char* p_fileCgm){
@@ -289,7 +303,7 @@ void InGameState::createArena(const char* p_fileCgm){
             t_skyPath[4] = t_elements[6].c_str(); 
             t_skyPath[5] = t_elements[7].c_str(); 
 
-            m_engineManager->loadSkybox(t_skyPath, t_scale);
+            //m_engineManager->loadSkybox(t_skyPath, t_scale);
         }
     }
 }

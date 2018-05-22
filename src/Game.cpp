@@ -62,18 +62,13 @@ Game::Game(){
     m_map               = 0;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
-    m_state = new MenuState(this);
+    m_state = &MenuState::instance();
     // m_state = new InGameState(this, false);
 }
 
 //Destructor
 Game::~Game(){
     std::cout << "~Game" << std::endl;
-    if(m_state){ 
-        delete m_state;
-        m_state = nullptr; 
-    }
-
     Game::m_instance = nullptr;
 }
 

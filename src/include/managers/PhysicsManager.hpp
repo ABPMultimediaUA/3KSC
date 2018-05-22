@@ -67,6 +67,7 @@ public:
     ~PhysicsManager();
     
     void                    update(float p_delta);
+    void                    clear();
     
     void                    createPhysicBox(Box p_type, int* p_id, float p_position[3], float p_dimX, float p_dimY);
 

@@ -50,6 +50,7 @@ void EngineManager::createWindow(int p_resolutionPreset, bool p_fullscreen){
     m_window = new CEWindow(t_width, t_height, "3KSC", p_fullscreen);
     // m_window = new CEWindow(640, 480, "3KSC", p_fullscreen);
     m_scene  = new CEScene();
+    m_scene2D= new CEScene();
 }
 
 CEPosition EngineManager::getWindowPosition(){
@@ -185,7 +186,6 @@ void EngineManager::createPointLight(float p_lightPosition[3], float p_lightAten
     }
 }
 
-
 //Sets frame delta time of the last frame (in seconds) and prepares it for next update
 void EngineManager::updateFrameDeltaTime(float p_delta){
     m_frameDeltaTime = p_delta;
@@ -240,11 +240,15 @@ void EngineManager::drawScene(){
 
 void EngineManager::drawScene2D(){
     m_window->clear(0.047f, 0.165f, 0.549f, 1.0f);
-    m_scene->draw2D();
+    m_scene2D->draw2D();
 }
 
 void EngineManager::cleanScene(){
     m_scene->clean();
+
+    m_entityNodes.clear();
+    m_debugNodes.clear();
+    m_systems.clear();
 }
 
 float EngineManager::getFrameDeltaTime(){
@@ -347,7 +351,7 @@ void EngineManager::updateDebugQuad(int p_idDebug, float p_vertex[4][2]){
 }
 
 CESceneSprite* EngineManager::createSprite(const char* p_url, float p_width, float p_height, bool p_originCenter){
-    return m_scene->createSprite(p_url, p_width, p_height, p_originCenter);
+    return m_scene2D->createSprite(p_url, p_width, p_height, p_originCenter);
 }
 
 int EngineManager::createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife){

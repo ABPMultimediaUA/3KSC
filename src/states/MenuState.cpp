@@ -55,7 +55,12 @@ struct ScreenMapping{
 };
 
 //Instance initialization
-MenuState* MenuState::m_instance = nullptr; 
+MenuState* MenuState::m_instance = nullptr;
+
+MenuState& MenuState::instance(){
+    static MenuState instance(Game::getInstance());
+    return instance;
+}
 
 //Constructor
 MenuState::MenuState(Game* p_game){
@@ -101,7 +106,7 @@ MenuState* MenuState::getInstance(){
 
 //Change to next state
 void MenuState::nextState(){
-    m_game->setState(new InGameState(m_game));
+    m_game->setState(&InGameState::instance());
 }
 
 //Changes to specified screen
@@ -115,7 +120,6 @@ void MenuState::setScreen(Screen p_screen){
 
 //Creates the instance of each menu screen
 void MenuState::initializeScreens(){
-    m_screens.clear();
     m_screens.push_back(TitleScreen::instance());
     m_screens.push_back(MainScreen::instance());
     m_screens.push_back(CharacterLocalScreen::instance());
@@ -133,6 +137,10 @@ void MenuState::initializeScreens(){
 
     m_currentScreen = m_screens[0];
     m_currentScreen->showElements();
+}
+
+void MenuState::goToMainScreen(){
+    setScreen(Screen::Main);
 }
 
 //Initializes actions mapping

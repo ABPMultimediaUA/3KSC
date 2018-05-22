@@ -37,6 +37,8 @@ Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/it
 
 //Destructor
 Portal::~Portal(){
+    std::cout << "~Portal" << std::endl;
+
 }
 
 void Portal::onEnter(Character* p_character){

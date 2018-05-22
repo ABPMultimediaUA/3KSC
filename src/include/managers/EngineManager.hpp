@@ -42,6 +42,7 @@ private:
     std::vector<CESceneQuad*>   m_debugNodes;
     CEWindow*       m_window;
     CEScene*        m_scene;
+    CEScene*        m_scene2D;
 
     CESceneCamera*          m_cameraNode;
     std::vector<CESceneParticleSystem*> m_systems;

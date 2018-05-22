@@ -43,6 +43,7 @@ class MenuState : public State{
     friend class OnlineModeScreen;
 
     private:
+        MenuState(Game* p_game);
         static MenuState*           m_instance;
         EngineManager*              m_engineManager;
         std::vector<MenuScreen*>    m_screens;
@@ -59,13 +60,15 @@ class MenuState : public State{
         bool m_keepWaiting;
 
     public:
-        MenuState(Game* p_game);
         ~MenuState();
         static MenuState* getInstance();
+        static MenuState& instance();
         void initializeScreens();
 
         void    nextState();
         void    setScreen(Screen p_screen);
+        void    goToMainScreen();
+
         
         void    input();
         void    update();
