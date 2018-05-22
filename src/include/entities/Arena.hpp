@@ -49,6 +49,7 @@ public:
     void            setSpawnPositions(float p_spawnPositions[4][3]); 
     void            update(float p_delta);
     void            portalSpawner();
+    void            portalSpawnerOnline();
     void            spawnPortal();
     void            hidePortal();
     bool            portalIsActive();

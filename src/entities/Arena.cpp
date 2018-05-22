@@ -184,8 +184,9 @@ void Arena::update(float p_delta){
         m_soundManager->playSound("fos_ambient");
     if(m_portalSpawned)
         m_portal->update(p_delta);
-    m_engineManager->updateParticleSystem();
     portalSpawner();
+    m_engineManager->updateParticleSystem();
+
 }
 
 void Arena::portalSpawner(){
@@ -193,6 +194,15 @@ void Arena::portalSpawner(){
 
     if(!m_portalSpawned && t_time > m_portalSpawnTime){
         spawnPortal();
+    }
+}
+
+void Arena::portalSpawnerOnline(){
+    float t_time = m_inputManager->getMasterClock();
+
+    if(!m_portalSpawned && t_time > m_portalSpawnTime*2){
+        spawnPortal();
+        Client::instance().spawnPortal();
     }
 }
 
@@ -216,36 +226,50 @@ void Arena::spawnPortal(){
 
 void Arena::hidePortal(){
     m_portalSpawnTime   = m_inputManager->getMasterClock() + m_portalOffsetTime;
-
     delete m_portal;
     m_portal = nullptr;
     m_portalSpawned = false;
 }
 
 void Arena::onlineUpdate(float p_delta){
-
-        float t_time = m_inputManager->getMasterClock();
+    float t_time = m_inputManager->getMasterClock();
     
     if(t_time > m_nextSpawnTime){
         m_nextSpawnTime = t_time + m_offsetSpawnTime;
         if(spawnRandomItem())
         {    m_currentItems = m_items.size();
-            std::cout<<m_items.size()<<std::endl;
+            if(m_items.size()>0)
             Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems-1)->getX(), m_items.at(m_currentItems-1)->getY());
         }
+
     }
 
     for(int i = 0; i < m_items.size(); i++){
         if(m_items.at(i)->update())
-            m_items.erase(m_items.begin()+i);        
+        {
+            m_items.erase(m_items.begin()+i);
+            break;
+        }        
     }
+
+    if(m_portalSpawned)
+        m_portal->update(p_delta);
+    portalSpawnerOnline();
+    m_engineManager->updateParticleSystem();
 }
 
 void Arena::onlineUpdateClient(float p_delta){
     for(int i = 0; i < m_items.size(); i++){
         if(m_items.at(i)->update())
-            m_items.erase(m_items.begin()+i);        
+        {
+            m_items.erase(m_items.begin()+i);
+            break;
+        }        
     }
+    m_engineManager->updateParticleSystem();
+
+    if(m_portalSpawned)
+        m_portal->update(p_delta);
 }
 
 void Arena::spawnItemAt(int p_type, int x, int y){
