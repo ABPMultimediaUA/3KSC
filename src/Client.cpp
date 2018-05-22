@@ -66,11 +66,15 @@ void Client::send(char const *mens){
 	client->Send(mens, (int) strlen(mens)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
-void Client::update(){
+void Client::update(float p_time){
 	listen();
 	if(m_yourPlayer == 0)
 	{
-		//Arena::getInstance()->onlineUpdate();
+		Arena::getInstance()->onlineUpdate(p_time);
+	}
+	else
+	{
+		Arena::getInstance()->onlineUpdateClient(p_time);
 	}
 }
 void Client::listen(){
@@ -237,6 +241,9 @@ void Client::readMessage(std::string p_message){
 		Arena::getInstance()->getPlayer(t_player)->setVX(std::stof(t_parsed[8]));
 		Arena::getInstance()->getPlayer(t_player)->receiveAttack(t_dmg, t_block, t_knockPower, t_knockback,true);
 	}
+	else if(t_parsed[0] == "portal"){
+		Arena::getInstance()->spawnPortal();
+	}
 	else{
 		if(t_parsed.size()<4)
 			return;
@@ -315,6 +322,14 @@ void Client::spawnItem(int p_type, int x, int y)
 {
 	std::string t_toSend 	= "item:" + std::to_string(p_type) + ":" + std::to_string(x) 
 							+ ":" + std::to_string(y);
+    char const *t_toSendChar = t_toSend.c_str();
+	std::cout<<t_toSendChar<<std::endl;
+	send(t_toSendChar);
+}
+
+void Client::spawnPortal()
+{
+	std::string t_toSend 	= "portal:1";
     char const *t_toSendChar = t_toSend.c_str();
 	std::cout<<t_toSendChar<<std::endl;
 	send(t_toSendChar);

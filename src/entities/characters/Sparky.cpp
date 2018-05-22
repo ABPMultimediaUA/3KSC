@@ -28,6 +28,7 @@
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/EngineManager.hpp"
+#include "../../include/managers/HUDManager.hpp"
 
 #include <iostream>
 
@@ -67,7 +68,10 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : C
 
 }
 
-Sparky::~Sparky(){}
+Sparky::~Sparky(){
+    std::cout << "~Sparky" << std::endl;
+
+}
 
 bool Sparky::jump(){
     return Character::jump();
@@ -134,8 +138,6 @@ bool Sparky::specialAttackSide(){
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
 
-        
-        m_system = m_engineManager->createParticleSystem("assets/fire.png", 3, -m_position[0], 9- m_position[1], 1, 0.2, 0, 1, true, 0.1);
         //Create attack and increase projectile count
         m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 0);
         m_punchLaunched = true;
@@ -148,6 +150,11 @@ bool Sparky::specialAttackSide(){
 }
 
 bool Sparky::ultimateAttack(){
+    //Disable Ultimate in HUD
+    m_HUDManager->setUltimate(m_playerIndex, false);
+    //Disable Ultimate in HUD
+    m_HUDManager->setUltimate(m_playerIndex, false);
+    
     // m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;

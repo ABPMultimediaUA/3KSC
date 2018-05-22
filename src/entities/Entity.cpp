@@ -93,6 +93,8 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 }
 
 Entity::~Entity(){
+    std::cout << "~Entity" << std::endl;
+
     if(m_debugMode)
         m_engineManager->deleteDebug(m_idDebug);
     

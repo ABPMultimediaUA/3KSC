@@ -33,9 +33,7 @@ LifeTank::LifeTank(float p_position[3])
 }
 
 //Destructor
-LifeTank::~LifeTank(){
-    delete m_arena;
-}
+LifeTank::~LifeTank(){}
 
 //Increases owner's HP
 void LifeTank::use(){

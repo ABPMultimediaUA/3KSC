@@ -72,6 +72,6 @@ void MapScreen::select(){
 
 void MapScreen::save(){
     m_game->setMap(getSelectedIndex());
-    m_engineManager->cleanScene();        
+    //m_engineManager->cleanScene();        
     m_game->nextState();
 }

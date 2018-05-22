@@ -33,11 +33,12 @@ class AICharacter;
 
 struct ActionMapping;
 class Game;
+class HUDManager;
 
 class Character : public Entity{
 public:
     Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online = false, bool p_NPC = false);
-    ~Character();
+    virtual ~Character();
 
     void            getRespawnPosition();
 	
@@ -65,6 +66,7 @@ public:
     int             getHP();
     int             getMP();
     int             getOrientation();
+    bool            getAlive()  {   return m_alive; }
     void            setStunned(float p_time = 0);
     bool            isJumping();
     void            onTouchGround();
@@ -103,6 +105,7 @@ public:
 
 protected:
     Game*           m_game;
+    HUDManager*     m_HUDManager;
 
     static int      m_playerCount;
     int             m_playerIndex;
@@ -118,6 +121,7 @@ protected:
     int             m_maxMP;
     int             m_damage;
     float           m_velocity;
+    bool            m_ultimateMode;
     float           m_attackPosition[3];
     float           m_attackTarget[3];
     float           m_respawnPosition[3];

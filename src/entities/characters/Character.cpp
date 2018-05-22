@@ -26,7 +26,7 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
-#include "../../include/managers/UIManager.hpp"
+#include "../../include/managers/HUDManager.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
 
@@ -45,11 +45,12 @@ struct ActionMapping{
 //Static members
 int Character::m_playerCount = 0;
 
-// UIManager*      m_UIManager         = &UIManager::instance();
 Arena*          m_arena             = 0;
 
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online, bool p_NPC) : Entity(p_position, 0.5f, p_modelURL){
+    m_game                  = Game::getInstance();
     m_arena                 = Arena::getInstance();
+    m_HUDManager            = &HUDManager::instance();
     m_client                = &Client::instance();
     
     m_playerIndex           = Character::m_playerCount++;
@@ -58,8 +59,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
     m_AIEnabled             = false;
     
     m_name                  = p_name;
-    //m_lives                 = 0;
-    m_lives                 = 3;
+    m_lives                 = m_game->getLives();
     m_HP                    = m_maxHP = p_HP;
     m_MP                    = m_maxMP = p_MP;
     m_velocity              = p_velocity;
@@ -125,6 +125,7 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
 }
 
 Character::~Character(){
+    std::cout << "~Character" << std::endl; 
     if(m_AI){
         delete m_AI;
         m_AI = nullptr;
@@ -193,11 +194,11 @@ void Character::changeHP(int p_variation){
     std::cout << "HP: " << m_HP << std::endl;
 
     //HUD Stuff
-    // m_UIManager->setHP(m_playerIndex, m_HP);
+    m_HUDManager->setHP(m_playerIndex, m_HP, m_maxHP);
 }
 
 void Character::checkAlive(){
-    if(m_HP <= 0)
+    if(m_HP <= 0 && m_lives > 0)
         die();
 }
 
@@ -209,7 +210,7 @@ void Character::addMP(int p_MP){
         m_MP = m_maxMP;
 
     //HUD Stuff
-    // m_UIManager->setMP(m_playerIndex, m_MP);
+    m_HUDManager->setMP(m_playerIndex, m_MP, m_maxMP);
 }
 
 //Check if we can do an action. If we can, substract the MP and return true, if not, return false.
@@ -217,6 +218,7 @@ bool Character::useMP(int p_MP){
     //We have enough MP for doing the action
     if(m_MP >= p_MP){
         m_MP -= p_MP;
+        m_HUDManager->setMP(m_playerIndex, m_MP, m_maxMP);
         return true;
     }
 
@@ -248,9 +250,12 @@ void Character::removeWings(){
 
 //Decreases number of lives
 void Character::die(){
-    std::cout << "LA HA PALMADOOOOOO POR IMBECIIIIIL!!!" << std::endl;
     m_lives--;
     //std::cout << "Me quedan " << m_lives << " vidas." << std::endl;
+    
+    //HUD Stuff
+    m_HUDManager->setLives(m_playerIndex, m_lives);
+
     m_HP = 0;
     //m_alive = false;
     m_knockback = false;
@@ -260,16 +265,16 @@ void Character::die(){
     deathSound();
     removeWings();
 
-    if(m_lives >= 0){
+    if(m_lives > 0){
         respawn();
     }    
     else{
-        m_arena->pleaseKill(m_playerIndex);
-        m_engineManager->cleanScene();
-        m_game->setState(new MenuState(m_game));
+        //m_arena->pleaseKill(m_playerIndex);
+        //m_engineManager->cleanScene();
+        //m_game->setState(new MenuState(m_game));
     }
 
-    //HUD Stuff
+
     //Delete when m_lives == 0
 }
 
@@ -376,7 +381,7 @@ void Character::update(){
     
     updatePosition();
     
-    if(getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25)
+    if((getY() < -25 || getY() > 25 || getX() < -25 || getX() > 25) && m_lives > 0)
         die();
 
     checkAlive();
@@ -442,8 +447,8 @@ void Character::respawn(){
     m_MP = m_maxMP;
 
     moveTo(m_respawnPosition);
-    //m_UIManager->setHP(m_playerIndex, m_HP);
-    //m_UIManafer->setMP(m_playerIndex, m_MP);
+    m_HUDManager->setHP(m_playerIndex, m_HP, m_maxHP);
+    m_HUDManager->setMP(m_playerIndex, m_MP, m_maxMP);
 }
 
 void Character::onTouchGround(){
@@ -568,8 +573,6 @@ bool Character::tauntSound(){}
 void Character::deathSound(){}
 
 bool Character::leave(){
-    m_engineManager->cleanScene();
-    m_game->setState(new MenuState(m_game));
 
     return false;
 }

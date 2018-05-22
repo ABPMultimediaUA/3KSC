@@ -46,7 +46,6 @@ public:
 
 private:
     bool        m_snowmanPlaced;
-    bool        m_ultimateMode;
     bool        m_kalasnikov;
     bool        m_kalasnikovBulletLaunched;
 

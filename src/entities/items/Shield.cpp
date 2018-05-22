@@ -33,9 +33,7 @@ Shield::Shield(float p_position[3])
 }
 
 //Destructor
-Shield::~Shield(){
-    delete m_arena;
-}
+Shield::~Shield(){}
 
 //Protects owner against attacks
 void Shield::use(){

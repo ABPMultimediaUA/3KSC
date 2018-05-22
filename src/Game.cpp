@@ -62,22 +62,20 @@ Game::Game(){
     m_map               = 0;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
-    m_state = new MenuState(this);
-    // m_state = new InGameState(this, false);
+    m_state = &MenuState::instance();
+    // m_state = &InGameState::instance();
 }
 
 //Destructor
 Game::~Game(){
     std::cout << "~Game" << std::endl;
-    if (m_state)    { delete m_state;   m_state = nullptr; }
     Game::m_instance = nullptr;
 }
 
 //Changes to an specified state
 void Game::setState(State* p_state){
     std::cout << "Deleting state: " << m_state << std::endl;
-    // std::cout << "Deleting state" << std::endl;
-    delete m_state;
+    //delete m_state;
     std::cout << "State deleted, setting state: " << p_state << std::endl;
     m_state = p_state;
     std::cout << "State set" << std::endl;
@@ -109,6 +107,7 @@ void Game::run(){
         // std::cout << "Main loop!"  <<std::endl;
 
         t_now = std::chrono::high_resolution_clock::now();
+        m_inputManager->updateMasterClock();
     }
 
     std::cout << "Stop!"  <<std::endl;

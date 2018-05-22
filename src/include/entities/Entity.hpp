@@ -32,7 +32,7 @@ class SoundManager;
 class Entity {
 public:
     Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type = 0);
-    ~Entity();
+    virtual ~Entity();
     void        moveTo(float p_position[3]);
     void        moveTo(float p_y, float p_x);
     void        moveX(float p_variation);

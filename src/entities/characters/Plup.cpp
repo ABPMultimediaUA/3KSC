@@ -28,6 +28,8 @@
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/SoundManager.hpp"
+#include "../../include/managers/EngineManager.hpp"
+#include "../../include/managers/HUDManager.hpp"
 #include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.anim", p_online, p_NPC){
@@ -66,7 +68,10 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Chara
     }
 }
 
-Plup::~Plup(){}
+Plup::~Plup(){
+    std::cout << "~Plup" << std::endl;
+
+}
 
 bool Plup::jump(){
     return Character::jump();
@@ -109,7 +114,10 @@ bool Plup::specialAttackUp(){
         m_soundManager->playSound("p_atak");
 
         m_kalasnikov = true;
-        m_kalasnikovAmmo = 5;
+        m_kalasnikovAmmo = 0;
+
+        m_engineManager->createParticleSystem("assets/bala.png", 5, -m_position[0]*5, (10-m_position[1])*(5), 650, 0.5, 80, 90, true, 1);
+        ///ULTIMO PARAMETRO DURACIÓN DEL SISTEMA
     }
     return false;
 }
@@ -149,6 +157,9 @@ bool Plup::specialAttackSide(){
 }
 
 bool Plup::ultimateAttack(){
+    //Disable Ultimate in HUD
+    m_HUDManager->setUltimate(m_playerIndex, false);
+
     m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
@@ -165,7 +176,7 @@ bool Plup::ultimateAttack(){
         }
         m_ultimateTime = m_inputManager->getMasterClock() + m_ultimateDuration;
         m_ultimateCharged = false;
-
+        m_engineManager->createParticleSystem("assets/spark.png", 300, -m_position[0]*5, (10-m_position[1])*(5), 1200, 1, 0, 360, true, 0.5);
     }
 
     return false;
@@ -223,7 +234,7 @@ void Plup::updateDash(){
         m_dashing = false;
     }
 }
-
+///MODIFICAR ESTO, QUE NO SE MUEVA, MUNICION PUESTA A 0 AHORA
 void Plup::updateKalasnikov(){
     if(!m_kalasnikovBulletLaunched && m_kalasnikovAmmo > 0){
         m_attackPosition[0] = m_position[0];
