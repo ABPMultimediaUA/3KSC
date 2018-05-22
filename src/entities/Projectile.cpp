@@ -35,7 +35,7 @@ const char* Projectile::m_modelURLs[3] = {
     "assets/models/characters/sparky/balas.obj"
 };
 
-Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, float p_knockbackPower, int p_type) : Entity(p_position, 0.7f, m_modelURLs[p_type], 5){
+Projectile::Projectile(float p_position[3], float p_target[3], int p_rotation, int p_owner, int p_damage, float p_knockbackPower, int p_type) : Entity(p_position, 0.7f, m_modelURLs[p_type], 4){
     std::memcpy(m_target, p_target, 3 * sizeof(float));
     m_owner = p_owner;
 

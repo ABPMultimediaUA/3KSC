@@ -6,26 +6,46 @@
 #include "../include/ChaoticEngine/CEsprite.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
-CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram) : CEEntity(){
+CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram, bool p_originCenter) : CEEntity(){
     m_shaderProgram = p_shaderProgram;
 
-    loadResource(p_urlSource);
+    m_currentFrame = 0;
+    m_totalFrames = 0;
 
     m_width   = p_width ;
     m_height  = p_height;
 
-    float t_minX = m_width/2 * -1;
-    float t_maxX = m_width/2;
-    float t_minY = m_height/2 * -1;
-    float t_maxY = m_height/2;
+    GLfloat t_vertices[16] = { 0 };
 
-    GLfloat t_vertices[] = { 
-        // Pos      // Tex
-        t_minX, t_minY, 0.0f, 0.0f, 
-        t_minX, t_maxY, 0.0f, 1.0f,
-        t_maxX, t_maxY, 1.0f, 1.0f,
-        t_maxX, t_minY, 1.0f, 0.0f
-    };
+    if(p_originCenter){
+        float t_minX = m_width/2 * -1;
+        float t_maxX = m_width/2;
+        float t_minY = m_height/2 * -1;
+        float t_maxY = m_height/2;
+
+        GLfloat t_vert[] = { 
+            // Pos      // Tex
+            t_minX, t_minY, 0.0f, 0.0f, 
+            t_minX, t_maxY, 0.0f, 1.0f,
+            t_maxX, t_maxY, 1.0f, 1.0f,
+            t_maxX, t_minY, 1.0f, 0.0f
+        };
+        for(int i = 0; i < 16; i++)
+            t_vertices[i] = t_vert[i];
+    }else{
+        GLfloat t_vert[] = {
+            // Pos      // Tex
+            0.0f,    0.0f,     0.0f, 0.0f, 
+            0.0f,    m_height, 0.0f, 1.0f,
+            m_width, m_height, 1.0f, 1.0f,
+            m_width, 0.0f,     1.0f, 0.0f
+        };
+
+        std::cout << "HOLAAAAAAAAAA" << std::endl;
+
+        for(int i = 0; i < 16; i++)
+            t_vertices[i] = t_vert[i];
+    }
 
     unsigned int m_indices[] = {
         0, 1, 3,  // First Triangle
@@ -57,14 +77,16 @@ CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuin
 CESprite::~CESprite(){}
 
 void CESprite::beginDraw(){
+    if (!m_visible) return;
+
     glUseProgram(m_shaderProgram);
 
     //PRECALCULAMOS LAS MATRICES Y LAS PASAMOS AL SHADER
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(m_modelMatrix));
     
-    glm::mat4 t_projection = glm::ortho(20.0f, -20.0f, -20.0f, 20.0f, -15.0f, 100.0f);
+    glm::mat4 t_projection = glm::ortho(512.0f, -512.0f, -384.0f, 384.0f, -15.0f, 100.0f);
+    m_MVP = t_projection * m_modelMatrix;
     glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(t_projection));
-    //glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
 
     glm::vec3 t_color = glm::vec3(1.0f, 1.0f, 1.0f);
     glUniform3f(glGetUniformLocation(m_shaderProgram, "spriteColor"), t_color.x, t_color.y, t_color.z);
@@ -73,7 +95,7 @@ void CESprite::beginDraw(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_texture->getTextureId());
+    glBindTexture(GL_TEXTURE_2D, m_texture[m_currentFrame]->getTextureId());
 
     glBindVertexArray(m_VAO);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -87,7 +109,26 @@ void CESprite::loadResource(const char* p_urlSource){
     CEResourceManager* t_manager = CEResourceManager::instance();
     CEResourceTexture* t_resource = (CEResourceTexture*)&t_manager->getResource(p_urlSource);
     if(t_resource != NULL){
-        m_texture = t_resource;
-        m_texture->glBuffersTexture();
+        m_texture.push_back(t_resource);
+        m_texture.back()->glBuffersTexture();
+        m_totalFrames = m_texture.size();
+    }
+}
+
+void CESprite::getNext(){
+    m_currentFrame++;
+    if(m_currentFrame > m_totalFrames)
+        m_currentFrame = 0;
+}
+
+void CESprite::getLast(){
+    m_currentFrame--;
+    if(m_currentFrame < 0)
+        m_currentFrame = m_totalFrames;
+}
+
+void CESprite::setFrame(int p_frame){
+    if (p_frame >= 0 && p_frame < m_totalFrames){
+        m_currentFrame = p_frame;
     }
 }

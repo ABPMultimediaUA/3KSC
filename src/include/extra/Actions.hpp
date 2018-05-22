@@ -32,8 +32,9 @@
         SpecialAttackDown,
         SpecialAttackSide,
         UltimateAttack,
-        ToggleAI,
         Taunt,
+        Leave,
+        ToggleAI,
 
         Count
     };

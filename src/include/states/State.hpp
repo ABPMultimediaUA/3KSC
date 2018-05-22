@@ -23,13 +23,18 @@
 
 class Game;
 
+#include <iostream> //TEMPORAL!!!
+
 class State{
     protected:
         Game* m_game;
         float m_deltaTime;
 
     public:
-        virtual ~State(){};
+        virtual ~State(){
+            std::cout << "~State" << std::endl;
+            m_game = nullptr;
+        };
 
         virtual void input()        = 0;
         virtual void update()       = 0;

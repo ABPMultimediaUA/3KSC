@@ -18,7 +18,8 @@ struct Particle {
 
 class CEParticleSystem : public CEEntity{
 public:
-    CEParticleSystem(const char* p_path, int p_amount, GLuint p_shaderProgram);
+    CEParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity,
+        GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife, GLuint p_shaderProgram);
     void update(GLfloat dt = 0.025f);
     void beginDraw();
     void endDraw();
@@ -32,8 +33,10 @@ public:
 
     void setParticleLife(int p_particleLife)    { m_particleLife = p_particleLife; }
     int  getParticleLife()  { return m_particleLife; }
-
+    void place(Particle &particle);
     glm::vec3 getPosition()  { return glm::vec3(glm::inverse(m_MVP)[3]); }
+
+    int id;
 
 private:
     std::vector<Particle>   m_particles;
@@ -50,9 +53,20 @@ private:
     glm::mat4   m_MVP;
     glm::vec3   m_position;
 
+    GLfloat                 m_velocity;
+    GLfloat                 m_velocityVariation;
+    GLfloat                 m_life;
+    GLfloat                 m_lifeVariation;
+    int                     m_minAngle;
+    int                     m_maxAngle;
+    bool                    m_explode;
+      
+
     void 	init();
-    GLuint 	firstUnusedParticle();
+    int 	firstUnusedParticle();
     void 	respawnParticle(Particle &particle);
+
+    GLfloat                 m_systemLife;
 };
 
 #endif

@@ -27,6 +27,8 @@
 #include "../../include/managers/SoundManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
+#include "../../include/managers/EngineManager.hpp"
+
 #include <iostream>
 
 Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_name, p_position, 150, 70, 65.f, "assets/models/characters/sparky/sparky_animations.anim", p_online){
@@ -53,9 +55,12 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online) : Character(p_n
     m_knockbackUp        = 1.5f;
     m_knockbackDown      = 1.5f;
     m_knockbackUlti      = 0.25f;
+    m_system             = -1;
 
-    if(m_NPC)
+    if(m_NPC){
+        toggleAI();
         m_AI = new AISparky(this);
+    }
 
     m_soundManager->loadBank(SoundID::S_SPARKY);
     m_soundManager->loadEvents(SoundID::S_SPARKY);
@@ -100,6 +105,8 @@ bool Sparky::specialAttackUp(){
         m_physicsManager->sparkyJump(getId());
         m_jumpingTime = m_inputManager->getMasterClock() + m_jumpingDuration;
         m_sparkyJumping = true;
+        m_system = m_engineManager->createParticleSystem("assets/fire.png", 20, -m_position[0]*5, (10-m_position[1])*(5),150, 0.5, 0, 360, true, 0.5);
+
     }
     
     return false;
@@ -110,6 +117,8 @@ bool Sparky::specialAttackDown(){
         m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
         m_soundManager->playSound("s_atak");
         m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
+        m_system = m_engineManager->createParticleSystem("assets/spark.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
+        //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
     }
 
     return false;
@@ -125,6 +134,8 @@ bool Sparky::specialAttackSide(){
         m_attackTarget[1] = m_position[1];
         m_attackTarget[2] = m_position[2];
 
+        
+        m_system = m_engineManager->createParticleSystem("assets/fire.png", 3, -m_position[0], 9- m_position[1], 1, 0.2, 0, 1, true, 0.1);
         //Create attack and increase projectile count
         m_punch = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 0);
         m_punchLaunched = true;
@@ -137,7 +148,7 @@ bool Sparky::specialAttackSide(){
 }
 
 bool Sparky::ultimateAttack(){
-   // m_ultimateCharged = true;
+    // m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
         m_ultimateAmmo = 10;
@@ -158,7 +169,11 @@ void Sparky::updatePlayer(){
 
     if(m_ultimateMode)
         updateUltimate();
-
+    
+    //  if(m_system>=0)
+    //  {
+    //      m_engineManager->particlePosition(m_system, -m_position[0], 9- m_position[1], 0);
+    //  }
     randomSounds();
 }
 

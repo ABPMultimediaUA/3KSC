@@ -100,8 +100,8 @@ CESceneQuad* CEScene::createQuad(float p_vertex[4][2]){
 	return CEquad;	
 }
 
-CESceneSprite* CEScene::createSprite(const char* p_path, float p_width, float p_height){
-	CESceneSprite* CEsprite = new CESceneSprite(m_root, p_path, p_width, p_height, m_shaderProgram->getShaderProgram(2));
+CESceneSprite* CEScene::createSprite(const char* p_path, float p_width, float p_height, bool p_originCenter){
+	CESceneSprite* CEsprite = new CESceneSprite(m_root, p_path, p_width, p_height, m_shaderProgram->getShaderProgram(2), p_originCenter);
 
 	return CEsprite;
 }
@@ -116,11 +116,12 @@ CESceneBillboard* CEScene::createBillboard(const char* p_path, float p_width, fl
 	return CEbillboard;
 }
 
-CESceneParticleSystem* CEScene::createParticleSystem(const char* p_path, int p_amount){
-	CESceneParticleSystem* CEemitter = new CESceneParticleSystem(m_root, p_path, p_amount, m_shaderProgram->getShaderProgram(3));
+CESceneParticleSystem* CEScene::createParticleSystem(const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity, GLfloat p_life, int p_minAngle,int p_maxAngle, bool p_explode, float p_systemLife){
+	CESceneParticleSystem* CEemitter = new CESceneParticleSystem(m_root, p_path, p_amount, p_x, p_y,p_velocity, p_life, p_minAngle, p_maxAngle, p_explode, p_systemLife,m_shaderProgram->getShaderProgram(3));
 
 	return CEemitter;
 }
+
 
 CESceneSkybox* CEScene::createSkybox(const char* p_path[6], float p_scale){
 	CESceneSkybox* CEskybox = new CESceneSkybox(m_root, p_path, p_scale, m_shaderProgram->getShaderProgram(4));
@@ -169,6 +170,10 @@ void CEScene::calculateLights(){
 
 void CEScene::draw(){
 	calculateLights();
+	m_root->draw();
+}
+
+void CEScene::draw2D(){
 	m_root->draw();
 }
 

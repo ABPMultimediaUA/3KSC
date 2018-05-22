@@ -27,7 +27,7 @@
 
 class Sparky: public Character {
 public:
-	Sparky(char* p_name, float p_position[3], bool p_online = false);
+	Sparky(char* p_name, float p_position[3], bool p_online = false, bool p_NPC = false);
     ~Sparky();
     bool    jump();
     bool    basicAttack();
@@ -54,6 +54,8 @@ private:
     Projectile*     m_ultimateBullet;
 
     int             m_ultimateAmmo;
+
+    int             m_system;
     
     void    updatePunch();
     void    updateUltimate();

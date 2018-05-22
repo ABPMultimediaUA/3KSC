@@ -76,27 +76,24 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
 //Destructor
 InGameState::~InGameState(){
-    // delete m_UIManager;
-    // m_UIManager = nullptr;
+    std::cout << "~InGameState" << std::endl;
     
     delete m_arena;
     m_arena = nullptr;
-
-    delete m_client;
-    m_client = nullptr;
 }
 
 void InGameState::input(){}
 
 void InGameState::update(){
+    double t_time = m_engineManager->getElapsedTime();
     m_inputManager->updateMasterClock();
     m_soundManager->update();
-    m_engineManager->updateFrameDeltaTime(m_deltaTime);
+    m_engineManager->updateFrameDeltaTime(t_time);
 
     if(m_onlineMode)
         m_client->update();
     else
-        m_arena->update((float)m_deltaTime);
+        m_arena->update((float)t_time);
 
     int t_playerCount = m_arena->getPlayerCount();
     Character* t_currentPlayer;
@@ -111,18 +108,19 @@ void InGameState::update(){
     }
     //Update the physics one step more(need to be done first of all)
     m_physicsManager->update(m_deltaTime);
-    
-    //m_engineManager->updateParticleSystem();
 
-    //calculateFPS();
+    //m_engineManager->updateParticleSystem();
+    // calculateFPS(t_time);
+
+
 }
 
-void InGameState::calculateFPS(){
-    //std::cout << m_engineManager->getElapsedTime() << std::endl;
-    m_time += m_engineManager->getElapsedTime();
+void InGameState::calculateFPS(double t_time){
+    // std::cout << t_time << std::endl;
+    m_time += t_time;
     m_FPS++;
     if(m_time >= 1.0){
-        std::cout << m_FPS << std::endl;
+        std::cout << m_FPS << " FPS" << std::endl;
         m_time  = 0;
         m_FPS   = 0;
     }

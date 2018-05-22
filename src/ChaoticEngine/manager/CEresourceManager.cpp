@@ -52,7 +52,6 @@ CEResource& CEResourceManager::checkFormat(const char* p_name){
 	//Remember even = format, odd = type
 	size_t i = 0;
 	while (i < m_types.size() && t_resourceObject == NULL) {
-
 		if (!m_types[i].compare(t_format)) {
 			if (!m_types[i + 1].compare("mesh")) { //file contains a mesh			
 				t_resourceObject = new CEResourceMesh();

@@ -47,6 +47,7 @@ AICharacter::AICharacter(Character* p_player){
     m_y                 = m_player->getY();
     m_position          = b2Vec2(m_x, m_y);
     m_time              = 0.0f;
+    m_starting_time     = m_inputManager->getMasterClock();
 }
 
 AICharacter::~AICharacter(){

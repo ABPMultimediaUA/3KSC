@@ -6,12 +6,13 @@ layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
 uniform mat4 projection;
 uniform vec2 offset;
 uniform vec4 color;
+uniform float scale2;
 
 out vec2 TexCoords;
 out vec4 ParticleColor;
 
 void main(){
-    float scale = 2.0f;
+    float scale = scale2;
 
     TexCoords = vertex.zw;
     ParticleColor = color;

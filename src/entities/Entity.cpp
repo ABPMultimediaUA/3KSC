@@ -32,7 +32,6 @@
 //Entity count initialization
 int Entity::m_entityCount = 0;
 
-
 //Create entity with model (proportional scale)
 Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p_type){
     m_engineManager     = &EngineManager::instance();
@@ -60,29 +59,30 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     
     moveTo(p_position);
 
-    m_debugMode = true;
+    m_debugMode = false;
     switch(p_type){
+        //PLAYER
         case 0:
             m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
             break;
-
+        //ARENA
         case 1:
             m_engineManager->parseOBJ(p_modelURL);
             m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, m_debugMode);
             break;
-
+        //ITEM
         case 2:
             m_physicsManager->createPhysicBox(Box::Item, &m_id, p_position, 0.5, 0.5);
             break;
-
+        //PORTAL
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1.75, 1.5);
+            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1.4, 1.5);
             break;
-
+        //PROJECTILE
         case 4:
-            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.5);
+            m_physicsManager->createPhysicBox(Box::Bullet, &m_id, p_position, 0.5, 0.5);
             break;
-
+        //SNOWMAN
         case 5:
             m_physicsManager->createPhysicBox(Box::Other, &m_id, p_position, 0.5, 0.5);
             break;

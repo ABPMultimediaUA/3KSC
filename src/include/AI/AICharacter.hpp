@@ -55,7 +55,10 @@ class AICharacter{
         float           m_distanceToItem;       // Determines if an item is close
         float           m_specialUpRange;       // Determines if an enemy is in range of special ability up
         float           m_specialSideRange;     // Determines if an enemy is in range of special ability side
+        float           m_specialDownRange;
         float           m_time;                 // Time that has passed since the last change of action
+        float           m_starting_time;        // Control time
+        float           m_ultimate_ready;       // Determines if ultimate is ready
         
         std::string     readFile(const char* p_url);
     public:
