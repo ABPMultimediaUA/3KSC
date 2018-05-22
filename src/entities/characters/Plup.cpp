@@ -42,8 +42,8 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Chara
 
     m_turretDuration    = 15.0f;
     m_turretTime        = 0.0f;
-    m_basicDuration     = 0.5f;
-    m_basicTime         = 0.0f;
+    m_atakOffset        = 0.5f;
+    m_atakTime          = 0.0f;
     m_ultimateDuration  = 3.0f;
     m_ultimateTime      = 0.0f;
 
@@ -80,7 +80,7 @@ bool Plup::jump(){
 //Slap
 bool Plup::basicAttack(){
     float t_currentTime = m_inputManager->getMasterClock();
-    if(t_currentTime >= m_basicTime){
+    if(t_currentTime >= m_atakTime){
         Character* t_currentPlayer;
 
         for(int i = 0; i < m_playerCount; i++){
@@ -102,14 +102,15 @@ bool Plup::basicAttack(){
                 }
             }
         }
-        m_basicTime = t_currentTime + m_basicDuration;
+        m_atakTime = t_currentTime + m_atakOffset;
     }
     return false;
 }
 
 //Range attack
 bool Plup::specialAttackUp(){
-    if(useMP(15)){
+    float t_currentTime = m_inputManager->getMasterClock();
+    if(t_currentTime >= m_atakTime && useMP(15)){
         m_soundManager->modifyParameter("p_atak", 0.5, "Atak");
         m_soundManager->playSound("p_atak");
 
@@ -118,13 +119,16 @@ bool Plup::specialAttackUp(){
 
         m_engineManager->createParticleSystem("assets/bala.png", 5, -m_position[0]*5, (10-m_position[1])*(5), 650, 0.5, 80, 90, true, 1);
         ///ULTIMO PARAMETRO DURACIÓN DEL SISTEMA
+        
+        m_atakTime = t_currentTime + m_atakOffset;
     }
     return false;
 }
 
 //Snowman
 bool Plup::specialAttackDown(){
-    if(!m_snowmanPlaced && useMP(40)){
+    float t_currentTime = m_inputManager->getMasterClock();
+    if(!m_snowmanPlaced && t_currentTime >= m_atakTime && useMP(40)){
         m_attackPosition[0] = m_position[0] + 1*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -135,13 +139,16 @@ bool Plup::specialAttackDown(){
         m_turretTime = m_inputManager->getMasterClock() + m_turretDuration;
         m_soundManager->modifyParameter("p_atak", 0.7, "Atak");
         m_soundManager->playSound("p_atak");
+
+        m_atakTime = t_currentTime + m_atakOffset;
     }
     return false;
 }
 
 //Dash
 bool Plup::specialAttackSide(){
-    if(m_onGround && !m_dashing && useMP(20)){
+    float t_currentTime = m_inputManager->getMasterClock();
+    if(m_onGround && !m_dashing && t_currentTime >= m_atakTime && useMP(20)){
         //Trigger the atak, if while we are dashing we collide with another player, this player will be stunned and receive damage, also this action finish the dash atak.
         m_soundManager->modifyParameter("p_atak", 0.3, "Atak");
         m_soundManager->playSound("p_atak");
@@ -151,6 +158,8 @@ bool Plup::specialAttackSide(){
 
         m_physicsManager->dash(getId(), m_orientation);
         m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide);
+
+        m_atakTime = t_currentTime + m_atakOffset;
     }
 
     return false;

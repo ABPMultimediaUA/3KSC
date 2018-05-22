@@ -190,9 +190,7 @@ void Character::changeHP(int p_variation){
 
     if(m_stunned)
         m_stunned = false;
-
-    std::cout << "HP: " << m_HP << std::endl;
-
+    
     //HUD Stuff
     m_HUDManager->setHP(m_playerIndex, m_HP, m_maxHP);
 }

@@ -57,8 +57,8 @@ private:
 
     float       m_turretDuration;
     float       m_turretTime;
-    float       m_basicDuration;
-    float       m_basicTime;
+    float       m_atakOffset;
+    float       m_atakTime;
     float       m_ultimateDuration;
     float       m_ultimateTime;
 

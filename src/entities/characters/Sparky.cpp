@@ -45,6 +45,9 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : C
     m_ultiBulletLaunched = false;
     m_ultimateAmmo       = 10;
 
+    m_atakOffset         = 0.5f;
+    m_atakTime           = 0.0f;
+
     m_damageBasic        = 20.0f;
     m_damageSide         = 35.0f;
     m_damageUp           = 30.0f;
@@ -79,7 +82,9 @@ bool Sparky::jump(){
 
 //Headbutt
 bool Sparky::basicAttack(){
-    if(!m_ultimateMode){
+    float t_currentTime = m_inputManager->getMasterClock();
+
+    if(!m_ultimateMode && t_currentTime >= m_atakTime){
         Character* t_currentPlayer;
 
         for(int i = 0; i < m_playerCount; i++){
@@ -98,12 +103,15 @@ bool Sparky::basicAttack(){
                 }
             }
         }
+        m_atakTime = t_currentTime + m_atakOffset;
     }
     return false;
 }
 
 bool Sparky::specialAttackUp(){
-    if(useMP(10)){
+    float t_currentTime = m_inputManager->getMasterClock();
+
+    if(t_currentTime >= m_atakTime && useMP(10)){
         m_soundManager->modifyParameter("s_atak", 0.5, "Atak");
         m_soundManager->playSound("s_atak");
         m_physicsManager->sparkyJump(getId());
@@ -111,25 +119,31 @@ bool Sparky::specialAttackUp(){
         m_sparkyJumping = true;
         m_system = m_engineManager->createParticleSystem("assets/fire.png", 20, -m_position[0]*5, (10-m_position[1])*(5),150, 0.5, 0, 360, true, 0.5);
 
+        m_atakTime = t_currentTime + m_atakOffset;
     }
     
     return false;
 }
 
 bool Sparky::specialAttackDown(){
-    if(useMP(20) && !m_ultimateMode){
+    float t_currentTime = m_inputManager->getMasterClock();
+
+    if(t_currentTime >= m_atakTime && !m_ultimateMode && useMP(20)){
         m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
         m_soundManager->playSound("s_atak");
         m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
         m_system = m_engineManager->createParticleSystem("assets/spark.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
         //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
+        m_atakTime = t_currentTime + m_atakOffset;
     }
 
     return false;
 }
 
 bool Sparky::specialAttackSide(){
-    if(!m_punchLaunched && useMP(35) && !m_ultimateMode){
+    float t_currentTime = m_inputManager->getMasterClock();
+
+    if(!m_punchLaunched && t_currentTime >= m_atakTime && !m_ultimateMode && useMP(35)){
         m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -144,6 +158,8 @@ bool Sparky::specialAttackSide(){
 
         m_soundManager->modifyParameter("s_atak", 0.3, "Atak");
         m_soundManager->playSound("s_atak");
+
+        m_atakTime = t_currentTime + m_atakOffset;
     }
 
     return false;
