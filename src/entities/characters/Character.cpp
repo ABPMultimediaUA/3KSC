@@ -190,7 +190,7 @@ void Character::changeHP(int p_variation){
 
     if(m_stunned)
         m_stunned = false;
-    
+
     //HUD Stuff
     m_HUDManager->setHP(m_playerIndex, m_HP, m_maxHP);
 }
@@ -342,6 +342,7 @@ void Character::input(){
 
 //Update state of player
 void Character::update(){
+    m_currentTime = m_inputManager->getMasterClock();
 
     //Update AI if exists and is enabled
     if(m_AI && m_AIEnabled)
@@ -351,21 +352,20 @@ void Character::update(){
     updatePlayer();
     m_moveAmmount = 0;
 
-    float t_currentTime = m_inputManager->getMasterClock();
-    if(m_winged && t_currentTime >= m_wingsTime)
+    if(m_winged && m_currentTime >= m_wingsTime)
         removeWings();
 
-    if(m_shielded && t_currentTime >= m_shieldTime)
+    if(m_shielded && m_currentTime >= m_shieldTime)
         m_shielded = false;
 
-    if(m_stunned && t_currentTime > m_stunTime){
+    if(m_stunned && m_currentTime > m_stunTime){
         m_stunDuration = 1.0;
         m_stunned      = false;
     }    
     else
         doActions();
 
-    if(m_knockback && t_currentTime >= m_knockbackTime)
+    if(m_knockback && m_currentTime >= m_knockbackTime)
         m_knockback = false;
 
     if(m_respawning)

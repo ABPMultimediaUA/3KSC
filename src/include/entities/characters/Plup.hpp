@@ -61,6 +61,8 @@ private:
     float       m_atakTime;
     float       m_ultimateDuration;
     float       m_ultimateTime;
+    float       m_kalasnikovOffset;
+    float       m_kalasnikovTime;
 
     void        updateSnowman();
     void        deleteSnowman();
