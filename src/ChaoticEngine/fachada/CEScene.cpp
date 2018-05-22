@@ -88,8 +88,8 @@ CESceneMesh* CEScene::createMesh(const char* p_path){
 	return CEmesh;	
 }
 
-CESceneAnimation* CEScene::createAnimatedMesh(const char* p_path){
-	CESceneAnimation* CEanimMesh = new CESceneAnimation(m_root, p_path, m_shaderProgram->getShaderProgram(5));
+CESceneAnimation* CEScene::createAnimatedMesh(const char* p_path, bool p_loop){
+	CESceneAnimation* CEanimMesh = new CESceneAnimation(m_root, p_path, m_shaderProgram->getShaderProgram(5), p_loop);
 
 	return CEanimMesh;	
 }

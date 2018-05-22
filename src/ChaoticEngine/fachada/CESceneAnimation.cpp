@@ -4,7 +4,7 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneAnimation.hpp"
 
-CESceneAnimation::CESceneAnimation(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram){
+CESceneAnimation::CESceneAnimation(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram, bool p_loop){
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();
 	m_translate = new CETransform(); 
@@ -13,7 +13,7 @@ CESceneAnimation::CESceneAnimation(CESceneNode* p_parent, const char* p_path, GL
 	m_rotate->rotate(0, 0, 0);
 	m_scale->scale(1, 1, 1);
 	m_translate->translate(0, 0, 0);
-	m_animation->loadResource(p_path);
+	m_animation->loadResource(p_path, p_loop);
 
 	m_nodeRotate 	 = new CESceneNode(p_parent);
 	CESceneNode* t_nodeScale 	 = new CESceneNode(m_nodeRotate);
@@ -61,8 +61,8 @@ void CESceneAnimation::processInput(GLFWwindow* p_window){
 		changeCurrentAnimation(1);
 }
 
-void CESceneAnimation::loadAnimation(const char* p_path){
-	m_animation->loadResource(p_path);
+void CESceneAnimation::loadAnimation(const char* p_path, bool p_loop){
+	m_animation->loadResource(p_path, p_loop);
 }
 
 void CESceneAnimation::changeCurrentAnimation(int p_current){

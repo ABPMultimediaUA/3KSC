@@ -305,7 +305,7 @@ void InGameState::createArena(const char* p_fileCgm){
             t_skyPath[4] = t_elements[6].c_str(); 
             t_skyPath[5] = t_elements[7].c_str(); 
 
-            //m_engineManager->loadSkybox(t_skyPath, t_scale);
+            m_engineManager->loadSkybox(t_skyPath, t_scale);
         }
     }
 }

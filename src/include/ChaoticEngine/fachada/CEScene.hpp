@@ -27,7 +27,7 @@ public:
 	CESceneLight*			createDirectionalLight(float p_direction[3]);
 	CESceneLight*			createPointLight(float p_lightAtenuation);
 	CESceneMesh*			createMesh(const char* p_path);
-	CESceneAnimation*		createAnimatedMesh(const char* p_path);
+	CESceneAnimation*		createAnimatedMesh(const char* p_path, bool p_loop);
 	CESceneQuad*			createQuad(float p_vertex[4][2]);
 	CESceneSprite*			createSprite(const char* p_path, float p_width, float p_height, bool p_originCenter = true);
 	CESceneBillboard*		createBillboard(const char* p_path, float p_width, float p_height, CESceneNode* p_parent = NULL);
