@@ -13,7 +13,7 @@ BINARY 	:= 3KSC
 
 #Compiler set-up
 CC		:= g++
-LDFLAGS := -Wl,-rpath=$(LIBDIR)
+LDFLAGS := -Wl,-O2,-rpath=$(LIBDIR)
 
 INCLUDE := -I$(HDRDIR) -I$(HDRDIR)ChaoticEngine/fachada -I$(INCDIR) -I$(INCDIR)sfml -I$(INCDIR)box2D -I$(INCDIR)nlohmann -I$(INCDIR)raknet/raknet -I$(INCDIR)fmod -I$(INCDIR)OpenGL -I$(INCDIR)glm -I$(INCDIR)ChaoticEngine
 LIBS	:= -L$(LIBDIR) -lGL -lGLEW -lglfw -lassimp -lXxf86vm -lXext -lX11 -lXcursor -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lraknet -lRakNetLibStatic -lfmod -lfmodL -lfmodstudio -lfmodstudioL -lassimp

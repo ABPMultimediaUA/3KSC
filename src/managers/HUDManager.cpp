@@ -133,7 +133,8 @@ void HUDManager::initializePlayer(int p_index){
 
     //Placing
     int t_x = -412 + (610 * p_index);
-    int t_y = -258;
+    //int t_y = -258;
+    int t_y = 354;
 
     t_playerHUD->face->setAbsolutePosition(t_x, t_y, 1);
     t_playerHUD->bg->setAbsolutePosition(t_x + 64, t_y, 1);
@@ -162,7 +163,7 @@ void HUDManager::initializeUB(){
     m_ultimateFG = m_engineManager->createHUD("assets/UI/HUD/Bars/UltiFG.png", 300, 20, false);
 
     int t_x = -150;
-    int t_y = -296;
+    int t_y = 316;
 
     m_ultimateBG->setAbsolutePosition(t_x, t_y, 0);
     m_ultimateFG->setAbsolutePosition(t_x, t_y, 1);

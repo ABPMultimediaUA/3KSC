@@ -45,7 +45,7 @@ Portal::~Portal(){
 }
 
 void Portal::onEnter(Character* p_character){
-    std::cout<< "ENTER PORTAL" <<std::endl;
+    //std::cout<< "ENTER PORTAL" <<std::endl;
     m_charactersInPortal++;
     m_players[p_character->getIndex()] = p_character;
     m_using = true;
@@ -53,7 +53,7 @@ void Portal::onEnter(Character* p_character){
 
 
 void Portal::onLeave(Character* p_character){
-    std::cout<< "LEAVE PORTAL" <<std::endl;
+    //std::cout<< "LEAVE PORTAL" <<std::endl;
     m_players[p_character->getIndex()] = NULL;
     m_charactersInPortal--;
     m_using = false;
