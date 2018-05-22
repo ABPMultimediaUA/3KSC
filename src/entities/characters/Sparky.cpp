@@ -163,7 +163,6 @@ bool Sparky::ultimateAttack(){
     //Disable Ultimate in HUD
     m_HUDManager->setUltimate(m_playerIndex, false);
     
-    // m_ultimateCharged = true;
     if(m_ultimateCharged){
         m_ultimateMode = true;
         m_ultimateAmmo = 10;
