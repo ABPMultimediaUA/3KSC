@@ -35,10 +35,7 @@ void CEAnimatedMesh::beginDraw(){
     glm::mat3 t_normal = transpose(inverse(m_modelMatrix));
     glUniformMatrix3fv(glGetUniformLocation(m_shaderProgram, "NormalMatrix"), 1, GL_FALSE, glm::value_ptr(t_normal));
 
-    //showMat(m_modelMatrix);
-
     double t_time = glfwGetTime();
-    //m_frameTime = 1.0; //así ira a 1 fps (quitar para aumentar a 25 fps)
 
     if (t_time - m_lastTime >= m_frameTime){ 
         m_currentFrame++;
@@ -46,11 +43,12 @@ void CEAnimatedMesh::beginDraw(){
     }
     if(m_currentFrame > m_currentAnimation->getNumFrames() - 1){
         m_currentFrame = 0;
-        //if the cuurent animation dont have loop, change to animation number 0
+        //Si la animacion actual no tiene Loop, volvemos al frame 0
         if(!m_currentAnimation->getHaveLoop())
             m_currentAnimation = m_animations[0];
     }
     
+    //Dibujamos solo la animacion que se este ejecutando actualmente
     if(m_currentAnimation != NULL){
         m_currentAnimation->draw(m_shaderProgram, m_currentFrame);
     }
@@ -58,6 +56,7 @@ void CEAnimatedMesh::beginDraw(){
 
 void CEAnimatedMesh::endDraw(){}
 
+//Lee las animaciones que recibe desde fichero y llama al gestor de recursos
 void CEAnimatedMesh::loadResource(const char* p_urlSource, bool p_loop){
     CEResourceManager* t_manager = CEResourceManager::instance();
     CEResourceAnimation* t_resource = (CEResourceAnimation*)&t_manager->getResource(p_urlSource);
@@ -67,9 +66,9 @@ void CEAnimatedMesh::loadResource(const char* p_urlSource, bool p_loop){
     }
 }
 
+//Cambia la animacion a ejecutar por la pasada por parametro
 void CEAnimatedMesh::setCurrentAnimation(int p_current){
     if(p_current < m_animations.size()){
         m_currentAnimation = m_animations[p_current];
-        //m_currentFrame = 0;
     }
 }

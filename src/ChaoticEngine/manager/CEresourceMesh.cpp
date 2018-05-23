@@ -11,6 +11,10 @@ CEResourceMesh::CEResourceMesh() : CEResource(){}
 //Destructor
 CEResourceMesh::~CEResourceMesh(){}
 
+//Gran parte de la implementacion de esta clase esta basada en el tutorial LearningOpenGL
+//url: https://learnopengl.com/Model-Loading/Model
+
+//Cargamos desde fichero utilizando la libreria Assimp
 bool CEResourceMesh::loadFile(const char* p_name){
 	Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(p_name, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -19,7 +23,7 @@ bool CEResourceMesh::loadFile(const char* p_name){
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
 		return false;
 	}
-
+	//Una vez que leemos el fichero guardamos datos como el directorio del mismo y procesamos sus nodos
 	std::string path = p_name;
 	m_directory = path.substr(0, path.find_last_of('/'));
 
@@ -28,14 +32,14 @@ bool CEResourceMesh::loadFile(const char* p_name){
 }
 
 void CEResourceMesh::processNode(aiNode* p_node, const aiScene* p_scene){
-	// Process each mesh located at the current node
+
+	//Procesamos todas las mallas que hayan en cada nodo de Assimp
 	for(unsigned int i = 0; i < p_node->mNumMeshes; i++){
-		// The node object only contains indices to index the actual objects in the scene. 
-		// The scene contains all the data
+		//Los nodos contienen indices a los objetos de la escena, los cuales tienen los datos a tratar
 		aiMesh* mesh = p_scene->mMeshes[p_node->mMeshes[i]];
 		m_meshes.push_back(processMesh(mesh, p_scene));
 	}
-	// then do the same for each of its children
+	//Hacemos lo mismo con cada hijo que encontremos en el arbol
     for(unsigned int i = 0; i < p_node->mNumChildren; i++){
         processNode(p_node->mChildren[i], p_scene);
     }
@@ -47,10 +51,10 @@ CEsubMesh CEResourceMesh::processMesh(aiMesh* p_mesh, const aiScene* p_scene){
 	std::vector<GLuint>  indices;
 	std::vector<CEResourceTexture*> textures;
 
-	// Walk through each of the mesh's vertices
+	//Vamos adquiriendo los datos de todos los vertices leidos
 	for(unsigned int i = 0; i < p_mesh->mNumVertices; i++){
 		Vertex vertex;
-		glm::vec3 vector; 	//assimp dont uses vec3 class so we transfer the data first.
+		glm::vec3 vector;
 		// Positions
 		if (p_mesh->HasPositions()) {
 			vector.x = p_mesh->mVertices[i].x;
@@ -106,20 +110,25 @@ CEsubMesh CEResourceMesh::processMesh(aiMesh* p_mesh, const aiScene* p_scene){
 	return CEsubMesh(vertices, indices, textures);
 }
 
+//El dibujado recorre el vector de CEsubMesh que tiene un CEResourceMesh para llamar a todos sus metodos draw
 void CEResourceMesh::draw(GLuint p_shaderProgram){
 	for(GLuint i = 0; i < m_meshes.size(); i++){
 			m_meshes[i].subDraw(p_shaderProgram);
 	}
 }
 
+//Este metodo carga texturas utilizando el gestor de recursos y los datos leidos por Assimp
 std::vector<CEResourceTexture*> CEResourceMesh::loadMaterialTextures(aiMaterial * p_mat, aiTextureType p_type, string p_typeName){
     CEResourceManager* t_manager = CEResourceManager::instance();
 	vector<CEResourceTexture*> t_textures;
+	//Recorremos todas las texturas encontradas
     for(unsigned int i = 0; i < p_mat->GetTextureCount(p_type); i++){
         aiString str;
         p_mat->GetTexture(p_type, i, &str);
         std::string t_path = m_directory + '/' + str.C_Str();
+        //Por cada una de ellas llamamos al gestor para que se encargue de su gestion
         CEResourceTexture* t_texture = (CEResourceTexture*)&t_manager->getResource(t_path.c_str());
+        //Una vez obtenida del gestor rellenamos los datos
         t_texture->glBuffersTexture();
         t_texture->setTextureType(p_typeName);
         t_texture->setTexturePath(str.C_Str());

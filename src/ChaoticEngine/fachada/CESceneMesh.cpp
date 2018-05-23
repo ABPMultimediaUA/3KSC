@@ -4,6 +4,9 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneMesh.hpp"
 
+
+//Fachada para crear Mallas y aplicarle las transformaciones correspondientes
+
 CESceneMesh::CESceneMesh(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram){
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();

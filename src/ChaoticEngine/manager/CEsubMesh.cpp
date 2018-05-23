@@ -8,6 +8,9 @@
 
 #include "../../include/ChaoticEngine/manager/CEsubMesh.hpp"
 
+//Gran parte de la implementacion de esta clase esta basada en el tutorial LearningOpenGL
+//url: https://learnopengl.com/Model-Loading/Mesh
+
 //Constructor
 CEsubMesh::CEsubMesh(std::vector<Vertex> p_vertices, std::vector<GLuint> p_indices, std::vector<CEResourceTexture*> p_textures){
 	m_vertices = p_vertices;
@@ -41,7 +44,7 @@ void CEsubMesh::subDraw(GLuint p_shaderProgram){
         glBindTexture(GL_TEXTURE_2D, m_textures[i]->getTextureId());
     }
 
-	// Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
+	// Also set each mesh's shininess property to a default value
 	glUniform1f(glGetUniformLocation(p_shaderProgram, "Material.Shininess"), 30.0f);
 	
 	glUniform1f(glGetUniformLocation(p_shaderProgram, "numShades"), 7.0f);
@@ -59,6 +62,7 @@ void CEsubMesh::subDraw(GLuint p_shaderProgram){
 	}
 }
 
+//Preparamos los buffers por cada una de las CEsubMeshes
 void CEsubMesh::prepareBuffers(){
 	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &m_VBO);
