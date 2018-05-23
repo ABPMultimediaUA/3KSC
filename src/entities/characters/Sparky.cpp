@@ -79,6 +79,7 @@ bool Sparky::jump(){
 bool Sparky::basicAttack(){
     if(!m_ultimateMode && m_currentTime >= m_atakTime){
         Character* t_currentPlayer;
+        m_engineManager->changeAnimation(m_modelId, 5);
 
         for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
@@ -102,12 +103,13 @@ bool Sparky::basicAttack(){
 }
 
 bool Sparky::specialAttackUp(){
-    if(m_currentTime >= m_atakTime && useMP(10)){
+    if(m_currentTime >= m_atakTime && useMP(20)){
         m_soundManager->modifyParameter("s_atak", 0.5, "Atak");
         m_soundManager->playSound("s_atak");
         m_physicsManager->sparkyJump(m_idBody);
         m_jumpingTime = m_currentTime + m_jumpingDuration;
         m_sparkyJumping = true;
+        m_engineManager->changeAnimation(m_modelId, 2);
         m_system = m_engineManager->createParticleSystem("assets/fire.png", 20, -m_position[0]*5, (10-m_position[1])*(5),150, 0.5, 0, 360, true, 0.5);
 
         m_atakTime = m_currentTime + m_atakOffset;
@@ -124,13 +126,14 @@ bool Sparky::specialAttackDown(){
         m_system = m_engineManager->createParticleSystem("assets/Spark_Yellow.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
         //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
         m_atakTime = m_currentTime + m_atakOffset;
+        m_engineManager->changeAnimation(m_modelId, 3);
     }
 
     return false;
 }
 
 bool Sparky::specialAttackSide(){
-    if(!m_punchLaunched && m_currentTime >= m_atakTime && !m_ultimateMode && useMP(35)){
+    if(!m_punchLaunched && m_currentTime >= m_atakTime && !m_ultimateMode && useMP(15)){
         m_attackPosition[0] = m_position[0] + 0.5*m_orientation;
         m_attackPosition[1] = m_position[1];
         m_attackPosition[2] = m_position[2];
@@ -164,6 +167,7 @@ bool Sparky::ultimateAttack(){
         m_ultimateCharged = false;
         m_soundManager->modifyParameter("s_ultimate", 0, "Prob");
         m_soundManager->playSound("s_ultimate");
+        m_engineManager->changeAnimation(m_modelId, 4);
     }
 
     return false;

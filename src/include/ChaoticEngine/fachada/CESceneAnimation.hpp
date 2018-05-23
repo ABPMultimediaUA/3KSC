@@ -14,7 +14,6 @@ public:
 	CESceneAnimation(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram, bool p_loop);
 	~CESceneAnimation();
 
-	void 	processInput(GLFWwindow* p_window);
 	void 	loadAnimation(const char* p_path, bool p_loop);
 	void 	changeCurrentAnimation(int p_current);
 

@@ -135,40 +135,7 @@ void EngineManager::resetCamera(){
         m_newCameraPosition[3] = m_resetPosition[3];
         m_newCameraPosition[4] = m_resetPosition[4];
         m_newCameraPosition[5] = m_resetPosition[5];
-        
-        //m_cameraNode->setPosition(core::vector3df(m_resetPosition[0], m_resetPosition[1], m_resetPosition[2]));
-        //m_cameraNode->setTarget(core::vector3df(m_resetPosition[3], m_resetPosition[4], m_resetPosition[5]));
     }
-}
-
-void EngineManager::updateCamera(){
-    /*if(m_cameraNode && m_moveCamera){
-        float t_maxTime = 1.0;
-        m_amountTime += getFrameDeltaTime();
-
-        float posXCamera = (t_maxTime-m_amountTime)*m_cameraPosition[0] + m_amountTime*m_newCameraPosition[0];
-        float posYCamera = (t_maxTime-m_amountTime)*m_cameraPosition[1] + m_amountTime*m_newCameraPosition[1];
-        float posZCamera = (t_maxTime-m_amountTime)*m_cameraPosition[2] + m_amountTime*m_newCameraPosition[2];
-
-        float posXTarget = (t_maxTime-m_amountTime)*m_cameraPosition[3] + m_amountTime*m_newCameraPosition[3];
-        float posYTarget = (t_maxTime-m_amountTime)*m_cameraPosition[4] + m_amountTime*m_newCameraPosition[4];
-        float posZTarget = (t_maxTime-m_amountTime)*m_cameraPosition[5] + m_amountTime*m_newCameraPosition[5];
-
-        m_cameraNode->setPosition(core::vector3df(posXCamera, posYCamera, posZCamera));
-        m_cameraNode->setTarget(core::vector3df(posXTarget, posYTarget, posZTarget));
-
-        if(m_amountTime >= t_maxTime){
-            m_amountTime = 0.0;
-            m_moveCamera = false;
-
-            m_cameraPosition[0] = m_newCameraPosition[0];
-            m_cameraPosition[1] = m_newCameraPosition[1];
-            m_cameraPosition[2] = m_newCameraPosition[2];
-            m_cameraPosition[3] = m_newCameraPosition[3];
-            m_cameraPosition[4] = m_newCameraPosition[4];
-            m_cameraPosition[5] = m_newCameraPosition[5];
-        }
-    }*/
 }
 
 void EngineManager::createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]){

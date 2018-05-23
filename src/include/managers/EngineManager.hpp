@@ -84,7 +84,6 @@ public:
     void        createCamera(float p_cameraPosition[3], float p_target[3]);
     void        moveCamera(float p_posX, float p_posY, float p_posZ);
     void        resetCamera();
-    void        updateCamera();
 
     void                createGlobalLight(float p_lightPosition[3], float p_lightDirection[3]);
     void                createPointLight(float p_lightPosition[3], float p_lightAtenuation);

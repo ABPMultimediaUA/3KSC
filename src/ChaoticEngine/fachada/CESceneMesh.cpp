@@ -40,23 +40,6 @@ CESceneMesh::~CESceneMesh(){
 	m_scale = nullptr;
 }
 
-void CESceneMesh::processInput(GLFWwindow* p_window){
-	if(glfwGetKey(p_window, GLFW_KEY_R) == GLFW_PRESS)
-		setRotation(0,3,0);
-	if(glfwGetKey(p_window, GLFW_KEY_W) == GLFW_PRESS)
-		setPosition(0,1,0);
-	if(glfwGetKey(p_window, GLFW_KEY_S) == GLFW_PRESS)
-		setPosition(0,-1,0);
-	if(glfwGetKey(p_window, GLFW_KEY_D) == GLFW_PRESS)
-		setPosition(1,0,0);
-	if(glfwGetKey(p_window, GLFW_KEY_A) == GLFW_PRESS)
-		setPosition(-1,0,0);
-	if(glfwGetKey(p_window, GLFW_KEY_E) == GLFW_PRESS)
-		setPosition(0,0,1);
-	if(glfwGetKey(p_window, GLFW_KEY_Q) == GLFW_PRESS)
-		setPosition(0,0,-1);
-}
-
 void CESceneMesh::setScale(float p_x, float p_y, float p_z){
 	m_scale->scale(p_x, p_y, p_z);
 }
