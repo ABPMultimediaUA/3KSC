@@ -31,10 +31,6 @@ class EndGameState : public State{
     private:
         EndGameState(Game* p_game);
 
-        HUDManager*     m_HUDManager;
-        InputManager*   m_inputManager;
-        Arena*          m_arena;
-
     public:
         static EndGameState& instance();
         ~EndGameState();

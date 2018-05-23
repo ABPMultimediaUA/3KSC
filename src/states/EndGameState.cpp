@@ -36,11 +36,6 @@ EndGameState& EndGameState::instance(){
 //Constructor
 EndGameState::EndGameState(Game* p_game){
     m_game          = p_game;
-    m_HUDManager    = &HUDManager::instance();
-    m_inputManager  = &InputManager::instance();
-    m_arena         = Arena::getInstance();
-
-    m_HUDManager->showWinnerMessage();
 }
 
 //Destructor
@@ -51,19 +46,6 @@ void EndGameState::input(){
 }
 
 void EndGameState::update(){
-    bool t_kbInput  = m_inputManager->isKeyPressed(Key::Return);
-    bool t_jsInput  = m_inputManager->isConnected(0) && m_inputManager->isButtonPressed(0, Button::Start);
-
-    if (t_kbInput || t_jsInput /* || m_inputManager->getMasterClock() >= 10.f */){
-        if (m_arena)    { delete m_arena;   m_arena = nullptr;  }
-        EngineManager::instance().cleanScene();
-        SoundManager::instance().stopAll();
-        PhysicsManager::instance().clear();
-        MenuState::getInstance()->goToMainScreen();
-
-        nextState();
-    }
-
 }
 
 void EndGameState::render(){
