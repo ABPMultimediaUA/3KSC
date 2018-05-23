@@ -134,6 +134,28 @@ void Arena::spawnPlayer(bool p_online){
     m_playerCount++;
 }
 
+void Arena::spawnPlayerOnline(bool p_online, int p_index){
+    // std::cout<<"player online "<<p_index<<std::endl;
+    // if(p_index == 1)
+    // m_playerCount++
+    switch (m_game->getChosenPlayer(p_index)){
+        case 0: { 
+            std::cout << " ++ Spawn Plup" << std::endl;
+            m_players[p_index] = new Plup("Plup", m_spawnPositions[p_index], p_online, m_game->isNPC(p_index));
+            break;
+        }
+        case 1: { 
+            std::cout << " ++ Spawn Sparky" << std::endl;
+            m_players[p_index] = new Sparky("Sparky", m_spawnPositions[p_index], p_online, m_game->isNPC(p_index));
+            break;
+        }
+    }
+    // if(p_index == 0)
+    // m_playerCount++;
+
+    m_playerCount++;
+}
+
 void Arena::addPlayer(bool p_bool){
     float positionSparky[3] = {0, 100, 0};
     m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, p_bool);
@@ -268,7 +290,6 @@ void Arena::onlineUpdate(float p_delta){
             if(m_items.size()>0)
             Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems-1)->getX(), m_items.at(m_currentItems-1)->getY());
         }
-
     }
 
     for(int i = 0; i < m_items.size(); i++){

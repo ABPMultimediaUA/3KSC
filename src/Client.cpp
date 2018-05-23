@@ -35,6 +35,7 @@
 #include "Gets.h"
 #include "include/Client.hpp"
 #include "include/entities/Arena.hpp"
+#include "include/Game.hpp"
 #include "include/managers/InputManager.hpp"
 
 
@@ -53,6 +54,7 @@ Client& Client::instance(){
 Client::Client(){
     m_inputManager  = &InputManager::instance();
     m_arena         = Arena::getInstance();
+	m_game         	= Game::getInstance();
 	m_arena->setOnline(true);
 }
 
@@ -97,18 +99,13 @@ void Client::listen(){
 			break;
 
 		case ID_CONNECTION_REQUEST_ACCEPTED:
-			// This tells the client they have connected
-			// printf("ID_CONNECTION_REQUEST_ACCEPTED to %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
-			// printf("My external address is %s\n", client->GetExternalID(p->systemAddress).ToString(true));
 			t_first = "player";
 			send(t_first);
 			break;
 		default:
-			// It's a client, so just show the message
 			std::string t_messageReceived;
 			t_messageReceived.append(reinterpret_cast<const char*>(p->data));
 			readMessage(t_messageReceived);
-			//printf("Receiving-> %s\n",p->data);
 			break;
 		}
 	}
@@ -118,7 +115,7 @@ void Client::start()
 {
 	m_yourPlayer = -1;
 	client=RakNet::RakPeerInterface::GetInstance();
-
+	m_flag = true;
 	char t_debug[5];
 	std::cout<<"Debug mode? (Y)/(N)"<<std::endl;
 	std::cin >> t_debug;
@@ -126,7 +123,6 @@ void Client::start()
 		m_debug = true;
 
 	RakNet::SystemAddress clientID=RakNet::UNASSIGNED_SYSTEM_ADDRESS;
-	//puts("Enter the client port to listen on");
 	Gets(clientPort,sizeof(clientPort));
 	if (clientPort[0]==0)
 		strcpy(clientPort, "0");
@@ -143,11 +139,19 @@ void Client::start()
 	if (serverPort[0]==0)
 		strcpy(serverPort, "1234");
 
+	char t_character[6];
+	std::cout<<"Type your character number:\n1- Sparky\n2- Plup"<<std::endl;
+	std::cin >> t_character;
+	if (t_character[0] == '1')
+		m_character = 1;
+	else
+		m_character = 0;
+	std::cout<<"Character: "<<m_character<<std::endl;
+
 	RakNet::SocketDescriptor socketDescriptor(atoi(clientPort),0);
 	socketDescriptor.socketFamily=AF_INET;
 	client->Startup(8,&socketDescriptor, 1);
 	client->SetOccasionalPing(true);
-
 
 	#if LIBCAT_SECURITY==1
 		char public_key[cat::EasyHandshake::PUBLIC_KEY_BYTES];
@@ -165,26 +169,6 @@ void Client::start()
 		RakNet::ConnectionAttemptResult car = client->Connect(ip, atoi(serverPort), "Rumpelstiltskin", (int) strlen("Rumpelstiltskin"));
 		RakAssert(car==RakNet::CONNECTION_ATTEMPT_STARTED);
 	#endif
-
-/* 	printf("\nMy IP addresses:\n");
-	unsigned int i;
-	for (i=0; i < client->GetNumberOfAddresses(); i++)
-	{
-		printf("%i. %s\n", i+1, client->GetLocalIP(i));
-	}
-
-	printf("My GUID is %s\n", client->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS).ToString());
-	puts("'quit' to quit. 'stat' to show stats. 'ping' to ping.\n'disconnect' to disconnect. 'connect' to reconnnect. Type to talk.");
- */
-	// Loop for input
-
-		// This sleep keeps RakNet responsive
-
-	// Be nice and let the server know we quit.
-	//client->Shutdown(300);
-
-	// We're done with the network
-	//RakNet::RakPeerInterface::DestroyInstance(client);
 }
 
 int Client::getActions(int p_player){
@@ -208,21 +192,41 @@ unsigned char GetPacketIdentifier(RakNet::Packet *p)
 void Client::readMessage(std::string p_message){
 	std::vector<std::string> t_parsed{explode(p_message, ':')};
 	if(t_parsed[0] == "new"){
-		m_yourPlayer = std::stoi(t_parsed[1]);
-		m_yourPlayerString = t_parsed[1];
-		for(int i = -1; i < m_yourPlayer; ++i){
-			m_arena->addPlayer(true);
-		}
+		m_yourPlayer = 0;
+		m_yourPlayerString = "0";
+		m_game->setChosenPlayer(m_yourPlayer, m_character);
+		m_arena->spawnPlayerOnline(true, m_yourPlayer);
+
 		if(m_debug) std::cout<<"Bienvenido, "<<t_parsed[1]<<" jugadores en la partida"<<std::endl;
 		m_inputManager->setOnlineControl(m_yourPlayer);
 	}
+	if(t_parsed[0] == "second"){
+		std::string t_toSend 	= "joined:" + std::to_string(m_character);
+		char const *t_toSendChar = t_toSend.c_str();
+		send(t_toSendChar);
+		m_yourPlayer = 1;
+		m_yourPlayerString = "1";
+		m_game->setChosenPlayer(m_yourPlayer, m_character);
+		m_game->setChosenPlayer(0, std::stoi(t_parsed[1]));
+		m_arena->spawnPlayerOnline(true, 0);
+		m_arena->spawnPlayerOnline(true, m_yourPlayer);
+		m_inputManager->setOnlineControl(m_yourPlayer);
+	}
+	else if(t_parsed[0] == "player")
+	{
+		if(m_flag)
+		{
+			std::string t_toSend 	= "second:" + std::to_string(m_character);
+			char const *t_toSendChar = t_toSend.c_str();
+			send(t_toSendChar);
+			m_flag = false;
+		}
+	}
 	else if(t_parsed[0] == "joined"){
-		Arena::getInstance()->addPlayer(true);
-		m_inputManager -> sendOnlineInput();
-		if(m_debug) std::cout<<"Nuevo jugador en la partida"<<std::endl;
+			m_game->setChosenPlayer(1, std::stoi(t_parsed[1]));
+			m_arena->spawnPlayerOnline(true, 1);
 	}
 	else if(t_parsed[0] == "item"){
-		std::cout<<"item"<<std::endl;
 		Arena::getInstance()->spawnItemAt(std::stof(t_parsed[1]), std::stof(t_parsed[2]), std::stof(t_parsed[3]));
 		if(m_debug) std::cout<<"Objeto de tipo "<<t_parsed[1]<<" añadido"<<std::endl;
 	}
@@ -246,7 +250,10 @@ void Client::readMessage(std::string p_message){
 	}
 	else{
 		if(t_parsed.size()<4)
+		{
+			std::cout<<"MENSAJE NO IDENTIFICADO "<<t_parsed[0]<<std::endl;
 			return;
+		}
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setY(std::stof(t_parsed[2]));
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setX(std::stof(t_parsed[1]));
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setVX(std::stof(t_parsed[4]));
@@ -323,7 +330,6 @@ void Client::spawnItem(int p_type, int x, int y)
 	std::string t_toSend 	= "item:" + std::to_string(p_type) + ":" + std::to_string(x) 
 							+ ":" + std::to_string(y);
     char const *t_toSendChar = t_toSend.c_str();
-	std::cout<<t_toSendChar<<std::endl;
 	send(t_toSendChar);
 }
 
@@ -331,7 +337,6 @@ void Client::spawnPortal()
 {
 	std::string t_toSend 	= "portal:1";
     char const *t_toSendChar = t_toSend.c_str();
-	std::cout<<t_toSendChar<<std::endl;
 	send(t_toSendChar);
 }
 

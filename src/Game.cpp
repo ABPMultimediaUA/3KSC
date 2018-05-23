@@ -54,6 +54,8 @@ Game::Game(){
     for (int i = 0; i < 2; i++){
         m_NPC[i]            = false;
         m_chosenPlayers[i]  = 0;
+        m_chosenPlayers[0]  = 0;
+        m_chosenPlayers[1]  = 1;
     }
 
     m_battleSettings[0] = 2;
@@ -62,8 +64,8 @@ Game::Game(){
     m_map               = 0;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
-    m_state = &MenuState::instance();
-    // m_state = &InGameState::instance();
+    //m_state = &MenuState::instance();
+    m_state = &InGameState::instance();
 }
 
 //Destructor

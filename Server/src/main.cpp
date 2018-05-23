@@ -140,9 +140,6 @@ int main(void)
 		RakSleep(30);
 		if (kbhit())
 		{
-			// Notice what is not here: something to keep our network running.  It's
-			// fine to block on gets or anything we want
-			// Because the network engine was painstakingly written using threads.
 			Gets(message,sizeof(message));
 
 			if (strcmp(message, "quit")==0)
@@ -220,22 +217,10 @@ int main(void)
 
 			// Message now holds what we want to broadcast
 			char message2[2048];
-
-			// Append Server: to the message so clients know that it ORIGINATED from the server
-			// All messages to all clients come from the server either directly or by being
-			// relayed from other clients
 			message2[0]=0;
 			const static char prefix[] = "Server: ";
 			strncpy(message2, prefix, sizeof(message2));
 			strncat(message2, message, sizeof(message2) - strlen(prefix) - 1);
-		
-			// message2 is the data to send
-			// strlen(message2)+1 is to send the null terminator
-			// HIGH_PRIORITY doesn't actually matter here because we don't use any other priority
-			// RELIABLE_ORDERED means make sure the message arrives in the right order
-			// We arbitrarily pick 0 for the ordering stream
-			// RakNet::UNASSIGNED_SYSTEM_ADDRESS means don't exclude anyone from the broadcast
-			// true means broadcast the message to everyone connected
 			server->Send(message2, (const int) strlen(message2)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 		}
 
@@ -252,12 +237,23 @@ int main(void)
 				case ID_NEW_INCOMING_CONNECTION:
 					printf("ID_NEW_INCOMING_CONNECTION from %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
 					clientID=p->systemAddress; // Record the player ID of the client
-					m_auxString = "new:"+std::to_string(m_playerNumber);
-					t_connection = m_auxString.c_str();  //use char const* as target type
-					server->Send(t_connection, (int) strlen(t_connection)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
-					m_auxString = "joined:"+std::to_string(m_playerNumber);
-				 	t_connection = m_auxString.c_str();
-					server->Send(t_connection, (int) strlen(t_connection)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
+					if(m_playerNumber == 0)
+					{
+						m_auxString = "new:"+std::to_string(m_playerNumber);
+						t_connection = m_auxString.c_str();  //use char const* as target type
+						server->Send(t_connection, (int) strlen(t_connection)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
+					}
+					else if(m_playerNumber == 1)
+					{
+						m_auxString = "player:";
+					 	t_connection = m_auxString.c_str();
+					 	server->Send(t_connection, (int) strlen(t_connection)+1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
+					}
+					else
+					{
+						std::cout<<"-----==== SERVER FULL ===-----"<<std::endl;
+						std::cout<<"Please type 'reset' to restart"<<std::endl;
+					}
 					++m_playerNumber;
 					break;
 
