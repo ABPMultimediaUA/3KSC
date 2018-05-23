@@ -126,7 +126,7 @@ bool Sparky::specialAttackDown(){
         m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
         m_soundManager->playSound("s_atak");
         m_physicsManager->shockwaveBox(m_idBody, m_damageDown, m_knockbackDown);
-        m_system = m_engineManager->createParticleSystem("assets/spark.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
+        m_system = m_engineManager->createParticleSystem("assets/Spark_Yellow.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
         //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
         m_atakTime = m_currentTime + m_atakOffset;
     }
