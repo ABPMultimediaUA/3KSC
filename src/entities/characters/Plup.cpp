@@ -31,7 +31,7 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/HUDManager.hpp"
 
-Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 300, 100, 100.f, "assets/models/characters/plup/plup.obj", p_online, p_NPC){
+Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.anim", p_online, p_NPC){
     m_type              = 3;
 
     m_kalasnikovBulletLaunched = false;
@@ -150,8 +150,8 @@ bool Plup::specialAttackSide(){
         m_dashTime = m_currentTime + m_dashDuration;
         m_dashing = true;
 
-        m_physicsManager->dash(getId(), m_orientation);
-        m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide);
+        m_physicsManager->dash(m_idBody, m_orientation);
+        m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(m_idBody), true, m_damageSide, m_damageSide);
 
         m_atakTime = m_currentTime + m_atakOffset;
     }
@@ -226,20 +226,20 @@ int Plup::getCurrentSnowmen(){
 
 void Plup::updateDash(){
     if(m_currentTime < m_dashTime){
-        m_physicsManager->dash(getId(), m_orientation);
-        if(m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(getId()), true, m_damageSide, m_damageSide)){
-            m_physicsManager->resetVelocity(getId());
+        m_physicsManager->dash(m_idBody, m_orientation);
+        if(m_physicsManager->checkCollisionSimple(m_physicsManager->getBody(m_idBody), true, m_damageSide, m_damageSide)){
+            m_physicsManager->resetVelocity(m_idBody);
             m_dashing = false;
         }
     }else{
-        m_physicsManager->resetVelocity(getId());
+        m_physicsManager->resetVelocity(m_idBody);
         m_dashing = false;
     }
 }
 ///MODIFICAR ESTO, QUE NO SE MUEVA, MUNICION PUESTA A 0 AHORA
 void Plup::updateKalasnikov(){
     if(m_currentTime >= m_kalasnikovTime && m_kalasnikovAmmo > 0){
-        m_physicsManager->machineGun(getId(), m_orientation, m_damageUp, m_knockbackUp, false);
+        m_physicsManager->machineGun(m_idBody, m_orientation, m_damageUp, m_knockbackUp, false);
         m_kalasnikovTime = m_currentTime + m_kalasnikovOffset;
         m_kalasnikovAmmo--;
     }else

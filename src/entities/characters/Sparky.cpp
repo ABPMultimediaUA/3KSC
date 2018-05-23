@@ -30,7 +30,7 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/HUDManager.hpp"
 
-Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 450, 70, 90.f, "assets/models/characters/sparky/sparky.obj", p_online, p_NPC){
+Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 150, 70, 65.f, "assets/models/characters/sparky/sparky_animations.anim", p_online, p_NPC){
     m_type               = 4;
     
     m_jumpingDuration    = 0.10;
@@ -105,7 +105,7 @@ bool Sparky::specialAttackUp(){
     if(m_currentTime >= m_atakTime && useMP(10)){
         m_soundManager->modifyParameter("s_atak", 0.5, "Atak");
         m_soundManager->playSound("s_atak");
-        m_physicsManager->sparkyJump(getId());
+        m_physicsManager->sparkyJump(m_idBody);
         m_jumpingTime = m_currentTime + m_jumpingDuration;
         m_sparkyJumping = true;
         m_system = m_engineManager->createParticleSystem("assets/fire.png", 20, -m_position[0]*5, (10-m_position[1])*(5),150, 0.5, 0, 360, true, 0.5);
@@ -120,8 +120,8 @@ bool Sparky::specialAttackDown(){
     if(m_currentTime >= m_atakTime && !m_ultimateMode && useMP(20)){
         m_soundManager->modifyParameter("s_atak", 0.7, "Atak");
         m_soundManager->playSound("s_atak");
-        m_physicsManager->shockwaveBox(getId(), m_damageDown, m_knockbackDown);
-        m_system = m_engineManager->createParticleSystem("assets/spark.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
+        m_physicsManager->shockwaveBox(m_idBody, m_damageDown, m_knockbackDown);
+        m_system = m_engineManager->createParticleSystem("assets/Spark_Yellow.png", 10, -m_position[0]*5, (10-m_position[1])*(5),100, 0.5, 0, 360, true, 1);
         //m_system  = m_engineManager->createParticleSystem("assets/fire.png", 50, -m_position[0], 9- m_position[1], 10, 2, -20, 20, false,30);
         m_atakTime = m_currentTime + m_atakOffset;
     }
@@ -190,12 +190,12 @@ void Sparky::updateJump(){
     if(m_currentTime > m_jumpingTime){
         if(!m_gravity){
             m_gravity = true;
-            m_physicsManager->fastGravity(getId());
+            m_physicsManager->fastGravity(m_idBody);
         }else if(m_onGround){
             m_gravity       = false;
             m_sparkyJumping = false;
-            m_physicsManager->shockwaveBox(getId(), m_damageUp, m_knockbackUp);
-            m_physicsManager->resetVelocity(getId());
+            m_physicsManager->shockwaveBox(m_idBody, m_damageUp, m_knockbackUp);
+            m_physicsManager->resetVelocity(m_idBody);
         }
     }
 }
@@ -220,7 +220,7 @@ void Sparky::updateUltimate(){
         m_attackTarget[2] = m_position[2];
         
         m_ultimateBullet = new Projectile(m_attackPosition, m_attackTarget, m_orientation, m_playerIndex, m_damageSide, m_knockbackSide, 2);
-        m_physicsManager->machineGun(getId(), m_orientation, m_damageUlti, m_knockbackUlti, true);
+        m_physicsManager->machineGun(m_idBody, m_orientation, m_damageUlti, m_knockbackUlti, true);
         m_ultiBulletLaunched = true;
         m_ultimateAmmo--;
     }else if(m_ultiBulletLaunched){

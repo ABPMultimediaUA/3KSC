@@ -3,6 +3,7 @@
 #include "../../src/include/ChaoticEngine/fachada/CESceneCamera.hpp"
 #include "../../src/include/ChaoticEngine/fachada/CESceneLight.hpp"
 #include "../../src/include/ChaoticEngine/fachada/CESceneMesh.hpp"
+#include "../../src/include/ChaoticEngine/fachada/CESceneAnimation.hpp"
 #include "../../src/include/ChaoticEngine/fachada/CESceneQuad.hpp"
 #include "../../src/include/ChaoticEngine/fachada/CESceneSprite.hpp"
 #include "../../src/include/ChaoticEngine/fachada/CEShader.hpp"

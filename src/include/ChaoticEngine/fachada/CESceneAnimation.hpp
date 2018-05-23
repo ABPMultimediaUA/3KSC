@@ -11,11 +11,11 @@
 
 class CESceneAnimation{
 public:
-	CESceneAnimation(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram);
+	CESceneAnimation(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram, bool p_loop);
 	~CESceneAnimation();
 
 	void 	processInput(GLFWwindow* p_window);
-	void 	loadAnimation(const char* p_path);
+	void 	loadAnimation(const char* p_path, bool p_loop);
 	void 	changeCurrentAnimation(int p_current);
 
 	void 	setScale(float p_x, float p_y, float p_z);

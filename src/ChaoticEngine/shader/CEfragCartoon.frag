@@ -54,7 +54,7 @@ void main(){
 	vec3 view 	= normalize(viewPos - Position);
 	vec3 halfV 	= normalize(light + view);
 
-	float amb 		= 0.3;
+	float amb 		= 0.5;
 	float diff 		= clamp(dot(light,Normal), 0.0f, 1.0f);
 	float spec 		= 0;
 	if(dot(light,Normal) > 0.0)

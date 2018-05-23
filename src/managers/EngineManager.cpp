@@ -198,8 +198,76 @@ void EngineManager::deleteDebug(int p_id){
     m_scene->remove(m_debugNodes[p_id]->getTopNode());
 }
 
+void EngineManager::deleteEntityAnim(int p_id){
+    m_scene->remove(m_animationNodes[p_id]->getTopNode());
+}
+
+void EngineManager::preLoadAssets(){
+
+    float t_position[3] = {0,0,0};
+    float t_scale[3] = {1,1,1};
+
+    //Precargamos los objetos
+    loadAnimations(t_position, t_scale, "assets/models/items/portal/portal_anim.anim");
+    loadAnimations(t_position, t_scale, "assets/models/characters/plup/plup.anim");
+    loadAnimations(t_position, t_scale, "assets/models/characters/sparky/sparky_animations.anim");
+
+    cleanScene();
+}
+
+//Loads animations of 3D models
+int EngineManager::loadAnimations(float p_position[3], float p_scale[3], const char* p_modelURL){
+
+    std::ifstream t_file(p_modelURL);
+    std::string t_line;
+    const char* t_path;
+    std::cout << "cargando animaciones de: " << p_modelURL << std::endl;
+    CESceneAnimation* t_animation = NULL;
+    int t_cont = 0;
+    float t_loop;
+
+
+    while(std::getline(t_file, t_line)){
+        if(t_line == "" || t_line[0] == '#')// Skip everything and continue with the next line
+            continue;
+
+        std::istringstream t_tokens(t_line);
+        std::vector<std::string> t_elements(std::istream_iterator<std::string>{t_tokens}, std::istream_iterator<std::string>());
+        t_path = t_elements[0].c_str();
+        t_loop = strtof((t_elements[2]).c_str(), 0);
+
+        if(t_animation == NULL){
+            t_animation = m_scene->createAnimatedMesh(t_path, t_loop);
+            t_animation->changeCurrentAnimation(0);
+        }
+        else{
+            t_animation->loadAnimation(t_path, t_loop);
+        }
+        float t_number = strtof((t_elements[1]).c_str(), 0);
+        if(t_number == 1)
+            t_animation->changeCurrentAnimation(t_cont);
+
+        t_cont ++;
+    }
+    if(t_animation){
+        t_animation->setAbsolutePosition(p_position[0], p_position[1], p_position[2]);
+        t_animation->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
+
+        m_animationNodes.push_back(t_animation);
+        return m_animationNodes.size()-1;
+    }
+    return -1;
+}
+
+//change the current animations
+void EngineManager::changeAnimation(int p_animation, int p_newAnimation){
+    if(m_animationNodes[p_animation] != NULL){
+        m_animationNodes[p_animation]->changeCurrentAnimation(p_newAnimation);
+    }
+}
+
 //Loads a 3D model
-void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3], const char* p_modelURL){
+int EngineManager::load3DModel(float p_position[3], float p_scale[3], const char* p_modelURL){
     CESceneMesh* t_mesh = m_scene->createMesh(p_modelURL);
 
     if(t_mesh){
@@ -207,7 +275,9 @@ void EngineManager::load3DModel(int p_id, float p_position[3], float p_scale[3],
         t_mesh->setAbsoluteScale(p_scale[0], p_scale[1], p_scale[2]);
 
         m_entityNodes.push_back(t_mesh);
+        return m_entityNodes.size()-1;
     }
+    return -1;
 }
 
 void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
@@ -215,12 +285,23 @@ void EngineManager::loadSkybox(const char* p_skyboxURLs[6], float t_scale){
 }
 
 void EngineManager::moveEntity(Entity* p_entity){
-    float* t_position = p_entity->getElapsedPosition();
-    m_entityNodes[p_entity->getId()]->setPosition(t_position[0], t_position[1], t_position[2]);
+    float* t_position = p_entity->getPosition();
+    if(p_entity->getType() == 0 || p_entity->getType() == 3){
+        m_animationNodes[p_entity->getModelId()]->setAbsolutePosition(t_position[0], t_position[1], t_position[2]);
+    }
+    else{
+        m_entityNodes[p_entity->getId()]->setAbsolutePosition(t_position[0], t_position[1], t_position[2]);
+    }
 }
 
 void EngineManager::setRotation(int p_id, float p_degrees){
     CESceneMesh* t_node  = m_entityNodes[p_id];
+    
+    t_node->setAbsoluteRotation(0.0f, p_degrees, 0.0f);
+}
+
+void EngineManager::setAnimRotation(int p_id, float p_degrees){
+    CESceneAnimation* t_node  = m_animationNodes[p_id];
     
     t_node->setAbsoluteRotation(0.0f, p_degrees, 0.0f);
 }
@@ -248,6 +329,7 @@ void EngineManager::cleanScene(){
     m_entityNodes.clear();
     m_debugNodes.clear();
     m_systems.clear();
+    m_animationNodes.clear();
 }
 
 float EngineManager::getFrameDeltaTime(){
@@ -330,7 +412,7 @@ void EngineManager::pushVertex(float p_minX, float p_maxX, float p_minY, float p
     m_VertexZ.push_back(p_maxZ);
 
     
-   /* std::cout <<
+    /*std::cout <<
         "Objeto: " << m_totalVertex << "\n" <<
         "PosMin: " << p_minX << "," << p_minY << "," << p_minZ << "\n" <<
         "PosMax: " << p_maxX << "," << p_maxY << "," << p_maxZ << "\n" <<

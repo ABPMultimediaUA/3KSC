@@ -41,6 +41,8 @@ public:
     void        moveXY(float p_variationX, float p_variationY);
     bool        checkCloseness(float* p_point, float p_range);
     int         getId();
+    int         getType(){ return m_type;}
+    int         getModelId();
     float*      getPosition();
     float*      getElapsedPosition();
     float       getX();
@@ -65,7 +67,10 @@ protected:
     SoundManager*    m_soundManager;
 
     static int              m_entityCount;
-    int                     m_id; 
+    int                     m_id;
+    int                     m_idBody;
+    int                     m_modelId; 
+    int                     m_type;
     
     float                   m_position[3]; // [0] for x, [1] for y, [2] for z
     float                   m_lastPosition[3]; // [0] for x, [1] for y, [2] for z

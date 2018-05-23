@@ -8,19 +8,6 @@
 #include "../include/ChaoticEngine/CEanimatedMesh.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
-/*void showMat(glm::mat4 p_matrix){   
-    std::cout << std::fixed;
-    std::cout << std::setprecision(6);
-
-    for (int i = 0; i < 4; i++){
-        for (int j = 0; j < 4; j++){
-            std::cout << p_matrix[i][j] << "\t";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}*/
-
 CEAnimatedMesh::CEAnimatedMesh(GLuint p_shaderProgram) : CEEntity(){
     m_shaderProgram = p_shaderProgram;
     m_lastTime = glfwGetTime();
@@ -51,7 +38,7 @@ void CEAnimatedMesh::beginDraw(){
     //showMat(m_modelMatrix);
 
     double t_time = glfwGetTime();
-    m_frameTime = 1.0; //así ira a 1 fps (quitar para aumentar a 25 fps)
+    //m_frameTime = 1.0; //así ira a 1 fps (quitar para aumentar a 25 fps)
 
     if (t_time - m_lastTime >= m_frameTime){ 
         m_currentFrame++;
@@ -59,6 +46,9 @@ void CEAnimatedMesh::beginDraw(){
     }
     if(m_currentFrame > m_currentAnimation->getNumFrames() - 1){
         m_currentFrame = 0;
+        //if the cuurent animation dont have loop, change to animation number 0
+        if(!m_currentAnimation->getHaveLoop())
+            m_currentAnimation = m_animations[0];
     }
     
     if(m_currentAnimation != NULL){
@@ -68,11 +58,13 @@ void CEAnimatedMesh::beginDraw(){
 
 void CEAnimatedMesh::endDraw(){}
 
-void CEAnimatedMesh::loadResource(const char* p_urlSource){
+void CEAnimatedMesh::loadResource(const char* p_urlSource, bool p_loop){
     CEResourceManager* t_manager = CEResourceManager::instance();
     CEResourceAnimation* t_resource = (CEResourceAnimation*)&t_manager->getResource(p_urlSource);
-    if(t_resource != NULL)
+    if(t_resource != NULL){
+        t_resource->setHaveLoop(p_loop);
         m_animations.push_back(t_resource);
+    }
 }
 
 void CEAnimatedMesh::setCurrentAnimation(int p_current){

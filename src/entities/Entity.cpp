@@ -39,43 +39,50 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 
     m_idDebug = -1;
 
-    m_id = m_entityCount++;    
+    m_idBody = m_entityCount++;    
     float t_scale[3] = {p_scale, p_scale, p_scale};
-
     for(int i = 0; i < 3; i++){
         m_position[i] = p_position[i];
         m_lastPosition[i] = p_position[i];
     }
+
+    m_id      = -1;
+    m_modelId = -1;
+    m_type = p_type;
+
+    if(p_type == 0 || p_type == 3)
+        m_modelId = m_engineManager->loadAnimations(p_position, t_scale, p_modelURL);
+    else
+        m_id = m_engineManager->load3DModel(p_position, t_scale, p_modelURL);
     
-    m_engineManager->load3DModel(m_id, p_position, t_scale, p_modelURL);
     moveTo(p_position);
 
     m_debugMode = false;
     switch(p_type){
         //PLAYER
         case 0:
-            m_physicsManager->createPhysicBox(Box::Player, &m_id, p_position, 0.5, 0.6);
+            m_physicsManager->createPhysicBox(Box::Player, &m_idBody, p_position, 0.5, 0.6);
             break;
         //ARENA
         case 1:
             m_engineManager->parseOBJ(p_modelURL);
-            m_physicsManager->createPhysicBoxPlatform(&m_id, p_position, m_debugMode);
+            m_physicsManager->createPhysicBoxPlatform(&m_idBody, p_position, m_debugMode);
             break;
         //ITEM
         case 2:
-            m_physicsManager->createPhysicBox(Box::Item, &m_id, p_position, 0.5, 0.5);
+            m_physicsManager->createPhysicBox(Box::Item, &m_idBody, p_position, 0.5, 0.5);
             break;
         //PORTAL
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_id, p_position, 1.4, 1.5);
+            m_physicsManager->createPhysicBoxPortal(&m_idBody, p_position, 1.4, 1.5);
             break;
         //PROJECTILE
         case 4:
-            m_physicsManager->createPhysicBox(Box::Bullet, &m_id, p_position, 0.5, 0.5);
+            m_physicsManager->createPhysicBox(Box::Bullet, &m_idBody, p_position, 0.5, 0.5);
             break;
         //SNOWMAN
         case 5:
-            m_physicsManager->createPhysicBox(Box::Other, &m_id, p_position, 0.5, 0.5);
+            m_physicsManager->createPhysicBox(Box::Other, &m_idBody, p_position, 0.5, 0.5);
             break;
     }
 
@@ -87,8 +94,12 @@ Entity::~Entity(){
     if(m_debugMode)
         m_engineManager->deleteDebug(m_idDebug);
     
-    m_engineManager->deleteEntity(m_id);
-    m_physicsManager->destroyBody(m_id);
+    if(m_modelId != -1)
+        m_engineManager->deleteEntityAnim(m_modelId);
+    else
+        m_engineManager->deleteEntity(m_id);
+
+    m_physicsManager->destroyBody(m_idBody);
 }
 
 void Entity::updatePosition(){
@@ -99,14 +110,14 @@ void Entity::updatePosition(){
     m_lastPosition[1] = m_position[1];
 
     //Set to the entity the new position of the body
-    m_position[0] = m_physicsManager->getBody(m_id)->GetPosition().x;
-    m_position[1] = m_physicsManager->getBody(m_id)->GetPosition().y;
+    m_position[0] = m_physicsManager->getBody(m_idBody)->GetPosition().x;
+    m_position[1] = m_physicsManager->getBody(m_idBody)->GetPosition().y;
 
     m_engineManager->moveEntity(this);
 }
 
 void Entity::moveTo(float p_position[3]){
-    m_physicsManager->moveBody(m_id, p_position[0], p_position[1]);
+    m_physicsManager->moveBody(m_idBody, p_position[0], p_position[1]);
 }
 
 void Entity::moveTo(float p_x, float p_y){
@@ -146,6 +157,10 @@ int Entity::getId(){
     return m_id;
 }
 
+int Entity::getModelId(){
+    return m_modelId;
+}
+
 float* Entity::getElapsedPosition(){
     m_elapsed[0] = m_position[0] - m_lastPosition[0];
     m_elapsed[1] = m_position[1] - m_lastPosition[1];
@@ -159,11 +174,11 @@ float* Entity::getPosition(){
 }
 
 float Entity::getX(){
-    return m_physicsManager->getBody(m_id)->GetPosition().x;
+    return m_physicsManager->getBody(m_idBody)->GetPosition().x;
 }
 
 float Entity::getVX(){
-    return m_physicsManager->getBody(m_id)->GetLinearVelocity().x;
+    return m_physicsManager->getBody(m_idBody)->GetLinearVelocity().x;
 }
 
 void Entity::setVX(float x){
@@ -171,7 +186,7 @@ void Entity::setVX(float x){
 }
 
 float Entity::getY(){
-    return m_physicsManager->getBody(m_id)->GetPosition().y;
+    return m_physicsManager->getBody(m_idBody)->GetPosition().y;
 }
 
 float Entity::getZ(){
@@ -183,7 +198,10 @@ int Entity::getEntityCount(){
 }
 
 void Entity::rotate(float p_degrees){
-    m_engineManager->setRotation(this->getId(), p_degrees);
+    if(m_type == 0)
+        m_engineManager->setAnimRotation(this->getModelId(), p_degrees);
+    else
+        m_engineManager->setRotation(this->getId(), p_degrees);
 }
 
 void Entity::setX(float p_position){
@@ -195,8 +213,8 @@ void Entity::setY(float p_position){
 }
 
 void Entity::createDebug(){
-    m_idDebug = m_physicsManager->createBodyDebug(m_id);
+    m_idDebug = m_physicsManager->createBodyDebug(m_idBody);
 }
 void Entity::updateDebug(){
-    m_physicsManager->updateBodyDebug(m_id, m_idDebug);
+    m_physicsManager->updateBodyDebug(m_idBody, m_idDebug);
 }

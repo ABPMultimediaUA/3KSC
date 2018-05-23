@@ -12,7 +12,7 @@ public:
 	CEAnimatedMesh(GLuint p_shaderProgram);
 	virtual ~CEAnimatedMesh();
 
-	void loadResource(const char* p_urlSource);
+	void loadResource(const char* p_urlSource, bool p_loop);
 	void setCurrentAnimation(int p_current);
 
 	void beginDraw() override;
