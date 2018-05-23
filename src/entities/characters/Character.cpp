@@ -256,7 +256,6 @@ void Character::die(){
     m_HUDManager->setLives(m_playerIndex, m_lives);
 
     m_HP = 0;
-    //m_alive = false;
     m_knockback = false;
     m_stunned   = false;
     m_shielded = false;
@@ -269,10 +268,12 @@ void Character::die(){
 
     if(m_lives > 0)
         respawn(); 
-    else
+    else{
         m_alive = false;
 
-    //Delete when m_lives == 0
+        int t_winner = (m_playerIndex == 0 ? 1 : 0);
+        m_game->setWinner(t_winner);
+    }
 }
 
 void Character::lookLeft(){

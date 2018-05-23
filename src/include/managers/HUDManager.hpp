@@ -52,16 +52,20 @@ class HUDManager{
         Arena*          m_arena;
 
         PlayerHUD*      m_playerHUDs[2];
+
         CESceneSprite*  m_ultimateBG;
         CESceneSprite*  m_ultimateFG;
         CESceneSprite*  m_ultimateText;
         float           m_ultimateCharge;
+
+        CESceneSprite*  m_winnerMsg;
 
         HUDManager();
         
         void initializePlayer(int p_index);
         void initializeUB();
         void ultimateBlink(int p_player);
+        void initializeWinnerMessage();
 
     public:
         static HUDManager& instance();
@@ -77,6 +81,8 @@ class HUDManager{
         void setStun(int p_player, bool p_active);
         void setShield(int p_player, bool p_active);
         void setWings(int p_player, bool p_active);
+
+        void showWinnerMessage();
 
         void update();
         void render();
