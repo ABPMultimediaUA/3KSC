@@ -4,6 +4,9 @@
 
 #include "../include/ChaoticEngine/CEquad.hpp"
 
+/*
+Creamos un quad (usado para el modo debug) con los vertices que se le pasan por parametro
+*/
 CEQuad::CEQuad(float p_vertex[4][2], GLuint p_shaderProgram) : CEEntity(){
     m_shaderProgram = p_shaderProgram;
 
@@ -13,14 +16,6 @@ CEQuad::CEQuad(float p_vertex[4][2], GLuint p_shaderProgram) : CEEntity(){
         m_vertices[i*3+2] = 0.0f;
     }
 
-    /*
-    m_indices[0] = 0; //First Triangle
-    m_indices[1] = 3;
-    m_indices[2] = 1;
-    m_indices[3] = 3; //Second Triangle
-    m_indices[4] = 2;
-    m_indices[5] = 1;
-    */
     m_indices[0] = 1; //First Triangle
     m_indices[1] = 2;
     m_indices[2] = 0;
@@ -50,6 +45,9 @@ CEQuad::CEQuad(float p_vertex[4][2], GLuint p_shaderProgram) : CEEntity(){
 
 CEQuad::~CEQuad(){}
 
+/*
+Actualizamos la posicion de lo vertices para que se pinten donde corresponde
+*/
 void CEQuad::updatePositions(float p_vertex[4][2]){
     for(int i = 0; i < 4; i++){
         m_vertices[i*3]   = p_vertex[i][0];

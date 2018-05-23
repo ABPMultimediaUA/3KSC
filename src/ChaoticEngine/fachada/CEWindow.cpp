@@ -3,6 +3,9 @@
 
 #include "../../include/ChaoticEngine/fachada/CEWindow.hpp"
 
+/*
+Creamos una ventana con GLFW
+*/
 CEWindow::CEWindow(int p_width, int p_height, const char* p_title, bool p_fullscreen){
 	glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

@@ -4,6 +4,10 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneParticleSystem.hpp"
 
+/*
+Fachada para crear Emisores de particulas y aplicarle las transformaciones correspondientes
+*/
+
 CESceneParticleSystem::CESceneParticleSystem(CESceneNode* p_parent, const char* p_path, int p_amount, float p_x, float p_y, GLfloat p_velocity,
 		GLfloat p_life, int p_minAngle, int p_maxAngle, bool p_explode, float p_systemLife, GLuint p_shaderProgram){
 	m_rotate    = new CETransform();

@@ -4,6 +4,10 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneCamera.hpp"
 
+/*
+Fachada para crear Camaras y aplicarle las transformaciones correspondientes
+*/
+
 CESceneCamera::CESceneCamera(CESceneNode* p_parent, bool p_isActive){
 	m_isActive = p_isActive;
 
@@ -33,6 +37,9 @@ CESceneCamera::~CESceneCamera(){
 	m_rotate = nullptr;
 }
 
+/*
+Si la camara se crea o se cambia su estado a activa este metodo hace que se le pasen todos los datos al motor para sus calculos
+*/
 void CESceneCamera::activateCamera(){
 	m_camera->setProjectionMatrix();
 	m_camera->setViewMatrix(this->getViewMatrix());
