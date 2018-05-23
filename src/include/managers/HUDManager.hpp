@@ -35,6 +35,10 @@ struct PlayerHUD{
     CESceneSprite*  up;
     CESceneSprite*  lives;
 
+    CESceneSprite*  stun;
+    CESceneSprite*  shield;
+    CESceneSprite*  wings;
+
     bool            ultimateON;
 
     ~PlayerHUD();
@@ -50,6 +54,7 @@ class HUDManager{
         PlayerHUD*      m_playerHUDs[2];
         CESceneSprite*  m_ultimateBG;
         CESceneSprite*  m_ultimateFG;
+        CESceneSprite*  m_ultimateText;
         float           m_ultimateCharge;
 
         HUDManager();
@@ -69,6 +74,9 @@ class HUDManager{
         void setLives(int p_player, int p_lives);
         void fillUB(float p_delta);
         void setUltimate(int p_player, bool p_active);
+        void setStun(int p_player, bool p_active);
+        void setShield(int p_player, bool p_active);
+        void setWings(int p_player, bool p_active);
 
         void update();
         void render();
