@@ -202,6 +202,19 @@ void EngineManager::deleteEntityAnim(int p_id){
     m_scene->remove(m_animationNodes[p_id]->getTopNode());
 }
 
+void EngineManager::preLoadAssets(){
+
+    float t_position[3] = {0,0,0};
+    float t_scale[3] = {1,1,1};
+
+    //Precargamos los objetos
+    loadAnimations(t_position, t_scale, "assets/models/items/portal/portal_anim.anim");
+    loadAnimations(t_position, t_scale, "assets/models/characters/plup/plup.anim");
+    loadAnimations(t_position, t_scale, "assets/models/characters/sparky/sparky_animations.anim");
+
+    cleanScene();
+}
+
 //Loads animations of 3D models
 int EngineManager::loadAnimations(float p_position[3], float p_scale[3], const char* p_modelURL){
 
@@ -316,6 +329,7 @@ void EngineManager::cleanScene(){
     m_entityNodes.clear();
     m_debugNodes.clear();
     m_systems.clear();
+    m_animationNodes.clear();
 }
 
 float EngineManager::getFrameDeltaTime(){

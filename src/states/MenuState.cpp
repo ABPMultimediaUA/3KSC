@@ -111,7 +111,7 @@ MenuState* MenuState::getInstance(){
 //Change to next state
 void MenuState::nextState(){
     m_soundManager->stopAll();
-
+    m_engineManager->preLoadAssets();
     m_game->setState(&InGameState::instance());
 }
 

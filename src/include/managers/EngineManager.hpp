@@ -79,6 +79,7 @@ public:
     void        swapBuffers();
     void        pollEvents();
     void        stop();
+    void        preLoadAssets();
 
     void        createCamera(float p_cameraPosition[3], float p_target[3]);
     void        moveCamera(float p_posX, float p_posY, float p_posZ);
