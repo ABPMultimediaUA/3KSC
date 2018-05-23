@@ -23,8 +23,6 @@
 
 class Game;
 
-#include <iostream> //TEMPORAL!!!
-
 class State{
     protected:
         Game* m_game;
@@ -32,7 +30,6 @@ class State{
 
     public:
         virtual ~State(){
-            std::cout << "~State" << std::endl;
             m_game = nullptr;
         };
 
