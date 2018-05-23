@@ -23,57 +23,90 @@
 
 class EngineManager;
 
-//#include "../entities/characters/Character.hpp"
+#include "../extra/MenuActions.hpp"
 #include "../extra/Actions.hpp"
 #include "../extra/Inputs.hpp"
-#include <SFML/Window/Keyboard.hpp>//DELETE!!!
-#include <SFML/Window/Joystick.hpp>//DELETE!!!
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Clock.hpp>
 #include <Client.hpp>
 
 class InputManager{
-    public:
-        static InputManager& instance();
-        InputManager();
-        ~InputManager();
-        bool    eventHandler();
-        void    onKeyPressed(int p_key);
-        bool    isKeyPressed(Key p_key);
-        bool    isConnected(int p_joystick);
-        bool    isButtonPressed(int p_joystick, Button p_button);
-        float   getAxisPosition(int p_joystick, Axis p_axis);
-        void    updateJoysticks();
-        void    assignDevice(int p_device, int p_player);
-        void    onlineMode();
-        void    setOnlineControl(int p_player);
-        void    setAction(Action p_action, int p_player, bool p_bool = true); 
-        void    setNetPlayer(int p_player, bool p_actions[12]);        
-        void    updateActions(int p_player);
-        bool    checkAction(Action p_action, int p_player);
-        int     getInputDevice(int p_player);
-        void    updateOnlineInput(int p_player);
-        void    sendOnlineInput();
-    
-    private:
-        EngineManager*          m_engineManager;
-        int**                   m_bindings;   
-        sf::Keyboard::Key       m_keys[101];
-        sf::Joystick::Axis      m_axis[8];
-        Client*                 m_client;
-        int                     m_onlinePlayer;
-        bool                    m_lastActions[12] = {false};
-        bool                    m_isOnline = false;
-        //Event handling
-        sf::Window*             m_window;             
-        sf::Event*              m_event;
-        //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
-        int     m_inputDevices[4];
+public:
+    static InputManager& instance();
+    InputManager();
+    ~InputManager();
+    bool    eventHandler();
+    void    onKeyPressed(int p_key);
+    bool    isKeyPressed(Key p_key);
+    bool    isMousePressed();
+    int     getMouseX();
+    int     getMouseY();
+    bool    isConnected(int p_joystick);
+    bool    isButtonPressed(int p_joystick, Button p_button);
+    float   getAxisPosition(int p_joystick, Axis p_axis);
+    void    updateJoysticks();
+    void    assignDevice(int p_device, int p_player);
+    void    onlineMode();
+    void    setOnlineControl(int p_player);
+    void    setAction(Action p_action, int p_player, bool p_bool = true); 
+    void    setNetPlayer(int p_player, bool p_actions[12]);     
 
-        //Conditions for each Input (they change depending on keyboard/joystick control)
-        //Input booleans
-        bool m_actions[4][(int) Action::Count];
+    void    updateActions(int p_player);
+    
+    int     getInputDevice(int p_player);
+    int     getDeviceCount();
+    void    updateOnlineInput(int p_player);
+    void    sendOnlineInput();
+
+    void    updateMasterClock();
+    void    resetMasterClock();
+    float   getMasterClock();
+
+    //Menu Actions
+    void    updateMenuActions();
+    bool    checkMenuAction(MenuAction p_action);
+
+    //Actions
+    void    updatePlayerActions(int p_player);
+    bool    checkPlayerAction(Action p_action, int p_player);
+
+private:
+    EngineManager*          m_engineManager;
+    int**                   m_bindings;   
+    sf::Keyboard::Key       m_keys[101];
+    sf::Joystick::Axis      m_axis[8];
+    Client*                 m_client;
+    int                     m_onlinePlayer;
+    bool                    m_lastActions[11] = {false};
+    bool                    m_isOnline;
+    float                   m_masterTime;
+    sf::Clock               m_masterClock;
+
+    //Event handling
+    sf::Window*             m_window;             
+    sf::Event*              m_event;
+
+    //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
+    int     m_inputDevices[4];
+    void    autoassignDevices();
+
+    //Menu Actions
+    bool    m_menuActions[(int) MenuAction::Count];
+
+    void    menuInputJoystick();
+    void    menuInputKeyboard();
+    void    menuInputOnline();
+
+    //Actions
+    bool    m_playerActions[4][(int) Action::Count];
+
+    void    playerInputJoystick(int p_player);
+    void    playerInputKeyboard(int p_player);
+    void    playerInputNPC(int p_player);
+    void    playerInputOnline(int p_player);
 };
 
 #endif

@@ -32,7 +32,7 @@ class Arena;
 class Item: public Entity {
 public:
     Item(float p_position[3], const char* p_modelURL);
-    ~Item();
+    virtual ~Item();
     virtual void    setOwner(int p_owner);
     virtual void    use();
     bool            update();
@@ -46,7 +46,7 @@ protected:
     float               m_durationGround;
     static const char*  m_modelURLs[4];
 
-    sf::Clock           m_clock;
+    float               m_dieTime;
 };
 
 #endif

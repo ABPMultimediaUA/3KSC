@@ -23,25 +23,13 @@
 #ifndef AI_SPARKY
 #define AI_SPARKY
 
-class AINode;
-
 #include "AICharacter.hpp"
-#include <Box2D.h>
 
 class AISparky : public AICharacter{
     private:
-        float m_SPARKY_distance_to_enemy;       // Fraction that determines if an enemy is close
-        float m_SPARKY_distance_to_item;        // Fraction that determines if an item is close
-        float m_SPARKY_life;                    // Plup's current life
-        float m_SPARKY_mana;                    // Plup's current mana
-        float m_SPARKY_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
-        float m_SPARKY_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
-        float m_SPARKY_special_check ;          // Determines if a snowman is already placed or not
-        b2Vec2 m_SPARKY_position;               // Vector containing Plup's position
-        AINode* m_SPARKY_root;                  // Root of Plup's tree
+        
     public:
-        static AISparky& instance();
-        AISparky();
+        AISparky(Character* p_player);
         ~AISparky();
         void update();
         void buildTree();

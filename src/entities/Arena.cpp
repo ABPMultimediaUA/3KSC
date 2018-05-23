@@ -21,8 +21,11 @@
 *********************************************************************************/
 
 #include "../include/entities/Arena.hpp"
+#include "../include/Game.hpp"
 #include "../include/managers/EngineManager.hpp"
+#include "../include/managers/InputManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 
 #include "../include/entities/characters/Plup.hpp"
 #include "../include/entities/characters/Sparky.hpp"
@@ -31,58 +34,104 @@
 #include "../include/entities/items/LifeTank.hpp"
 #include "../include/entities/items/Shield.hpp"
 #include "../include/entities/items/Wings.hpp"
-#include "../include/entities/items/FOAH.hpp"
-#include "../include/entities/items/Portal.hpp"
 
-#include "../include/debug.hpp"
 #include "Client.hpp"
-#include <iostream>
-
-EngineManager*  Arena::m_engineManager     = &EngineManager::instance();
-PhysicsManager* Arena::m_physicsManager    = &PhysicsManager::instance();
-
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
 
-Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode):Entity(p_position, p_scale, p_modelURL, 1){
+Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entity(p_position, p_scale, p_modelURL, 1){
+    m_instance          = this;
+    m_game              = Game::getInstance();
 
-    m_currentItems  = 0;
-    //m_items         = new Item*[m_maxItemsOnScreen];
-    m_instance      = this;
-    m_debugMode     = p_debugMode;
-    m_spawningTime  = 10;
-    m_clock         = new sf::Clock();
-    m_playerCount   = 0;
-    m_players       = new Character*[4];
-    m_usedItems     = 0;
+    m_currentItems      = 0;
+    m_offsetSpawnTime   = 7.5;
+    m_nextSpawnTime     = m_inputManager->getMasterClock() + m_offsetSpawnTime;
+    m_playerCount       = 0;
+    m_players           = new Character*[4];
+    m_usedItems         = 0;
+
+    m_portalDuration    = 0.75;
+    m_portalOffsetTime  = 10;
+    m_portalSpawnTime   = m_inputManager->getMasterClock() + m_portalOffsetTime;
+    m_portalSpawned     = false;
+
+    m_portal = nullptr;
+
+    m_musicIntensity[0] = 0.8;
+    m_musicIntensity[1] = 0.6;
+    m_musicIntensity[2] = 0.4;
+    m_musicIntensity[3] = 0.0;
 }
 
-Arena::~Arena(){}
+Arena::~Arena(){
+    for(int i = 0; i < m_playerCount; i++){
+        delete m_players[i];
+        m_players[i] = nullptr;
+    }
+
+    delete[] m_players;
+    m_players = nullptr;
+
+    if(m_portal){
+        delete m_portal;
+        m_portal = nullptr;
+    }
+}
 
 Arena* Arena::getInstance(){
     return m_instance;
 }
 
+//Spawns all players
 void Arena::spawnPlayers(){
-    float positionPortal[3] = {-70, 5, 0};
-    //new Portal(positionPortal);
+    spawnPlayer();
+    spawnPlayer();
 
-    m_players[m_playerCount++] = new Sparky("Player 1", m_spawnPositions[0], false);
-    m_players[m_playerCount++] = new Plup(  "Player 2", m_spawnPositions[1], false);
-    m_players[m_playerCount++] = new Plup(  "Player 3", m_spawnPositions[2], false);
-
-    if(m_debugMode){
-        for(int i = 0; i < m_playerCount; i++){
-            m_players[i]->modeDebug();
-        }
-        modeDebug();
-    }
+    m_soundManager->modifyParameter("fos_music", m_musicIntensity[0], "Intensity", false);
 }
 
-void Arena::addPlayer(){
+//Spawns a single player
+void Arena::spawnPlayer(bool p_online){
+    switch (m_game->getChosenPlayer(m_playerCount)){
+        case 0: { 
+            m_players[m_playerCount] = new Plup("Plup", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));
+            break;
+        }
+        case 1: { 
+            m_players[m_playerCount] = new Sparky("Sparky", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));
+            break;
+        }
+    }
+
+    m_playerCount++;
+}
+
+void Arena::spawnPlayerOnline(bool p_online, int p_index){
+    // std::cout<<"player online "<<p_index<<std::endl;
+    // if(p_index == 1)
+    // m_playerCount++
+    switch (m_game->getChosenPlayer(p_index)){
+        case 0: { 
+            std::cout << " ++ Spawn Plup" << std::endl;
+            m_players[p_index] = new Plup("Plup", m_spawnPositions[p_index], p_online, m_game->isNPC(p_index));
+            break;
+        }
+        case 1: { 
+            std::cout << " ++ Spawn Sparky" << std::endl;
+            m_players[p_index] = new Sparky("Sparky", m_spawnPositions[p_index], p_online, m_game->isNPC(p_index));
+            break;
+        }
+    }
+    // if(p_index == 0)
+    // m_playerCount++;
+
+    m_playerCount++;
+}
+
+void Arena::addPlayer(bool p_bool){
     float positionSparky[3] = {0, 100, 0};
-    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, m_debugMode);
+    m_players[m_playerCount++] = new Sparky("Player 1", positionSparky, p_bool);
 }
 
 //Returns number of players
@@ -92,7 +141,10 @@ int Arena::getPlayerCount(){
 
 //Returns the player with the given index
 Character* Arena::getPlayer(int p_index){
-    return m_players[p_index];
+    if(m_players[p_index] != 0)
+        return m_players[p_index];
+    else
+        return 0;
 }
 
 //Checks if any of the items in the screen is where the player wants to pick it and uses it
@@ -100,9 +152,9 @@ void Arena::catchItem(int p_owner, float p_where[3]){
     //Check if there's an item here and use it
     for (int i = 0; i < m_items.size(); i++){
         //X axis
-        if(p_where[0] >= m_items.at(i)->getX() - 5 && p_where[0] <= m_items.at(i)->getX() + 5){
+        if(p_where[0] >= m_items.at(i)->getX() - 1 && p_where[0] <= m_items.at(i)->getX() + 1){
             //Y axis
-            if(p_where[1] >= m_items.at(i)->getY() - 10 && p_where[1] <= m_items.at(i)->getY() + 10){
+            if(p_where[1] >= m_items.at(i)->getY() - 1 && p_where[1] <= m_items.at(i)->getY() + 1){
                 //Use the item
                 m_items.at(i)->setOwner(p_owner);
                 m_items.at(i)->use();
@@ -125,11 +177,6 @@ void Arena::animateBackground(){}
 
 void Arena::restart(){}
 
-void Arena::modeDebug(){
-    if(m_debugMode)
-        m_debugBattlefield = new Debug(666, m_physicsManager->getBody(getId()));
-}
-
 void Arena::setSpawnPositions(float p_spawnPositions[4][3]){
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 3; j++){
@@ -138,15 +185,15 @@ void Arena::setSpawnPositions(float p_spawnPositions[4][3]){
     }
 }
 
-void Arena::respawnPlayer(int p_player){
-    m_players[p_player]->respawn(m_respawnPosition);
+float* Arena::getRespawnPosition(){
+    return m_respawnPosition;
 }
 
-void Arena::update(){
-    float t_time = m_clock->getElapsedTime().asSeconds();
+void Arena::update(float p_delta){
+    float t_time = m_inputManager->getMasterClock();
     
-    if(t_time > m_spawningTime){
-        m_clock->restart();
+    if(t_time > m_nextSpawnTime){
+        m_nextSpawnTime = t_time + m_offsetSpawnTime;
         spawnRandomItem();
     }
 
@@ -155,8 +202,30 @@ void Arena::update(){
             m_items.erase(m_items.begin()+i);
     }
 
-    if(m_debugMode)
-        m_debugBattlefield->update();
+    if(!m_soundManager->isPlaying("fos_ambient"))
+        m_soundManager->playSound("fos_ambient");
+    if(m_portalSpawned)
+        m_portal->update(p_delta);
+    
+    portalSpawner();
+    m_engineManager->updateParticleSystem();
+}
+
+void Arena::portalSpawner(){
+    float t_time = m_inputManager->getMasterClock();
+
+    if(!m_portalSpawned && t_time > m_portalSpawnTime){
+        spawnPortal();
+    }
+}
+
+void Arena::portalSpawnerOnline(){
+    float t_time = m_inputManager->getMasterClock();
+
+    if(!m_portalSpawned && t_time > m_portalSpawnTime*2){
+        spawnPortal();
+        Client::instance().spawnPortal();
+    }
 }
 
 bool Arena::spawnRandomItem(){
@@ -165,43 +234,113 @@ bool Arena::spawnRandomItem(){
 
     int range = m_spawnItemRange[1] - m_spawnItemRange[0] + 1;
     int randx = m_spawnItemRange[0] + (rand() % range);
-
-    spawnItemAt(rand()%3, randx, m_spawnItemRange[2]);
+    int random = rand()%(3-0 + 1) + 0;
+    spawnItemAt(random, randx, m_spawnItemRange[2]);
     return true;
 }
 
-void Arena::onlineUpdate(){
-    float t_time = m_clock->getElapsedTime().asSeconds();
+void Arena::spawnPortal(){
+    float positionPortal[3] = {0, 0.5, 0};
+    m_portal = new Portal(positionPortal);
+    m_portalSpawned = true;
+}
+
+void Arena::hidePortal(){
+    m_portalSpawnTime   = m_inputManager->getMasterClock() + m_portalOffsetTime;
+    delete m_portal;
+    m_portal = nullptr;
+    m_portalSpawned = false;
+}
+
+void Arena::onlineUpdate(float p_delta){
+    float t_time = m_inputManager->getMasterClock();
     
-    if(t_time > m_spawningTime){
-        m_clock->restart();
-        if(spawnRandomItem()){
-            Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems)->getX(), m_items.at(m_currentItems)->getY());
+    if(t_time > m_nextSpawnTime){
+        m_nextSpawnTime = t_time + m_offsetSpawnTime;
+        if(spawnRandomItem())
+        {    m_currentItems = m_items.size();
+            if(m_items.size()>0)
+            Client::instance().spawnItem(m_lastItemType, m_items.at(m_currentItems-1)->getX(), m_items.at(m_currentItems-1)->getY());
         }
     }
-    if(m_debugMode)
-        m_debugBattlefield->update();
+
+    for(int i = 0; i < m_items.size(); i++){
+        if(m_items.at(i)->update())
+        {
+            m_items.erase(m_items.begin()+i);
+            break;
+        }        
+    }
+
+    if(m_portalSpawned)
+        m_portal->update(p_delta);
+    portalSpawnerOnline();
+    m_engineManager->updateParticleSystem();
+}
+
+void Arena::onlineUpdateClient(float p_delta){
+    for(int i = 0; i < m_items.size(); i++){
+        if(m_items.at(i)->update())
+        {
+            m_items.erase(m_items.begin()+i);
+            break;
+        }        
+    }
+    m_engineManager->updateParticleSystem();
+
+    if(m_portalSpawned)
+        m_portal->update(p_delta);
 }
 
 void Arena::spawnItemAt(int p_type, int x, int y){
     float t_position[3] = {x, y, 0};
-
     switch (p_type){
-        case 0:     { m_items.push_back(new LifeTank(t_position));   }   break;
-        case 1:     { m_items.push_back(new Shield(t_position));     }   break;
+        case 0:     { m_items.push_back(new Shield(t_position));     }   break;
+        case 1:     { m_items.push_back(new LifeTank(t_position));   }   break;
         case 2:     { m_items.push_back(new Wings(t_position));      }   break;
     }
 
     m_currentItems = m_items.size();
-    m_lastItemType = p_type;
+    m_lastItemType = p_type; 
 }
 
-void Arena::setOnline(bool p_state)
-{
+void Arena::setOnline(bool p_state){
     m_online = p_state;
 }
 
-bool Arena::getOnline()
-{
+bool Arena::getOnline(){
     return m_online;
+}
+
+bool Arena::portalIsActive(){
+    return m_portalSpawned;
+}
+
+float* Arena::getPortalPosition(){
+    return m_portal->getPosition();
+}
+
+// Gets position of closest item to target position
+b2Vec2 Arena::getClosestItemPosition(b2Vec2 p_position){
+    m_physicsManager = &PhysicsManager::instance();
+    float t_closestDistance = 0.0f;
+    b2Vec2 t_return = b2Vec2(0.0f,0.0f);
+
+    for(int i=0; i<m_items.size(); i++){
+        if(m_items.at(i)!=nullptr){
+            b2Vec2 t_p2 = b2Vec2(m_items.at(i)->getPosition()[0], m_items.at(i)->getPosition()[1]);
+            float t_distanceToItem = m_physicsManager->getDistanceBetween(p_position, t_p2);
+
+            // Find closest waypoint
+            if(t_closestDistance == 0.0f){ // No waypoint is chosen. Choose this one
+                t_closestDistance = t_distanceToItem;
+                t_return = t_p2;
+            }
+            else if(t_distanceToItem < t_closestDistance){
+                t_closestDistance = t_distanceToItem;
+                t_return = t_p2;
+            }
+        }
+    }
+    return t_return;
 }

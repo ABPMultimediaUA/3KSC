@@ -23,28 +23,23 @@
 #ifndef ARENA
 #define ARENA
 
+class Game;
 class EngineManager;
 class PhysicsManager;
 class Item;
-class Debug;
 
 #include "characters/Character.hpp"
-#include <SFML/System/Clock.hpp>
-//#include "Skybox.hpp"
-//#include "Texture.hpp"
-//#include "WaterLily.hpp"
-//#include "Branch.hpp"
-//#include "Platform.hpp"
-//#include "GravityZone.hpp"
-
+#include "../include/entities/items/Portal.hpp"
+#include <Box2D/Common/b2Math.h>
 
 class Arena : public Entity {
 public:
-    Arena(float p_position[3], float p_scale, const char* p_modelURL, bool p_debugMode = false);
+    Arena(float p_position[3], float p_scale, const char* p_modelURL);
     ~Arena();
+
     static Arena*   getInstance();
     void            spawnPlayers();
-    void            addPlayer();
+    void            addPlayer(bool p_online = false);
     int             getPlayerCount();
     Character*      getPlayer(int p_index);
     void            catchItem(int p_owner, float p_where[3]);
@@ -53,54 +48,66 @@ public:
     void            animateBackground();
     void            restart();
     void            setSpawnPositions(float p_spawnPositions[4][3]); 
-    void            respawnPlayer(int p_player);
-    void            update();
+    void            update(float p_delta);
+    void            portalSpawner();
+    void            portalSpawnerOnline();
+    void            spawnPortal();
+    void            hidePortal();
+    bool            portalIsActive();
+    float*          getPortalPosition();
     bool            spawnRandomItem();
-    void            modeDebug();
-    void            onlineUpdate();
+    void            onlineUpdate(float p_time);
+    void            onlineUpdateClient(float p_time);
     void            spawnItemAt(int p_type, int x, int y);
+    b2Vec2          getClosestItemPosition(b2Vec2 p_position);
     void            setOnline(bool p_state);
     bool            getOnline();
     void            setRespawnPositions(float p_respawnPosition[3]){ for(int i = 0; i < 3; i++) m_respawnPosition[i] = p_respawnPosition[i]; }
     void            setItemRange(float p_itemRange[3]) { for(int i = 0; i < 3; i++) m_spawnItemRange[i] = p_itemRange[i]; }
 
+    float*          getRespawnPosition();
+
+    void            pleaseKill(int p_playerIndex);
+    void            spawnPlayer(bool p_online = false);
+    void            spawnPlayerOnline(bool p_online, int p_index);
+
 private: 
-    static Arena*           m_instance;
-    static EngineManager*   m_engineManager;
-    static PhysicsManager*  m_physicsManager;
+    static Arena*       m_instance;
+    Game*               m_game;
+    PhysicsManager*     m_physicsManager;
     
     static const char*  m_modelURLs[3];
-	static const char*  m_skyboxURLs[3][6];
-    //Texture*    m_background;
-    float       m_time;
-    //Item**      m_items;
-    int         m_spawningTime;
-    int         m_spawnedItems;
-    int         m_usedItems;
-    int         m_maxItemsOnScreen = 5;
-    int         m_currentItems;
-    int         m_lastItemType = 0;
-
+    static const char*  m_skyboxURLs[3][6];
+    float               m_time;
     std::vector<Item*>  m_items;
+    float               m_offsetSpawnTime;
+    float               m_nextSpawnTime;
+    int                 m_spawnedItems;
+    int                 m_usedItems;
+    int                 m_maxItemsOnScreen = 5;
+    int                 m_currentItems;
+    int                 m_lastItemType = 0;
+    int                 m_spawningPortalTime;
+    Portal*             m_portal;
 
-    int         m_playerCount;
-    Character** m_players;
+    int                 m_playerCount;
+    Character**         m_players;
 
-    Debug*      m_debugBattlefield;
-    bool        m_debugMode;
+    float               m_spawnPositions[4][3];
+    float               m_respawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
+    float               m_spawnItemRange[3];
 
-    float       m_spawnPositions[4][3];
-    float       m_respawnPosition[3]; // First []: index. Second []: [0] for x, [1] for y, [2] for z
-    float       m_spawnItemRange[3];
+    bool                m_online = false;
 
-    bool        m_online = false;
+    bool                m_portalSpawned;
+    float               m_portalDuration;
+    float               m_portalTime;
+    float               m_portalOffsetTime;
+    float               m_portalSpawnTime;
 
-    sf::Clock*  m_clock;
+    float               m_musicIntensity[4];
 
-    //WaterLily*   m_waterLilys;
-    //Branch*      m_branches;
-    //Platform*    m_platforms;
-    //GravityZone* m_gravityZones;
+
 };
 
 #endif

@@ -19,7 +19,9 @@
 */
 
 #include "../include/managers/SoundManager.hpp"
-#include <iostream>
+#include "../include/managers/InputManager.hpp"
+#include "../include/extra/Inputs.hpp"
+#include <cstring>
 
 const char* m_dataBank[] = {
     "assets/fmod/Build/Desktop/Kira.bank",
@@ -28,7 +30,8 @@ const char* m_dataBank[] = {
     "assets/fmod/Build/Desktop/Plup.bank",
     "assets/fmod/Build/Desktop/Rawr.bank",
     "assets/fmod/Build/Desktop/Sparky.bank",
-    "assets/fmod/Build/Desktop/FosFosStadium.bank"
+    "assets/fmod/Build/Desktop/FosFosStadium.bank",
+    "assets/fmod/Build/Desktop/Menu.bank"
 };
 
 //Returns the only instance of this class
@@ -37,21 +40,20 @@ SoundManager& SoundManager::instance(){
     return instance;
 }
 
-void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line)
-{
-    if(result == 70){
+void ERRCHECK_fn(FMOD_RESULT result, const char *file, int line){
+    if(result == 70)
         return;
-    }else if (result != FMOD_OK){
+    else
+    if(result != FMOD_OK){
         std::cerr << file << "(" << line << "): FMOD error " << result << " - " << FMOD_ErrorString(result) << std::endl;
         exit(-1);
     }
 }
-
 #define ERRCHECK(_result) ERRCHECK_fn(_result, __FILE__, __LINE__)
 
 //Constructor
 SoundManager::SoundManager(){
-    //banksPath = "../../assets/fmod/Build/Desktop/";
+    m_inputManager = &InputManager::instance();
 
     ERRCHECK(FMOD::Studio::System::create(&m_system));
     ERRCHECK(m_system->getLowLevelSystem(&m_lowLevelSystem));
@@ -60,12 +62,17 @@ SoundManager::SoundManager(){
     ERRCHECK(m_system->initialize(32, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0));
 
     loadBanks();
+
+    m_musicVolume   = 0.25f;
+    m_effectVolume  = 0.50f;
+    m_soundMute     = false;
+    m_soundEffectPlaying = false;
 }
 
 //Destructor
 SoundManager::~SoundManager(){}
 
-void SoundManager::update(bool p_paused){
+void SoundManager::update(){
     ERRCHECK(m_system->update());
 }
 
@@ -100,12 +107,12 @@ void SoundManager::loadEvents(SoundID p_bank){
             break;
         
         case SoundID::S_MIYAGI:
-            createSoundEvent("event:/characters/miyagi/death"     , "m_death"       );
-            createSoundEvent("event:/characters/miyagi/kill"      , "m_kill"        );
-            createSoundEvent("event:/characters/miyagi/random"    , "m_random"      );
-            createSoundEvent("event:/characters/miyagi/special"   , "m_special"     );
-            createSoundEvent("event:/characters/miyagi/taunt"     , "m_taunt"       );
-            createSoundEvent("event:/characters/miyagi/ultimate"  , "m_ultimate"    );
+            createSoundEvent("event:/characters/miyagi/death"   , "m_death"       );
+            createSoundEvent("event:/characters/miyagi/kill"    , "m_kill"        );
+            createSoundEvent("event:/characters/miyagi/random"  , "m_random"      );
+            createSoundEvent("event:/characters/miyagi/special" , "m_special"     );
+            createSoundEvent("event:/characters/miyagi/taunt"   , "m_taunt"       );
+            createSoundEvent("event:/characters/miyagi/ultimate", "m_ultimate"    );
             break;
         
         case SoundID::S_PLUP:
@@ -115,6 +122,7 @@ void SoundManager::loadEvents(SoundID p_bank){
             createSoundEvent("event:/characters/plup/special"   , "p_special"     );
             createSoundEvent("event:/characters/plup/taunt"     , "p_taunt"       );
             createSoundEvent("event:/characters/plup/ultimate"  , "p_ultimate"    );
+            createSoundEvent("event:/characters/plup/atak"      , "p_atak"        );
             break;
         
         case SoundID::S_RAWR:
@@ -127,49 +135,172 @@ void SoundManager::loadEvents(SoundID p_bank){
             break;
         
         case SoundID::S_SPARKY:
-            createSoundEvent("event:/characters/sparky/death"     , "s_death"       );
-            createSoundEvent("event:/characters/sparky/kill"      , "s_kill"        );
-            createSoundEvent("event:/characters/sparky/random"    , "s_random"      );
-            createSoundEvent("event:/characters/sparky/special"   , "s_special"     );
-            createSoundEvent("event:/characters/sparky/taunt"     , "s_taunt"       );
-            createSoundEvent("event:/characters/sparky/ultimate"  , "s_ultimate"    );
+            createSoundEvent("event:/characters/sparky/death"   , "s_death"       );
+            createSoundEvent("event:/characters/sparky/kill"    , "s_kill"        );
+            createSoundEvent("event:/characters/sparky/random"  , "s_random"      );
+            createSoundEvent("event:/characters/sparky/special" , "s_special"     );
+            createSoundEvent("event:/characters/sparky/taunt"   , "s_taunt"       );
+            createSoundEvent("event:/characters/sparky/ultimate", "s_ultimate"    );
+            createSoundEvent("event:/characters/sparky/atak"    , "s_atak"        );
             break;
 
         case SoundID::S_FOSFOS_STADIUM:
-            std::cout << "HOLAAAAA\n";
-            this->createSoundEvent("event:/music/fosfosStadium"    , "fos_music"    );
+            createSoundEvent("event:/music/FosFosStadium/fosfosStadium", "fos_music"    , false);
+            createSoundEvent("event:/music/FosFosStadium/fosfosAmbient", "fos_ambient"         );
+            break;
+
+        case SoundID::S_MENU:
+            createSoundEvent("event:/music/Credits/creditos"    , "credits"       , false);
+            createSoundEvent("event:/music/Menu/menu"           , "menu_music"    , false);
+            createSoundEvent("event:/music/Menu/sounds"         , "menu_sounds"          );
             break;
     }
 }
 
-/*
-void SoundManager::getEvents(){
-    ERRCHECK(m_system->getEvent("event:/Music/Music", &m_musicEvent));
-
-    ERRCHECK(m_musicEvent->createInstance(&m_musicInstance));
-
-    ERRCHECK(m_musicInstance->start());
-}
-*/
-
-void SoundManager::createSoundEvent(const char* eventPath, const char* name){
+void SoundManager::createSoundEvent(const char* eventPath, const char* name, bool p_isEffectSound){
     FMOD::Studio::EventDescription* t_eventDescription;
 
     ERRCHECK(m_system->getEvent(eventPath, &t_eventDescription));
 
     SoundEvent* t_soundEvent = new SoundEvent(t_eventDescription);
-    //std::cout << name << std::endl;
-
-    m_soundEvents.insert(std::pair<const char*, SoundEvent*>(name, t_soundEvent));
+    
+    if(p_isEffectSound)
+        m_effectEvents.insert(std::pair<const char*, SoundEvent*>(name, t_soundEvent));
+    else
+        m_musicEvents.insert(std::pair<const char*, SoundEvent*>(name, t_soundEvent));
 }
 
 void SoundManager::playSound(const char* name){
-    //std::cout << name << std::endl;
-    m_soundEvents.at(name)->start();
+    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+        if(strcmp(m_iterator->first, name) == 0){
+            m_iterator->second->setVolume(m_effectVolume);
+            m_iterator->second->start();
+            break;
+        }
+    }
 }
 
-void SoundManager::modifyParameter(const char* name, float num, const char* parameter){
-    m_soundEvents.at(name)->modifyParameter(num, parameter);
+void SoundManager::playMusic(const char* name){
+    for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
+        if(strcmp(m_iterator->first, name) == 0){
+            m_iterator->second->setVolume(m_musicVolume);
+            m_iterator->second->start();
+            break;
+        }
+    }
+}
+
+bool SoundManager::isPlaying(const char* p_name, bool p_checkUltimate){
+    bool t_isPlaying = true;
+    bool t_ultimate = false;
+    if(p_checkUltimate){
+        switch(p_name[0]){
+            case 'p':
+                t_ultimate = this->isPlaying("p_ultimate", false);
+                break;
+
+            case 's':
+                t_ultimate = this->isPlaying("s_ultimate", false);
+                break;
+        }
+    }
+
+    if(!t_ultimate){
+        for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+            if(strcmp(m_iterator->first, p_name) == 0){
+                FMOD_STUDIO_PLAYBACK_STATE t_playbackState;
+                m_iterator->second->getEventInstance()->getPlaybackState(&t_playbackState);
+                if(t_playbackState == FMOD_STUDIO_PLAYBACK_STOPPED)
+                    t_isPlaying = false;
+                break;
+            }
+        }
+    }
+
+    return t_isPlaying;
+}
+
+void SoundManager::pauseAll(){
+    for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
+        bool t_pause = false;
+        m_iterator->second->getEventInstance()->getPaused(&t_pause);
+        if(!t_pause){
+            m_iterator->second->pause();
+            m_mutedSounds.push_back(m_iterator->second);
+        }
+    }
+    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+        bool t_pause = false;
+        m_iterator->second->getEventInstance()->getPaused(&t_pause);
+        if(!t_pause){
+            m_iterator->second->pause();
+            m_mutedSounds.push_back(m_iterator->second);
+        }
+    }
+}
+
+void SoundManager::unPauseAll(){
+    for(int i = 0; i < m_mutedSounds.size(); i++){
+        m_mutedSounds.at(i)->unPause();
+    }
+    m_mutedSounds.clear();
+}
+
+void SoundManager::stopAll(){
+    for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
+        m_iterator->second->stop();
+    }
+    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+        m_iterator->second->stop();
+    }
+    update();
+}
+
+void SoundManager::modifyParameter(const char* name, float num, const char* parameter, bool p_isEffectSound){
+    if(p_isEffectSound){
+        for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+            if(strcmp(m_iterator->first, name) == 0){
+                m_iterator->second->modifyParameter(num, parameter);
+                break;
+            }
+        }
+    }else{
+        for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
+            if(strcmp(m_iterator->first, name) == 0){
+                m_iterator->second->modifyParameter(num, parameter);
+                break;
+            }
+        }
+    }
+}
+
+void SoundManager::updateSounds(){
+    for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
+        m_iterator->second->setVolume(m_effectVolume);
+    }
+    for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
+        m_iterator->second->setVolume(m_musicVolume);
+    }
+}
+
+void SoundManager::setMusicVolume(float p_volume){
+    m_musicVolume = p_volume;
+    if(m_musicVolume > 1)
+        m_musicVolume = 1;
+    else if(m_musicVolume < 0)
+        m_musicVolume = 0;
+
+    updateSounds();
+}
+
+void SoundManager::setEffectVolume(float p_volume){
+    m_effectVolume = p_volume;
+    if(m_effectVolume > 1)
+        m_effectVolume = 1;
+    else if(m_effectVolume < 0)
+        m_effectVolume = 0;
+
+    updateSounds();
 }
 
 /*
@@ -183,6 +314,26 @@ void SoundEvent::start(){
     ERRCHECK(m_soundInstance->start());
 }
 
+void SoundEvent::stop(){
+    ERRCHECK(m_soundInstance->stop(FMOD_STUDIO_STOP_IMMEDIATE));
+}
+
+void SoundEvent::pause(){
+    ERRCHECK(m_soundInstance->setPaused(true));
+}
+
+void SoundEvent::unPause(){
+    ERRCHECK(m_soundInstance->setPaused(false));
+}
+
+void SoundEvent::setVolume(float p_volume){
+    ERRCHECK(m_soundInstance->setVolume(p_volume));
+}
+
 void SoundEvent::modifyParameter(float num, const char* parameter){
     ERRCHECK(m_soundInstance->setParameterValue(parameter, num));
+}
+
+FMOD::Studio::EventInstance* SoundEvent::getEventInstance(){
+    return m_soundInstance;
 }

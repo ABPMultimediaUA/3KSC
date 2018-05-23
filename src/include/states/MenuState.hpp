@@ -21,16 +21,61 @@
 #ifndef MENU_STATE
 #define MENU_STATE
 
+class EngineManager;
+class SoundManager;
+class MenuScreen;
+
+struct MenuActionMapping;
+struct ScreenMapping;
+
 #include "State.hpp"
+#include "../extra/Screens.hpp"
+#include <vector>
 
 class MenuState : public State{
-    public:
+    friend class MenuScreen;
+    friend class BattleSettingsScreen;
+    friend class CharacterLocalScreen;
+    friend class CharacterOnlineScreen;
+    friend class GameSettingsScreen;
+    friend class MainScreen;
+    friend class MapScreen;
+    friend class OnlineCreateScreen;
+    friend class OnlineJoinScreen;
+    friend class OnlineModeScreen;
+
+    private:
         MenuState(Game* p_game);
+        static MenuState*           m_instance;
+        EngineManager*              m_engineManager;
+        SoundManager*               m_soundManager;
+        std::vector<MenuScreen*>    m_screens;
+        MenuScreen*                 m_currentScreen;
+
+
+        MenuActionMapping*  m_actions;
+        ScreenMapping*      m_screenMaps;
+
+        void mapActions();
+        void mapScreens();
+
+        bool m_waitRelease;
+        bool m_keepWaiting;
+
+    public:
         ~MenuState();
+        static MenuState* getInstance();
+        static MenuState& instance();
+        void initializeScreens();
+
+        void    nextState();
+        void    setScreen(Screen p_screen);
+        void    goToMainScreen();
+
+        
         void    input();
         void    update();
         void    render();
-        void    nextState();
 };
 
 #endif

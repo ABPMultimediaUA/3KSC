@@ -21,24 +21,13 @@
 *********************************************************************************/
 
 #include "../include/AI/AINode.hpp"
-#include <iostream>
 
-AINode::AINode(int p_type, float p_comparison_value, float *p_data, std::string p_action){
-    m_type = p_type;
-    m_comparison_value = p_comparison_value;
-    m_data = p_data;
-    m_action = p_action;
-    m_true_children = new AINode*;
-    m_false_children = new AINode*;
-}
-
-AINode::AINode(int p_type, float p_comparison_value, float *p_data){
-    m_type = p_type;
-    m_comparison_value = p_comparison_value;
-    m_data = p_data;
-    m_action = "";
-    m_true_children = new AINode*;
-    m_false_children = new AINode*;
+AINode::AINode(int p_id, int p_type, float p_comparison_value, float *p_data, int p_action){
+    m_type              = p_type;
+    m_comparison_value  = p_comparison_value;
+    m_data              = p_data;
+    m_action            = p_action;
+    m_id                = p_id;
 }
 
 AINode::~AINode(){}
@@ -46,50 +35,60 @@ AINode::~AINode(){}
 AINode* AINode::makeDecision(AINode* node){
     if(node->m_type==0){
         if(node->m_data != 0){
-            if(*(node->m_data) > node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
-            else
-                return(makeDecision(node->m_false_children[0]));
+            if(*(node->m_data) > node->m_comparison_value){
+                return(makeDecision(node->m_true_children));
+            }
+            else{
+                return(makeDecision(node->m_false_children));
+            }
         }
         else
             return(node);
     }
     else if(node->m_type==1){
         if(node->m_data != 0){
-            if(*(node->m_data) < node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
-            else
-                return(makeDecision(node->m_false_children[0]));
+            if(*(node->m_data) < node->m_comparison_value){
+                return(makeDecision(node->m_true_children));
+            }
+            else{
+                return(makeDecision(node->m_false_children));
+            }
         }
         else
             return(node);
     }
     else if(node->m_type==2){
         if(node->m_data != 0){
-            if(*(node->m_data) == node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
-            else
-                return(makeDecision(node->m_false_children[0]));
+            if(*(node->m_data) == node->m_comparison_value){
+                return(makeDecision(node->m_true_children));
+            }
+            else{
+                return(makeDecision(node->m_false_children));
+            }
         }
         else
             return(node);
     }
     else if(node->m_type==3){
         if(node->m_data != 0){
-            if(*(node->m_data) >= node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
-            else
-                return(makeDecision(node->m_false_children[0]));
+            if(*(node->m_data) >= node->m_comparison_value){
+                return(makeDecision(node->m_true_children));
+            }
+            else{
+                return(makeDecision(node->m_false_children));
+            }
         }
         else
             return(node);
     }
     else if(node->m_type==4){
         if(node->m_data != 0){
-            if(*(node->m_data) <= node->m_comparison_value)
-                return(makeDecision(node->m_true_children[0]));
-            else
-                return(makeDecision(node->m_false_children[0]));
+            if(*(node->m_data) <= node->m_comparison_value){
+                return(makeDecision(node->m_true_children));
+            }
+            else{
+                return(makeDecision(node->m_false_children));
+            }
         }
         else{
             return(node);

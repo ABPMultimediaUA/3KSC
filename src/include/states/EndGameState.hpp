@@ -21,11 +21,18 @@
 #ifndef END_GAME_STATE
 #define END_GAME_STATE
 
+class HUDManager;
+class InputManager;
+class Arena;
+
 #include "State.hpp"
 
 class EndGameState : public State{
-    public:
+    private:
         EndGameState(Game* p_game);
+
+    public:
+        static EndGameState& instance();
         ~EndGameState();
         void    input();
         void    update();

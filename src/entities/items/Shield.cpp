@@ -23,7 +23,6 @@
 #include "../../include/entities/items/Shield.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/entities/Arena.hpp"
-#include <iostream>
 
 //Constructor
 Shield::Shield(float p_position[3])
@@ -33,16 +32,11 @@ Shield::Shield(float p_position[3])
 }
 
 //Destructor
-Shield::~Shield(){
-    delete m_physicsManager;
-    delete m_arena;
-}
+Shield::~Shield(){}
 
 //Protects owner against attacks
 void Shield::use(){
     m_arena->getPlayer(m_owner)->shield();
-
-    //std::cout << m_arena->getPlayer(m_owner)->getName() <<" got a Shield.\n" << m_arena->getPlayer(m_owner)->getName() << "'s now protected against attacks." << std::endl;
 }
 
 //Sets the owner of the item

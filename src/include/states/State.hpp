@@ -26,14 +26,18 @@ class Game;
 class State{
     protected:
         Game* m_game;
+        float m_deltaTime;
 
     public:
-        virtual ~State(){};
+        virtual ~State(){
+            m_game = nullptr;
+        };
 
         virtual void input()        = 0;
         virtual void update()       = 0;
         virtual void render()       = 0;
         virtual void nextState()    = 0;
+        void setDeltaTime(long long p_delta);
 };
 
 #endif

@@ -23,7 +23,6 @@
 #include "../../include/entities/items/LifeTank.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/entities/Arena.hpp"
-#include <iostream>
 
 //Constructor
 LifeTank::LifeTank(float p_position[3])
@@ -33,16 +32,11 @@ LifeTank::LifeTank(float p_position[3])
 }
 
 //Destructor
-LifeTank::~LifeTank(){
-    delete m_physicsManager;
-    delete m_arena;
-}
+LifeTank::~LifeTank(){}
 
 //Increases owner's HP
 void LifeTank::use(){
     m_arena->getPlayer(m_owner)->changeHP(30);
-
-    //std::cout << m_arena->getPlayer(m_owner)->getName() << " got a Life Tank.\n" << m_arena->getPlayer(m_owner)->getName() << " now has " << m_arena->getPlayer(m_owner)->getHP() << " HPs." << std::endl;
 }
 
 //Sets the owner of the item

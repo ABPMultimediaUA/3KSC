@@ -23,8 +23,7 @@
 #ifndef CHARACTER
 #define CHARACTER
 
-class SoundManager;
-class Debug;
+class AICharacter;
 
 #include <SFML/System.hpp>
 
@@ -33,19 +32,27 @@ class Debug;
 #include <Client.hpp>
 
 struct ActionMapping;
+class Game;
+class HUDManager;
 
 class Character : public Entity{
 public:
-    Character(char* p_name, float p_position[3], int p_HP, int p_MP, int p_damage, float p_velocity, const char* p_modelURL, bool p_debugMode);
-    ~Character();
+    Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online = false, bool p_NPC = false);
+    virtual ~Character();
+
+    void            getRespawnPosition();
 	
-    void            receiveAttack(int p_damage, bool p_block);
+    void            receiveAttack(int p_damage, bool p_block, float p_knockPower, int p_knockSide = 0, bool p_checked = 0);
     virtual void    changeHP(int p_variation);
-    void            addMP(int p_variation);
+    void            checkAlive();
+    void            addMP(int p_MP);
+    bool            useMP(int p_MP);
     void            die();
-    void            respawn(float p_position[3]);
+    void            setRespawnPosition(float p_respawnPosition[3]);
+    void            respawn();
     void            shield();
     void            wings();
+    void            removeWings();
     void            lookLeft();
     void            lookRight();
     void            input();
@@ -57,14 +64,18 @@ public:
     int             getIndex();
     char*           getName();
     int             getHP();
+    int             getMaxHP() { return m_maxHP; }
     int             getMP();
-    bool            getOrientation();
+    int             getOrientation();
+    bool            getAlive()  {   return m_alive; }
     void            setStunned(float p_time = 0);
     bool            isJumping();
     void            onTouchGround();
     void            onLeaveGround();
-    bool            enoughMP(int p_MP);
     void            setUltimateCharged();
+    bool            getUltimateCharged();
+    void            onPortal();
+    void            leavePortal();
     
     //Actions
     bool            left();
@@ -78,19 +89,29 @@ public:
     virtual bool    specialAttackDown();
     virtual bool    specialAttackSide();
     virtual bool    ultimateAttack();
+    virtual bool    tauntSound();
+    virtual void    deathSound();
+    bool            leave();
+    bool            toggleAI();
+
     virtual int     getCurrentSnowmen();
     bool            moveToPath(float p_position[2]);
 
-    void            modeDebug();
     void            setKnockback();
-    void            knockback(bool p_orientation);
+    void            knockback(int p_orientation, float p_knockPower);
 
     virtual void    updatePlayer() = 0;
-    
+
+    int             getValidation();
+
 protected:
-    SoundManager*   m_soundManager;
+    Game*           m_game;
+    HUDManager*     m_HUDManager;
+
     static int      m_playerCount;
     int             m_playerIndex;
+    bool            m_NPC;
+    AICharacter*    m_AI;
 
     int             m_type;                 //0-5: {Kira, Luka, Miyagi, Plup, Rawr, Sparky}
     char*           m_name;
@@ -101,9 +122,11 @@ protected:
     int             m_maxMP;
     int             m_damage;
     float           m_velocity;
+    bool            m_ultimateMode;
     float           m_attackPosition[3];
     float           m_attackTarget[3];
-    bool            m_orientation;
+    float           m_respawnPosition[3];
+    int             m_orientation;
     bool            m_stunned;
     bool            m_blocking;
     bool            m_shielded;
@@ -114,6 +137,7 @@ protected:
     bool            m_ultimateCharged;
     float           m_frameDeltaTime;       //For movement
     float           m_runningFactor;
+    float           m_currentTime;
 
     //Jumps
     int             m_maxJumps;
@@ -127,22 +151,49 @@ protected:
     ActionMapping*  m_actions;
     void            mapActions();
 
-    Debug*          m_playerDebug;
+    //Debug*          m_playerDebug;
     bool            m_debugMode;
 
-    sf::Clock       m_knockbackClock;
-    sf::Clock       m_dashClock;
-    sf::Clock       m_stunClock;
+    float           m_jumpDuration;
+    float           m_jumpTime;
+    float           m_knockbackDuration;
+    float           m_knockbackTime;
+    float           m_dashDuration;
+    float           m_dashTime;
+    float           m_stunDuration;
+    float           m_stunTime;
+    float           m_wingsDuration;
+    float           m_wingsTime;
+    float           m_shieldDuration;
+    float           m_shieldTime;
 
+    int             m_sideKnockback;
     bool            m_knockback;
     bool            m_dashing;
     float           m_stunnedTime;
+    int             m_validation;
+    bool            m_online;
+
+    float           m_moveAmmount;
+    float           m_damageBasic;
+    float           m_damageSide;
+    float           m_damageUp;
+    float           m_damageDown;
+    float           m_damageUlti;
+    float           m_knockbackBasic;
+    float           m_knockbackSide;
+    float           m_knockbackUp;
+    float           m_knockbackDown;
+    float           m_knockbackUlti;
 
 private:
     bool            m_waitRelease;
     bool            m_keepWaiting;
-    void            doActions();
+    bool            m_AIEnabled;
     bool            m_flagAIJump = false;
+    Client*         m_client;
+
+    void            doActions();
 };
 
 #endif

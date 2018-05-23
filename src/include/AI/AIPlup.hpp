@@ -23,25 +23,13 @@
 #ifndef AI_PLUP
 #define AI_PLUP
 
-class AINode;
-
 #include "AICharacter.hpp"
-#include <Box2D.h>
 
 class AIPlup : public AICharacter{
     private:
-        float m_PLUP_distance_to_enemy;       // Fraction that determines if an enemy is close
-        float m_PLUP_distance_to_item;        // Fraction that determines if an item is close
-        float m_PLUP_life;                    // Plup's current life
-        float m_PLUP_mana;                    // Plup's current mana
-        float m_PLUP_special_up_range;        // Fraction that determines if an enemy is in range of special ability up
-        float m_PLUP_special_side_range;      // Fraction that determines if an enemy is in range of special ability side
         float m_PLUP_snowman_placed;          // Determines if a snowman is already placed or not
-        b2Vec2 m_PLUP_position;               // Vector containing Plup's position
-        AINode* m_PLUP_root;                  // Root of Plup's tree
     public:
-        static AIPlup& instance();
-        AIPlup();
+        AIPlup(Character* p_player);
         ~AIPlup();
         void update();
         void buildTree();

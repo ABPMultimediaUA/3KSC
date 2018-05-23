@@ -25,7 +25,6 @@
         Left = 0,
         Right,
         Jump,
-        Run,
         Block,
         Pick,
         BasicAttack,
@@ -33,6 +32,9 @@
         SpecialAttackDown,
         SpecialAttackSide,
         UltimateAttack,
+        Taunt,
+        Leave,
+        ToggleAI,
 
         Count
     };

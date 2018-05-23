@@ -20,9 +20,8 @@
 
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/EngineManager.hpp"
-#include "../include/extra/Inputs.hpp"
-#include "../include/extra/Actions.hpp"
-#include <iostream> // to write in console
+#include <SFML/Window/Mouse.hpp>
+
 #include <cstring> //For std::memcpy()
 
 //Returns the only instance of this class
@@ -35,6 +34,7 @@ InputManager& InputManager::instance(){
 InputManager::InputManager(){
     m_engineManager = &EngineManager::instance();
 
+    m_masterTime = m_masterClock.getElapsedTime().asSeconds();
     m_bindings = 0;
 
     //Event handling
@@ -50,15 +50,13 @@ InputManager::InputManager(){
     std::memcpy(m_axis, t_axis, 8 * sizeof(sf::Joystick::Axis));
 
     //Devices initialization
-    m_inputDevices[0]   = -1;
-    m_inputDevices[1]   = -2;
-    m_inputDevices[2]   =  0;
-    m_inputDevices[3]   = -2;
+    autoassignDevices();
+    m_isOnline = false;
 
     //Initialize action booleans
     for (int i = 0; i < 4; i++){
         for (int j = 0; j < (int) Action::Count; j++){
-            m_actions[i][j] = false;
+            m_playerActions[i][j] = false;
         }
     }
 }
@@ -91,6 +89,24 @@ bool InputManager::eventHandler(){
     return t_eventReceived;
 }
 
+//Checks which devices are connected and assigns devices for everyone
+void InputManager::autoassignDevices(){
+    bool t_keyboardAssigned = false;
+    updateJoysticks();
+
+    for (int i = 0; i < 2; i++){
+        if(isConnected(i))
+            m_inputDevices[i] = i;
+        else{
+            if(!t_keyboardAssigned){
+                m_inputDevices[i] = -1;
+                t_keyboardAssigned = true;
+            }else
+                m_inputDevices[i] = -2;
+        }
+    }
+}
+
 //Specific Key press handler
 void InputManager::onKeyPressed(int p_key){
 
@@ -102,8 +118,25 @@ bool InputManager::isKeyPressed(Key p_key){
     return t_result;
 }
 
+//Returns whether mouse button p_button is pressed or not
+bool InputManager::isMousePressed(){
+    return sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+}
+
+//Returns the X coordinate of the mouse (relative to window)
+int InputManager::getMouseX(){
+    return sf::Mouse::getPosition().x - m_engineManager->getWindowPosition().x;
+}
+
+//Returns the X coordinate of the mouse (relative to window)
+int InputManager::getMouseY(){
+    return sf::Mouse::getPosition().y - m_engineManager->getWindowPosition().y;
+}
+
 //Checks if controller with index p_index is connected
 bool InputManager::isConnected(int p_joystick){
+    sf::Joystick::update();
     return sf::Joystick::isConnected(p_joystick);
 }
 
@@ -124,6 +157,7 @@ void InputManager::updateJoysticks(){
 
 //Assing input device to player
 void InputManager::assignDevice(int p_device, int p_player){
+    m_inputDevices[p_player] = p_device;
     //Only change device of player 2 for now
     // if (p_player == 1){
     //     m_inputDevices[p_player] = p_device;
@@ -144,157 +178,21 @@ void InputManager::setOnlineControl(int p_player){
 }
 
 void InputManager::setNetPlayer(int p_player, bool p_actions[12]){
-    m_actions[p_player][(int) Action::Left]                 = p_actions[0]; 
-    m_actions[p_player][(int) Action::Right]                = p_actions[1];             
-    m_actions[p_player][(int) Action::Jump]                 = p_actions[2];
-    m_actions[p_player][(int) Action::Run]                  = p_actions[3];
-    m_actions[p_player][(int) Action::Block]                = p_actions[4];
-    m_actions[p_player][(int) Action::Pick]                 = p_actions[5];
-    m_actions[p_player][(int) Action::BasicAttack]          = p_actions[6];
-    m_actions[p_player][(int) Action::SpecialAttackUp]      = p_actions[7];
-    m_actions[p_player][(int) Action::SpecialAttackDown]    = p_actions[8];
-    m_actions[p_player][(int) Action::SpecialAttackSide]    = p_actions[9];
-    m_actions[p_player][(int) Action::UltimateAttack]       = p_actions[10];
+    m_playerActions[p_player][(int) Action::Left]                 = p_actions[0]; 
+    m_playerActions[p_player][(int) Action::Right]                = p_actions[1];             
+    m_playerActions[p_player][(int) Action::Jump]                 = p_actions[2];
+    m_playerActions[p_player][(int) Action::Block]                = p_actions[3];
+    m_playerActions[p_player][(int) Action::Pick]                 = p_actions[4];
+    m_playerActions[p_player][(int) Action::BasicAttack]          = p_actions[5];
+    m_playerActions[p_player][(int) Action::SpecialAttackUp]      = p_actions[6];
+    m_playerActions[p_player][(int) Action::SpecialAttackDown]    = p_actions[7];
+    m_playerActions[p_player][(int) Action::SpecialAttackSide]    = p_actions[8];
+    m_playerActions[p_player][(int) Action::UltimateAttack]       = p_actions[9];
 }
 
 // Enables an action for AI
 void InputManager::setAction(Action p_action, int p_player, bool p_bool){
-    m_actions[p_player][(int)p_action] = p_bool;
-}
-
-//Updates joysticks state and booleans for each action
-void InputManager::updateActions(int p_player){
-    int t_inputDevice = m_inputDevices[p_player];
-    bool t_up, t_down; //They're not actions, but needed for some conditions
-    //Keyboard input
-    if (t_inputDevice == -1){
-        if(!m_engineManager->getDevice()->isWindowActive()) return;
-        /* Controls:
-            *   Left/Right or A/D           Movement
-            *   Space                       Jump
-            *   E                           Basic Attack
-            *   X + Up/W                    Up Special Attack
-            *   X + Down/S                  Down Special Attack
-            *   X + Left/Right or A/D       Side Special Attack
-            *   Q                           Pick item
-            *   B                           Block
-            *   LShift/RShift               Run
-            *   Z                           Ultimate Attack
-        */
-
-        t_up = 
-            isKeyPressed(Key::W) ||
-            isKeyPressed(Key::Up);
-        t_down =
-            isKeyPressed(Key::S) ||
-            isKeyPressed(Key::Down);
-        m_actions[p_player][(int) Action::Left] =
-            isKeyPressed(Key::A) ||
-            isKeyPressed(Key::Left);
-        m_actions[p_player][(int) Action::Right] =
-            isKeyPressed(Key::D) ||
-            isKeyPressed(Key::Right);
-
-        m_actions[p_player][(int) Action::Jump] =
-            isKeyPressed(Key::Space);
-        m_actions[p_player][(int) Action::Run] =
-            isKeyPressed(Key::LShift) ||
-            isKeyPressed(Key::RShift);
-        m_actions[p_player][(int) Action::Block] =
-            isKeyPressed(Key::B);
-        m_actions[p_player][(int) Action::Pick] =
-            isKeyPressed(Key::Q);      
-
-        m_actions[p_player][(int) Action::BasicAttack] =
-            isKeyPressed(Key::E);
-        m_actions[p_player][(int) Action::SpecialAttackUp] =
-            isKeyPressed(Key::X) &&
-                t_up;
-        m_actions[p_player][(int) Action::SpecialAttackDown] =
-            isKeyPressed(Key::X) &&
-                t_down;
-        m_actions[p_player][(int) Action::SpecialAttackSide] =
-            isKeyPressed(Key::X) &&
-                (m_actions[p_player][(int) Action::Left] ||
-                m_actions[p_player][(int) Action::Right]);
-        m_actions[p_player][(int) Action::UltimateAttack] =
-            isKeyPressed(Key::Z);
-    }
-    else if (t_inputDevice == -3)
-    {
-        //online player
-    }
-    //Joystick input
-    else if (t_inputDevice != -2){
-        if(!m_engineManager->getDevice()->isWindowActive()) return;
-        //Update joysticks state first
-        updateJoysticks();
-
-        /* Controls (XBOX 360 Controller):
-            *   Left/Right      Movement
-            *   A               Jump
-            *   X               Basic Attack
-            *   B + Up          Up Special Attack
-            *   B + Down        Down Special Attack
-            *   B + Left/Right  Side Special Attack
-            *   Y               Pick item
-            *   LB              Block
-            *   RB              Run
-            *   LT + RT         Ultimate Attack
-        */
-
-        t_up =
-            getAxisPosition(t_inputDevice, Axis::Y) <= -75 ||
-            getAxisPosition(t_inputDevice, Axis::PovY) == -100;
-        t_down =
-            getAxisPosition(t_inputDevice, Axis::Y) >= 75 ||
-            getAxisPosition(t_inputDevice, Axis::PovY) == 100;
-        m_actions[p_player][(int) Action::Left] =
-            getAxisPosition(t_inputDevice, Axis::X) <= -75 ||
-            getAxisPosition(t_inputDevice, Axis::PovX) == -100;
-        m_actions[p_player][(int) Action::Right] =
-            getAxisPosition(t_inputDevice, Axis::X) >= 75 ||
-            getAxisPosition(t_inputDevice, Axis::PovX) == 100;
-
-        m_actions[p_player][(int) Action::Jump] =
-            isButtonPressed(t_inputDevice, Button::A);
-        m_actions[p_player][(int) Action::Run] =
-            isButtonPressed(t_inputDevice, Button::RB);
-        m_actions[p_player][(int) Action::Block] =
-            isButtonPressed(t_inputDevice, Button::LB);
-        m_actions[p_player][(int) Action::Pick] =
-            isButtonPressed(t_inputDevice, Button::Y);
-
-        m_actions[p_player][(int) Action::BasicAttack] =
-            isButtonPressed(t_inputDevice, Button::X);
-        m_actions[p_player][(int) Action::SpecialAttackUp] =
-            isButtonPressed(t_inputDevice, Button::B) &&
-                t_up;
-        m_actions[p_player][(int) Action::SpecialAttackDown] =
-            isButtonPressed(t_inputDevice, Button::B) &&
-                t_down;
-        m_actions[p_player][(int) Action::SpecialAttackSide] =
-            isButtonPressed(t_inputDevice, Button::B) &&
-                (m_actions[p_player][(int) Action::Left] ||
-                m_actions[p_player][(int) Action::Right]);
-        m_actions[p_player][(int) Action::UltimateAttack] =
-            getAxisPosition(t_inputDevice, Axis::Z) >= 0 &&
-                getAxisPosition(t_inputDevice, Axis::R) >= 0;
-    }
-    //NPC
-    else{
-        for (int i = 0; i < (int) Action::Count; i++){
-            //m_actions[p_player][i] = false;
-        }
-    }
-
-    if(m_isOnline && p_player == m_client->getPlayer())
-        updateOnlineInput(p_player);
-}
-
-//Returns true if the asked action's input is enabled
-bool InputManager::checkAction(Action p_action, int p_player){
-    return m_actions[p_player][(int) p_action];
+//    m_playerActions[p_player][(int)p_action] = p_bool;
 }
 
 //Returns the input device for the specified player
@@ -302,19 +200,30 @@ int InputManager::getInputDevice(int p_player){
     return m_inputDevices[p_player];
 }
 
+//Returns the number of players with assigned input device
+int InputManager::getDeviceCount(){
+    int t_result = 0;
+
+    for (int i = 0; i < 4; i++){
+        if (m_inputDevices[i] != -2 && m_inputDevices[i] != -3){
+            t_result++;
+        }
+    }
+
+    return t_result;
+}
+
 void InputManager::updateOnlineInput(int p_player){
     bool t_actions[12];
     bool t_flag = false;
     uint i;
-    for(i = 0; i < 12; i++)
-    {
-        if(m_actions[p_player][i])
+    for(i = 0; i < 10; i++){
+        if(m_playerActions[p_player][i])
             t_actions[i] = true;
         else
             t_actions[i] = false;
 
-        if(t_actions[i] != m_lastActions[i])
-        {
+        if(t_actions[i] != m_lastActions[i]){
             m_lastActions[i] = t_actions[i];
             t_flag = true;
         }
@@ -325,4 +234,180 @@ void InputManager::updateOnlineInput(int p_player){
 
 void InputManager::sendOnlineInput(){
     m_client->sendAction(m_lastActions);
+}
+
+void InputManager::updateMasterClock(){
+    m_masterTime = m_masterClock.getElapsedTime().asSeconds();
+}
+
+void InputManager::resetMasterClock(){
+    m_masterClock.restart();
+}
+
+float InputManager::getMasterClock(){
+    return m_masterTime;
+}
+
+
+
+
+
+
+
+
+
+
+/* ****************************** MENU ACTIONS ****************************** */
+//Calls functions to update menu actions booleans
+void InputManager::updateMenuActions(){
+    switch(m_inputDevices[0]){
+        case 0: case 1: case 2: case 3: {menuInputJoystick();   break;}
+        case -1:                        {menuInputKeyboard();   break;}
+        case -3:                        {menuInputOnline();     break;}
+    }
+}
+
+//Updates menu actions (Joystick input)
+void InputManager::menuInputJoystick(){
+    if(!m_engineManager->isWindowActive()) return;
+
+    //Update joysticks state first
+    updateJoysticks();
+
+    m_menuActions[(int) MenuAction::Up]         = getAxisPosition(0, Axis::Y) <= -75 || getAxisPosition(0, Axis::PovY) == -100;
+    m_menuActions[(int) MenuAction::Down]       = getAxisPosition(0, Axis::Y) >=  75 || getAxisPosition(0, Axis::PovY) ==  100;
+    m_menuActions[(int) MenuAction::Left]       = getAxisPosition(0, Axis::X) <= -75 || getAxisPosition(0, Axis::PovX) == -100;
+    m_menuActions[(int) MenuAction::Right]      = getAxisPosition(0, Axis::X) >=  75 || getAxisPosition(0, Axis::PovX) ==  100;
+    m_menuActions[(int) MenuAction::Select]     = isButtonPressed(0, Button::A);
+    m_menuActions[(int) MenuAction::Back]       = isButtonPressed(0, Button::B);
+    m_menuActions[(int) MenuAction::Save]       = isButtonPressed(0, Button::Start);
+    m_menuActions[(int) MenuAction::Settings]   = isButtonPressed(0, Button::Y);
+    m_menuActions[(int) MenuAction::ToggleNPC]  = isButtonPressed(0, Button::X);
+}
+
+//Updates menu actions (Keyboard input)
+void InputManager::menuInputKeyboard(){
+    if(!m_engineManager->isWindowActive()) return;
+
+    m_menuActions[(int) MenuAction::Up]         = isKeyPressed(Key::Up);
+    m_menuActions[(int) MenuAction::Down]       = isKeyPressed(Key::Down);
+    m_menuActions[(int) MenuAction::Left]       = isKeyPressed(Key::Left);
+    m_menuActions[(int) MenuAction::Right]      = isKeyPressed(Key::Right);
+    m_menuActions[(int) MenuAction::Select]     = isKeyPressed(Key::Return);
+    m_menuActions[(int) MenuAction::Back]       = isKeyPressed(Key::Escape);
+    m_menuActions[(int) MenuAction::Save]       = isKeyPressed(Key::Return);
+    m_menuActions[(int) MenuAction::Settings]   = isKeyPressed(Key::Tab);
+    m_menuActions[(int) MenuAction::ToggleNPC]  = isKeyPressed(Key::A);
+}
+
+//Updates menu actions (for online players)
+void InputManager::menuInputOnline(){
+
+}
+
+//Returns true if the asked action's input is enabled
+bool InputManager::checkMenuAction(MenuAction p_action){
+    return m_menuActions[(int) p_action];
+}
+
+
+
+
+
+
+
+
+
+
+/* ****************************** PLAYER ACTIONS ****************************** */
+//Calls functions to update player actions booleans
+void InputManager::updatePlayerActions(int p_player){
+    switch(m_inputDevices[p_player]){
+        case 0: case 1: case 2: case 3: {playerInputJoystick(p_player);     break;}
+        case -1:                        {playerInputKeyboard(p_player);     break;}
+        case -2:                        {playerInputNPC(p_player);          break;}
+        case -3:                        {playerInputOnline(p_player);       break;}
+    }
+    if(m_isOnline && p_player == m_client->getPlayer()){
+        updateOnlineInput(p_player);
+        m_isOnline = true;
+    }
+}
+
+//Updates player actions (Joystick input)
+void InputManager::playerInputJoystick(int p_player){
+    if(!m_engineManager->isWindowActive()) return;
+
+    //Update joysticks state first
+    updateJoysticks();
+
+    int t_joystick = m_inputDevices[p_player];
+
+    bool t_up       = getAxisPosition(t_joystick, Axis::Y) <= -75 || getAxisPosition(t_joystick, Axis::PovY) == -100;
+    bool t_down     = getAxisPosition(t_joystick, Axis::Y) >=  75 || getAxisPosition(t_joystick, Axis::PovY) ==  100;
+    bool t_left     = getAxisPosition(t_joystick, Axis::X) <= -75 || getAxisPosition(t_joystick, Axis::PovX) == -100;
+    bool t_right    = getAxisPosition(t_joystick, Axis::X) >=  75 || getAxisPosition(t_joystick, Axis::PovX) ==  100;
+    bool t_special  = isButtonPressed(t_joystick, Button::B);
+        
+    m_playerActions[p_player][(int) Action::Left]   = t_left; 
+    m_playerActions[p_player][(int) Action::Right]  = t_right;
+
+    m_playerActions[p_player][(int) Action::Jump]   = isButtonPressed(t_joystick, Button::A);
+    m_playerActions[p_player][(int) Action::Block]  = isButtonPressed(t_joystick, Button::RB);
+    m_playerActions[p_player][(int) Action::Pick]   = isButtonPressed(t_joystick, Button::Y);
+
+    m_playerActions[p_player][(int) Action::BasicAttack]        = isButtonPressed(t_joystick, Button::X);
+    m_playerActions[p_player][(int) Action::SpecialAttackUp]    = t_special && t_up;
+    m_playerActions[p_player][(int) Action::SpecialAttackDown]  = t_special && t_down;
+    m_playerActions[p_player][(int) Action::SpecialAttackSide]  = t_special && (t_left || t_right);
+    m_playerActions[p_player][(int) Action::UltimateAttack]     = getAxisPosition(t_joystick, Axis::Z) >= 0 && getAxisPosition(t_joystick, Axis::R) >= 0;
+    
+    m_playerActions[p_player][(int) Action::Taunt]              = isButtonPressed(t_joystick, Button::LB);
+    m_playerActions[p_player][(int) Action::Leave]              = isButtonPressed(t_joystick, Button::Back);
+    m_playerActions[p_player][(int) Action::ToggleAI]           = isButtonPressed(t_joystick, Button::LS);
+}
+
+//Updates player actions (Keyboard input)
+void InputManager::playerInputKeyboard(int p_player){
+    if(!m_engineManager->isWindowActive()) return;
+
+    bool t_up       = isKeyPressed(Key::Up);
+    bool t_down     = isKeyPressed(Key::Down);
+    bool t_left     = isKeyPressed(Key::Left);
+    bool t_right    = isKeyPressed(Key::Right);
+    bool t_special  = isKeyPressed(Key::S);
+
+    m_playerActions[p_player][(int) Action::Left]   = t_left;
+    m_playerActions[p_player][(int) Action::Right]  = t_right;
+
+    m_playerActions[p_player][(int) Action::Jump]   = isKeyPressed(Key::Space);
+    m_playerActions[p_player][(int) Action::Block]  = isKeyPressed(Key::E);
+    m_playerActions[p_player][(int) Action::Pick]   = isKeyPressed(Key::D);      
+
+    m_playerActions[p_player][(int) Action::BasicAttack]        = isKeyPressed(Key::A);
+    m_playerActions[p_player][(int) Action::SpecialAttackUp]    = t_special && t_up;
+    m_playerActions[p_player][(int) Action::SpecialAttackDown]  = t_special && t_down;
+    m_playerActions[p_player][(int) Action::SpecialAttackSide]  = t_special && (t_left || t_right);
+    m_playerActions[p_player][(int) Action::UltimateAttack]     = isKeyPressed(Key::W);
+
+    m_playerActions[p_player][(int) Action::Taunt]              = isKeyPressed(Key::R);
+    m_playerActions[p_player][(int) Action::Leave]              = isKeyPressed(Key::Escape);
+    m_playerActions[p_player][(int) Action::ToggleAI]           = isKeyPressed(Key::O);
+}
+
+//Updates player actions (for NPC)
+void InputManager::playerInputNPC(int p_player){
+    for (int i = 0; i < (int) Action::Count; i++){
+        //m_playerActions[p_player][i] = false;
+    }
+}
+
+//Updates player actions (for online players)
+void InputManager::playerInputOnline(int p_player){
+
+}
+
+//Returns true if the asked action's input is enabled
+bool InputManager::checkPlayerAction(Action p_action, int p_player){
+    return m_playerActions[p_player][(int) p_action];
 }

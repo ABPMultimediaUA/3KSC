@@ -23,14 +23,30 @@
 #ifndef PORTAL
 #define PORTAL
 
+class PhysicsManager;
+class HUDManager;
+class Arena;
+
 #include "../Entity.hpp"
+#include "../characters/Character.hpp"
 
 class Portal: public Entity {
-    public:
-        Portal(float p_position[3]);
-        ~Portal();
-        // void    setOwner(int p_owner) override;
-        // void    use() override;
+public:
+    Portal(float p_position[3]);
+    ~Portal();
+    void        onEnter(Character* p_character);
+    void        onLeave(Character* p_character);
+    void        update(float p_delta);
+    void        use();
+private:
+    Arena*          m_arena;
+    PhysicsManager* m_physicsManager;
+    HUDManager*     m_HUDManager;
+
+    float       m_charge;
+    bool        m_using;
+    int         m_charactersInPortal;
+    Character*  m_players[2] = {NULL,NULL};
 };
 
 #endif

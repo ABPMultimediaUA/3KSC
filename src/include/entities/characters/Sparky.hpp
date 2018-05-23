@@ -27,28 +27,41 @@
 
 class Sparky: public Character {
 public:
-	Sparky(char* p_name, float p_position[3], bool p_debugMode);
+	Sparky(char* p_name, float p_position[3], bool p_online = false, bool p_NPC = false);
     ~Sparky();
     bool    jump();
     bool    basicAttack();
     bool    specialAttackUp();
-    void    updateJump();
     bool    specialAttackDown();
     bool    specialAttackSide();
     bool    ultimateAttack();
-    void    updateUltimate();
     void    updatePlayer();
-    void    updatePunch();
+    void    updateJump();
+    bool    tauntSound();
+    void    deathSound();
 
 private:
+    float           m_jumpingDuration;
+    float           m_jumpingTime;
+
+    bool            m_gravity;
     bool            m_sparkyJumping;
     bool            m_punchLaunched;
-    bool            m_ultimateMode;
     bool            m_ultiBulletLaunched;
+
+    float       m_atakOffset;
+    float       m_atakTime;
+
     Projectile*     m_punch;
     Projectile*     m_ultimateBullet;
 
     int             m_ultimateAmmo;
+
+    int             m_system;
+    
+    void    updatePunch();
+    void    updateUltimate();
+    void    randomSounds();
 
 };
 

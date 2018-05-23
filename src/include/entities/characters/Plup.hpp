@@ -30,29 +30,45 @@ class Snowman;
 
 class Plup: public Character {
 public:
-    Plup(char* p_name, float p_position[3], bool p_debugMode);
+    Plup(char* p_name, float p_position[3], bool p_online = false, bool p_NPC = false);
     ~Plup();
-    bool        jump();
-    bool        basicAttack();
-    bool        specialAttackUp();
-    bool        specialAttackDown();
-    bool        specialAttackSide();
-    bool        ultimateAttack();
+    bool    jump();
+    bool    basicAttack();
+    bool    specialAttackUp();
+    bool    specialAttackDown();
+    bool    specialAttackSide();
+    bool    ultimateAttack();
+    void    updatePlayer();
+    int     getCurrentSnowmen();
+    bool    tauntSound();
+    void    deathSound();
 
-    void        updateSnowman();
-    void        deleteSnowman();
-    int         getCurrentSnowmen();
-
-    void        updatePlayer();
 
 private:
     bool        m_snowmanPlaced;
+    bool        m_kalasnikov;
+    bool        m_kalasnikovBulletLaunched;
 
+    int         m_kalasnikovAmmo;
     int         m_maxSnowmen;
     Snowman*    m_snowman;
 
-    sf::Clock   m_turretClock;
-    sf::Clock   m_basicClock;
+    Projectile* m_kalasnikovBullet;
+
+    float       m_turretDuration;
+    float       m_turretTime;
+    float       m_atakOffset;
+    float       m_atakTime;
+    float       m_ultimateDuration;
+    float       m_ultimateTime;
+    float       m_kalasnikovOffset;
+    float       m_kalasnikovTime;
+
+    void        updateSnowman();
+    void        deleteSnowman();
+    void        updateDash();
+    void        updateKalasnikov();
+    void        randomSounds();
 };
 
 #endif

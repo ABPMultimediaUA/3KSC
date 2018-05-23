@@ -21,16 +21,17 @@
 #ifndef CONTACT_MANAGER
 #define CONTACT_MANAGER
 
-//#include "../entities/Entity.hpp"
-//#include <vector>
 #include <Box2D.h>
 
 class ContactManager : public b2ContactListener{
 public:
     void BeginContact(b2Contact* p_contact);
     void EndContact(b2Contact* p_contact);
+    void PreSolve(b2Contact* p_contact, const b2Manifold* p_oldManifold);
 
-private:
+    void checkCollision(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact);
+    void checkLeave(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact);
+    void checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact, const b2Manifold* p_oldManifold);
 
 };
 

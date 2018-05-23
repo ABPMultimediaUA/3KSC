@@ -24,13 +24,11 @@
 #include "../include/entities/Projectile.hpp"
 #include "../include/entities/characters/Character.hpp"
 #include "../include/entities/Arena.hpp"
-// #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/PhysicsManager.hpp"
-#include <iostream>
+#include "../include/managers/InputManager.hpp"
 
 //Constructor
-Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "assets/models/characters/plup/snowman.obj", 5){
-    // m_engineManager = &EngineManager::instance();
+Snowman::Snowman(float p_position[3], int p_owner, float p_damage, float p_knockPower) : Entity(p_position, 0.7f, "assets/models/characters/plup/munyeco_plup.obj", 5){
     m_physicsManager = &PhysicsManager::instance();
     m_arena          = Arena::getInstance();
     
@@ -38,23 +36,29 @@ Snowman::Snowman(float p_position[3], int p_owner) : Entity(p_position, 3.f, "as
     m_owner          = p_owner;
     
     m_bulletLaunched = false;
+    m_launchOffset   = 1.5;
+    m_launchTime     = m_inputManager->getMasterClock() + m_launchOffset;
+
+    m_damage         = p_damage;
+    m_knockPower     = p_knockPower;
 }
 
 //Destructor
 Snowman::~Snowman(){}
 
-
 //Looks for player and fires after finding
 bool Snowman::lockNLoad(){
-    if(!m_bulletLaunched && m_ammo > 0 && (m_launchClock.getElapsedTime().asSeconds() >= 1.5 || m_ammo == 3)){
+    float t_time = m_inputManager->getMasterClock();
+    if(!m_bulletLaunched && m_ammo > 0 && (t_time >= m_launchTime || m_ammo == 3)){
+        int t_side = 1;
         int t_playerCount = m_arena->getPlayerCount();
         Character* t_currentPlayer;
-
-        for (int i = 0; i < t_playerCount; i++){
+        
+        for(int i = 0; i < t_playerCount; i++){
             //Snowman shall not shoot its owner
-            if (i == m_owner)
+            if(i == m_owner)
                 continue;
-
+            
             t_currentPlayer = m_arena->getPlayer(i);
             m_target[0] = t_currentPlayer->getX();
             m_target[1] = t_currentPlayer->getY();
@@ -68,11 +72,14 @@ bool Snowman::lockNLoad(){
             //Attack ONLY if in range and in sight
             if(t_closestBodyFraction >= 0.2f){ //If there is not an intersection to the raycast
                 //Create snowball (if any left)
-                if(m_ammo-- > 0){
-                    m_snowball = new Projectile(m_position, m_target, true, m_owner, 7, 1);
-                    //std::cout << "Snowman: Take this!" << std::endl;
+                if(m_ammo > 0){
                     m_bulletLaunched = true;
-                    m_launchClock.restart();
+                    m_ammo--;
+                    if(m_position[0] > m_target[0])
+                        t_side = -1;
+                    m_snowball = new Projectile(m_position, m_target, true, m_owner, m_damage, t_side, 1);
+                    
+                    m_launchTime = t_time + m_launchOffset;
                     break;
                 }
             }
@@ -80,7 +87,7 @@ bool Snowman::lockNLoad(){
     }
 
     //Update position of the turret (gravity)
-    updatePosition(false, false, false);
+    updatePosition();
 
     //Delete turret when last bullet is gone
     if (m_ammo == -1)
@@ -90,11 +97,12 @@ bool Snowman::lockNLoad(){
 }
 
 void Snowman::updateBullet(){
-    updatePosition(false, false, false);
+    updatePosition();
 
     if(!m_snowball->update(true)){
         m_bulletLaunched = false;
         delete m_snowball;
+        m_snowball = nullptr;
         
         if(m_ammo == 0)
             m_ammo--;

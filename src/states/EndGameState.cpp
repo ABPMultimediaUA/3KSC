@@ -21,10 +21,21 @@
 #include "../include/states/EndGameState.hpp"
 #include "../include/states/MenuState.hpp"
 #include "../include/Game.hpp"
+#include "../include/managers/HUDManager.hpp"
+#include "../include/managers/EngineManager.hpp"
+#include "../include/managers/InputManager.hpp"
+#include "../include/managers/SoundManager.hpp"
+#include "../include/managers/PhysicsManager.hpp"
+#include "../include/entities/Arena.hpp"
+
+EndGameState& EndGameState::instance(){
+    static EndGameState instance(Game::getInstance());
+    return instance;
+}
 
 //Constructor
 EndGameState::EndGameState(Game* p_game){
-    m_game = p_game;
+    m_game          = p_game;
 }
 
 //Destructor
@@ -35,7 +46,6 @@ void EndGameState::input(){
 }
 
 void EndGameState::update(){
-
 }
 
 void EndGameState::render(){
@@ -44,5 +54,5 @@ void EndGameState::render(){
 
 //Change to next state
 void EndGameState::nextState(){
-    m_game->setState(new MenuState(m_game));
+    m_game->setState(&MenuState::instance());
 }

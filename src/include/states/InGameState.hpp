@@ -23,39 +23,48 @@
 
 class EngineManager;
 class InputManager;
-class UIManager;
+class HUDManager;
 class SoundManager;
 class PhysicsManager;
 class AICharacter;
 class Arena;
-class Client;
 class Pathfinding;
+class Client;
 
 #include "State.hpp"
 
 class InGameState : public State{
     private:
+        InGameState(Game* p_game, bool p_onlineMode = false);
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
-        UIManager*      m_UIManager;
+        HUDManager*     m_HUDManager;
         SoundManager*   m_soundManager;
         PhysicsManager* m_physicsManager;
-        AICharacter**   m_AIPlayers;
         Arena*          m_arena;
-        Client*         m_client;
         Pathfinding*    m_pathfinding;
+        Client*         m_client;
 
         bool            m_onlineMode;
-        bool            m_waitRelease;
-        bool            m_AIactivate;
+        float           m_scale;
+
+        double  m_time;
+        int     m_FPS;
+
+        bool    m_changeState;
+
     public:
-        InGameState(Game* p_game, bool p_onlineMode = false);
+        static InGameState& instance();
         ~InGameState();
+        void    initState(Game* p_game);
         void    input();
         void    update();
         void    render();
         void    nextState();
-        void    readFileMapCgm(const char* p_fileCgm);
+        void    createArena(const char* p_fileCgm);
+
+        void    calculateFPS(double t_time);
+
 };
 
 #endif
