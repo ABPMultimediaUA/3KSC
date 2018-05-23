@@ -20,6 +20,7 @@
 
 #include "../include/menu_screens/MapScreen.hpp"
 #include "../include/managers/EngineManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 #include "../include/Game.hpp"
 
 //Instance initialization
@@ -67,11 +68,10 @@ void MapScreen::update(){
 
 /* ****************************** ACTIONS ****************************** */
 void MapScreen::select(){
-    save();
+    this->save();
 }
 
 void MapScreen::save(){
     m_game->setMap(getSelectedIndex());
-    //m_engineManager->cleanScene();        
     m_game->nextState();
 }

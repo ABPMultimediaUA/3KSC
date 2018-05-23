@@ -39,7 +39,8 @@ enum class SoundID{
     S_PLUP,
     S_RAWR,
     S_SPARKY,
-    S_FOSFOS_STADIUM
+    S_FOSFOS_STADIUM,
+    S_MENU
 };
 
 struct Vector3 {
@@ -74,12 +75,7 @@ public:
     void    stopAll();
 
     void    setMusicVolume(float p_volume);
-    void    increaseMusicVolume();
-    void    decreaseMusicVolume();
-
     void    setEffectVolume(float p_volume);
-    void    increaseEffectVolume();
-    void    decreaseEffectVolume();
 
 private:
     InputManager*           m_inputManager;

@@ -21,6 +21,7 @@
 #include "../include/menu_screens/MenuScreen.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
+#include "../include/managers/SoundManager.hpp"
 #include "../include/extra/MenuActions.hpp"
 
 #include <iostream>
@@ -47,6 +48,7 @@ MenuScreen::MenuScreen(MenuState* p_menu){
     m_menu              = p_menu;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
+    m_soundManager      = &SoundManager::instance();
 
     m_screenName        = nullptr;
     m_selectedNode      = nullptr;
@@ -358,21 +360,31 @@ void MenuScreen::right(){
     }
 }
 
-void MenuScreen::select(){    
+void MenuScreen::select(){
+    m_soundManager->modifyParameter("menu_sounds", 0.9f, "option");
+    m_soundManager->playSound("menu_sounds");
     if (m_selectedNode && m_selectedNode->target != Screen::Undefined){
+        m_soundManager->modifyParameter("menu_sounds", 0.15f, "option");
+        m_soundManager->playSound("menu_sounds");
         m_menu->setScreen(m_selectedNode->target);
     }
 }
 
 void MenuScreen::back(){
+    m_soundManager->modifyParameter("menu_sounds", 0.4f, "option");
+    m_soundManager->playSound("menu_sounds");
     m_menu->setScreen(m_prev);
 }
 
 void MenuScreen::save(){
+    m_soundManager->modifyParameter("menu_sounds", 0.15f, "option");
+    m_soundManager->playSound("menu_sounds");
     m_menu->setScreen(m_next);
 }
 
 void MenuScreen::settings(){
+    m_soundManager->modifyParameter("menu_sounds", 0.65f, "option");
+    m_soundManager->playSound("menu_sounds");
     m_menu->setScreen(m_settings);
 }
 

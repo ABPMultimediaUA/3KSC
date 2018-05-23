@@ -31,7 +31,8 @@ const char* m_dataBank[] = {
     "assets/fmod/Build/Desktop/Plup.bank",
     "assets/fmod/Build/Desktop/Rawr.bank",
     "assets/fmod/Build/Desktop/Sparky.bank",
-    "assets/fmod/Build/Desktop/FosFosStadium.bank"
+    "assets/fmod/Build/Desktop/FosFosStadium.bank",
+    "assets/fmod/Build/Desktop/Menu.bank"
 };
 
 //Returns the only instance of this class
@@ -64,7 +65,7 @@ SoundManager::SoundManager(){
     loadBanks();
 
     m_musicVolume   = 0.25f;
-    m_effectVolume  = 0.5f;
+    m_effectVolume  = 0.50f;
     m_soundMute     = false;
     m_soundEffectPlaying = false;
 }
@@ -73,21 +74,6 @@ SoundManager::SoundManager(){
 SoundManager::~SoundManager(){}
 
 void SoundManager::update(){
-    if(m_inputManager->isKeyPressed(Key::P))
-        pauseAll();
-    else if(m_inputManager->isKeyPressed(Key::O))
-        unPauseAll();
-
-    if(m_inputManager->isKeyPressed(Key::Numpad9))
-        increaseMusicVolume();
-    else if(m_inputManager->isKeyPressed(Key::Numpad7))
-        decreaseMusicVolume();
-
-    if(m_inputManager->isKeyPressed(Key::Numpad3))
-        increaseEffectVolume();
-    else if(m_inputManager->isKeyPressed(Key::Numpad1))
-        decreaseEffectVolume();
-
     ERRCHECK(m_system->update());
 }
 
@@ -158,12 +144,18 @@ void SoundManager::loadEvents(SoundID p_bank){
             createSoundEvent("event:/characters/sparky/taunt"   , "s_taunt"       );
             createSoundEvent("event:/characters/sparky/ultimate", "s_ultimate"    );
             createSoundEvent("event:/characters/sparky/atak"    , "s_atak"        );
-
             break;
 
         case SoundID::S_FOSFOS_STADIUM:
-            createSoundEvent("event:/music/fosfosStadium"    , "fos_music"    , false);
-            createSoundEvent("event:/music/fosfosAmbient"    , "fos_ambient"         );
+            std::cout << "HELOO" << std::endl;
+            createSoundEvent("event:/music/FosFosStadium/fosfosStadium", "fos_music"    , false);
+            createSoundEvent("event:/music/FosFosStadium/fosfosAmbient", "fos_ambient"         );
+            break;
+
+        case SoundID::S_MENU:
+            createSoundEvent("event:/music/Credits/creditos"    , "credits"       , false);
+            createSoundEvent("event:/music/Menu/menu"           , "menu_music"    , false);
+            createSoundEvent("event:/music/Menu/sounds"         , "menu_sounds"          );
             break;
     }
 }
@@ -182,9 +174,6 @@ void SoundManager::createSoundEvent(const char* eventPath, const char* name, boo
 }
 
 void SoundManager::playSound(const char* name){
-    if(strcmp(name+2, "ultimate") == 0)
-        stopAll();
-
     for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
         if(strcmp(m_iterator->first, name) == 0){
             m_iterator->second->setVolume(m_effectVolume);
@@ -290,8 +279,6 @@ void SoundManager::modifyParameter(const char* name, float num, const char* para
             }
         }
     }
-
-    //m_musicEvents.at(name)->modifyParameter(num, parameter);
 }
 
 void SoundManager::updateSounds(){
@@ -313,43 +300,11 @@ void SoundManager::setMusicVolume(float p_volume){
     updateSounds();
 }
 
-void SoundManager::increaseMusicVolume(){
-    m_musicVolume += 0.05f;
-    if(m_musicVolume > 1)
-        m_musicVolume = 1;
-
-    updateSounds();
-}
-
-void SoundManager::decreaseMusicVolume(){
-    m_musicVolume -= 0.05f;
-    if(m_musicVolume < 0)
-        m_musicVolume = 0;
-
-    updateSounds();
-}
-
 void SoundManager::setEffectVolume(float p_volume){
     m_effectVolume = p_volume;
     if(m_effectVolume > 1)
         m_effectVolume = 1;
     else if(m_effectVolume < 0)
-        m_effectVolume = 0;
-
-    updateSounds();
-}
-
-void SoundManager::increaseEffectVolume(){
-    m_effectVolume += 0.05f;
-    if(m_effectVolume > 1)
-        m_effectVolume = 1;
-
-    updateSounds();
-}
-
-void SoundManager::decreaseEffectVolume(){
-    m_effectVolume -= 0.05f;
-    if(m_effectVolume < 0)
         m_effectVolume = 0;
 
     updateSounds();

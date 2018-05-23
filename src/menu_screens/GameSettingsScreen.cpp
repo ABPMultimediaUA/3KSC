@@ -50,17 +50,17 @@ GameSettingsScreen::~GameSettingsScreen(){
 
 //Initializes settings
 void GameSettingsScreen::init(){
-    m_volumes[0] = 20;
-    m_volumes[1] = 20;
-    m_volumes[2] = 20;
+    m_volumes[0] = 10;
+    m_volumes[1] = 10;
+    m_volumes[2] = 10;
 
-    m_sprites[3]->setTexture(20);
-    m_sprites[4]->setTexture(20);
-    m_sprites[5]->setTexture(20);
+    m_sprites[3]->setTexture(10);
+    m_sprites[4]->setTexture(10);
+    m_sprites[5]->setTexture(10);
 
-    m_game->setVolume(0, 20);
-    m_game->setVolume(1, 20);
-    m_game->setVolume(2, 20);
+    m_game->setVolume(0, 10);
+    m_game->setVolume(1, 10);
+    m_game->setVolume(2, 10);
 }
 
 void GameSettingsScreen::update(){
@@ -84,7 +84,7 @@ void GameSettingsScreen::left(){
     if (m_volumes[t_index] > 0){
         int t_volume = --m_volumes[t_index];
         m_sprites[t_index + 3]->setTexture(t_volume);
-        m_game->setVolume(t_index, t_volume);
+        m_game->setVolume(t_index, t_volume*0.05);
     }
 }
 
@@ -94,7 +94,7 @@ void GameSettingsScreen::right(){
     if (m_volumes[t_index] < 20){
         int t_volume = ++m_volumes[t_index]; 
         m_sprites[t_index + 3]->setTexture(t_volume);
-        m_game->setVolume(t_index, t_volume);
+        m_game->setVolume(t_index, t_volume*0.05);
     }
 }
 

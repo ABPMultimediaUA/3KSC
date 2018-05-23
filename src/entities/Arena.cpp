@@ -82,13 +82,9 @@ Arena::~Arena(){
         delete m_portal;
         m_portal = nullptr;
     }
-
-    std::cout << "TERMINADO DELETE ARENA" << std::endl;
 }
 
 void Arena::cleanArena(){
-    std::cout << "Clean Arena" << std::endl; 
-
     for(int i = 0; i < m_playerCount; i++){
         delete m_players[i];
         m_players[i] = nullptr;
