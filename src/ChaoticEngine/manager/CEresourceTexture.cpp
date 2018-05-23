@@ -9,10 +9,6 @@ CEResourceTexture::CEResourceTexture() : CEResource(){}
 //Destructor
 CEResourceTexture::~CEResourceTexture(){}
 
-//Gran parte de la implementacion de esta clase esta basada en el tutorial LearningOpenGL
-//En este caso se ha externalizado algunos metodos empleados en el tutorial
-//url: https://learnopengl.com/Model-Loading/Model
-
 bool CEResourceTexture::loadFile(const char* p_name){
 
     return(textureFromFile(p_name));
@@ -21,10 +17,7 @@ bool CEResourceTexture::loadFile(const char* p_name){
 void CEResourceTexture::draw(GLuint p_shaderProgram){
 }
 
-//Para la carga de texturas desde fichero se emplea una libreria externa llamada stbi_image
-//url: https://github.com/nothings/stb/blob/master/stb_image.h
 
-//Este metodo intenta cargar la textura desde la ruta dada
 bool CEResourceTexture::textureFromFile(const char * p_path){
 
     std::string t_filename = p_path;
@@ -41,7 +34,6 @@ bool CEResourceTexture::textureFromFile(const char * p_path){
     return false;
 }
 
-//Se rellenas los buffers de OpenGL comprobando cuantos componentes tiene la textura a tratar
 void CEResourceTexture::glBuffersTexture(){
     if(m_textureData){
         GLenum format;

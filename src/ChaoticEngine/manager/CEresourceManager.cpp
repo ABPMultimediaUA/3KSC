@@ -21,7 +21,6 @@ CEResourceManager::CEResourceManager(){}
 CEResourceManager::~CEResourceManager(){}
 
 CEResource& CEResourceManager::getResource(const char* p_name){
-	//Creamos un recurso vacio y comprobamos si ya tenemos guardado algun recurso con esa ruta
 	CEResource* t_resource = NULL;
 	std::string t_path = p_name;
 	for(size_t i = 0; i < m_resources.size(); i++){
@@ -30,9 +29,9 @@ CEResource& CEResourceManager::getResource(const char* p_name){
 			return *t_resource;
 		}
 	}
-	//Si no lo hemos encontrado entonces lo leemos desde disco
+	//Resource not found, we wanna load it from disk
 	if(t_resource == NULL){
-		//comprobamos el formato del recurso
+		//check the format of the resource
 		t_resource = &checkFormat(p_name);
 		if(t_resource->loadFile(p_name)){
 			t_resource->setName(p_name);
@@ -42,8 +41,6 @@ CEResource& CEResourceManager::getResource(const char* p_name){
 	return *t_resource;
 }
 
-//Este metodo sustrae el formato de la ruta que le pasan por parametro y lo compara con un vector en el que
-//hay guardados varios tipos de formatos
 CEResource& CEResourceManager::checkFormat(const char* p_name){
 	
 	std::string t_path   = p_name;
@@ -54,7 +51,6 @@ CEResource& CEResourceManager::checkFormat(const char* p_name){
 	
 	//Remember even = format, odd = type
 	size_t i = 0;
-	//Una vez que encuentra en formato apropiado crea un recurso de ese tipo y lo devuelve
 	while (i < m_types.size() && t_resourceObject == NULL) {
 		if (!m_types[i].compare(t_format)) {
 			if (!m_types[i + 1].compare("mesh")) { //file contains a mesh			
@@ -73,7 +69,6 @@ CEResource& CEResourceManager::checkFormat(const char* p_name){
 	return *t_resourceObject;
 }
 
-//Borramos todos los recursos almacenados en el gestor
 void CEResourceManager::deleteResources(){
 	showResources();
 	for(int i = 0; i < m_resources.size(); i++){

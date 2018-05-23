@@ -4,8 +4,6 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneAnimation.hpp"
 
-//Fachada para crear Animaciones y aplicarle las transformaciones correspondientes
-
 CESceneAnimation::CESceneAnimation(CESceneNode* p_parent, const char* p_path, GLuint p_shaderProgram, bool p_loop){
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();

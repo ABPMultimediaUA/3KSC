@@ -5,9 +5,6 @@
 #include "../include/ChaoticEngine/CEskybox.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
-//Gran parte de la implementacion de esta clase esta basada en el tutorial LearningOpenGL
-//url: https://learnopengl.com/Advanced-OpenGL/Cubemaps
-
 CESkybox::CESkybox(float p_scale, GLuint p_shaderProgram): CEEntity(){
     float x = p_scale;
     float skyboxVertices[] = {
