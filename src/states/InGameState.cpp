@@ -54,7 +54,7 @@ InGameState& InGameState::instance(){
 InGameState::InGameState(Game* p_game, bool p_onlineMode){
     //Online stuff
     m_instance = this;
-    m_onlineMode = false;
+    m_onlineMode = true;
 }
 
 //Destructor

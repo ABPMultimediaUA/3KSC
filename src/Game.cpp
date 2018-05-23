@@ -65,8 +65,8 @@ Game::Game(){
     m_map               = 0;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
-    m_state = &MenuState::instance();
-    //m_state = &InGameState::instance();
+    //m_state = &MenuState::instance();
+    m_state = &InGameState::instance();
 }
 
 //Destructor

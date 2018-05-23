@@ -192,13 +192,13 @@ unsigned char GetPacketIdentifier(RakNet::Packet *p)
 void Client::readMessage(std::string p_message){
 	std::vector<std::string> t_parsed{explode(p_message, ':')};
 	if(t_parsed[0] == "new"){
-		m_yourPlayer = 0;
-		m_yourPlayerString = "0";
-		m_game->setChosenPlayer(m_yourPlayer, m_character);
-		m_arena->spawnPlayerOnline(true, m_yourPlayer);
+		// m_yourPlayer = 0;
+		// m_yourPlayerString = "0";
+		// m_game->setChosenPlayer(m_yourPlayer, m_character);
+		// m_arena->spawnPlayerOnline(true, m_yourPlayer);
 
 		if(m_debug) std::cout<<"Bienvenido, "<<t_parsed[1]<<" jugadores en la partida"<<std::endl;
-		m_inputManager->setOnlineControl(m_yourPlayer);
+
 	}
 	if(t_parsed[0] == "second"){
 		std::string t_toSend 	= "joined:" + std::to_string(m_character);
@@ -212,10 +212,8 @@ void Client::readMessage(std::string p_message){
 		m_arena->spawnPlayerOnline(true, m_yourPlayer);
 		m_inputManager->setOnlineControl(m_yourPlayer);
 	}
-	else if(t_parsed[0] == "player")
-	{
-		if(m_flag)
-		{
+	else if(t_parsed[0] == "player")	{
+		if(m_flag){
 			std::string t_toSend 	= "second:" + std::to_string(m_character);
 			char const *t_toSendChar = t_toSend.c_str();
 			send(t_toSendChar);
@@ -223,8 +221,12 @@ void Client::readMessage(std::string p_message){
 		}
 	}
 	else if(t_parsed[0] == "joined"){
-			m_game->setChosenPlayer(1, std::stoi(t_parsed[1]));
-			m_arena->spawnPlayerOnline(true, 1);
+		std::cout<<"NANI? "<<std::stoi(t_parsed[1])<<std::endl;
+		m_game->setChosenPlayer(0, m_character);
+		m_game->setChosenPlayer(1, std::stoi(t_parsed[1]));
+		m_arena->spawnPlayer(true);
+		m_arena->spawnPlayerOnline(true, 1);
+		m_inputManager->setOnlineControl(m_yourPlayer);
 	}
 	else if(t_parsed[0] == "item"){
 		Arena::getInstance()->spawnItemAt(std::stof(t_parsed[1]), std::stof(t_parsed[2]), std::stof(t_parsed[3]));
