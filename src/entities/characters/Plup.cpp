@@ -25,6 +25,7 @@
 #include "../../include/entities/Snowman.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
+#include "../../include/Game.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/managers/SoundManager.hpp"
@@ -42,7 +43,7 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Chara
 
     m_turretDuration    = 15.0f;
     m_turretTime        = 0.0f;
-    m_atakOffset        = 0.5f;
+    m_atakOffset        = 0.6f - (0.1f * (m_game->getDifficulty() - 1));
     m_atakTime          = 0.0f;
     m_ultimateDuration  = 3.0f;
     m_ultimateTime      = 0.0f;

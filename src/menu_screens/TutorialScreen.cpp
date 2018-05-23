@@ -19,7 +19,6 @@
 */
 
 #include "../include/menu_screens/TutorialScreen.hpp"
-#include <iostream>
 
 //Instance initialization
 TutorialScreen* TutorialScreen::m_instance = nullptr;
@@ -42,9 +41,7 @@ TutorialScreen::TutorialScreen(MenuState* p_menu)
 }
 
 //Destructor
-TutorialScreen::~TutorialScreen(){
-    std::cout << "~TutorialScreen" << std::endl;
-}
+TutorialScreen::~TutorialScreen(){}
 
 //Hides all elements except the selected one
 void TutorialScreen::hideUnselected(){

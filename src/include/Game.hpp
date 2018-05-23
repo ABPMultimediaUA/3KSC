@@ -80,8 +80,8 @@ class Game{
         bool        isNPC(int p_player)             { return m_NPC[p_player]; }
         int         getChosenPlayer(int p_player)   { return m_chosenPlayers[p_player]; }
 
-        int         getRounds()                     { return m_battleSettings[0];   }
         int         getLives()                      { return m_battleSettings[0];   }
+        int         getDifficulty()                 { return m_battleSettings[1];   }
 
         int         getMap()                        { return m_map;                 }
         
