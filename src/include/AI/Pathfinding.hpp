@@ -41,7 +41,6 @@ class Pathfinding{
         void      init(std::vector<Waypoint*> p_waypoints);
         b2Vec2    findPath(b2Vec2 p_p1, b2Vec2 p_p2, Waypoint* p_lastWaypoint);
         b2Vec2    getClosestWaypoint(b2Vec2 p_position, bool p_direction);
-        void      testWaypoints();
         void      addWaypoint(float p_wayData[3]);
         void      connectWaypoints(float p_id1, float p_id2);
 };

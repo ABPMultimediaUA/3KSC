@@ -26,7 +26,6 @@
 #include "../include/managers/PhysicsManager.hpp"
 #include <cstring> //For std::memcpy()
 #include <cmath> //For std::sqrt()
-//#include <iostream>
 
 //Static members
 const char* Projectile::m_modelURLs[3] = {

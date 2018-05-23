@@ -24,7 +24,6 @@
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/HUDManager.hpp"
 #include "../../include/entities/Arena.hpp"
-#include <iostream>
 
 //Constructor
 Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/items/portal_000004.obj", 3){
@@ -39,13 +38,9 @@ Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/it
 }
 
 //Destructor
-Portal::~Portal(){
-    std::cout << "~Portal" << std::endl;
-
-}
+Portal::~Portal(){}
 
 void Portal::onEnter(Character* p_character){
-    //std::cout<< "ENTER PORTAL" <<std::endl;
     m_charactersInPortal++;
     m_players[p_character->getIndex()] = p_character;
     m_using = true;
@@ -53,7 +48,6 @@ void Portal::onEnter(Character* p_character){
 
 
 void Portal::onLeave(Character* p_character){
-    //std::cout<< "LEAVE PORTAL" <<std::endl;
     m_players[p_character->getIndex()] = NULL;
     m_charactersInPortal--;
     m_using = false;
@@ -80,7 +74,6 @@ void Portal::use(){
             break;
         }
     }
-    std::cout << m_players[i]->getIndex() <<" filled ultimate bar." << std::endl;
 
     m_arena->hidePortal();
     m_using             = false;

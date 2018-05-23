@@ -22,7 +22,6 @@
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/AI/Waypoint.hpp"
-#include <iostream>
 
 //Returns the only instance of this class
 Pathfinding& Pathfinding::instance(){
@@ -162,17 +161,4 @@ void Pathfinding::addWaypoint(float p_wayData[3]){
 
 void Pathfinding::connectWaypoints(float p_id1, float p_id2){
     m_waypoints.at(p_id1)->connect(m_waypoints.at(p_id2));
-}
-
-// Tests if waypoints system works properly (Spoiler: yes it does! Super Pluuuuup!)
-void Pathfinding::testWaypoints(){
-
-    // Check connections and positions (in console)
-    for(int i=0; i<m_waypoints.size(); i++){
-        std::cout<<"Waypoint "<<i<<" is in position "<<m_waypoints.at(i)->m_position[0]<<","<<m_waypoints.at(i)->m_position[1]<<" and is connected to waypoints ";
-        for(int j=0; j<m_waypoints.at(i)->m_connected_waypoints.size(); j++){
-            std::cout<<m_waypoints.at(i)->m_connected_waypoints.at(j)->m_id<<" ";
-        }
-        std::cout<<std::endl;
-    }
 }

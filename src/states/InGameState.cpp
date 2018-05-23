@@ -35,8 +35,6 @@
 #include "../include/extra/Inputs.hpp"
 #include "../include/extra/Screens.hpp"
 
-
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -61,8 +59,6 @@ InGameState::InGameState(Game* p_game, bool p_onlineMode){
 
 //Destructor
 InGameState::~InGameState(){
-    std::cout << "~InGameState" << std::endl;
-    
     delete m_arena;
     m_arena = nullptr;
 }

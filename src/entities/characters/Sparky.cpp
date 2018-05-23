@@ -30,8 +30,6 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/HUDManager.hpp"
 
-#include <iostream>
-
 Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 450, 70, 90.f, "assets/models/characters/sparky/sparky.obj", p_online, p_NPC){
     m_type               = 4;
     
@@ -71,10 +69,7 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : C
 
 }
 
-Sparky::~Sparky(){
-    std::cout << "~Sparky" << std::endl;
-
-}
+Sparky::~Sparky(){}
 
 bool Sparky::jump(){
     return Character::jump();

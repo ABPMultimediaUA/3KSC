@@ -27,7 +27,6 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/entities/characters/Character.hpp"
-#include <iostream>
 #include <fstream>
 
 AIPlup::AIPlup(Character* p_player)

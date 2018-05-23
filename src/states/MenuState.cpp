@@ -39,7 +39,6 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/SoundManager.hpp"
 
-#include <iostream>
 #include <string>
 
 //Struct containing menu actions and its properties
@@ -86,8 +85,6 @@ MenuState::MenuState(Game* p_game){
 
 //Destructor
 MenuState::~MenuState(){
-    std::cout << "~MenuState" << std::endl;
-
     for (MenuScreen* t_screen : m_screens){ 
         delete t_screen;  
     }

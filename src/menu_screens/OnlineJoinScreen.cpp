@@ -39,9 +39,7 @@ OnlineJoinScreen::OnlineJoinScreen(MenuState* p_menu)
 }
 
 //Destructor
-OnlineJoinScreen::~OnlineJoinScreen(){
-    std::cout << "~OnlineJoinScreen" << std::endl;
-}
+OnlineJoinScreen::~OnlineJoinScreen(){}
 
 
 

@@ -19,7 +19,6 @@
 */
 
 #include "../include/managers/ContactManager.hpp"
-#include <iostream>
 #include "../include/entities/characters/Character.hpp"
 #include "../include/entities/items/Portal.hpp"
 

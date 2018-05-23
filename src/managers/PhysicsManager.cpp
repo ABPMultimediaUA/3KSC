@@ -21,8 +21,6 @@
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/EngineManager.hpp"
 #include "../include/entities/Arena.hpp"
-#include "../include/debug.hpp"
-#include <iostream>
 
 EngineManager* PhysicsManager::m_engineManager = 0;
 

@@ -24,7 +24,6 @@
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
 #include "../../include/entities/Arena.hpp"
-#include <iostream>
 
 //Constructor
 Item::Item(float p_position[3], const char* p_modelURL) : Entity(p_position, 0.5f, p_modelURL, 2){

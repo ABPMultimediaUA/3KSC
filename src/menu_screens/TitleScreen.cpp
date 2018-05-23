@@ -43,9 +43,7 @@ TitleScreen::TitleScreen(MenuState* p_menu)
 }
 
 //Destructor
-TitleScreen::~TitleScreen(){
-    std::cout << "~TitleScreen" << std::endl;
-}
+TitleScreen::~TitleScreen(){}
 
 
 

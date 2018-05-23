@@ -39,9 +39,7 @@ OnlineCreateScreen::OnlineCreateScreen(MenuState* p_menu)
 }
 
 //Destructor
-OnlineCreateScreen::~OnlineCreateScreen(){
-    std::cout << "~OnlineCreateScreen" << std::endl;   
-}
+OnlineCreateScreen::~OnlineCreateScreen(){}
 
 
 

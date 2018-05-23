@@ -23,7 +23,6 @@
 #include "../include/managers/EngineManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/extra/ResolutionPresets.hpp"
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>

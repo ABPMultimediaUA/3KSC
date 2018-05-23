@@ -45,9 +45,7 @@ MapScreen::MapScreen(MenuState* p_menu)
 }
 
 //Destructor
-MapScreen::~MapScreen(){
-    std::cout << "~MapScreen" << std::endl;
-}
+MapScreen::~MapScreen(){}
 
 void MapScreen::update(){
     MenuScreen::update();
