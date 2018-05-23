@@ -62,6 +62,8 @@ Game::Game(){
     m_battleSettings[1] = 3;
 
     m_map               = 0;
+
+    m_winner            = 0;
     
     m_engineManager->createWindow(m_resolutionPreset, false);
     m_state = &MenuState::instance();

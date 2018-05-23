@@ -57,6 +57,8 @@ class Game{
         //Map
         int             m_map;
 
+        int             m_winner;
+
     public:
         Game();
         ~Game();
@@ -85,6 +87,8 @@ class Game{
 
         int         getMap()                        { return m_map;                 }
         
+        int         getWinner()                     { return m_winner;              }
+        
         //Setters
         void        setResolutionPreset(int p_preset);
         void        changeVideoMode();
@@ -97,6 +101,8 @@ class Game{
         void        setBattleSettings(int p_type, int p_value)      { m_battleSettings[p_type] = p_value;       }
 
         void        setMap(int p_map)                               { m_map = p_map;                            }
+        
+        void        setWinner(int p_winner)                         { m_winner = p_winner;                      }
 };
 
 #endif

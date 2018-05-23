@@ -25,7 +25,6 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/ChaoticEngine/fachada/CESceneSprite.hpp"
 #include <string> //For std::to_string()
-#include <iostream>
 
 /* ****************************** PLAYER HUD ****************************** */
 //Destructor
@@ -66,6 +65,7 @@ HUDManager::HUDManager(){
     initializePlayer(0);
     initializePlayer(1);
     initializeUB();
+    initializeWinnerMessage();
 }
 
 //Destructor
@@ -189,10 +189,16 @@ void HUDManager::initializeUB(){
     m_ultimateFG->setAbsoluteScale(0, 1, 1);
 }
 
+//Initializes the winner message
+void HUDManager::initializeWinnerMessage(){
+    m_winnerMsg = m_engineManager->createHUD("assets/UI/HUD/EndGame/J1.png", 530, 300);
+    m_winnerMsg->addTexture("assets/UI/HUD/EndGame/J2.png");
+    m_winnerMsg->setVisible(false);
+}
+
 // Changes the HP of a player in the screen
 // Changes the color of the HP bar and the face of the character
 void HUDManager::setHP(int p_player, int p_HP, int p_maxHP){
-
     //High HP
     if (p_HP >= (p_maxHP / 3)){
         m_playerHUDs[p_player]->hp->setTexture(0);
@@ -256,6 +262,11 @@ void HUDManager::setWings(int p_player, bool p_active){
     m_playerHUDs[p_player]->wings->setTexture((int) p_active);
 }
 
+//Shows the match winner (called in EndGameState)
+void HUDManager::showWinnerMessage(){
+    m_winnerMsg->setTexture(m_game->getWinner());
+    m_winnerMsg->setVisible(true);
+}
 
 //Updates the UI
 void HUDManager::update(){
