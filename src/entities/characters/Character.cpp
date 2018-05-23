@@ -250,7 +250,7 @@ void Character::removeWings(){
 
 //Decreases number of lives
 void Character::die(){
-    m_lives--;
+    //m_lives--;
     
     //HUD Stuff
     m_HUDManager->setLives(m_playerIndex, m_lives);
