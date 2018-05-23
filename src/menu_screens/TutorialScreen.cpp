@@ -18,38 +18,36 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#include "../include/menu_screens/MainScreen.hpp"
-#include "../include/Game.hpp"
+#include "../include/menu_screens/TutorialScreen.hpp"
 #include <iostream>
 
 //Instance initialization
-MainScreen* MainScreen::m_instance = nullptr;
+TutorialScreen* TutorialScreen::m_instance = nullptr;
 
 //Returns the only instance of this class
-MainScreen* MainScreen::instance(){
+TutorialScreen* TutorialScreen::instance(){
     if (!m_instance){
-        m_instance = new MainScreen(MenuState::getInstance());
+        m_instance = new TutorialScreen(MenuState::getInstance());
     }
 
     return m_instance;
 }
 
 //Constructor
-MainScreen::MainScreen(MenuState* p_menu)
+TutorialScreen::TutorialScreen(MenuState* p_menu)
     : MenuScreen(p_menu){
-    m_game = Game::getInstance();
-    createFromFile("assets/UI/menu_screens/Main.cgs");
+    createFromFile("assets/UI/menu_screens/Tutorial.cgs");
 
     hideUnselected();
 }
 
 //Destructor
-MainScreen::~MainScreen(){
-    std::cout << "~MainScreen" << std::endl;
+TutorialScreen::~TutorialScreen(){
+    std::cout << "~TutorialScreen" << std::endl;
 }
 
 //Hides all elements except the selected one
-void MainScreen::hideUnselected(){
+void TutorialScreen::hideUnselected(){
     for (CESceneSprite* t_sprite : m_sprites){
         t_sprite->setVisible(t_sprite == m_selectedNode->element);
     }
@@ -61,27 +59,16 @@ void MainScreen::hideUnselected(){
 
 
 /* ****************************** ACTIONS ****************************** */
-void MainScreen::left(){    
+void TutorialScreen::left(){    
     if (m_selectedNode && m_selectedNode->left){
         m_selectedNode = m_selectedNode->left;
         hideUnselected();
     }
 }
 
-void MainScreen::right(){    
+void TutorialScreen::right(){    
     if (m_selectedNode && m_selectedNode->right){
         m_selectedNode = m_selectedNode->right;
         hideUnselected();
-    }
-}
-
-void MainScreen::select(){
-    //Quit    
-    if (m_selectedNode == m_nodes[2]){
-        m_game->quit();
-    }
-
-    else{
-        MenuScreen::select();
     }
 }

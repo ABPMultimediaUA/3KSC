@@ -34,6 +34,7 @@
 #include "../include/menu_screens/OnlineCreateScreen.hpp"
 #include "../include/menu_screens/OnlineJoinScreen.hpp"
 #include "../include/menu_screens/GameSettingsScreen.hpp"
+#include "../include/menu_screens/TutorialScreen.hpp"
 
 #include "../include/extra/MenuActions.hpp"
 #include "../include/managers/EngineManager.hpp"
@@ -139,6 +140,7 @@ void MenuState::initializeScreens(){
     // m_screens.push_back(OnlineCreateScreen::instance());
     // m_screens.push_back(OnlineJoinScreen::instance());
     m_screens.push_back(GameSettingsScreen::instance());
+    m_screens.push_back(TutorialScreen::instance());
 
     for (MenuScreen* t_screen : m_screens){
         t_screen->hideElements();
@@ -183,7 +185,8 @@ void MenuState::mapScreens(){
     // m_screenMaps[7]     = { "OnlineCreate"      , Screen::OnlineCreate      };
     // m_screenMaps[8]     = { "OnlineJoin"        , Screen::OnlineJoin        };
     m_screenMaps[5]     = { "GameSettings"      , Screen::GameSettings      };
-    m_screenMaps[6]     = { ""                  , Screen::Undefined         };
+    m_screenMaps[6]     = { "Tutorial"          , Screen::Tutorial          };
+    m_screenMaps[7]     = { ""                  , Screen::Undefined         };
 }
 
 void MenuState::input(){

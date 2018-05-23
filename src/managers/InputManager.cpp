@@ -382,26 +382,26 @@ void InputManager::playerInputJoystick(int p_player){
 void InputManager::playerInputKeyboard(int p_player){
     if(!m_engineManager->isWindowActive()) return;
 
-    bool t_up       = isKeyPressed(Key::W) || isKeyPressed(Key::Up);
-    bool t_down     = isKeyPressed(Key::S) || isKeyPressed(Key::Down);
-    bool t_left     = isKeyPressed(Key::A) || isKeyPressed(Key::Left);
-    bool t_right    = isKeyPressed(Key::D) || isKeyPressed(Key::Right);
-    bool t_special  = isKeyPressed(Key::X);
+    bool t_up       = isKeyPressed(Key::Up);
+    bool t_down     = isKeyPressed(Key::Down);
+    bool t_left     = isKeyPressed(Key::Left);
+    bool t_right    = isKeyPressed(Key::Right);
+    bool t_special  = isKeyPressed(Key::S);
 
     m_playerActions[p_player][(int) Action::Left]   = t_left;
     m_playerActions[p_player][(int) Action::Right]  = t_right;
 
     m_playerActions[p_player][(int) Action::Jump]   = isKeyPressed(Key::Space);
-    m_playerActions[p_player][(int) Action::Block]  = isKeyPressed(Key::B);
-    m_playerActions[p_player][(int) Action::Pick]   = isKeyPressed(Key::Q);      
+    m_playerActions[p_player][(int) Action::Block]  = isKeyPressed(Key::E);
+    m_playerActions[p_player][(int) Action::Pick]   = isKeyPressed(Key::D);      
 
-    m_playerActions[p_player][(int) Action::BasicAttack]        = isKeyPressed(Key::E);
+    m_playerActions[p_player][(int) Action::BasicAttack]        = isKeyPressed(Key::A);
     m_playerActions[p_player][(int) Action::SpecialAttackUp]    = t_special && t_up;
     m_playerActions[p_player][(int) Action::SpecialAttackDown]  = t_special && t_down;
     m_playerActions[p_player][(int) Action::SpecialAttackSide]  = t_special && (t_left || t_right);
-    m_playerActions[p_player][(int) Action::UltimateAttack]     = isKeyPressed(Key::Z);
+    m_playerActions[p_player][(int) Action::UltimateAttack]     = isKeyPressed(Key::W);
 
-    m_playerActions[p_player][(int) Action::Taunt]              = isKeyPressed(Key::T);
+    m_playerActions[p_player][(int) Action::Taunt]              = isKeyPressed(Key::R);
     m_playerActions[p_player][(int) Action::Leave]              = isKeyPressed(Key::Escape);
     m_playerActions[p_player][(int) Action::ToggleAI]           = isKeyPressed(Key::O);
 }

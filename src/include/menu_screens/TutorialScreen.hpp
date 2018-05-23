@@ -1,6 +1,6 @@
 /*
     3KSC: A fighting game
-    Copyright (C) 2018  Chaotic Games
+    Copyright (C);
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,24 +18,27 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef SCREENS
-#define SCREENS
+#ifndef TUTORIAL_SCREEN
+#define TUTORIAL_SCREEN
 
-    enum class Screen{
-        Undefined = -1,
-        Title = 0,
-        Main,
-        CharacterLocal,
-        // CharacterOnline,
-        BattleSettings,
-        Map,
-        // OnlineMode,
-        // OnlineCreate,
-        // OnlineJoin,
-        GameSettings,
-        Tutorial,
+class Game;
 
-        Count
-    };
+#include "MenuScreen.hpp"
 
-#endif      
+class TutorialScreen : public MenuScreen{
+    private:
+        TutorialScreen(MenuState* p_menu);
+
+        static TutorialScreen*  m_instance;
+
+        void hideUnselected();
+
+    public:
+        static TutorialScreen* instance();
+        ~TutorialScreen();
+
+        void left()     override;
+        void right()    override;      
+};
+
+#endif
