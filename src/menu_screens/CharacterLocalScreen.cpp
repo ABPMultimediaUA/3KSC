@@ -24,7 +24,6 @@
 #include "../include/managers/SoundManager.hpp"
 #include "../include/Game.hpp"
 
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
 
@@ -54,9 +53,7 @@ CharacterLocalScreen::CharacterLocalScreen(MenuState* p_menu)
 }
 
 //Destructor
-CharacterLocalScreen::~CharacterLocalScreen(){
-    std::cout << "~CharacterLocalScreen" << std::endl;
-}
+CharacterLocalScreen::~CharacterLocalScreen(){}
 
 //Simulates initial character choosing
 void CharacterLocalScreen::init(){

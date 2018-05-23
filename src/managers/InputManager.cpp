@@ -22,7 +22,6 @@
 #include "../include/managers/EngineManager.hpp"
 #include <SFML/Window/Mouse.hpp>
 
-#include <iostream> // to write in console
 #include <cstring> //For std::memcpy()
 
 //Returns the only instance of this class
@@ -53,11 +52,6 @@ InputManager::InputManager(){
     //Devices initialization
     autoassignDevices();
     m_isOnline = false;
-
-    //m_inputDevices[0]   = -2;
-    //m_inputDevices[1]   = -1;
-    //m_inputDevices[2]   = -2;
-    //m_inputDevices[3]   = -2;
 
     //Initialize action booleans
     for (int i = 0; i < 4; i++){
@@ -100,20 +94,15 @@ void InputManager::autoassignDevices(){
     bool t_keyboardAssigned = false;
     updateJoysticks();
 
-    for (int i = 0; i < 4; i++){
-        if(isConnected(i)){
+    for (int i = 0; i < 2; i++){
+        if(isConnected(i))
             m_inputDevices[i] = i;
-            std::cout << "Player " << i+1 << " es mando." << std::endl;
-        }
         else{
             if(!t_keyboardAssigned){
                 m_inputDevices[i] = -1;
                 t_keyboardAssigned = true;
-                std::cout << "Player " << i+1 << " es teclado." << std::endl;
-            }else{
+            }else
                 m_inputDevices[i] = -2;
-                std::cout << "Player " << i+1 << " es IA." << std::endl;
-            }
         }
     }
 }

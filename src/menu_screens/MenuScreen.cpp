@@ -24,7 +24,6 @@
 #include "../include/managers/SoundManager.hpp"
 #include "../include/extra/MenuActions.hpp"
 
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -61,8 +60,6 @@ MenuScreen::MenuScreen(MenuState* p_menu){
 }
 
 MenuScreen::~MenuScreen(){
-    std::cout << "~MenuScreen\n" << std::endl;
-
     m_selectedNode  = nullptr;    
 
     if  (m_screenName)                          { delete m_screenName;  m_screenName = nullptr; }

@@ -33,8 +33,6 @@
 #include "../../include/Game.hpp"
 #include "../../include/states/MenuState.hpp"
 
-#include <iostream>
-
 struct ActionMapping{
     Action  action;                     //Action to map
     bool    (Character::*function)();   //Function for the action
@@ -125,7 +123,6 @@ Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, floa
 }
 
 Character::~Character(){
-    std::cout << "~Character" << std::endl; 
     if(m_AI){
         delete m_AI;
         m_AI = nullptr;
@@ -254,7 +251,6 @@ void Character::removeWings(){
 //Decreases number of lives
 void Character::die(){
     m_lives--;
-    //std::cout << "Me quedan " << m_lives << " vidas." << std::endl;
     
     //HUD Stuff
     m_HUDManager->setLives(m_playerIndex, m_lives);
@@ -388,10 +384,6 @@ void Character::update(){
         die();
 
     checkAlive();
-
-    //std::cout << getX() << ", " << getY() << std::endl;
-    //std::cout << "PHYSIC: "; m_physicsManager->getPosition(m_id);
-    //std::cout << "ENGINE: " << m_engineManager->getEntityPosition(m_id).x << " , " << m_engineManager->getEntityPosition(m_id).y << std::endl;
 }
 
 //Returns the type of the player
@@ -585,7 +577,6 @@ bool Character::leave(){
 
 bool Character::toggleAI(){
     m_AIEnabled = !m_AIEnabled;
-    std::cout << "AI state is now set to " << m_AIEnabled << std::endl;
 
     return false;
 }

@@ -26,7 +26,6 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
-#include <iostream>
 
 //Constructor
 Snowman::Snowman(float p_position[3], int p_owner, float p_damage, float p_knockPower) : Entity(p_position, 0.3f, "assets/models/characters/plup/snowman.obj", 5){
@@ -46,7 +45,6 @@ Snowman::Snowman(float p_position[3], int p_owner, float p_damage, float p_knock
 
 //Destructor
 Snowman::~Snowman(){}
-
 
 //Looks for player and fires after finding
 bool Snowman::lockNLoad(){

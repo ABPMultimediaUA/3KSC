@@ -21,7 +21,6 @@
 #include "../include/menu_screens/MainScreen.hpp"
 #include "../include/Game.hpp"
 #include "../include/managers/EngineManager.hpp"
-#include <iostream>
 
 //Instance initialization
 MainScreen* MainScreen::m_instance = nullptr;
@@ -45,9 +44,7 @@ MainScreen::MainScreen(MenuState* p_menu)
 }
 
 //Destructor
-MainScreen::~MainScreen(){
-    std::cout << "~MainScreen" << std::endl;
-}
+MainScreen::~MainScreen(){}
 
 //Hides all elements except the selected one
 void MainScreen::hideUnselected(){

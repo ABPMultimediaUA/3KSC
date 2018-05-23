@@ -25,7 +25,6 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/ChaoticEngine/fachada/CESceneSprite.hpp"
 #include <string> //For std::to_string()
-#include <iostream>
 
 /* ****************************** PLAYER HUD ****************************** */
 //Destructor

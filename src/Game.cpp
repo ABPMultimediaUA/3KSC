@@ -25,7 +25,6 @@
 #include "include/states/MenuState.hpp"
 #include "include/states/InGameState.hpp"
 
-#include <iostream>
 #include <stdio.h>
 #include <sys/time.h>
 #include <chrono>
@@ -70,17 +69,12 @@ Game::Game(){
 
 //Destructor
 Game::~Game(){
-    std::cout << "~Game" << std::endl;
     Game::m_instance = nullptr;
 }
 
 //Changes to an specified state
 void Game::setState(State* p_state){
-    //std::cout << "Deleting state: " << m_state << std::endl;
-    //delete m_state;
-    //std::cout << "State deleted, setting state: " << p_state << std::endl;
     m_state = p_state;
-    //std::cout << "State set" << std::endl;
 }
 
 //Changes to the next stage
@@ -106,13 +100,10 @@ void Game::run(){
             // std::cout << m_elapsedTotal << "\t\t" << m_nanoFrames << std::endl;
         // }
 
-        // std::cout << "Main loop!"  <<std::endl;
-
         t_now = std::chrono::high_resolution_clock::now();
         m_inputManager->updateMasterClock();
     }
 
-    std::cout << "Stop!"  <<std::endl;
     m_engineManager->stop();
 }
 

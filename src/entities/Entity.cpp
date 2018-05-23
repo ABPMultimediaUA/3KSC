@@ -25,9 +25,7 @@
 #include "../include/managers/PhysicsManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/managers/SoundManager.hpp"
-//#include "../include/debug.hpp"
 #include <cstring> //For std::memcpy()
-#include <iostream>
 
 //Entity count initialization
 int Entity::m_entityCount = 0;
@@ -93,8 +91,6 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
 }
 
 Entity::~Entity(){
-    std::cout << "~Entity" << std::endl;
-
     if(m_debugMode)
         m_engineManager->deleteDebug(m_idDebug);
     

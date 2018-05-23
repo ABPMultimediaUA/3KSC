@@ -21,7 +21,6 @@
 #include "../include/managers/SoundManager.hpp"
 #include "../include/managers/InputManager.hpp"
 #include "../include/extra/Inputs.hpp"
-#include <iostream>
 #include <cstring>
 
 const char* m_dataBank[] = {
@@ -85,7 +84,6 @@ void SoundManager::loadBanks(){
 
 void SoundManager::loadBank(SoundID p_bank){
     ERRCHECK(m_system->loadBankFile(m_dataBank[(int)p_bank], FMOD_STUDIO_LOAD_BANK_NORMAL, &m_musicBank));
-    std::cout << "Banco " << m_dataBank[(int)p_bank] << " leido correctamente." << std::endl;
 }
 
 void SoundManager::loadEvents(SoundID p_bank){
@@ -147,7 +145,6 @@ void SoundManager::loadEvents(SoundID p_bank){
             break;
 
         case SoundID::S_FOSFOS_STADIUM:
-            std::cout << "HELOO" << std::endl;
             createSoundEvent("event:/music/FosFosStadium/fosfosStadium", "fos_music"    , false);
             createSoundEvent("event:/music/FosFosStadium/fosfosAmbient", "fos_ambient"         );
             break;
@@ -250,10 +247,6 @@ void SoundManager::unPauseAll(){
 }
 
 void SoundManager::stopAll(){
-    /*for(m_iterator = m_effectEvents.begin(); m_iterator != m_effectEvents.end(); m_iterator++){
-        if(strcmp(m_iterator->first, "fos_ambient") != 0)
-            m_iterator->second->stop();
-    }*/
     for(m_iterator = m_musicEvents.begin(); m_iterator != m_musicEvents.end(); m_iterator++){
         m_iterator->second->stop();
     }

@@ -28,7 +28,6 @@
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/entities/characters/Character.hpp"
 
-#include <iostream>
 #include <fstream>
 
 AISparky::AISparky(Character* p_player)

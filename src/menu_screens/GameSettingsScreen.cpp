@@ -44,9 +44,7 @@ GameSettingsScreen::GameSettingsScreen(MenuState* p_menu)
 }
 
 //Destructor
-GameSettingsScreen::~GameSettingsScreen(){
-    std::cout << "~GameSettingsScreen" << std::endl;
-} 
+GameSettingsScreen::~GameSettingsScreen(){} 
 
 //Initializes settings
 void GameSettingsScreen::init(){

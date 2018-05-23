@@ -23,7 +23,6 @@
 #include "../../include/entities/items/Wings.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/entities/Arena.hpp"
-#include <iostream>
 
 //Constructor
 Wings::Wings(float p_position[3])
@@ -38,8 +37,6 @@ Wings::~Wings(){}
 //Increases owner's speed
 void Wings::use(){
     m_arena->getPlayer(m_owner)->wings();
-
-    //std::cout << m_arena->getPlayer(m_owner)->getName() <<" got Wings.\n" << m_arena->getPlayer(m_owner)->getName() << "'s speed increased." << std::endl;
 }
 
 //Sets the owner of the item

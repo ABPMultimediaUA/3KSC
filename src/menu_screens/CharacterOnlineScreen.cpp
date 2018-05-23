@@ -20,7 +20,6 @@
 
 #include "../include/menu_screens/CharacterOnlineScreen.hpp"
 #include "../include/Game.hpp"
-#include <iostream>
 
 //Instance initialization
 CharacterOnlineScreen* CharacterOnlineScreen::m_instance = nullptr;
@@ -42,9 +41,7 @@ CharacterOnlineScreen::CharacterOnlineScreen(MenuState* p_menu)
 }
 
 //Destructor
-CharacterOnlineScreen::~CharacterOnlineScreen(){
-    std::cout << "~CharacterOnlineScreen" << std::endl;
-}
+CharacterOnlineScreen::~CharacterOnlineScreen(){}
 
 
 //Handles the user inputs for the screen

@@ -36,7 +36,6 @@ class Arena : public Entity {
 public:
     Arena(float p_position[3], float p_scale, const char* p_modelURL);
     ~Arena();
-    void            cleanArena();
 
     static Arena*   getInstance();
     void            spawnPlayers();
@@ -67,9 +66,6 @@ public:
     void            setItemRange(float p_itemRange[3]) { for(int i = 0; i < 3; i++) m_spawnItemRange[i] = p_itemRange[i]; }
 
     float*          getRespawnPosition();
-
-    void            pleaseKill(int p_playerIndex);
-
 
 private: 
     static Arena*       m_instance;

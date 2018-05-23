@@ -43,9 +43,7 @@ BattleSettingsScreen::BattleSettingsScreen(MenuState* p_menu)
 }
 
 //Destructor
-BattleSettingsScreen::~BattleSettingsScreen(){
-    std::cout << "~BattleSettingsScreen" << std::endl;
-}
+BattleSettingsScreen::~BattleSettingsScreen(){}
 
 //Initializes battle settings
 void BattleSettingsScreen::init(){

@@ -39,9 +39,7 @@ OnlineModeScreen::OnlineModeScreen(MenuState* p_menu)
 }
 
 //Destructor
-OnlineModeScreen::~OnlineModeScreen(){
-    std::cout << "~OnlineModeScreen" << std::endl;
-}
+OnlineModeScreen::~OnlineModeScreen(){}
 
 void OnlineModeScreen::update(){
     MenuScreen::update();

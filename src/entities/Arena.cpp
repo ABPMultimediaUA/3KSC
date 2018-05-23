@@ -34,10 +34,8 @@
 #include "../include/entities/items/LifeTank.hpp"
 #include "../include/entities/items/Shield.hpp"
 #include "../include/entities/items/Wings.hpp"
-#include "../include/entities/items/FOAH.hpp"
 
 #include "Client.hpp"
-#include <iostream>
 
 //Instance initialization
 Arena* Arena::m_instance = 0;
@@ -67,24 +65,6 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
 }
 
 Arena::~Arena(){
-    std::cout << "~Arena" << std::endl; 
-    //cleanArena();
-
-    for(int i = 0; i < m_playerCount; i++){
-        delete m_players[i];
-        m_players[i] = nullptr;
-    }
-
-    delete[] m_players;
-    m_players = nullptr;
-
-    if(m_portal){
-        delete m_portal;
-        m_portal = nullptr;
-    }
-}
-
-void Arena::cleanArena(){
     for(int i = 0; i < m_playerCount; i++){
         delete m_players[i];
         m_players[i] = nullptr;
@@ -108,7 +88,6 @@ void Arena::spawnPlayers(){
     spawnPlayer();
     spawnPlayer();
 
-    std::cout << "PLAYER COUNT " << m_playerCount << std::endl;
     m_soundManager->modifyParameter("fos_music", m_musicIntensity[0], "Intensity", false);
 }
 
@@ -116,12 +95,10 @@ void Arena::spawnPlayers(){
 void Arena::spawnPlayer(bool p_online){
     switch (m_game->getChosenPlayer(m_playerCount)){
         case 0: { 
-            std::cout << " ++ Spawn Plup" << std::endl;
             m_players[m_playerCount] = new Plup("Plup", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));
             break;
         }
         case 1: { 
-            std::cout << " ++ Spawn Sparky" << std::endl;
             m_players[m_playerCount] = new Sparky("Sparky", m_spawnPositions[m_playerCount], p_online, m_game->isNPC(m_playerCount));
             break;
         }
@@ -241,7 +218,6 @@ bool Arena::spawnRandomItem(){
 }
 
 void Arena::spawnPortal(){
-    std::cout<<"portal spawned"<<std::endl;
     float positionPortal[3] = {0, 0.5, 0};
     m_portal = new Portal(positionPortal);
     m_portalSpawned = true;
@@ -313,11 +289,6 @@ void Arena::setOnline(bool p_state){
 
 bool Arena::getOnline(){
     return m_online;
-}
-
-void Arena::pleaseKill(int p_playerIndex){
-    //delete m_players[p_playerIndex];
-    //m_players[p_playerIndex] = 0;
 }
 
 bool Arena::portalIsActive(){

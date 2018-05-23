@@ -30,7 +30,6 @@
 #include "../../include/managers/SoundManager.hpp"
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/HUDManager.hpp"
-#include <iostream>
 
 Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.anim", p_online, p_NPC){
     m_type              = 3;
@@ -70,10 +69,7 @@ Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Chara
     }
 }
 
-Plup::~Plup(){
-    std::cout << "~Plup" << std::endl;
-
-}
+Plup::~Plup(){}
 
 bool Plup::jump(){
     return Character::jump();
@@ -243,7 +239,6 @@ void Plup::updateDash(){
 ///MODIFICAR ESTO, QUE NO SE MUEVA, MUNICION PUESTA A 0 AHORA
 void Plup::updateKalasnikov(){
     if(m_currentTime >= m_kalasnikovTime && m_kalasnikovAmmo > 0){
-        std::cout << "Kalasnikov" << std::endl;
         m_physicsManager->machineGun(m_idBody, m_orientation, m_damageUp, m_knockbackUp, false);
         m_kalasnikovTime = m_currentTime + m_kalasnikovOffset;
         m_kalasnikovAmmo--;
