@@ -70,6 +70,6 @@ void CEAnimatedMesh::loadResource(const char* p_urlSource, bool p_loop){
 void CEAnimatedMesh::setCurrentAnimation(int p_current){
     if(p_current < m_animations.size()){
         m_currentAnimation = m_animations[p_current];
-        m_currentFrame = 0;
+        //m_currentFrame = 0;
     }
 }

@@ -153,7 +153,6 @@ void InGameState::calculateFPS(double t_time){
 }
 
 void InGameState::render(){
-    m_engineManager->updateCamera();
     m_engineManager->drawScene();
 }
 

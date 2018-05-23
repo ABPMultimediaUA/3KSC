@@ -529,6 +529,9 @@ int Character::getValidation(){
 bool Character::left(){
     if(!m_stunned){
         lookLeft();
+        if(!m_ultimateMode)
+            m_engineManager->changeAnimation(m_modelId, 1);
+        
         m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * -1;
     m_physicsManager->move(m_idBody, m_moveAmmount, 0);
     }
@@ -538,6 +541,9 @@ bool Character::left(){
 bool Character::right(){
     if(!m_stunned){
         lookRight();
+        if(!m_ultimateMode)
+            m_engineManager->changeAnimation(m_modelId, 1);
+
         m_moveAmmount = m_velocity * m_frameDeltaTime * m_runningFactor * 1;
     m_physicsManager->move(m_idBody, m_moveAmmount, 0);
     }
@@ -547,6 +553,9 @@ bool Character::right(){
 bool Character::jump(){
     if(m_maxJumps > 0){
         m_maxJumps--;
+        if(!m_ultimateMode)
+            m_engineManager->changeAnimation(m_modelId, 2);
+
         m_physicsManager->jump(m_idBody, 300);
     }
 }
