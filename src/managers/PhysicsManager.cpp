@@ -359,17 +359,17 @@ float PhysicsManager::getDistanceBetween(b2Vec2 p_p1, b2Vec2 p_p2){
     return t_distance;
 }
 
-void PhysicsManager::applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP){
+void PhysicsManager::applyKnockback(int p_idBody, int t_side, float p_knockPower, int p_HP, int p_maxHP){
     b2Body* t_body = getBody(p_idBody);
 
-    float t_inverseHP = (1-(p_HP*0.01)) * 5;
+    float t_inverseHP = (1-((float)p_HP/(float)p_maxHP)) * 10;
     int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
     int t_powerY = 750  * p_knockPower * t_inverseHP;
     t_body->ApplyLinearImpulse(b2Vec2(t_powerX, t_powerY), t_body->GetWorldCenter(), true);
 }
 
-void PhysicsManager::applyKnockback(b2Body* p_body, int t_side, float p_knockPower, int p_HP){
-    float t_inverseHP = (1-(p_HP*0.01)) * 5;
+void PhysicsManager::applyKnockback(b2Body* p_body, int t_side, float p_knockPower, int p_HP, int p_maxHP){
+    float t_inverseHP = (1-((float)p_HP/(float)p_maxHP)) * 10;
     int t_powerX = 1000 * p_knockPower * t_inverseHP * t_side;
     int t_powerY = 750 * p_knockPower * t_inverseHP;
 
@@ -434,7 +434,7 @@ void PhysicsManager::checkCollisionMultiple(b2Body* p_body, b2Body* p_ignoreBody
                 if(p_ignoreBody->GetPosition().x > t_body->GetPosition().x)
                     t_side = -1;
                 t_player->changeHP(-p_damage);
-                applyKnockback(t_body, t_side, p_knockPower, t_player->getHP());
+                applyKnockback(t_body, t_side, p_knockPower, t_player->getHP(), t_player->getMaxHP());
             }
         }
     }

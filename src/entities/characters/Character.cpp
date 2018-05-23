@@ -502,7 +502,7 @@ void Character::knockback(int p_orientation, float p_knockPower){
         m_sideKnockback = p_orientation;
         setKnockback();
     }
-    m_physicsManager->applyKnockback(m_idBody, p_orientation, p_knockPower, m_HP);
+    m_physicsManager->applyKnockback(m_idBody, p_orientation, p_knockPower, m_HP, m_maxHP);
 }
 
 int  Character::getCurrentSnowmen(){}

@@ -31,7 +31,7 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/HUDManager.hpp"
 
-Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 100, 100, 75.f, "assets/models/characters/plup/plup.anim", p_online, p_NPC){
+Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 400, 100, 100.f, "assets/models/characters/plup/plup.anim", p_online, p_NPC){
     m_type              = 3;
 
     m_kalasnikovBulletLaunched = false;

@@ -64,6 +64,7 @@ public:
     int             getIndex();
     char*           getName();
     int             getHP();
+    int             getMaxHP() { return m_maxHP; }
     int             getMP();
     int             getOrientation();
     bool            getAlive()  {   return m_alive; }

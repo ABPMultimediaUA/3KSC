@@ -203,7 +203,6 @@ void EngineManager::deleteEntityAnim(int p_id){
 }
 
 void EngineManager::preLoadAssets(){
-
     float t_position[3] = {0,0,0};
     float t_scale[3] = {1,1,1};
 
@@ -211,6 +210,9 @@ void EngineManager::preLoadAssets(){
     loadAnimations(t_position, t_scale, "assets/models/items/portal/portal_anim.anim");
     loadAnimations(t_position, t_scale, "assets/models/characters/plup/plup.anim");
     loadAnimations(t_position, t_scale, "assets/models/characters/sparky/sparky_animations.anim");
+    m_scene->createMesh("assets/models/items/movement_wings.obj");
+    m_scene->createMesh("assets/models/items/life_tank.obj");
+    m_scene->createMesh("assets/models/items/shield.obj");
 
     cleanScene();
 }
