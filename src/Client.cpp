@@ -251,7 +251,7 @@ void Client::readMessage(std::string p_message){
 	else{
 		if(t_parsed.size()<4)
 		{
-			std::cout<<"MENSAJE NO IDENTIFICADO "<<t_parsed[0]<<std::endl;
+			//std::cout<<"MENSAJE NO IDENTIFICADO "<<t_parsed[0]<<std::endl;
 			return;
 		}
 		Arena::getInstance()->getPlayer(std::stoi(t_parsed[0]))->setY(std::stof(t_parsed[2]));
