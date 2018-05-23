@@ -96,12 +96,7 @@ void InGameState::initState(Game* p_game){
 
 void InGameState::input(){
     if(m_inputManager->isKeyPressed(Key::Escape)){
-        if (m_arena)    { delete m_arena;   m_arena = nullptr;  }
-        m_engineManager->cleanScene();
-        m_soundManager->stopAll();
-        m_physicsManager->clear();
-        MenuState::getInstance()->goToMainScreen();
-        m_game->setState(&MenuState::instance());
+        this->nextState();
     }
 }
 
@@ -134,8 +129,17 @@ void InGameState::update(){
     //m_engineManager->updateParticleSystem();
     m_HUDManager->update();
 
+    //Winner
     if(m_changeState){
-        this->nextState();
+        m_HUDManager->showWinnerMessage();
+
+        bool t_kbInput  = m_inputManager->isKeyPressed(Key::Return);
+        bool t_jsInput  = m_inputManager->isConnected(0) && (m_inputManager->isButtonPressed(0, Button::Start) || m_inputManager->isButtonPressed(0, Button::A));
+
+        if (t_kbInput || t_jsInput){
+            this->nextState();
+        }
+
     }
 
     // calculateFPS(t_time);
@@ -158,7 +162,12 @@ void InGameState::render(){
 
 //Change to next state
 void InGameState::nextState(){
-    m_game->setState(&EndGameState::instance());
+    if (m_arena)    { delete m_arena;   m_arena = nullptr;  }
+    m_engineManager->cleanScene();
+    m_soundManager->stopAll();
+    m_physicsManager->clear();
+    MenuState::getInstance()->goToMainScreen();
+    m_game->setState(&MenuState::instance());
 }
 
 void InGameState::createArena(const char* p_fileCgm){
