@@ -3,7 +3,9 @@
 
 #include "../include/ChaoticEngine/CElight.hpp"
 
-//Constructor for Point light
+/*
+Creamos una luz puntual con la atenuacion pasada por parametro
+*/
 CELight::CELight(float p_attenuation, GLuint p_shaderProgram) : CEEntity(){
 	m_shaderProgram = p_shaderProgram;
 
@@ -12,7 +14,9 @@ CELight::CELight(float p_attenuation, GLuint p_shaderProgram) : CEEntity(){
 	setComponents();
 }
 
-//constructor for Directional Light
+/*
+Creamos una luz direccional con la direccion pasada por parametro
+*/
 CELight::CELight(glm::vec3 p_direction, GLuint p_shaderProgram) : CEEntity(){
 	m_shaderProgram = p_shaderProgram;
 

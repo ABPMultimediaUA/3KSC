@@ -4,6 +4,10 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneQuad.hpp"
 
+/*
+Fachada para crear Quads y aplicarles las transformaciones correspondientes
+*/
+
 CESceneQuad::CESceneQuad(CESceneNode* p_parent, float p_vertex[4][2], GLuint p_shaderProgram){
 	m_translate = new CETransform(); 
 	m_quad	 	= new CEQuad(p_vertex, p_shaderProgram);

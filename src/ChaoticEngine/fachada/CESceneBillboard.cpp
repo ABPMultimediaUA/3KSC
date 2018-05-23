@@ -4,6 +4,10 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneBillboard.hpp"
 
+/*
+Fachada para crear Billboars y aplicarle las transformaciones correspondientes
+*/
+
 CESceneBillboard::CESceneBillboard(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram){
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();

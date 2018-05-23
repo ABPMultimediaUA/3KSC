@@ -6,6 +6,11 @@
 #include "../include/ChaoticEngine/CEsprite.hpp"
 #include "../include/ChaoticEngine/manager/CEresourceManager.hpp"
 
+/*
+Constructor para crear un sprite 2D. Se puede elegir donde queremos el origen de transformaciones:
+    p_origenCente = true  -> crea el origen en el centro del spirte (por defecto)
+    p_origenCente = false -> crea el origen en el lado izquierdo
+*/
 CESprite::CESprite(const char* p_urlSource, float p_width, float p_height, GLuint p_shaderProgram, bool p_originCenter) : CEEntity(){
     m_shaderProgram = p_shaderProgram;
 
@@ -105,6 +110,9 @@ void CESprite::beginDraw(){
 
 void CESprite::endDraw(){}
 
+/*
+Haciendo multiples llamadas a este metodo se le puden añadir mas texturas al sprite
+*/
 void CESprite::loadResource(const char* p_urlSource){
     CEResourceManager* t_manager = CEResourceManager::instance();
     CEResourceTexture* t_resource = (CEResourceTexture*)&t_manager->getResource(p_urlSource);
@@ -115,12 +123,18 @@ void CESprite::loadResource(const char* p_urlSource){
     }
 }
 
+/*
+Obtiene la siguiente textura del sprite si la tiene
+*/
 void CESprite::getNext(){
     m_currentFrame++;
     if(m_currentFrame > m_totalFrames)
         m_currentFrame = 0;
 }
 
+/*
+Obtiene la anterior textura del sprite si la tiene
+*/
 void CESprite::getLast(){
     m_currentFrame--;
     if(m_currentFrame < 0)

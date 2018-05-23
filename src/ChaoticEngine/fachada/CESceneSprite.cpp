@@ -4,6 +4,10 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneSprite.hpp"
 
+/*
+Fachada para crear Sprites y aplicarles las transformaciones correspondientes
+*/
+
 CESceneSprite::CESceneSprite(CESceneNode* p_parent, const char* p_path, float p_width, float p_height, GLuint p_shaderProgram, bool p_originCenter){
 	m_rotate    = new CETransform();
 	m_scale	    = new CETransform();
@@ -37,13 +41,6 @@ CESceneSprite::~CESceneSprite(){
 	
 	delete m_scale;
 	m_scale = nullptr;
-}
-
-void CESceneSprite::processInput(GLFWwindow* p_window){
-	if(glfwGetKey(p_window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		m_sprite->getLast();
-	else if(glfwGetKey(p_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		m_sprite->getNext();
 }
 
 void CESceneSprite::setScale(float p_x, float p_y, float p_z){
