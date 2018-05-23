@@ -57,6 +57,8 @@ class Game{
         //Map
         int             m_map;
 
+        int             m_winner;
+
     public:
         Game();
         ~Game();
@@ -80,10 +82,12 @@ class Game{
         bool        isNPC(int p_player)             { return m_NPC[p_player]; }
         int         getChosenPlayer(int p_player)   { return m_chosenPlayers[p_player]; }
 
-        int         getRounds()                     { return m_battleSettings[0];   }
         int         getLives()                      { return m_battleSettings[0];   }
+        int         getDifficulty()                 { return m_battleSettings[1];   }
 
         int         getMap()                        { return m_map;                 }
+        
+        int         getWinner()                     { return m_winner;              }
         
         //Setters
         void        setResolutionPreset(int p_preset);
@@ -97,6 +101,8 @@ class Game{
         void        setBattleSettings(int p_type, int p_value)      { m_battleSettings[p_type] = p_value;       }
 
         void        setMap(int p_map)                               { m_map = p_map;                            }
+        
+        void        setWinner(int p_winner)                         { m_winner = p_winner;                      }
 };
 
 #endif

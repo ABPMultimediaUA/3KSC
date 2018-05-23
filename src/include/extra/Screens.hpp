@@ -33,6 +33,7 @@
         // OnlineCreate,
         // OnlineJoin,
         GameSettings,
+        Tutorial,
 
         Count
     };
