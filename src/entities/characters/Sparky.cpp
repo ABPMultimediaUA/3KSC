@@ -24,6 +24,7 @@
 #include "../../include/AI/AISparky.hpp"
 #include "../../include/entities/Arena.hpp"
 #include "../../include/extra/Actions.hpp"
+#include "../../include/Game.hpp"
 #include "../../include/managers/SoundManager.hpp"
 #include "../../include/managers/PhysicsManager.hpp"
 #include "../../include/managers/InputManager.hpp"
@@ -43,7 +44,7 @@ Sparky::Sparky(char* p_name, float p_position[3], bool p_online, bool p_NPC) : C
     m_ultiBulletLaunched = false;
     m_ultimateAmmo       = 10;
 
-    m_atakOffset         = 0.5f;
+    m_atakOffset         = 0.6f - (0.1f * (m_game->getDifficulty() - 1));
     m_atakTime           = 0.0f;
 
     m_damageBasic        = 20.0f;

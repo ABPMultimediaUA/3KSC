@@ -20,6 +20,7 @@
 
 #include "../include/states/InGameState.hpp"
 #include "../include/states/EndGameState.hpp"
+#include "../include/states/MenuState.hpp"
 #include "../include/Game.hpp"
 
 #include "../include/managers/EngineManager.hpp"
@@ -30,7 +31,6 @@
 #include "../include/entities/Arena.hpp"
 #include "../include/AI/Pathfinding.hpp"
 #include "../include/Client.hpp"
-#include "../include/states/MenuState.hpp"
 
 #include "../include/extra/Inputs.hpp"
 #include "../include/extra/Screens.hpp"
@@ -54,7 +54,7 @@ InGameState& InGameState::instance(){
 InGameState::InGameState(Game* p_game, bool p_onlineMode){
     //Online stuff
     m_instance = this;
-    m_onlineMode = p_onlineMode;
+    m_onlineMode = false;
 }
 
 //Destructor
@@ -96,7 +96,12 @@ void InGameState::initState(Game* p_game){
 
 void InGameState::input(){
     if(m_inputManager->isKeyPressed(Key::Escape)){
-        this->nextState();
+        if (m_arena)    { delete m_arena;   m_arena = nullptr;  }
+        m_engineManager->cleanScene();
+        m_soundManager->stopAll();
+        m_physicsManager->clear();
+        MenuState::getInstance()->goToMainScreen();
+        m_game->setState(&MenuState::instance());
     }
 }
 
@@ -153,13 +158,7 @@ void InGameState::render(){
 
 //Change to next state
 void InGameState::nextState(){
-    //m_arena->cleanArena();
-    delete m_arena;
-    m_engineManager->cleanScene();
-    m_soundManager->stopAll();
-    m_physicsManager->clear();
-    MenuState::getInstance()->goToMainScreen();
-    m_game->setState(&MenuState::instance());
+    m_game->setState(&EndGameState::instance());
 }
 
 void InGameState::createArena(const char* p_fileCgm){

@@ -3,6 +3,7 @@
 
 class InputManager;
 class Arena;
+class Game;
 
 #include "RakPeerInterface.h"
 #include "RakNetStatistics.h"
@@ -31,6 +32,7 @@ class Client{
     private:
         InputManager*   m_inputManager;
         Arena*          m_arena;
+        Game*           m_game;
 
         RakNet::RakNetStatistics *rss;
         RakNet::RakPeerInterface *client;
@@ -42,6 +44,8 @@ class Client{
         int m_action;
         int m_yourPlayer;
         bool m_debug = false;
+        int m_character;
+        bool m_flag;
         std::string m_yourPlayerString;
 };
 

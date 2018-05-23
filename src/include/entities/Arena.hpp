@@ -67,6 +67,10 @@ public:
 
     float*          getRespawnPosition();
 
+    void            pleaseKill(int p_playerIndex);
+    void            spawnPlayer(bool p_online = false);
+    void            spawnPlayerOnline(bool p_online, int p_index);
+
 private: 
     static Arena*       m_instance;
     Game*               m_game;
@@ -103,7 +107,7 @@ private:
 
     float               m_musicIntensity[4];
 
-    void                spawnPlayer(bool p_online = false);
+
 };
 
 #endif

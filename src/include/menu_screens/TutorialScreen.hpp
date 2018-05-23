@@ -1,6 +1,6 @@
 /*
     3KSC: A fighting game
-    Copyright (C) 2018  Chaotic Games
+    Copyright (C);
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,30 +18,27 @@
     You can contact Chaotic Games at: chaoticgamesdev@gmail.com
 */
 
-#ifndef END_GAME_STATE
-#define END_GAME_STATE
+#ifndef TUTORIAL_SCREEN
+#define TUTORIAL_SCREEN
 
-class HUDManager;
-class InputManager;
-class Arena;
+class Game;
 
-#include "State.hpp"
+#include "MenuScreen.hpp"
 
-class EndGameState : public State{
+class TutorialScreen : public MenuScreen{
     private:
-        EndGameState(Game* p_game);
+        TutorialScreen(MenuState* p_menu);
 
-        HUDManager*     m_HUDManager;
-        InputManager*   m_inputManager;
-        Arena*          m_arena;
+        static TutorialScreen*  m_instance;
+
+        void hideUnselected();
 
     public:
-        static EndGameState& instance();
-        ~EndGameState();
-        void    input();
-        void    update();
-        void    render();
-        void    nextState();
+        static TutorialScreen* instance();
+        ~TutorialScreen();
+
+        void left()     override;
+        void right()    override;      
 };
 
 #endif
