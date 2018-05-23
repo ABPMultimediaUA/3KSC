@@ -531,10 +531,11 @@ void PhysicsManager::machineGun(int p_idBody, int p_orientation, float p_damage,
 
 void PhysicsManager::getPosition(int p_idBody){
     b2Body* t_body = getBody(p_idBody);
-    std::cout << t_body->GetPosition().x << ", " << t_body->GetPosition().y << std::endl;
 }
 
 void PhysicsManager::move(int p_idBody, float p_moveX, float p_moveY){
+    if(p_idBody == -1)
+    return;
     b2Body* t_body = getBody(p_idBody);
     t_body->SetLinearVelocity(b2Vec2(p_moveX, t_body->GetLinearVelocity().y));
 }
