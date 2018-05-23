@@ -188,8 +188,10 @@ void Character::changeHP(int p_variation){
     if(m_HP > m_maxHP)
         m_HP = m_maxHP;
 
-    if(m_stunned)
+    if(m_stunned){
         m_stunned = false;
+        m_HUDManager->setStun(m_playerIndex, false);
+    }
 
     //HUD Stuff
     m_HUDManager->setHP(m_playerIndex, m_HP, m_maxHP);
@@ -227,6 +229,7 @@ bool Character::useMP(int p_MP){
 void Character::shield(){
     m_shielded = true;
     m_shieldTime = m_inputManager->getMasterClock() + m_shieldDuration;
+    m_HUDManager->setShield(m_playerIndex, true);
 }
 
 //Activates wings, if not already active
@@ -234,6 +237,7 @@ void Character::wings(){
     if(!m_winged){
         m_runningFactor = 1.5f;
         m_winged = true;
+        m_HUDManager->setWings(m_playerIndex, true);
     }
 
     m_wingsTime = m_inputManager->getMasterClock() + m_wingsDuration;
@@ -243,6 +247,7 @@ void Character::removeWings(){
     if(m_winged){
         m_runningFactor = 1.0f;
         m_winged = false;
+        m_HUDManager->setWings(m_playerIndex, false);
     }
 }
 
@@ -259,6 +264,9 @@ void Character::die(){
     m_knockback = false;
     m_stunned   = false;
     m_shielded = false;
+
+    m_HUDManager->setStun(m_playerIndex, false);
+    m_HUDManager->setShield(m_playerIndex, false);
 
     deathSound();
     removeWings();
@@ -355,12 +363,15 @@ void Character::update(){
     if(m_winged && m_currentTime >= m_wingsTime)
         removeWings();
 
-    if(m_shielded && m_currentTime >= m_shieldTime)
+    if(m_shielded && m_currentTime >= m_shieldTime){
         m_shielded = false;
+        m_HUDManager->setShield(m_playerIndex, false);
+    }
 
     if(m_stunned && m_currentTime > m_stunTime){
         m_stunDuration = 1.0;
         m_stunned      = false;
+        m_HUDManager->setStun(m_playerIndex, false);
     }    
     else
         doActions();
@@ -429,6 +440,8 @@ void Character::setStunned(float p_time){
         m_stunDuration = m_stunDuration/2;
     
     m_stunned = true;
+    m_HUDManager->setStun(m_playerIndex, true);
+
     m_stunTime = m_inputManager->getMasterClock() + m_stunDuration;
 }
 

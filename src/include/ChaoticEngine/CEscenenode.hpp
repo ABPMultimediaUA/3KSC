@@ -28,17 +28,12 @@ public:
 
 	int 			getTotalChilds();
 
-	void			setScale(float p_x, float p_y, float p_z);
-	void			setRotation(float p_x, float p_y, float p_z);
-	void			setTranslation(float p_x, float p_y, float p_z);
-
-	glm::vec3 		getPosition();
-
 
 private:
 	CEEntity* 					m_entity;
 	std::vector<CESceneNode*>	m_childs;
 	CESceneNode* 				m_father;
+	
 };
 
 #endif

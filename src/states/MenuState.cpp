@@ -149,6 +149,7 @@ void MenuState::initializeScreens(){
 }
 
 void MenuState::goToMainScreen(){
+    m_soundManager->playMusic("menu_music");
     setScreen(Screen::Main);
 }
 

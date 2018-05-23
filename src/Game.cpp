@@ -49,9 +49,9 @@ Game::Game(){
     m_resolutionPreset  = 1;
     m_fullscreen        = false;
 
-    m_volumes[0]        = 20;
-    m_volumes[1]        = 20;
-    m_volumes[2]        = 20;
+    m_volumes[0]        = 10;
+    m_volumes[1]        = 10;
+    m_volumes[2]        = 10;
 
     for (int i = 0; i < 2; i++){
         m_NPC[i]            = false;

@@ -4,6 +4,10 @@
 #include "../../include/ChaoticEngine/manager/CEshader.hpp"
 #include "../../include/ChaoticEngine/fachada/CEShader.hpp"
 
+/*
+Fachada para crear/cargar Shaders
+*/
+
 CEShaderProgram::CEShaderProgram(const char* p_pathVertex, const char* p_pathFragment){
 	m_shader = new CEShader();
 

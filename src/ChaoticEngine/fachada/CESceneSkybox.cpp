@@ -4,6 +4,10 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneSkybox.hpp"
 
+/*
+Fachada para crear un Skybox y aplicarle las transformaciones correspondientes
+*/
+
 CESceneSkybox::CESceneSkybox(CESceneNode* p_parent, const char* p_path[6], float p_scale, GLuint p_shaderProgram){
 	m_rotate    = new CETransform();
 	m_scale	 	= new CETransform();

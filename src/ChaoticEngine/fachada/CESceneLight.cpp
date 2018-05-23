@@ -3,6 +3,10 @@
 
 #include "../../include/ChaoticEngine/fachada/CESceneLight.hpp"
 
+/*
+Fachada para crear Luces y aplicarle las transformaciones correspondientes
+*/
+
 CESceneLight::CESceneLight(CESceneNode* p_parent, float p_attenuation, GLuint p_shaderProgram, bool p_isActive){
 	m_isActive	  = p_isActive;
 
