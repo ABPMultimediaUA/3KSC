@@ -180,6 +180,7 @@ void EngineManager::preLoadAssets(){
     m_scene->createMesh("assets/models/items/movement_wings.obj");
     m_scene->createMesh("assets/models/items/life_tank.obj");
     m_scene->createMesh("assets/models/items/shield.obj");
+    m_scene->createMesh("assets/models/characters/plup/munyeco_plup.obj");
 
     cleanScene();
 }
@@ -190,7 +191,6 @@ int EngineManager::loadAnimations(float p_position[3], float p_scale[3], const c
     std::ifstream t_file(p_modelURL);
     std::string t_line;
     const char* t_path;
-    std::cout << "cargando animaciones de: " << p_modelURL << std::endl;
     CESceneAnimation* t_animation = NULL;
     int t_cont = 0;
     float t_loop;

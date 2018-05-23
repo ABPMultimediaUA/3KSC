@@ -31,7 +31,7 @@
 #include "../../include/managers/EngineManager.hpp"
 #include "../../include/managers/HUDManager.hpp"
 
-Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 400, 100, 100.f, "assets/models/characters/plup/plup.anim", p_online, p_NPC){
+Plup::Plup(char* p_name, float p_position[3], bool p_online, bool p_NPC) : Character(p_name, p_position, 400, 100, 100.f, "assets/models/characters/plup/plup_animations.anim", p_online, p_NPC){
     m_type              = 3;
 
     m_kalasnikovBulletLaunched = false;
@@ -79,6 +79,7 @@ bool Plup::jump(){
 bool Plup::basicAttack(){
     if(m_currentTime >= m_atakTime){
         Character* t_currentPlayer;
+        m_engineManager->changeAnimation(m_modelId, 5);
 
         for(int i = 0; i < m_playerCount; i++){
             //Ignore myself
@@ -117,6 +118,7 @@ bool Plup::specialAttackUp(){
         
         m_kalasnikovTime = m_currentTime + m_kalasnikovOffset;
         m_atakTime = m_currentTime + m_atakOffset;
+        m_engineManager->changeAnimation(m_modelId, 6);
     }
     return false;
 }
@@ -136,6 +138,7 @@ bool Plup::specialAttackDown(){
         m_soundManager->playSound("p_atak");
 
         m_atakTime = m_currentTime + m_atakOffset;
+        m_engineManager->changeAnimation(m_modelId, 3);
     }
     return false;
 }
@@ -176,6 +179,7 @@ bool Plup::ultimateAttack(){
             t_currentPlayer = Arena::getInstance()->getPlayer(i);
             t_currentPlayer->setStunned(3.0);
         }
+        m_engineManager->changeAnimation(m_modelId, 4);
         m_ultimateTime = m_currentTime + m_ultimateDuration;
         m_ultimateCharged = false;
         m_engineManager->createParticleSystem("assets/spark.png", 300, -m_position[0]*5, (10-m_position[1])*(5), 1200, 1, 0, 360, true, 0.5);
