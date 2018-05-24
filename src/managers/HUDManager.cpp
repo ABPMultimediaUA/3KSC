@@ -50,12 +50,16 @@ PlayerHUD::~PlayerHUD(){
 
 
 /* ****************************** HUD MANAGER ****************************** */
+HUDManager* HUDManager::m_instance = nullptr;
+
+
 //Returns the only instance of this class
-HUDManager& HUDManager::instance(bool p_init){
-    static HUDManager instance;
-    if(p_init)
-        instance.initHUD();
-    return instance;
+HUDManager* HUDManager::instance(){
+    if (!m_instance){
+        m_instance = new HUDManager();
+    }
+
+    return m_instance;
 }
 
 //Constructor
@@ -63,6 +67,8 @@ HUDManager::HUDManager(){
     m_game              = Game::getInstance();
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
+
+    initHUD();
 }
 
 //Destructor
@@ -74,6 +80,9 @@ HUDManager::~HUDManager(){
     if (m_ultimateBG)   { delete m_ultimateBG;      m_ultimateBG = nullptr;     }
     if (m_ultimateFG)   { delete m_ultimateFG;      m_ultimateFG = nullptr;     }
     if (m_ultimateText) { delete m_ultimateText;    m_ultimateText = nullptr;   }
+    if (m_winnerMsg)    { delete m_winnerMsg;       m_winnerMsg = nullptr;      }
+
+    m_instance = nullptr;
 }
 
 void HUDManager::initHUD(){

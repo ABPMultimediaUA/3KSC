@@ -101,7 +101,7 @@ private:
     void    menuInputOnline();
 
     //Actions
-    bool    m_playerActions[4][(int) Action::Count];
+    bool    m_playerActions[2][(int) Action::Count];
 
     void    playerInputJoystick(int p_player);
     void    playerInputKeyboard(int p_player);

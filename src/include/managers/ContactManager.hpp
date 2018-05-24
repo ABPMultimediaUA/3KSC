@@ -33,6 +33,15 @@ public:
     void checkLeave(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact);
     void checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2Contact* p_contact, const b2Manifold* p_oldManifold);
 
+    void setIdPlatforms(int p_id)   { idPlatform = p_id; }
+    void setIdPlayer1(int p_id)     { idPlayer1 = p_id;  }
+    void setIdPlayer2(int p_id)     { idPlayer2 = p_id;  }
+
+private:
+    int idPlatform;
+    int idPlayer1;
+    int idPlayer2;
+
 };
 
 #endif

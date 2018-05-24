@@ -44,6 +44,8 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_instance          = this;
     m_game              = Game::getInstance();
 
+    //Entity::resetCount();
+
     m_currentItems      = 0;
     m_offsetSpawnTime   = 7.5;
     m_nextSpawnTime     = m_inputManager->getMasterClock() + m_offsetSpawnTime;
@@ -62,7 +64,9 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_musicIntensity[1] = 0.6;
     m_musicIntensity[2] = 0.4;
     m_musicIntensity[3] = 0.0;
-}
+
+    m_playerCount       = 0;
+}   
 
 Arena::~Arena(){
     for(int i = 0; i < m_playerCount; i++){
@@ -103,6 +107,7 @@ void Arena::spawnPlayer(bool p_online){
             break;
         }
     }
+
 
     m_playerCount++;
 }

@@ -55,8 +55,6 @@ Game::Game(){
     for (int i = 0; i < 2; i++){
         m_NPC[i]            = false;
         m_chosenPlayers[i]  = 0;
-        m_chosenPlayers[0]  = 0;
-        m_chosenPlayers[1]  = 1;
     }
 
     m_battleSettings[0] = 2;

@@ -60,6 +60,7 @@ private:
     short                   CATEGORY_GROUND;
 
     float                   m_deltaTime;
+    int                     m_currentPlayer;
 
 public:
     static PhysicsManager& instance();

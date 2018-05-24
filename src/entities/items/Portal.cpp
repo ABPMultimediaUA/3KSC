@@ -29,7 +29,7 @@
 Portal::Portal(float p_position[3]) : Entity(p_position, 0.5f, "assets/models/items/portal/portal_anim.anim", 3){
     m_arena             = Arena::getInstance();
     m_physicsManager    = &PhysicsManager::instance();
-    m_HUDManager        = &HUDManager::instance();
+    m_HUDManager        = HUDManager::instance();
 
     m_using             = false;
     m_charge            = 0.0f;

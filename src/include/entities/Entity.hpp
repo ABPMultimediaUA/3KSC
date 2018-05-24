@@ -66,6 +66,7 @@ protected:
     InputManager*    m_inputManager;
     SoundManager*    m_soundManager;
 
+    static void             resetCount();
     static int              m_entityCount;
     int                     m_id;
     int                     m_idBody;
