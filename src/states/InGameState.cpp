@@ -67,7 +67,7 @@ void InGameState::initState(Game* p_game){
     m_game              = p_game;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
-    m_HUDManager        = &HUDManager::instance();
+    m_HUDManager        = &HUDManager::instance(true);
     m_soundManager      = &SoundManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();

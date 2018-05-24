@@ -49,6 +49,7 @@ public:
     float   getAxisPosition(int p_joystick, Axis p_axis);
     void    updateJoysticks();
     void    assignDevice(int p_device, int p_player);
+    void    autoassignDevices();
     void    onlineMode();
     void    setOnlineControl(int p_player);
     void    setAction(Action p_action, int p_player, bool p_bool = true); 
@@ -91,7 +92,6 @@ private:
 
     //Input device for each player [0-3]: Joysticks, -1: Keyboard, -2: NPC
     int     m_inputDevices[4];
-    void    autoassignDevices();
 
     //Menu Actions
     bool    m_menuActions[(int) MenuAction::Count];

@@ -57,7 +57,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     
     moveTo(p_position);
 
-    m_debugMode = false;
+    m_debugMode = true;
     switch(p_type){
         //PLAYER
         case 0:
@@ -74,7 +74,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
             break;
         //PORTAL
         case 3:
-            m_physicsManager->createPhysicBoxPortal(&m_idBody, p_position, 1.4, 1.5);
+            m_physicsManager->createPhysicBoxPortal(&m_idBody, p_position, 1.4, 0.75);
             break;
         //PROJECTILE
         case 4:

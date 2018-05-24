@@ -62,13 +62,14 @@ class HUDManager{
 
         HUDManager();
         
+        void initHUD();
         void initializePlayer(int p_index);
         void initializeUB();
         void ultimateBlink(int p_player);
         void initializeWinnerMessage();
 
     public:
-        static HUDManager& instance();
+        static HUDManager& instance(bool p_init = false);
         ~HUDManager();
 
         void setArena();

@@ -169,7 +169,9 @@ void CharacterLocalScreen::back(){
 
 void CharacterLocalScreen::save(){
     if (m_nowChoosing == 0) { m_nowChoosing = 1;    }
-    else                    { MenuScreen::save();   }
+    else{
+        MenuScreen::save();  
+    }
 }
 
 void CharacterLocalScreen::toggleNPC(){

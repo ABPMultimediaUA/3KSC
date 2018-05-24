@@ -51,8 +51,10 @@ PlayerHUD::~PlayerHUD(){
 
 /* ****************************** HUD MANAGER ****************************** */
 //Returns the only instance of this class
-HUDManager& HUDManager::instance(){
+HUDManager& HUDManager::instance(bool p_init){
     static HUDManager instance;
+    if(p_init)
+        instance.initHUD();
     return instance;
 }
 
@@ -61,11 +63,6 @@ HUDManager::HUDManager(){
     m_game              = Game::getInstance();
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
-
-    initializePlayer(0);
-    initializePlayer(1);
-    initializeUB();
-    initializeWinnerMessage();
 }
 
 //Destructor
@@ -77,6 +74,13 @@ HUDManager::~HUDManager(){
     if (m_ultimateBG)   { delete m_ultimateBG;      m_ultimateBG = nullptr;     }
     if (m_ultimateFG)   { delete m_ultimateFG;      m_ultimateFG = nullptr;     }
     if (m_ultimateText) { delete m_ultimateText;    m_ultimateText = nullptr;   }
+}
+
+void HUDManager::initHUD(){
+    initializePlayer(0);
+    initializePlayer(1);
+    initializeUB();
+    initializeWinnerMessage();
 }
 
 //Initializes the HUD for a player
