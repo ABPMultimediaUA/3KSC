@@ -50,7 +50,8 @@ void Portal::onEnter(Character* p_character){
 void Portal::onLeave(Character* p_character){
     m_players[p_character->getIndex()] = NULL;
     m_charactersInPortal--;
-    m_using = false;
+    if(m_charactersInPortal == 0)
+        m_using = false;
 }
 
 void Portal::update(float p_delta){

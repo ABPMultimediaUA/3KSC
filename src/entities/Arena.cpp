@@ -52,7 +52,7 @@ Arena::Arena(float p_position[3], float p_scale, const char* p_modelURL) : Entit
     m_usedItems         = 0;
 
     m_portalDuration    = 0.75;
-    m_portalOffsetTime  = 10;
+    m_portalOffsetTime  = 15;
     m_portalSpawnTime   = m_inputManager->getMasterClock() + m_portalOffsetTime;
     m_portalSpawned     = false;
 

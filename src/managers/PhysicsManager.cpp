@@ -199,7 +199,7 @@ void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float
     float size = 1;
     b2BodyDef* t_bodyDef = new b2BodyDef();
     t_bodyDef->type = b2_staticBody;
-    t_bodyDef->position.Set(p_position[0], p_position[1]);
+    t_bodyDef->position.Set(p_position[0], p_position[1] + 0.75);
     b2Body* t_body = m_world->CreateBody(t_bodyDef);
     
     //Create a shape for the body
