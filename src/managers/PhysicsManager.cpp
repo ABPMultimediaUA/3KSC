@@ -51,6 +51,7 @@ PhysicsManager::PhysicsManager(){
     CATEGORY_GROUND = 0x0003;
 
     m_deltaTime     = 1.0;
+    m_currentPlayer   = 0;
 }
 //Destructor
 PhysicsManager::~PhysicsManager(){
@@ -118,8 +119,16 @@ void PhysicsManager::createPhysicBox(Box p_type, int* p_id, float p_position[3],
     t_body->CreateFixture(t_fixtureDef);
     t_body->SetUserData(p_id);
 
-    if(p_type == Box::Player)
+    if(p_type == Box::Player){
         m_playersBody.push_back(t_body);
+        if(m_currentPlayer % 2 == 0){
+            m_currentPlayer++;
+            m_contactManager->setIdPlayer1(*p_id);
+        }else{
+            m_currentPlayer++;
+            m_contactManager->setIdPlayer2(*p_id);
+        }
+    }
 }
 
 void PhysicsManager::setPlayerSensor(int p_id, Character* p_character){
@@ -193,6 +202,7 @@ void PhysicsManager::createPhysicBoxPlatform(int* p_id, float p_position[3], boo
             m_engineManager->createDebugQuad(t_vertex);
         }
     }
+    m_contactManager->setIdPlatforms(*p_id);
 }
 
 void PhysicsManager::createPhysicBoxPortal(int* p_id, float p_position[3], float p_dimX, float p_dimY){

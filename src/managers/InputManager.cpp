@@ -54,7 +54,7 @@ InputManager::InputManager(){
     m_isOnline = false;
 
     //Initialize action booleans
-    for (int i = 0; i < 4; i++){
+    for (int i = 0; i < 2; i++){
         for (int j = 0; j < (int) Action::Count; j++){
             m_playerActions[i][j] = false;
         }

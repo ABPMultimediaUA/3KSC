@@ -46,6 +46,7 @@ struct PlayerHUD{
 
 class HUDManager{
     private:
+        static HUDManager* m_instance;
         Game*           m_game;
         EngineManager*  m_engineManager;
         InputManager*   m_inputManager;
@@ -69,7 +70,7 @@ class HUDManager{
         void initializeWinnerMessage();
 
     public:
-        static HUDManager& instance(bool p_init = false);
+        static HUDManager* instance();
         ~HUDManager();
 
         void setArena();

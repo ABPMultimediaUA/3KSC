@@ -57,7 +57,7 @@ Entity::Entity(float p_position[3], float p_scale, const char* p_modelURL, int p
     
     moveTo(p_position);
 
-    m_debugMode = true;
+    m_debugMode = false;
     switch(p_type){
         //PLAYER
         case 0:
@@ -100,6 +100,10 @@ Entity::~Entity(){
         m_engineManager->deleteEntity(m_id);
 
     m_physicsManager->destroyBody(m_idBody);
+}
+
+void Entity::resetCount(){
+    m_entityCount = 0;
 }
 
 void Entity::updatePosition(){

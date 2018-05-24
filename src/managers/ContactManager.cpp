@@ -83,7 +83,7 @@ void ContactManager::checkPreSolve(b2Fixture* fixture1, b2Fixture* fixture2, b2C
 	int	  t_data1 = *reinterpret_cast<int*>(fixture1->GetBody()->GetUserData());
 	int	  t_data2 = *reinterpret_cast<int*>(fixture2->GetBody()->GetUserData());
 	
-	if(t_data1 == 0 && (t_data2 == 1 || t_data2 == 2)){
+	if(t_data1 == idPlatform && (t_data2 == idPlayer1 || t_data2 == idPlayer2)){
         b2Fixture* otherFixture 	= fixture1;
         b2Fixture* playerFixture 	= fixture2;
 

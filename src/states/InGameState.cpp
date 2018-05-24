@@ -67,7 +67,7 @@ void InGameState::initState(Game* p_game){
     m_game              = p_game;
     m_engineManager     = &EngineManager::instance();
     m_inputManager      = &InputManager::instance();
-    m_HUDManager        = &HUDManager::instance(true);
+    m_HUDManager        = HUDManager::instance();
     m_soundManager      = &SoundManager::instance();
     m_physicsManager    = &PhysicsManager::instance();
     m_pathfinding       = &Pathfinding::instance();
@@ -162,7 +162,8 @@ void InGameState::render(){
 
 //Change to next state
 void InGameState::nextState(){
-    if (m_arena)    { delete m_arena;   m_arena = nullptr;  }
+    if (m_arena)        { delete m_arena;       m_arena = nullptr;  }
+    if (m_HUDManager)   { delete m_HUDManager;  m_HUDManager = nullptr;}
     m_engineManager->cleanScene();
     m_soundManager->stopAll();
     m_physicsManager->clear();

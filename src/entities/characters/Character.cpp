@@ -48,10 +48,13 @@ Arena*          m_arena             = 0;
 Character::Character(char* p_name, float p_position[3], int p_HP, int p_MP, float p_velocity, const char* p_modelURL, bool p_online, bool p_NPC) : Entity(p_position, 0.5f, p_modelURL){
     m_game                  = Game::getInstance();
     m_arena                 = Arena::getInstance();
-    m_HUDManager            = &HUDManager::instance();
+    m_HUDManager            = HUDManager::instance();
     m_client                = &Client::instance();
-    
-    m_playerIndex           = Character::m_playerCount++;
+
+
+    m_playerCount           = m_playerCount % 2;
+    m_playerIndex           = Character::m_playerCount;
+    m_playerCount++;
     m_NPC                   = p_NPC;
     m_AI                    = nullptr;      //Each character will create it if NPC
     m_AIEnabled             = false;
