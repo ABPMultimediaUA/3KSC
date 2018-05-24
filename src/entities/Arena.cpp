@@ -240,7 +240,7 @@ bool Arena::spawnRandomItem(){
 }
 
 void Arena::spawnPortal(){
-    float positionPortal[3] = {0, 0.5, 0};
+    float positionPortal[3] = {0, 8.5, 0};
     m_portal = new Portal(positionPortal);
     m_portalSpawned = true;
 }
